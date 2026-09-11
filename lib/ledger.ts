@@ -175,9 +175,9 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         stage: "gate",
         title: "Needs you",
         detail:
-          "WordPress wp-login/wp-admin still LiteSpeed 403. Do not mark Escrow received until domain control + WP verified.",
+          "WordPress wp-login/wp-admin still LiteSpeed 403 remains an operational note. Personal Closed does not mark Escrow received or Escrow complete.",
         at: "2026-09-11T14:06:00Z",
-        status: "blocked",
+        status: "done",
       },
       {
         id: "ev_savedfast_close",
