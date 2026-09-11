@@ -399,7 +399,8 @@ assert(
 );
 assert(manifest.includes("id:"), "manifest id");
 const sw = read("public/sw.js");
-assert(sw.includes('CACHE = "botbuy-v3"'), "SW cache bumped to botbuy-v3");
+assert(sw.includes('CACHE = "botbuy-v4"'), "SW cache bumped to botbuy-v4");
+assert(sw.includes('pathname.startsWith("/_next/")'), "SW does not intercept Next chunks");
 assert(sw.includes('"/home"') && sw.includes('"/start"') && sw.includes('"/offline"'), "SW precaches app shell routes");
 assert(sw.includes("skipWaiting") && sw.includes("clients.claim"), "SW install/activate claim");
 assert(existsSync(join(root, "app/offline/page.tsx")), "offline shell page");

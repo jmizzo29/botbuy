@@ -1,4 +1,4 @@
-const CACHE = "botbuy-v3";
+const CACHE = "botbuy-v4";
 const OFFLINE = "/offline";
 const PRECACHE = [
   "/",
@@ -42,6 +42,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith("/api/")) return;
+  if (url.pathname.startsWith("/_next/")) return;
 
   event.respondWith(
     fetch(event.request)
