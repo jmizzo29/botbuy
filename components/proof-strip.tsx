@@ -11,18 +11,18 @@ export function ProofStrip({ compact = false }: { compact?: boolean }) {
     <Card className="px-5 py-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-muted">
             Public proof
           </p>
-          <p className="mt-1 text-sm text-zinc-300">
+          <p className="mt-1 text-sm text-foreground/80">
             {empty ? PROOF_EMPTY_COPY : "Live platform aggregates"}
           </p>
         </div>
-        {empty ? <ProofBadge /> : <span className="text-xs text-emerald-300">Live</span>}
+        {empty ? <ProofBadge /> : <span className="text-xs text-success">Live</span>}
       </div>
       {empty ? (
         compact ? null : (
-          <p className="mt-3 text-[11px] leading-relaxed text-zinc-600">
+          <p className="mt-3 text-[11px] leading-relaxed text-muted/80">
             {PROOF_EMPTY_MICRO}
           </p>
         )
@@ -46,7 +46,7 @@ export function ProofStrip({ compact = false }: { compact?: boolean }) {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+      <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
         {label}
       </p>
       <p className="money mt-1 text-xl font-medium">{value}</p>

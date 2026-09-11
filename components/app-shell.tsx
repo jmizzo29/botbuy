@@ -34,13 +34,13 @@ export function AppShell({
   const links = customerLinks;
 
   return (
-    <div className="min-h-dvh bg-[#09090b] text-stone-100">
+    <div className="min-h-dvh bg-background text-foreground">
       <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-white/8 px-4 py-6 md:flex md:flex-col">
         <Link href="/home" className="flex items-center gap-2.5 px-2">
           <Mark />
           <span className="text-[17px] font-semibold tracking-tight">BotBuy</span>
         </Link>
-        <p className="mt-2 px-2 text-[11px] leading-relaxed text-zinc-500">
+        <p className="mt-2 px-2 text-[11px] leading-relaxed text-muted">
           botbuyer.ai
         </p>
         <nav className="mt-8 flex flex-1 flex-col gap-1">
@@ -56,8 +56,8 @@ export function AppShell({
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors",
                   active
-                    ? "bg-white/8 text-white"
-                    : "text-zinc-400 hover:bg-white/4 hover:text-stone-100",
+                    ? "bg-accent/15 text-foreground"
+                    : "text-muted hover:bg-white/4 hover:text-foreground",
                 )}
               >
                 <link.icon className="h-4 w-4" />
@@ -68,7 +68,7 @@ export function AppShell({
         </nav>
         <div className="rounded-2xl bg-white/4 px-3 py-3">
           <p className="text-sm font-medium">{user.name}</p>
-          <p className="text-xs text-zinc-500">{user.company}</p>
+          <p className="text-xs text-muted">{user.company}</p>
           {isAdmin ? (
             <Link
               href="/admin"
@@ -81,17 +81,17 @@ export function AppShell({
       </aside>
 
       <div className="md:pl-60">
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/8 bg-[#09090b]/80 px-4 py-3 backdrop-blur md:hidden">
+        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/8 bg-background/80 px-4 py-3 backdrop-blur md:hidden">
           <Link href="/home" className="flex items-center gap-2">
             <Mark />
             <span className="font-semibold tracking-tight">BotBuy</span>
           </Link>
-          <span className="text-xs text-zinc-500">{user.name}</span>
+          <span className="text-xs text-muted">{user.name}</span>
         </header>
         <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6 md:px-8 md:pb-16 md:pt-10">
           {children}
         </main>
-        <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-6 border-t border-white/8 bg-[#09090b]/92 px-1 py-2 backdrop-blur md:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-6 border-t border-white/8 bg-background/92 px-1 py-2 backdrop-blur md:hidden">
           {customerLinks.map(
             (link) => {
               const active =
@@ -104,7 +104,7 @@ export function AppShell({
                   href={link.href}
                   className={cn(
                     "flex flex-col items-center gap-1 py-1 text-[10px]",
-                    active ? "text-white" : "text-zinc-500",
+                    active ? "text-foreground" : "text-muted",
                   )}
                 >
                   <link.icon className="h-4 w-4" />

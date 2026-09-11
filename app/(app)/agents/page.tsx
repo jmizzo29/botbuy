@@ -7,6 +7,7 @@ import {
   AGENT_SPEND_MICRO,
 } from "@/lib/agent-org";
 import { listAgentOrgs } from "@/lib/agent-runtime";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 export const metadata = {
   title: "Your agents",
@@ -18,7 +19,7 @@ export default function AgentsPage() {
   return (
     <div className="space-y-8">
       <header className="space-y-3">
-        <p className="rounded-full bg-amber-500/10 px-3 py-1 text-[11px] uppercase tracking-[0.14em] text-amber-200 ring-1 ring-amber-400/25 w-fit">
+        <p className={`rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.14em] ring-1 w-fit ${DEMO_PILL_CLASS}`}>
           {AGENT_DEMO_BANNER}
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">Your agents</h1>

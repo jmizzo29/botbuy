@@ -1,6 +1,7 @@
 import { DemoBadge } from "@/components/demo-badge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import { formatDateTime } from "@/lib/utils";
 import {
   formatCount,
@@ -13,7 +14,7 @@ import type { UsageDayRollup, UsageEvent, UsageTokensEst } from "@/lib/types";
 
 function EstimateBadge() {
   return (
-    <Badge className="bg-amber-500/10 text-amber-200 ring-amber-400/25">
+    <Badge className={DEMO_PILL_CLASS}>
       {USAGE_ESTIMATE_LABEL}
     </Badge>
   );

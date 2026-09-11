@@ -358,8 +358,8 @@ export default async function AdminPage() {
 
 function DemoStub({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-xl border border-dashed border-amber-400/30 bg-amber-500/[0.05] px-4 py-3">
-      <p className="text-[11px] uppercase tracking-[0.14em] text-amber-200/85">
+    <div className="rounded-xl border border-dashed border-demo/30 bg-demo/[0.05] px-4 py-3">
+      <p className="text-[11px] uppercase tracking-[0.14em] text-demo">
         Demo stub
       </p>
       <p className="mt-2 text-sm leading-relaxed text-zinc-400">{children}</p>

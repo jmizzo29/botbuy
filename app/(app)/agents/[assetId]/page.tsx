@@ -8,6 +8,7 @@ import {
   AGENT_SPEND_MICRO,
 } from "@/lib/agent-org";
 import { getAgentOrg } from "@/lib/agent-runtime";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 export async function generateMetadata({
   params,
@@ -34,7 +35,7 @@ export default async function AgentAssetPage({
         <Link href="/agents" className="text-xs text-zinc-500 hover:text-zinc-300">
           ← Your agents
         </Link>
-        <p className="mt-3 rounded-full bg-amber-500/10 px-3 py-1 text-[11px] uppercase tracking-[0.14em] text-amber-200 ring-1 ring-amber-400/25 w-fit">
+        <p className={`mt-3 rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.14em] ring-1 w-fit ${DEMO_PILL_CLASS}`}>
           {AGENT_DEMO_BANNER}
         </p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">{org.title}</h1>

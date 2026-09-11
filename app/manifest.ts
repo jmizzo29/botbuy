@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { THEME_BG } from "@/lib/ui-tokens";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -8,8 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     scope: "/",
     display: "standalone",
-    background_color: "#09090b",
-    theme_color: "#09090b",
+    background_color: THEME_BG,
+    theme_color: THEME_BG,
     lang: "en",
     icons: [
       {
