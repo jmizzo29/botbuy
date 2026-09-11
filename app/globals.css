@@ -195,3 +195,85 @@ body {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.03em;
 }
+
+/* Quiet Capital legal/site prose — no teal marketing bars, no glow. */
+.bb-prose {
+  color: var(--bb-text);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.bb-prose > * + * {
+  margin-top: 1.15rem;
+}
+
+.bb-prose h2 {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+
+.bb-prose h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.bb-prose h3 {
+  margin-top: 1.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.bb-prose ul {
+  padding-left: 1.2rem;
+  list-style: disc;
+}
+
+.bb-prose li + li {
+  margin-top: 0.4rem;
+}
+
+.bb-prose a {
+  color: var(--bb-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.bb-prose a:hover {
+  color: var(--bb-text);
+}
+
+.bb-prose strong {
+  font-weight: 600;
+}
+
+.bb-prose hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.bb-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.bb-prose th,
+.bb-prose td {
+  padding: 0.55rem 0.7rem 0.55rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.bb-prose th {
+  color: var(--bb-muted);
+  font-weight: 500;
+}
