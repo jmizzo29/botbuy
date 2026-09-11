@@ -18,6 +18,7 @@ const land = read("app/page.tsx");
 const signup = read("app/signup/page.tsx");
 const proof = read("components/proof-strip.tsx");
 const proofLib = read("lib/proof.ts");
+const dealUi = read("lib/deal-ui.ts");
 const chrome = read("components/public-chrome.tsx");
 const home = read("app/(app)/home/page.tsx");
 const agents = read("app/(app)/agents/page.tsx");
@@ -171,7 +172,11 @@ assert(dealDetail.includes("DealApproveActions"), "deal detail Approve/Reject");
 assert(dealDetail.includes("auto-approve OFF"), "deal detail auto-approve OFF");
 const demoNeedsYou = read("lib/demo-needs-you.ts");
 assert(demoNeedsYou.includes('status: "Needs you"'), "demo Needs you fixture status");
+assert(demoNeedsYou.includes("DEMO_NEEDS_YOU_LISTED_USD = 420"), "demo Needs you listed $420");
+assert(demoNeedsYou.includes("countsTowardCfoMoney"), "demo fixture opted out of CFO money");
+assert(dealUi.includes("isDemoQaFixture(deal)"), "public proof excludes demo QA fixture");
 assert(store.includes("ensureDemoNeedsYou") || store.includes("DEMO_NEEDS_YOU"), "store seeds Needs you demo");
+assert(store.includes(".filter(countsTowardCfoMoney)"), "store money helpers skip demo fixture");
 assert(approveUi.includes("APPROVE_LABEL") && approveUi.includes("REJECT_LABEL"), "Needs you ships Approve and Reject");
 assert(approveUi.includes("APPROVE_MICRO"), "approve micro on Needs you actions");
 assert(!approveUi.includes("{compact ? null"), "compact does not hide Reject");
@@ -200,6 +205,10 @@ assert(admin.includes("No $ / user") || usageUi.includes("No $ / user"), "admin 
 assert(!usageUi.includes("formatUsd") && !/\$\d/.test(usageUi), "usage UI invents no $ amounts");
 
 assert(finance.includes("const customerGmvUsd = 0"), "customer GMV locked at 0");
+assert(finance.includes("EXPECTED_IMPORTED_PENDING_USD = 416.68"), "CFO pending lock $416.68");
+assert(finance.includes("FORBIDDEN_DEMO_INFLATED_PENDING_USD = 836.68"), "CFO forbids demo-inflated $836.68");
+assert(finance.includes("countsTowardCfoMoney"), "CFO rollup excludes demo QA fixture");
+assert(store.includes("countsTowardCfoMoney"), "listed/verified spend exclude demo QA fixture");
 assert(admin.includes("botbuyer.ai $179.96"), "admin verified $179.96");
 assert(admin.includes("GMV empty until platform Closed deals"), "admin GMV empty copy");
 
@@ -257,6 +266,7 @@ assert(xfer?.price_verified === false, "xfer not price_verified");
 assert(xfer?.amount_status === "imported_unverified", "xfer imported_unverified");
 assert(Number(xfer?.price_usd) === 11.68, "xfer listed $11.68 stays unverified");
 assert(ledger.cfo?.verified_startup_spend_usd === 179.96, "CFO verified burn $179.96 only");
+assert(ledger.cfo?.pending_verify_usd === 416.68, "CFO pending $416.68 Savedfast+xfer once");
 
 const LAND_META =
   "Set spend, intent, and a payment method. BotBuy executes what you approve.";
