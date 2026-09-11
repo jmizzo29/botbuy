@@ -411,7 +411,7 @@ assert(startGate.includes("hasPublicSession"), "start checks signed-in");
 assert(startGate.includes("redirect(MY_DEALS_HREF)") || startGate.includes('redirect("/home")'), "signed-in start → My deals");
 assert(startGate.includes('redirect("/")'), "unsigned start → land");
 const pwa = read("components/pwa-register.tsx");
-assert(pwa.includes('register("/sw.js")'), "PWA registers /sw.js");
+assert(pwa.includes('register("/sw.js"'), "PWA registers /sw.js");
 assert(pwa.includes("InstallHint"), "discreet A2HS hint mounted");
 const a2hs = read("components/install-hint.tsx");
 const techlux = read("lib/cpo-techlux.ts");
@@ -450,6 +450,7 @@ assert(designerMocks.includes("Approve sheet"), "designer SoT locks Approve shee
 assert(designerMocks.includes("Add to Home Screen"), "designer SoT locks A2HS");
 const approveSheet = read("components/approve-sheet.tsx");
 assert(approveSheet.includes("data-surface=\"approve-sheet\""), "Approve sheet surface");
+assert(approveSheet.includes("createPortal"), "Approve sheet portals above A2HS");
 assert(approveSheet.includes("APPROVE_SHEET_TITLE"), "Approve sheet title lock");
 assert(approveSheet.includes("APPROVE_LABEL") && approveSheet.includes("REJECT_LABEL"), "Approve sheet has Approve + Reject");
 assert(approveUi.includes("ApproveSheet"), "Needs you opens Approve sheet on phone");

@@ -1,5 +1,6 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import {
   APPROVE_LABEL,
@@ -27,7 +28,7 @@ export function ApproveSheet({
   onReject: () => void;
   onClose: () => void;
 }) {
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 md:hidden" data-surface="approve-sheet">
       <button
         type="button"
@@ -77,6 +78,7 @@ export function ApproveSheet({
         </div>
         {error ? <p className="mt-3 text-sm text-demo">{error}</p> : null}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
