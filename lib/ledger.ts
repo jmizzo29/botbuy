@@ -173,9 +173,9 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
       {
         id: "ev_savedfast_gate",
         stage: "gate",
-        title: "Needs you",
+        title: "Historical note",
         detail:
-          "WordPress wp-login/wp-admin still LiteSpeed 403 remains an operational note. Personal Closed does not mark Escrow received or Escrow complete.",
+          "WordPress LiteSpeed 403 was recorded during close. Cleared as an open blocker — personal Closed with escrow seller-proceeds-processing. Not an open Needs-you gate.",
         at: "2026-09-11T14:06:00Z",
         status: "done",
       },
@@ -337,6 +337,11 @@ function assertJohnLedger(deals: Deal[]) {
   }
   if (isVerifiedAmount(savedfast) || isPublicProofEligible(savedfast)) {
     throw new Error("deal_savedfast $405 must stay imported_unverified and out of GMV/proof.");
+  }
+  if (savedfast.blockers.length > 0) {
+    throw new Error(
+      "deal_savedfast personal Closed must not keep open Needs-you blockers.",
+    );
   }
   if (xfer.parentDealId !== "deal_savedfast" || xfer.status !== "Closed") {
     throw new Error("transfer fee must be personal Closed and parented to deal_savedfast.");
