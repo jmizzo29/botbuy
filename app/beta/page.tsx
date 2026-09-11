@@ -13,6 +13,14 @@ export const metadata = {
 
 export default function BetaPage() {
   const blocks = loadLegalBlocks("beta", SITE_PAGE_CHROME.beta);
+  const hasOperator = Boolean(
+    blocks?.some(
+      (block) =>
+        (block.type === "p" || block.type === "h2" || block.type === "h3") &&
+        block.text.includes("Build Star Labs") &&
+        block.text.includes("Florida"),
+    ),
+  );
   return (
     <PublicChrome>
       <SitePageShell
@@ -22,6 +30,12 @@ export default function BetaPage() {
         {blocks ? (
           <>
             <MarkdownProse blocks={blocks} />
+            {hasOperator ? null : (
+              <p className="mt-8 text-sm leading-relaxed">
+                <strong>Operator:</strong> Build Star Labs (Florida). BotBuy is
+                offered on botbuyer.ai.
+              </p>
+            )}
             <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-3">
               <Button asChild>
                 <Link href={SITE_BETA_CTA.runHref}>{SITE_BETA_CTA.run}</Link>

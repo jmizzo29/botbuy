@@ -1,5 +1,7 @@
 /**
  * CPO vault SoT. Soft-signal HOLD — never claim rails live.
+ * Vault (brand) = linked payment methods / spend-through / pay-at-purchase.
+ * NOT custodial stored-value, omnibus float, or a BotBuy-held balance.
  * Available = can make vault-ready. Coming does not unlock Run.
  * Stripe/Link is one card path, not the only story.
  */
@@ -17,28 +19,32 @@ export const VAULT_FUND_IN_RAILS: VaultRail[] = [
   {
     id: "card",
     label: "Card",
-    detail: "One card path may use Stripe/Link. Not the only vault story.",
+    detail:
+      "Link a card for pay-at-purchase. One path may use Stripe/Link. Not the only method story.",
     badge: "Available",
     live: false,
   },
   {
     id: "bank",
     label: "Bank",
-    detail: "ACH and wire. All bank accounts.",
+    detail:
+      "ACH and wire as linked methods when the rail is built. Not a BotBuy deposit balance.",
     badge: "Coming",
     live: false,
   },
   {
     id: "x_money",
     label: "X Money / cash",
-    detail: "Twitter/X Money and cash rails on X when available.",
+    detail:
+      "Twitter/X Money as a linked pay-at-purchase method on X when available.",
     badge: "Coming",
     live: false,
   },
   {
     id: "bitcoin",
     label: "Bitcoin",
-    detail: "BTC fund-in when the rail is built and CHO-cleared.",
+    detail:
+      "BTC as a linked pay-at-purchase method when the rail is built and CHO-cleared.",
     badge: "Coming",
     live: false,
   },
@@ -47,7 +53,13 @@ export const VAULT_FUND_IN_RAILS: VaultRail[] = [
 export const VAULT_HOLD_NOTE =
   "HOLD until each rail is built and CHO-cleared. Available is not live.";
 
-export const VAULT_H1 = "Fund your vault";
+export const VAULT_H1 = "Add a payment method";
+
+export const VAULT_SUB =
+  "Link how BotBuy pays when you approve a deal. We don’t hold a balance.";
+
+export const VAULT_TRUST =
+  "Pay at purchase from your linked method. Hard spend limit still applies ($1,000 gate for now).";
 
 export function isVaultReady(rails = VAULT_FUND_IN_RAILS) {
   return rails.some((rail) => rail.badge === "Available");

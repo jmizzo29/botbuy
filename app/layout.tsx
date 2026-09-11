@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { PwaRegister } from "@/components/pwa-register";
+import { LAND_META_LINE } from "@/lib/brand";
 import { THEME_BG } from "@/lib/ui-tokens";
 import "./globals.css";
 
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     default: "BotBuy",
     template: "%s · BotBuy",
   },
-  description: "Set spend, intent, and vault. BotBuy does the rest.",
+  description: LAND_META_LINE,
   applicationName: "BotBuy",
   metadataBase: new URL("https://botbuyer.ai"),
   appleWebApp: {
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "BotBuy",
-    description: "Set spend, intent, and vault. BotBuy does the rest.",
+    description: LAND_META_LINE,
     url: "https://botbuyer.ai",
     siteName: "BotBuy",
     images: [
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "BotBuy",
-    description: "Set spend, intent, and vault. BotBuy does the rest.",
+    description: LAND_META_LINE,
     images: ["https://botbuyer.ai/brand/og-1200x630.png"],
   },
 };

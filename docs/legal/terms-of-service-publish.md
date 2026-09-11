@@ -36,8 +36,10 @@ If you do not agree, do not use BotBuy.
 BotBuy is a **spend-gated AI buy-agent** experience. In plain language, you may:
 
 - set a **spend limit** and purchase **intent**;
-- connect or reference a **payment vault** (processor-tokenized methods where available);
+- link **payment methods** for pay-at-purchase (the product “vault” is a brand name for linked methods — not a BotBuy-held balance);
 - have the agent help **search**, present, and (after approval) support **purchase/close** workflows **within your limits**.
+
+**Executor of human-approved actions.** BotBuy is an **executor of human-approved actions**, not an autonomous spender. The designated account holder approves each deal before spend. **Auto-approve is OFF.** Fail-closed: BotBuy executes only what you approve.
 
 **Approval design (current truth):** Every deal needs **designated account holder** approval (**your designated account holder**). **Auto-approve is OFF.** BotBuy is not designed to spend without that approval.
 
@@ -62,8 +64,8 @@ We may require human gates such as captcha, 2FA, bank gates, and KYC **when requ
 ## 4. Spend limits and deal approval
 
 - A **hard spend gate** applies (product design includes a gate such as **$1,000**; exact configured limits may vary by account/settings).
-- **BotBuy does not spend without account-holder approval of the deal.** Auto-approve remains **OFF** under current design.
-- By approving a deal, **you authorize** use of your selected payment method **only** within that approved deal and your applicable spend limit.
+- **BotBuy does not spend without account-holder approval of the deal.** Auto-approve remains **OFF** under current design. Fail-closed.
+- By approving a deal, **you authorize** use of your selected payment method **only** within that approved deal and your applicable spend limit. This is spend-through / pay-at-purchase — not a draw from a BotBuy-held balance.
 - Circumventing spend gates, approval flows, or security controls is prohibited (see Acceptable use).
 
 You remain responsible for reviewing deal terms, amounts, merchants, and any licenses/titles **before** you approve.
@@ -80,14 +82,20 @@ You remain responsible for reviewing deal terms, amounts, merchants, and any lic
 
 **Your responsibilities.** You remain responsible for:
 
-- funding and maintaining valid payment methods;
+- maintaining valid linked payment methods;
 - charges on approved deals;
 - chargebacks, disputes, and processor rules;
 - taxes where applicable.
 
 **Escrow / complete verification:** Rules are **TBD — not live**. These Terms **do not** claim Escrow is operational, and BotBuy does **not** claim to be your escrow agent by virtue of this draft.
 
-**Money-transmission / stored-value / MSB:**  
+---
+
+## No custodial balances (product lock)
+
+BotBuy does not hold customer stored-value balances or custodial wallet float. Vault is for linking payment methods and paying at purchase (spend-through) via payment partners — not a BotBuy account balance you preload and we hold.
+
+BotBuy is not a custodial stored-value wallet, omnibus float, or “BotBuy wallet balance.” These Terms do **not** claim money-transmitter or MSB status.
 
 ---
 
