@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { DealBadges } from "@/components/deal-badges";
 import { DealAmount } from "@/components/money";
 import { StatusPill } from "@/components/status-pill";
+import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
 import { formatDate } from "@/lib/utils";
 import type { Deal } from "@/lib/types";
 
@@ -26,6 +28,7 @@ export function DealCard({ deal }: { deal: Deal }) {
               {deal.title}
             </h3>
             <StatusPill status={deal.status} />
+            <DealBadges deal={deal} />
           </div>
           <p className="mt-1 text-sm text-zinc-400">
             {deal.marketplace} · {deal.category} · {currentStage(deal)}
@@ -33,15 +36,22 @@ export function DealCard({ deal }: { deal: Deal }) {
         </div>
         <DealAmount deal={deal} className="shrink-0" />
       </div>
+      {deal.blockers.length ? (
+        <ul className="mt-3 list-disc space-y-1 pl-4 text-xs text-amber-200/90">
+          {deal.blockers.map((blocker) => (
+            <li key={blocker}>{blocker}</li>
+          ))}
+        </ul>
+      ) : null}
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-500">
         <span>Opened {formatDate(deal.openedAt)}</span>
         {deal.closedAt ? <span>Closed {formatDate(deal.closedAt)}</span> : null}
         {deal.receipt ? <span>Order {deal.receipt.order_id}</span> : null}
         {deal.escrow ? <span>Escrow {deal.escrow.transaction_id}</span> : null}
-        {deal.source === "imported" ? (
-          <span>Imported · not agent-executed</span>
-        ) : null}
       </div>
+      {isImported(deal) ? (
+        <p className="mt-2 text-xs text-zinc-500">{HISTORY_MICRO}</p>
+      ) : null}
     </Link>
   );
 }

@@ -137,8 +137,8 @@ export default function AdminPage() {
           />
           <MetricTile
             label="$ under management"
-            value={formatUsd(metrics.dealsOps.underManagementUsd)}
-            hint={`Listed unverified · verified closed ${formatUsd(metrics.dealsOps.closedUsd)}`}
+            value="Imported · amount unverified"
+            hint="Seed listed amounts are not verified spend"
           />
           <MetricTile
             label="Success rate"

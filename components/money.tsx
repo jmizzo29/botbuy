@@ -1,7 +1,9 @@
-import { formatUsd } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { amountCopy, isVerifiedAmount } from "@/lib/deal-ui";
+import { formatUsd } from "@/lib/money";
 import type { Deal } from "@/lib/types";
 
+/** CHO: unverified amounts never render as confident $. */
 export function DealAmount({
   deal,
   className,
@@ -9,7 +11,7 @@ export function DealAmount({
   deal: Deal;
   className?: string;
 }) {
-  if (deal.priceVerified && deal.amountStatus === "verified") {
+  if (isVerifiedAmount(deal)) {
     return (
       <span className={cn("money inline-flex items-baseline", className)}>
         {formatUsd(deal.priceUsd)}
@@ -17,17 +19,14 @@ export function DealAmount({
     );
   }
 
-  const label =
-    deal.amountStatus === "pending_verify"
-      ? "Pending verify"
-      : "Imported · unverified";
-
   return (
-    <span className={cn("inline-flex flex-col items-end text-right", className)}>
-      <span className="text-sm font-medium text-amber-200">{label}</span>
-      <span className="mt-0.5 text-[11px] text-zinc-500">
-        listed {formatUsd(deal.priceUsd)} · not verified spend
-      </span>
+    <span
+      className={cn(
+        "text-sm font-medium text-amber-200 text-right",
+        className,
+      )}
+    >
+      {amountCopy(deal)}
     </span>
   );
 }

@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { DealBadges } from "@/components/deal-badges";
 import { DealAmount } from "@/components/money";
 import { StatusControls } from "@/components/status-controls";
 import { StatusPill } from "@/components/status-pill";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
 import { getDeal, listDealEvents } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
-import { formatUsd } from "@/lib/money";
 import type { DealEvent } from "@/lib/types";
 
 export async function generateMetadata({
@@ -42,37 +42,36 @@ export default async function DealDetailPage({
                 {deal.title}
               </h1>
               <StatusPill status={deal.status} />
+              <DealBadges deal={deal} />
             </div>
             <p className="mt-2 text-sm text-zinc-400">
               {deal.marketplace} · {deal.category}
               {deal.parentDealId ? (
                 <>
                   {" "}
-                  · child of{" "}
+                  ·{" "}
                   <Link
                     href={`/deals/${deal.parentDealId}`}
                     className="text-accent underline-offset-2 hover:underline"
                   >
-                    {deal.parentDealId}
+                    Savedfast
                   </Link>
                 </>
               ) : null}
             </p>
+            {isImported(deal) ? (
+              <p className="mt-2 text-sm text-zinc-500">{HISTORY_MICRO}</p>
+            ) : null}
           </div>
           <DealAmount deal={deal} />
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <Badge className="bg-white/5 text-zinc-300 ring-white/10">
-          source {deal.source}
-        </Badge>
-        <Badge className="bg-white/5 text-zinc-300 ring-white/10">
-          {deal.agentExecuted ? "agent executed" : "not agent-executed"}
-        </Badge>
-        <Badge className="bg-white/5 text-zinc-300 ring-white/10">
-          {deal.priceVerified ? "price verified" : deal.amountStatus}
-        </Badge>
+      <div className="flex flex-wrap gap-2 text-xs text-zinc-500">
+        <span>source={deal.source}</span>
+        <span>agent_executed={String(deal.agentExecuted)}</span>
+        <span>amount_status={deal.amountStatus}</span>
+        <span>price_verified={String(deal.priceVerified)}</span>
       </div>
 
       {deal.blockers.length ? (
@@ -201,10 +200,7 @@ export default async function DealDetailPage({
             <CardContent className="space-y-2 text-sm text-zinc-300">
               <Row label="Registrar" value={deal.domainTransfer.registrar} />
               <Row label="Order" value={deal.domainTransfer.order_id} />
-              <Row
-                label="Fee"
-                value={`${formatUsd(deal.domainTransfer.amount_usd)} listed · not verified spend`}
-              />
+              <Row label="Fee" value="Imported · amount unverified" />
               <Row label="Status" value={deal.domainTransfer.status} />
             </CardContent>
           </Card>

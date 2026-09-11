@@ -36,11 +36,13 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 
 Seeded from [`data/john-deal-ledger.json`](data/john-deal-ledger.json) on bootstrap.
 
-| id | status | amount UI | notes |
+| id | status | $ UI | labels |
 | --- | --- | --- | --- |
-| `deal_botbuyer_ai` | Closed | Pending verify — listed $179.96 is **not** verified spend | Namecheap 213804743 · `skipped_reason=imported_ledger` |
-| `deal_savedfast` | Closing | Imported · unverified | Flippa / Escrow · WP LiteSpeed 403 blockers · Closed blocked |
-| `deal_namecheap_savedfast_xfer` | Closing | Imported · unverified | parent `deal_savedfast` · $11.68 listed |
+| `deal_botbuyer_ai` | Closed | **Amount pending verify** | Imported · Board purchase · not agent-run |
+| `deal_savedfast` | Closing | **Imported · amount unverified** | Imported · blockers visible |
+| `deal_namecheap_savedfast_xfer` | Closing | **Imported · amount unverified** | Imported · parent → Savedfast |
+
+Detail microcopy on imported rows: `Added from your history. BotBuy didn’t execute this purchase.`
 
 Every imported row persists `source: "imported"`, `agent_executed: false`, plus `price_verified` and `amount_status` from JSON.
 

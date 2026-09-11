@@ -81,7 +81,8 @@ export default function VaultPage() {
                 {formatUsd(remaining)} remaining
               </p>
               <p className="mt-1 text-xs text-amber-200/80">
-                Listed imported (not spend): {formatUsd(listed)}
+                Imported listed amounts are unverified — not spend
+                {listed > 0 ? " (hidden until price_verified)" : ""}.
               </p>
             </div>
             <p className="text-xs text-zinc-500">Fail-closed · auto-approve OFF</p>

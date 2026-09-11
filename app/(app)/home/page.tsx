@@ -39,7 +39,7 @@ export default function HomePage() {
           value={String(closed.length)}
           hint={
             unverified.some((deal) => deal.status === "Closed")
-              ? "Amount pending verify — not verified spend"
+              ? "Amount pending verify"
               : "Verified close"
           }
         />

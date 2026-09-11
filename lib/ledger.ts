@@ -78,7 +78,7 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         stage: "purchase",
         title: "Purchase",
         detail:
-          "Namecheap order 213804743 · listed $179.96 (pending verify) · account johnmitchellbsl.",
+          "Namecheap order 213804743 · amount pending verify · account johnmitchellbsl.",
         at: "2026-09-11T14:24:00Z",
         status: "done",
       },
@@ -116,7 +116,7 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         id: "ev_savedfast_purchase",
         stage: "purchase",
         title: "Purchase",
-        detail: "Escrow.com 13190302 funded at listed $405 (imported · unverified).",
+        detail: "Escrow.com 13190302 · imported · amount unverified.",
         at: "2026-09-08T16:00:00Z",
         status: "done",
       },
@@ -148,7 +148,7 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         stage: "purchase",
         title: "Purchase",
         detail:
-          "Namecheap order 213803826 · txn 259699130 · 1 year inbound transfer · listed $11.68.",
+          "Namecheap order 213803826 · txn 259699130 · 1 year inbound transfer · imported · amount unverified.",
         at: "2026-09-11T14:06:00Z",
         status: "done",
       },

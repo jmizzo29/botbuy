@@ -14,7 +14,7 @@ export default function LandPage() {
     <PublicChrome>
       <div className="space-y-10 pt-10 md:pt-16">
         <p className="text-[11px] uppercase tracking-[0.18em] text-zinc-500">
-          {BRAND.origin}
+          {BRAND.origin} · {BRAND.registration}
         </p>
         <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-pretty sm:text-6xl">
           {BRAND.hero}

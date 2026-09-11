@@ -22,7 +22,7 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
       </header>
       <main className="mx-auto w-full max-w-5xl px-4 pb-20 md:px-8">{children}</main>
       <footer className="mx-auto w-full max-w-5xl px-4 pb-10 text-xs text-zinc-600 md:px-8">
-        {BRAND.origin} · App not announced live · DNS attach later · No paid Stripe
+        {BRAND.origin} · {BRAND.registration} · App not announced live · DNS later · No paid Stripe
       </footer>
     </div>
   );
