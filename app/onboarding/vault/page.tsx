@@ -16,8 +16,8 @@ export default function OnboardingVaultPage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">{VAULT_H1}</h1>
         <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-          Card is Available. Bank, X Money / cash, and Bitcoin are Coming.
-          Coming alone does not unlock Run.
+          Card is Available ≠ live. Bank, X Money / cash, and Bitcoin are
+          Coming. Coming alone does not unlock Run.
         </p>
       </header>
       <Card>

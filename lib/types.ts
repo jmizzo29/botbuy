@@ -228,8 +228,11 @@ export interface AdminMetrics {
     source: MetricSource;
     live: boolean;
     startupCostsUsd: number;
+    startupCostsPendingUsd: number;
     domainsInfraUsd: number;
+    domainsInfraPendingUsd: number;
     customerGmvUsd: number;
+    customerGmvPendingUsd: number;
     seedCashOutUsd: number;
     burnMonthlyUsd: number | null;
     runwayMonths: number | null;

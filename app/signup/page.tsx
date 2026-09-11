@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { persistSignupAction } from "@/app/signup/actions";
 import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +22,7 @@ export default function SignupPage() {
             {BRAND.signupLine}
           </h1>
         </div>
-        <form action="/onboarding/intent" className="grid gap-4">
+        <form action={persistSignupAction} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -35,8 +36,9 @@ export default function SignupPage() {
           <Button type="submit">Continue</Button>
         </form>
         <p className="text-xs leading-relaxed text-zinc-500">
-          POC session continues as John / Build Star Labs. No paid Stripe.
-          Vault later. {BRAND.origin} is not announced live.
+          POC persist · in-memory session · not a live account. Email is stored
+          on this demo isolate only. Continues as John / Build Star Labs. No
+          paid Stripe. {BRAND.origin} is not announced live.
         </p>
         <Link href="/" className="text-xs text-zinc-500 hover:text-zinc-300">
           ← Land

@@ -28,7 +28,7 @@ export function VaultRails() {
                 {rail.detail}
               </p>
             </div>
-            <RailBadge badge={rail.badge} />
+            <RailBadge badge={rail.badge} live={rail.live} />
           </li>
         ))}
       </ul>
@@ -50,7 +50,13 @@ export function VaultRails() {
   );
 }
 
-function RailBadge({ badge }: { badge: "Available" | "Coming" }) {
+function RailBadge({
+  badge,
+  live,
+}: {
+  badge: "Available" | "Coming";
+  live: false;
+}) {
   return (
     <Badge
       className={
@@ -59,7 +65,7 @@ function RailBadge({ badge }: { badge: "Available" | "Coming" }) {
           : "bg-zinc-500/10 text-zinc-400 ring-zinc-500/20"
       }
     >
-      {badge}
+      {badge === "Available" && !live ? "Available ≠ live" : badge}
     </Badge>
   );
 }

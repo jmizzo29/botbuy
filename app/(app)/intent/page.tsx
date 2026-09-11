@@ -17,6 +17,9 @@ export default function IntentPage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Intent</h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
+          <Badge className="mr-2 bg-sky-500/10 text-sky-200 ring-sky-400/25">
+            PLAN
+          </Badge>
           All software products across all channels. Pluggable marketplace
           adapters — not a merchant allowlist. Domains are OK. Not domains-only.
         </p>

@@ -112,7 +112,8 @@ export default function AdminPage() {
           <div>
             <CardTitle>Finance</CardTitle>
             <p className="mt-1 text-sm text-zinc-400">
-              CFO widgets. Seeded known costs — Demo until Stripe is live.
+              CFO widgets. Verified vs Pending/Imported split — Demo until
+              Stripe is live.
             </p>
           </div>
           <DemoBadge />
@@ -120,9 +121,14 @@ export default function AdminPage() {
         <CardContent className="space-y-5">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <FinanceTile
-              label="Startup costs"
+              label="Startup costs (verified)"
               value={formatUsd(finance.startupCostsUsd)}
-              hint="Imported ledger total"
+              hint="CHO verified only · botbuyer.ai $179.96"
+            />
+            <FinanceTile
+              label="Imported / pending"
+              value={formatUsd(finance.startupCostsPendingUsd)}
+              hint="Savedfast + xfer · not burn · not GMV"
             />
             <FinanceTile
               label="Burn"
@@ -137,14 +143,14 @@ export default function AdminPage() {
               empty
             />
             <FinanceTile
-              label="Domains / infra"
+              label="Domains / infra (verified)"
               value={formatUsd(finance.domainsInfraUsd)}
-              hint="Seeded known costs · no assumed paid infra budget"
+              hint="Verified domain only · excludes unverified $11.68 xfer"
             />
             <FinanceTile
-              label="Customer GMV under management"
+              label="Customer GMV (verified)"
               value={formatUsd(finance.customerGmvUsd)}
-              hint="Customer #1 seeded deals · not public proof"
+              hint="Verified only · not public proof"
             />
           </div>
           <ul className="divide-y divide-white/6 text-sm">

@@ -79,6 +79,14 @@ const vaultRefs: VaultRef[] = [
   },
 ];
 
+export interface SignupSession {
+  email: string;
+  createdAt: string;
+  poc: true;
+}
+
+let signupSession: SignupSession | null = null;
+
 const auditLogs: AuditLog[] = [
   {
     id: "aud_import_botbuyer",
@@ -146,6 +154,118 @@ const auditLogs: AuditLog[] = [
     createdAt: "2026-09-04T18:00:00Z",
   },
 ];
+
+export function persistSignup(email: string): SignupSession {
+  const trimmed = email.trim();
+  signupSession = {
+    email: trimmed,
+    createdAt: new Date().toISOString(),
+    poc: true,
+  };
+  auditLogs.unshift({
+    id: `aud_${crypto.randomUUID().slice(0, 8)}`,
+    userId: DEMO_USER.id,
+    action: "signup.persisted",
+    entityType: "signup",
+    entityId: DEMO_USER.id,
+    metadata: { email: trimmed, poc: true, theater: false },
+    createdAt: signupSession.createdAt,
+  });
+  return signupSession;
+}
+
+export function getSignupSession(): SignupSession | null {
+  return signupSession;
+}
+
+export function createSearchingDealFromRun(): Deal {
+  const intent = listIntents()[0];
+  const signup = getSignupSession();
+  const now = new Date().toISOString();
+  const id = `deal_run_${crypto.randomUUID().slice(0, 8)}`;
+  const title = intent?.summary?.slice(0, 80) || "First BotBuy search";
+  const category = intent?.categories[0] ?? "software";
+  const deal: Deal = {
+    id,
+    userId: DEMO_USER.id,
+    title,
+    category,
+    marketplace: "any_channel",
+    status: "Searching",
+    priceUsd: 0,
+    currency: "USD",
+    openedAt: now,
+    closedAt: null,
+    parentDealId: null,
+    receipt: null,
+    escrow: null,
+    domainTransfer: null,
+    blockers: [],
+    notes:
+      "Opened from go-live Run. Search stub · not a live agent purchase. HOLD.",
+    source: "engine",
+    agentExecuted: false,
+    priceVerified: false,
+    amountVerified: false,
+    amountStatus: "pending_verify",
+    evidencePath: null,
+    verification: {
+      passed: false,
+      skipped_reason: null,
+      artifacts: [],
+      receipt_refs: {},
+    },
+    timeline: [
+      {
+        id: `ev_${id}_search`,
+        stage: "search",
+        title: "Searching",
+        detail: intent
+          ? `PLAN intent: ${intent.summary}`
+          : "Opened from Run. Searching within spend limit.",
+        at: now,
+        status: "active",
+      },
+    ],
+  };
+  deals.unshift(deal);
+  appendDealEvent({
+    dealId: id,
+    type: "status",
+    title: "Deal opened",
+    detail: `Go-live Run created Searching deal${signup ? ` · ${signup.email}` : ""}.`,
+    at: now,
+    status: "done",
+    actor: "engine",
+    fromStatus: null,
+    toStatus: "Searching",
+  });
+  appendDealEvent({
+    dealId: id,
+    type: "search",
+    stage: "search",
+    title: "Searching",
+    detail: deal.timeline[0]?.detail ?? "Searching",
+    at: now,
+    status: "active",
+    actor: "engine",
+    toStatus: "Searching",
+  });
+  auditLogs.unshift({
+    id: `aud_${crypto.randomUUID().slice(0, 8)}`,
+    userId: DEMO_USER.id,
+    action: "deal.opened_from_run",
+    entityType: "deal",
+    entityId: id,
+    metadata: {
+      status: "Searching",
+      intentId: intent?.id ?? null,
+      email: signup?.email ?? null,
+    },
+    createdAt: now,
+  });
+  return deal;
+}
 
 export function listDirectoryUsers(): User[] {
   return [DEMO_USER];

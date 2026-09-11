@@ -16,9 +16,14 @@ export function isVerifiedAmount(
 }
 
 export function amountCopy(
-  deal: Pick<Deal, "id" | "priceVerified" | "amountStatus">,
+  deal: Pick<Deal, "id" | "priceVerified" | "amountStatus" | "source" | "status">,
 ) {
   if (isVerifiedAmount(deal)) return null;
+  if (deal.source !== "imported") {
+    return deal.status === "Searching"
+      ? "Searching · no price yet"
+      : "Amount pending verify";
+  }
   return "Imported · amount unverified";
 }
 
