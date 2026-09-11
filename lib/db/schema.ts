@@ -48,6 +48,12 @@ export const deals = pgTable("deals", {
   agentExecuted: boolean("agent_executed").notNull().default(false),
   priceVerified: boolean("price_verified").notNull().default(false),
   amountStatus: text("amount_status").notNull().default("imported_unverified"),
+  verification: jsonb("verification").$type<{
+    passed: boolean;
+    skipped_reason?: "imported_ledger" | null;
+    artifacts: string[];
+    receipt_refs: Record<string, string>;
+  }>(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -84,6 +90,7 @@ export const spendLimits = pgTable("spend_limits", {
     precision: 12,
     scale: 2,
   }).notNull(),
+  autoApprove: boolean("auto_approve").notNull().default(false),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -143,4 +150,29 @@ export const agentEvents = pgTable("agent_events", {
   detail: text("detail").notNull(),
   at: timestamp("at", { withTimezone: true }).notNull(),
   status: text("status").notNull(),
+});
+
+/** Append-only. Never update or delete rows. */
+export const dealEvents = pgTable("deal_events", {
+  id: text("id").primaryKey(),
+  dealId: text("deal_id")
+    .notNull()
+    .references(() => deals.id),
+  type: text("type").notNull(),
+  stage: text("stage"),
+  title: text("title").notNull(),
+  detail: text("detail").notNull(),
+  at: timestamp("at", { withTimezone: true }).notNull(),
+  status: text("status").notNull(),
+  fromStatus: text("from_status"),
+  toStatus: text("to_status"),
+});
+
+export const proofSnapshots = pgTable("proof_snapshots", {
+  id: text("id").primaryKey(),
+  verifiedAt: timestamp("verified_at", { withTimezone: true }),
+  closedVolumeUsd: numeric("closed_volume_usd", { precision: 12, scale: 2 }),
+  successRate: numeric("success_rate", { precision: 8, scale: 4 }),
+  activeBuyers: integer("active_buyers"),
+  note: text("note"),
 });

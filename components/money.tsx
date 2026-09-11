@@ -1,24 +1,33 @@
 import { formatUsd } from "@/lib/money";
 import { cn } from "@/lib/utils";
-import type { AmountStatus } from "@/lib/types";
+import type { Deal } from "@/lib/types";
 
-export function Money({
-  amount,
-  status,
+export function DealAmount({
+  deal,
   className,
 }: {
-  amount: number;
-  status?: AmountStatus;
+  deal: Deal;
   className?: string;
 }) {
+  if (deal.priceVerified && deal.amountStatus === "verified") {
+    return (
+      <span className={cn("money inline-flex items-baseline", className)}>
+        {formatUsd(deal.priceUsd)}
+      </span>
+    );
+  }
+
+  const label =
+    deal.amountStatus === "pending_verify"
+      ? "Pending verify"
+      : "Imported · unverified";
+
   return (
-    <span className={cn("money inline-flex items-baseline gap-2", className)}>
-      <span>{formatUsd(amount)}</span>
-      {status && status !== "verified" ? (
-        <span className="text-[11px] font-medium tracking-normal text-amber-200/80">
-          {status === "pending_verify" ? "pending verify" : "imported · unverified"}
-        </span>
-      ) : null}
+    <span className={cn("inline-flex flex-col items-end text-right", className)}>
+      <span className="text-sm font-medium text-amber-200">{label}</span>
+      <span className="mt-0.5 text-[11px] text-zinc-500">
+        listed {formatUsd(deal.priceUsd)} · not verified spend
+      </span>
     </span>
   );
 }

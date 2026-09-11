@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Money } from "@/components/money";
+import { DealAmount } from "@/components/money";
+import { StatusControls } from "@/components/status-controls";
 import { StatusPill } from "@/components/status-pill";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getDeal } from "@/lib/store";
+import { getDeal, listDealEvents } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
 import { formatUsd } from "@/lib/money";
-import type { AgentEvent } from "@/lib/types";
+import type { DealEvent } from "@/lib/types";
 
 export async function generateMetadata({
   params,
@@ -58,11 +59,7 @@ export default async function DealDetailPage({
               ) : null}
             </p>
           </div>
-          <Money
-            amount={deal.priceUsd}
-            status={deal.amountStatus}
-            className="text-2xl font-medium"
-          />
+          <DealAmount deal={deal} />
         </div>
       </div>
 
@@ -95,19 +92,58 @@ export default async function DealDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Agent work</CardTitle>
+          <CardTitle>Verification</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 text-sm text-zinc-300">
+          <Row
+            label="Passed"
+            value={deal.verification.passed ? "true" : "false"}
+          />
+          <Row
+            label="Skip"
+            value={deal.verification.skipped_reason ?? "—"}
+          />
+          <Row
+            label="Receipt refs"
+            value={
+              Object.keys(deal.verification.receipt_refs).length
+                ? Object.entries(deal.verification.receipt_refs)
+                    .map(([key, value]) => `${key} ${value}`)
+                    .join(" · ")
+                : "—"
+            }
+          />
+          <p className="text-xs text-zinc-500">
+            Closing→Closed requires verification.passed for agent-run deals.
+            Imported Closed may skip the engine with skipped_reason=imported_ledger.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Status engine</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <StatusControls deal={deal} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>deal_events</CardTitle>
           <p className="mt-1 text-sm text-zinc-400">
-            Search, diligence, purchase, gates, close — reconstructed from the
-            imported ledger.
+            Append-only. Search, diligence, purchase, gates, close — not just
+            receipts.
           </p>
         </CardHeader>
         <CardContent>
           <ol className="space-y-0">
-            {deal.timeline.map((event, index) => (
+            {listDealEvents(deal.id).map((event, index, all) => (
               <TimelineItem
                 key={event.id}
                 event={event}
-                last={index === deal.timeline.length - 1}
+                last={index === all.length - 1}
               />
             ))}
           </ol>
@@ -167,7 +203,7 @@ export default async function DealDetailPage({
               <Row label="Order" value={deal.domainTransfer.order_id} />
               <Row
                 label="Fee"
-                value={formatUsd(deal.domainTransfer.amount_usd)}
+                value={`${formatUsd(deal.domainTransfer.amount_usd)} listed · not verified spend`}
               />
               <Row label="Status" value={deal.domainTransfer.status} />
             </CardContent>
@@ -204,7 +240,7 @@ function TimelineItem({
   event,
   last,
 }: {
-  event: AgentEvent;
+  event: DealEvent;
   last: boolean;
 }) {
   const tone =
@@ -224,7 +260,8 @@ function TimelineItem({
       </div>
       <div className="pb-6">
         <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
-          {event.stage} · {formatDateTime(event.at)}
+          {event.type}
+          {event.stage ? ` · ${event.stage}` : ""} · {formatDateTime(event.at)}
         </p>
         <p className="mt-1 text-sm font-medium">{event.title}</p>
         <p className="mt-1 text-sm leading-relaxed text-zinc-400">

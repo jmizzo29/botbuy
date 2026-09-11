@@ -1,3 +1,4 @@
+/** FROZEN exact chips. Do not rename. */
 export const DEAL_STATUSES = [
   "Searching",
   "Found",
@@ -62,6 +63,36 @@ export interface AgentEvent {
   status: AgentEventStatus;
 }
 
+export type DealEventType =
+  | "import"
+  | "status"
+  | "search"
+  | "diligence"
+  | "purchase"
+  | "gate"
+  | "close"
+  | "note";
+
+export interface DealEvent {
+  id: string;
+  dealId: string;
+  type: DealEventType;
+  stage?: AgentStage;
+  title: string;
+  detail: string;
+  at: string;
+  status: AgentEventStatus;
+  fromStatus?: DealStatus | null;
+  toStatus?: DealStatus | null;
+}
+
+export interface DealVerification {
+  passed: boolean;
+  skipped_reason?: "imported_ledger" | null;
+  artifacts: string[];
+  receipt_refs: Record<string, string>;
+}
+
 export interface Deal {
   id: string;
   userId: string;
@@ -83,7 +114,16 @@ export interface Deal {
   agentExecuted: boolean;
   priceVerified: boolean;
   amountStatus: AmountStatus;
+  verification: DealVerification;
   timeline: AgentEvent[];
+}
+
+export interface ProofStats {
+  verified_at: string | null;
+  closedVolumeUsd: number | null;
+  successRate: number | null;
+  activeBuyers: number | null;
+  message: string | null;
 }
 
 export interface Intent {
@@ -102,6 +142,7 @@ export interface SpendLimits {
   weeklyLimitUsd: number;
   monthlyLimitUsd: number;
   perDealLimitUsd: number;
+  autoApprove: boolean;
   updatedAt: string;
 }
 

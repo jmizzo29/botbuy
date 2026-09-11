@@ -69,6 +69,9 @@ export function LimitsForm({ limits }: { limits: SpendLimits }) {
           </div>
         ))}
       </div>
+      <p className="text-xs text-zinc-500">
+        Auto-approve OFF (locked). Fail-closed. Proposed defaults — not GTM facts.
+      </p>
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={pending}>
           {pending ? "Saving…" : "Update limits"}

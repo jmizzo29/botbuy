@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import type { User } from "@/lib/types";
 
 const customerLinks = [
-  { href: "/", label: "Home", icon: Home },
+  { href: "/home", label: "Home", icon: Home },
   { href: "/deals", label: "Deals", icon: Layers3 },
   { href: "/intent", label: "Intent", icon: Target },
   { href: "/vault", label: "Vault", icon: Lock },
@@ -37,18 +37,18 @@ export function AppShell({
   return (
     <div className="min-h-dvh bg-[#09090b] text-stone-100">
       <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-white/8 px-4 py-6 md:flex md:flex-col">
-        <Link href="/" className="flex items-center gap-2.5 px-2">
+        <Link href="/home" className="flex items-center gap-2.5 px-2">
           <Mark />
           <span className="text-[17px] font-semibold tracking-tight">BotBuy</span>
         </Link>
         <p className="mt-2 px-2 text-[11px] leading-relaxed text-zinc-500">
-          Set spend. Set intent. Vault it.
+          botbuyer.ai
         </p>
         <nav className="mt-8 flex flex-1 flex-col gap-1">
           {links.map((link) => {
             const active =
-              link.href === "/"
-                ? pathname === "/"
+              link.href === "/home"
+                ? pathname === "/home"
                 : pathname.startsWith(link.href);
             return (
               <Link
@@ -80,7 +80,7 @@ export function AppShell({
 
       <div className="md:pl-60">
         <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/8 bg-[#09090b]/80 px-4 py-3 backdrop-blur md:hidden">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/home" className="flex items-center gap-2">
             <Mark />
             <span className="font-semibold tracking-tight">BotBuy</span>
           </Link>
@@ -106,8 +106,8 @@ export function AppShell({
           {customerLinks.map(
             (link) => {
               const active =
-                link.href === "/"
-                  ? pathname === "/"
+                link.href === "/home"
+                  ? pathname === "/home"
                   : pathname.startsWith(link.href);
               return (
                 <Link

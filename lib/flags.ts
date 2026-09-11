@@ -11,6 +11,6 @@ export const flags = {
 };
 
 export const CHO_PROOF_POLICY =
-  "Only CHO-verified aggregates on the public proof strip. Personal history may show imported deals with source=imported.";
+  "CHO-gated only. verified_at null → Proof coming when deals close. source=imported rows never enter public proof. Personal My deals ≠ public proof.";
 
 export const STUB_METRICS_BADGE = "Demo / stub metrics — not live";

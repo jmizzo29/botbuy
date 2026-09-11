@@ -1,8 +1,20 @@
-import { loadLedgerDeals } from "@/lib/ledger";
+import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
 import { DEMO_USER } from "@/lib/auth";
-import type { AuditLog, Deal, Intent, SpendLimits, VaultRef } from "@/lib/types";
+import { SPEND_DEFAULTS } from "@/lib/spend-policy";
+import { assertTransition, TransitionError } from "@/lib/status-engine";
+import type {
+  AuditLog,
+  Deal,
+  DealEvent,
+  DealStatus,
+  Intent,
+  SpendLimits,
+  VaultRef,
+} from "@/lib/types";
 
 const deals = loadLedgerDeals();
+
+const dealEvents: DealEvent[] = deals.flatMap((deal) => seedDealEvents(deal));
 
 const intents: Intent[] = [
   {
@@ -27,10 +39,11 @@ const intents: Intent[] = [
 
 let spendLimits: SpendLimits = {
   userId: DEMO_USER.id,
-  dailyLimitUsd: 500,
-  weeklyLimitUsd: 750,
-  monthlyLimitUsd: 2000,
-  perDealLimitUsd: 500,
+  dailyLimitUsd: SPEND_DEFAULTS.dailyLimitUsd,
+  weeklyLimitUsd: SPEND_DEFAULTS.weeklyLimitUsd,
+  monthlyLimitUsd: SPEND_DEFAULTS.monthlyLimitUsd,
+  perDealLimitUsd: SPEND_DEFAULTS.perDealLimitUsd,
+  autoApprove: SPEND_DEFAULTS.autoApprove,
   updatedAt: "2026-09-04T18:00:00Z",
 };
 
@@ -38,7 +51,7 @@ const vaultRefs: VaultRef[] = [
   {
     id: "vault_bsl_primary",
     userId: DEMO_USER.id,
-    provider: "stripe_setup_placeholder",
+    provider: "vault_stub",
     vaultRef: "tok_vault_bsl_7f3a91c2",
     last4: "4242",
     brand: "Visa",
@@ -59,6 +72,8 @@ const auditLogs: AuditLog[] = [
       source: "john-deal-ledger.json",
       order_id: "213804743",
       amount_status: "pending_verify",
+      price_verified: false,
+      skipped_reason: "imported_ledger",
     },
     createdAt: "2026-09-11T14:28:00Z",
   },
@@ -72,6 +87,7 @@ const auditLogs: AuditLog[] = [
       source: "john-deal-ledger.json",
       escrow_id: "13190302",
       amount_status: "imported_unverified",
+      price_verified: false,
     },
     createdAt: "2026-09-11T14:28:00Z",
   },
@@ -85,6 +101,7 @@ const auditLogs: AuditLog[] = [
       source: "john-deal-ledger.json",
       order_id: "213803826",
       parent_deal_id: "deal_savedfast",
+      price_verified: false,
     },
     createdAt: "2026-09-11T14:28:00Z",
   },
@@ -95,8 +112,10 @@ const auditLogs: AuditLog[] = [
     entityType: "spend_limits",
     entityId: DEMO_USER.id,
     metadata: {
-      monthlyLimitUsd: 2000,
-      perDealLimitUsd: 500,
+      monthlyLimitUsd: SPEND_DEFAULTS.monthlyLimitUsd,
+      dailyLimitUsd: SPEND_DEFAULTS.dailyLimitUsd,
+      autoApprove: false,
+      note: "proposed defaults — not GTM facts",
     },
     createdAt: "2026-09-04T18:00:00Z",
   },
@@ -111,6 +130,63 @@ export function listDeals(userId = DEMO_USER.id): Deal[] {
 
 export function getDeal(id: string, userId = DEMO_USER.id): Deal | undefined {
   return deals.find((deal) => deal.id === id && deal.userId === userId);
+}
+
+export function appendDealEvent(
+  event: Omit<DealEvent, "id"> & { id?: string },
+): DealEvent {
+  const row: DealEvent = {
+    ...event,
+    id: event.id ?? `evt_${crypto.randomUUID()}`,
+  };
+  dealEvents.push(row);
+  return row;
+}
+
+export function listDealEvents(dealId: string): DealEvent[] {
+  return dealEvents
+    .filter((event) => event.dealId === dealId)
+    .slice()
+    .sort((a, b) => +new Date(a.at) - +new Date(b.at));
+}
+
+export function transitionDeal(id: string, to: DealStatus): Deal {
+  const deal = getDeal(id);
+  if (!deal) {
+    throw new TransitionError("Deal not found");
+  }
+  const check = assertTransition(deal, to);
+  if (!check.ok) {
+    throw new TransitionError(check.reason);
+  }
+  const from = deal.status;
+  deal.status = to;
+  if (to === "Closed") {
+    deal.closedAt = new Date().toISOString();
+  }
+  const at = new Date().toISOString();
+  appendDealEvent({
+    dealId: deal.id,
+    type: "status",
+    title: `Status ${from} → ${to}`,
+    detail: `Append-only deal_events. Engine accepted ${from} → ${to}.`,
+    at,
+    status: "done",
+    fromStatus: from,
+    toStatus: to,
+  });
+  deal.timeline = [
+    ...deal.timeline,
+    {
+      id: `ev_${deal.id}_${Date.now()}`,
+      stage: to === "Closed" ? "close" : "gate",
+      title: to,
+      detail: `Status ${from} → ${to}`,
+      at,
+      status: "done",
+    },
+  ];
+  return deal;
 }
 
 export function listIntents(userId = DEMO_USER.id): Intent[] {
@@ -160,6 +236,7 @@ export function updateSpendLimits(
     ...spendLimits,
     ...patch,
     userId: DEMO_USER.id,
+    autoApprove: false,
     updatedAt: new Date().toISOString(),
   };
   auditLogs.unshift({
@@ -173,6 +250,7 @@ export function updateSpendLimits(
       weeklyLimitUsd: spendLimits.weeklyLimitUsd,
       monthlyLimitUsd: spendLimits.monthlyLimitUsd,
       perDealLimitUsd: spendLimits.perDealLimitUsd,
+      autoApprove: false,
     },
     createdAt: spendLimits.updatedAt,
   });
@@ -190,6 +268,27 @@ export function listAuditLogs(userId = DEMO_USER.id): AuditLog[] {
     .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
 }
 
+export function isVerifiedSpend(deal: Deal) {
+  return deal.priceVerified && deal.amountStatus === "verified";
+}
+
+export function verifiedSpendUsd(userId = DEMO_USER.id): number {
+  return listDeals(userId)
+    .filter(isVerifiedSpend)
+    .reduce((sum, deal) => sum + deal.priceUsd, 0);
+}
+
+export function listedUnverifiedUsd(userId = DEMO_USER.id): number {
+  return listDeals(userId)
+    .filter((deal) => !isVerifiedSpend(deal))
+    .reduce((sum, deal) => sum + deal.priceUsd, 0);
+}
+
+/** @deprecated unverified listed amounts are not spend */
 export function spendInFlight(userId = DEMO_USER.id): number {
-  return listDeals(userId).reduce((sum, deal) => sum + deal.priceUsd, 0);
+  return verifiedSpendUsd(userId);
+}
+
+export function autoApproveAllowed() {
+  return false;
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Money } from "@/components/money";
+import { DealAmount } from "@/components/money";
 import { StatusPill } from "@/components/status-pill";
 import { formatDate } from "@/lib/utils";
 import type { Deal } from "@/lib/types";
@@ -31,18 +31,16 @@ export function DealCard({ deal }: { deal: Deal }) {
             {deal.marketplace} · {deal.category} · {currentStage(deal)}
           </p>
         </div>
-        <Money
-          amount={deal.priceUsd}
-          status={deal.amountStatus}
-          className="shrink-0 text-[15px]"
-        />
+        <DealAmount deal={deal} className="shrink-0" />
       </div>
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-500">
         <span>Opened {formatDate(deal.openedAt)}</span>
         {deal.closedAt ? <span>Closed {formatDate(deal.closedAt)}</span> : null}
         {deal.receipt ? <span>Order {deal.receipt.order_id}</span> : null}
         {deal.escrow ? <span>Escrow {deal.escrow.transaction_id}</span> : null}
-        {!deal.agentExecuted ? <span>Imported · not agent-executed</span> : null}
+        {deal.source === "imported" ? (
+          <span>Imported · not agent-executed</span>
+        ) : null}
       </div>
     </Link>
   );

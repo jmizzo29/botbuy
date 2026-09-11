@@ -20,9 +20,7 @@ export const metadata: Metadata = {
   },
   description: "Set spend, intent, and vault. BotBuy does the rest.",
   applicationName: "BotBuy",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
-  ),
+  metadataBase: new URL("https://botbuyer.ai"),
   appleWebApp: {
     capable: true,
     title: "BotBuy",

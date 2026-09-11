@@ -1,6 +1,8 @@
 const CACHE = "botbuy-v1";
 const PRECACHE = [
   "/",
+  "/home",
+  "/signup",
   "/deals",
   "/intent",
   "/vault",

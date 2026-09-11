@@ -2,7 +2,13 @@ import { LimitsForm } from "@/components/limits-form";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatUsd } from "@/lib/money";
-import { getSpendLimits, listVaultRefs, spendInFlight } from "@/lib/store";
+import { SPEND_POLICY_LABEL } from "@/lib/spend-policy";
+import {
+  getSpendLimits,
+  listVaultRefs,
+  listedUnverifiedUsd,
+  verifiedSpendUsd,
+} from "@/lib/store";
 
 export const metadata = {
   title: "Vault & limits",
@@ -11,7 +17,8 @@ export const metadata = {
 export default function VaultPage() {
   const refs = listVaultRefs();
   const limits = getSpendLimits();
-  const spent = spendInFlight();
+  const spent = verifiedSpendUsd();
+  const listed = listedUnverifiedUsd();
   const remaining = Math.max(limits.monthlyLimitUsd - spent, 0);
   const usedPct = Math.min(100, (spent / limits.monthlyLimitUsd) * 100);
 
@@ -20,8 +27,8 @@ export default function VaultPage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Vault & limits</h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-          BotBuy never sees or logs a card number. Only a vault reference and
-          last four digits live here.
+          BotBuy never sees or logs a card number. No paid Stripe or Issuing.
+          Vault refs and last four only.
         </p>
       </header>
 
@@ -70,11 +77,14 @@ export default function VaultPage() {
             <div>
               <p className="money text-3xl font-medium">{formatUsd(spent)}</p>
               <p className="mt-1 text-sm text-zinc-500">
-                of {formatUsd(limits.monthlyLimitUsd)} monthly ·{" "}
+                verified of {formatUsd(limits.monthlyLimitUsd)} monthly ·{" "}
                 {formatUsd(remaining)} remaining
               </p>
+              <p className="mt-1 text-xs text-amber-200/80">
+                Listed imported (not spend): {formatUsd(listed)}
+              </p>
             </div>
-            <p className="text-xs text-zinc-500">From imported ledger totals</p>
+            <p className="text-xs text-zinc-500">Fail-closed · auto-approve OFF</p>
           </div>
           <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/8">
             <div
@@ -89,8 +99,7 @@ export default function VaultPage() {
         <CardHeader>
           <CardTitle>Limits</CardTitle>
           <p className="mt-1 text-sm text-zinc-400">
-            Agent purchases stop at these ceilings. Per-deal cap is the hard
-            gate.
+            {SPEND_POLICY_LABEL}
           </p>
         </CardHeader>
         <CardContent>

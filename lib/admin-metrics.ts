@@ -1,5 +1,10 @@
 import { flags, STUB_METRICS_BADGE } from "@/lib/flags";
-import { listDeals, spendInFlight, getSpendLimits } from "@/lib/store";
+import {
+  listDeals,
+  listedUnverifiedUsd,
+  verifiedSpendUsd,
+  getSpendLimits,
+} from "@/lib/store";
 import { DEAL_STATUSES, type AdminMetrics, type DealStatus } from "@/lib/types";
 
 export function getAdminMetrics(): AdminMetrics {
@@ -19,7 +24,7 @@ export function getAdminMetrics(): AdminMetrics {
   const reconstructedEvents = deals.reduce(
     (sum, deal) => sum + deal.timeline.length,
     0,
-  );
+  ); // deal_events seeded 1:1 from timeline + import row
   const agentRunsExecuted = deals.filter((deal) => deal.agentExecuted).length;
   const limits = getSpendLimits();
 
@@ -66,11 +71,13 @@ export function getAdminMetrics(): AdminMetrics {
     dealsOps: {
       source: "imported_ledger",
       byStatus,
-      underManagementUsd: spendInFlight(),
-      closedUsd: closed.reduce((sum, deal) => sum + deal.priceUsd, 0),
+      underManagementUsd: listedUnverifiedUsd(),
+      closedUsd: closed
+        .filter((deal) => deal.priceVerified)
+        .reduce((sum, deal) => sum + deal.priceUsd, 0),
       successRate: deals.length ? closed.length / deals.length : null,
       dealCount: deals.length,
-      note: "From imported customer #1 ledger — not CHO-verified live aggregates.",
+      note: "Imported ledger ops only. Listed $ are unverified. Public proof ignores these rows.",
     },
     systemHealth: {
       source: "derived_seed",
@@ -78,7 +85,7 @@ export function getAdminMetrics(): AdminMetrics {
       reconstructedEvents,
       humanGateDeals: gated.length,
       humanGateItems: gated.reduce((sum, deal) => sum + deal.blockers.length, 0),
-      spendMonthUsd: spendInFlight(),
+      spendMonthUsd: verifiedSpendUsd(),
       monthlyLimitUsd: limits.monthlyLimitUsd,
       note: "Derived from seeded ledger and vault limits. Not live agent telemetry.",
     },

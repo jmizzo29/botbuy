@@ -138,7 +138,7 @@ export default function AdminPage() {
           <MetricTile
             label="$ under management"
             value={formatUsd(metrics.dealsOps.underManagementUsd)}
-            hint={`Closed ${formatUsd(metrics.dealsOps.closedUsd)}`}
+            hint={`Listed unverified · verified closed ${formatUsd(metrics.dealsOps.closedUsd)}`}
           />
           <MetricTile
             label="Success rate"
@@ -192,7 +192,7 @@ export default function AdminPage() {
           <MetricTile
             label="Spend vs limit"
             value={`${formatUsd(metrics.systemHealth.spendMonthUsd)} / ${formatUsd(metrics.systemHealth.monthlyLimitUsd)}`}
-            hint="Imported spend · seeded monthly cap"
+            hint="Verified spend only · imported listed amounts excluded"
           />
         </div>
       </AdminSection>

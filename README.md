@@ -1,49 +1,48 @@
 # BotBuy
 
-**botbuyer.ai** — set spend, intent, and vault. BotBuy does the rest.
+**https://botbuyer.ai** — set spend, intent, and vault. BotBuy does the rest.
+
+Canonical chrome is **botbuyer.ai only**. Never botbuy.ai or getbotbuy.com. The app is not announced live; DNS attaches later.
 
 POC dashboard + installable PWA. The buyer agent tracks search, diligence, purchase, gates, and close — not just receipts.
 
-## Product rules (CHO)
+## Product / eng locks (CTO)
 
-- Personal history is **real**: seeded from [`data/john-deal-ledger.json`](data/john-deal-ledger.json) (customer #1, John Mitchell / Build Star Labs).
-- Public home proof strip is **Demo / empty** until CHO-verified live aggregates. Never invent live metrics.
-- Admin (`/admin`) is owner-only. Traffic, users, and revenue stay **Demo / stub metrics — not live** until Plausible / Vercel Analytics and Stripe are connected. Dashes, not fake numbers.
-- Deals ops on Admin use the imported ledger and are badged **Imported ledger**.
-- Card PAN never enters the app, APIs, or audit log. Vault references and last4 only.
+- Status chips are frozen exact: Searching · Found · Buying · Needs you · Closing · Closed · Failed · Paused
+- Public ProofStrip is CHO-gated (`verified_at` null → “Proof coming when deals close”). Never invent metrics. Zeros only after CHO verifies. `source=imported` rows are excluded.
+- Personal **My deals** ≠ public proof.
+- No paid Stripe / Issuing. No card PAN. Vault refs + last4 only.
+- If `price_verified === false`, do not render `price_usd` as verified spend.
+- Illegal status transitions are rejected. `deal_events` is append-only.
+- Closing→Closed requires `verification.passed` for agent-run deals. Imported Closed may skip the engine at seed with `verification.skipped_reason=imported_ledger`.
+- Spend proposed defaults (not GTM facts): day $500 / month $2,000 / auto-approve OFF. Fail-closed.
 
-## Screens
+## Routes
 
-| Route | Who | What |
-| --- | --- | --- |
-| `/` | Customer | Home — hero, empty proof strip, John’s real deals |
-| `/deals` | Customer | List + status filter |
-| `/deals/[id]` | Customer | Timeline, receipts, escrow, human gates |
-| `/intent` | Customer | Buying intent |
-| `/vault` | Customer | Vault refs + spend limits |
-| `/settings` | Customer | Profile, security, audit log, PWA install |
-| `/admin` | Admin (owner) | Traffic, users, revenue, deals ops, system health |
+| Route | What |
+| --- | --- |
+| `/` | Land — H1 `Set spend. Set intent. Vault it. BotBuy buys.` + empty ProofStrip |
+| `/signup` | Signup one-liner |
+| `/onboarding/intent` | Set intent |
+| `/onboarding/spend` | Set spend |
+| `/onboarding/vault` | Vault stub (no Issuing) |
+| `/onboarding/go-live` | Recap → My deals |
+| `/home` | My deals (John’s personal history) |
+| `/deals` `/deals/[id]` | List + timeline / gates / status engine |
+| `/intent` `/vault` `/settings` | In-app |
+| `/admin` | Owner-only stubs |
 
-Status taxonomy: Searching · Found · Buying · Needs you · Closing · Closed · Failed · Paused.
+## Ledger (customer #1)
 
-POC session is John as **admin / owner**. Admin appears in desktop nav (and the mobile header). Customers do not see it.
+Seeded from [`data/john-deal-ledger.json`](data/john-deal-ledger.json) on bootstrap.
 
-Imported deals:
+| id | status | amount UI | notes |
+| --- | --- | --- | --- |
+| `deal_botbuyer_ai` | Closed | Pending verify — listed $179.96 is **not** verified spend | Namecheap 213804743 · `skipped_reason=imported_ledger` |
+| `deal_savedfast` | Closing | Imported · unverified | Flippa / Escrow · WP LiteSpeed 403 blockers · Closed blocked |
+| `deal_namecheap_savedfast_xfer` | Closing | Imported · unverified | parent `deal_savedfast` · $11.68 listed |
 
-- **botbuyer.ai** — Closed $179.96 (Namecheap order 213804743)
-- **Savedfast** — Closing $405 (Flippa / Escrow.com 13190302)
-- **savedfast.com transfer** — Closing $11.68 (Namecheap 213803826)
-
-## Stack
-
-- Next.js App Router + TypeScript
-- Tailwind CSS v4
-- shadcn-style UI (Radix + CVA)
-- PWA (`app/manifest.ts` + `public/sw.js`)
-- Drizzle schema, Neon-ready (`lib/db/schema.ts`)
-- API routes: `/api/deals`, `/api/intents`, `/api/spend`, `/api/vault`, `/api/audit`, `/api/admin/metrics`
-
-Without `DATABASE_URL` the app serves the ledger JSON plus an in-memory store (intents / limits reset on cold start).
+Every imported row persists `source: "imported"`, `agent_executed: false`, plus `price_verified` and `amount_status` from JSON.
 
 ## Local
 
@@ -53,36 +52,25 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
-
 ```bash
 npm run lint
 npm run build
 ```
 
-Neon (optional):
-
-```bash
-# set DATABASE_URL in .env.local
-npm run db:generate
-npm run db:push
-```
+Open `/` (empty proof), `/home` (3 personal deals), `/deals/deal_savedfast` (Needs you gates).
 
 ## Vercel
 
-1. Import `jmizzo29/botbuy`.
-2. Framework preset: Next.js. Build `next build`, output default.
-3. Env: copy `.env.example`. Leave live flags `false` until CHO / Stripe / analytics are real.
-4. Deploy. Confirm `/` shows John’s three deals and `/admin` is badged stub.
-5. **Custom domain later:** in Vercel → Project → Domains, add `botbuyer.ai` and `www.botbuyer.ai`. Point the registrar (Namecheap, order 213804743) to Vercel nameservers or an A/`CNAME` as Vercel instructs. Do not flip `NEXT_PUBLIC_PROOF_STRIP_LIVE` until CHO signs off.
-
-PWA: HTTPS (Vercel) + manifest + service worker. iOS: Share → Add to Home Screen. Chrome: Install app.
+1. Import `jmizzo29/botbuy`. Next.js preset.
+2. Leave live flags false. No Stripe keys required.
+3. Confirm land ProofStrip is empty and `/home` shows John’s three deals with CHO-safe amounts.
+4. **Custom domain later:** attach **https://botbuyer.ai** only (and www). Do not use other brand hosts.
 
 ## Security
 
-- No PAN, CVV, or full account numbers in UI, API payloads, or `audit_logs.metadata`.
-- `vault_refs.vault_ref` is a token. `last4` is display-only.
-- Admin metrics API returns 403 when the session is not admin.
+- No PAN, CVV, or Issuing in the app or audit log.
+- Admin metrics stay stub-badged. Public proof ignores imported rows.
+- `POST /api/deals/[id]/status` returns 409 on illegal or unverified close.
 
 ## License
 

@@ -3,7 +3,9 @@ import type {
   AgentEvent,
   AmountStatus,
   Deal,
+  DealEvent,
   DealStatus,
+  DealVerification,
 } from "@/lib/types";
 
 type RawDeal = (typeof ledgerJson.deals)[number];
@@ -21,6 +23,35 @@ function asStatus(value: string): DealStatus {
   ];
   if (allowed.includes(value as DealStatus)) return value as DealStatus;
   return "Paused";
+}
+
+function verificationFor(deal: RawDeal): DealVerification {
+  const receipt_refs: Record<string, string> = {};
+  if ("receipt" in deal && deal.receipt) {
+    receipt_refs.merchant = deal.receipt.merchant;
+    receipt_refs.order_id = deal.receipt.order_id;
+    if (deal.receipt.txn_id) receipt_refs.txn_id = deal.receipt.txn_id;
+  }
+  if ("escrow" in deal && deal.escrow) {
+    receipt_refs.escrow_provider = deal.escrow.provider;
+    receipt_refs.escrow_transaction_id = deal.escrow.transaction_id;
+  }
+
+  if (deal.status === "Closed" && deal.source === "imported") {
+    return {
+      passed: false,
+      skipped_reason: "imported_ledger",
+      artifacts: [],
+      receipt_refs,
+    };
+  }
+
+  return {
+    passed: false,
+    skipped_reason: null,
+    artifacts: [],
+    receipt_refs,
+  };
 }
 
 function timelineFor(deal: RawDeal): AgentEvent[] {
@@ -46,7 +77,8 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         id: "ev_botbuyer_purchase",
         stage: "purchase",
         title: "Purchase",
-        detail: "Namecheap order 213804743 · $179.96 · account johnmitchellbsl.",
+        detail:
+          "Namecheap order 213804743 · listed $179.96 (pending verify) · account johnmitchellbsl.",
         at: "2026-09-11T14:24:00Z",
         status: "done",
       },
@@ -54,7 +86,8 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         id: "ev_botbuyer_close",
         stage: "close",
         title: "Close",
-        detail: "Domain registered. Amount pending receipt verify (CHO).",
+        detail:
+          "Imported as Closed. verification.skipped_reason=imported_ledger. Amount is not verified spend.",
         at: "2026-09-11T14:26:00Z",
         status: "done",
       },
@@ -83,7 +116,7 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         id: "ev_savedfast_purchase",
         stage: "purchase",
         title: "Purchase",
-        detail: "Escrow.com 13190302 funded at $405.",
+        detail: "Escrow.com 13190302 funded at listed $405 (imported · unverified).",
         at: "2026-09-08T16:00:00Z",
         status: "done",
       },
@@ -100,7 +133,8 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         id: "ev_savedfast_close",
         stage: "close",
         title: "Closing",
-        detail: "Domain transfer / waiting WP + registrar transfer.",
+        detail:
+          "Domain transfer / waiting WP + registrar transfer. Closed is blocked until verification artifacts.",
         at: "2026-09-11T14:06:00Z",
         status: "active",
       },
@@ -113,7 +147,8 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         id: "ev_xfer_purchase",
         stage: "purchase",
         title: "Purchase",
-        detail: "Namecheap order 213803826 · txn 259699130 · 1 year inbound transfer · $11.68.",
+        detail:
+          "Namecheap order 213803826 · txn 259699130 · 1 year inbound transfer · listed $11.68.",
         at: "2026-09-11T14:06:00Z",
         status: "done",
       },
@@ -121,7 +156,8 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         id: "ev_xfer_close",
         stage: "close",
         title: "Closing",
-        detail: "Transfer In — will begin shortly. Tied to Savedfast acquisition.",
+        detail:
+          "Transfer In — will begin shortly. Parent deal_savedfast. Closed blocked until transfer complete.",
         at: "2026-09-11T14:06:00Z",
         status: "active",
       },
@@ -154,8 +190,39 @@ function mapDeal(deal: RawDeal): Deal {
     agentExecuted: deal.agent_executed,
     priceVerified: deal.price_verified,
     amountStatus: deal.amount_status as AmountStatus,
+    verification: verificationFor(deal),
     timeline: timelineFor(deal),
   };
+}
+
+export function seedDealEvents(deal: Deal): DealEvent[] {
+  const events: DealEvent[] = [
+    {
+      id: `evt_${deal.id}_import`,
+      dealId: deal.id,
+      type: "import",
+      title: "Imported ledger",
+      detail: `source=imported · agent_executed=${deal.agentExecuted} · amount_status=${deal.amountStatus}`,
+      at: deal.openedAt,
+      status: "done",
+      toStatus: deal.status,
+    },
+  ];
+
+  for (const item of deal.timeline) {
+    events.push({
+      id: item.id,
+      dealId: deal.id,
+      type: item.stage,
+      stage: item.stage,
+      title: item.title,
+      detail: item.detail,
+      at: item.at,
+      status: item.status,
+    });
+  }
+
+  return events;
 }
 
 export const ledgerMeta = {
@@ -166,7 +233,35 @@ export const ledgerMeta = {
 };
 
 export function loadLedgerDeals(): Deal[] {
-  return ledgerJson.deals.map(mapDeal);
+  const deals = ledgerJson.deals.map(mapDeal);
+  assertJohnLedger(deals);
+  return deals;
+}
+
+function assertJohnLedger(deals: Deal[]) {
+  const byId = Object.fromEntries(deals.map((deal) => [deal.id, deal]));
+  const botbuyer = byId.deal_botbuyer_ai;
+  const savedfast = byId.deal_savedfast;
+  const xfer = byId.deal_namecheap_savedfast_xfer;
+
+  if (!botbuyer || !savedfast || !xfer) {
+    throw new Error("John ledger missing required customer #1 deals.");
+  }
+  if (botbuyer.source !== "imported" || botbuyer.agentExecuted) {
+    throw new Error("deal_botbuyer_ai must be imported and not agent-executed.");
+  }
+  if (botbuyer.priceVerified || botbuyer.amountStatus !== "pending_verify") {
+    throw new Error("deal_botbuyer_ai amount must stay pending_verify.");
+  }
+  if (botbuyer.status !== "Closed") {
+    throw new Error("deal_botbuyer_ai status must be Closed.");
+  }
+  if (savedfast.status !== "Closing" || !savedfast.blockers.some((item) => item.includes("403"))) {
+    throw new Error("deal_savedfast must stay Closing with WP 403 blocker.");
+  }
+  if (xfer.parentDealId !== "deal_savedfast" || xfer.status !== "Closing") {
+    throw new Error("transfer fee must be Closing and parented to deal_savedfast.");
+  }
 }
 
 export function getLedgerDeal(id: string): Deal | undefined {

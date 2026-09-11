@@ -1,18 +1,26 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getSpendLimits, spendInFlight, updateSpendLimits } from "@/lib/store";
+import {
+  getSpendLimits,
+  listedUnverifiedUsd,
+  verifiedSpendUsd,
+  updateSpendLimits,
+} from "@/lib/store";
 
 const patchLimits = z.object({
   dailyLimitUsd: z.number().nonnegative().optional(),
   weeklyLimitUsd: z.number().nonnegative().optional(),
   monthlyLimitUsd: z.number().nonnegative().optional(),
   perDealLimitUsd: z.number().nonnegative().optional(),
+  autoApprove: z.literal(false).optional(),
 });
 
 export function GET() {
   return NextResponse.json({
     limits: getSpendLimits(),
-    spendInFlightUsd: spendInFlight(),
+    verifiedSpendUsd: verifiedSpendUsd(),
+    listedUnverifiedUsd: listedUnverifiedUsd(),
+    autoApprove: false,
   });
 }
 
