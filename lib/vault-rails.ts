@@ -59,7 +59,7 @@ export const VAULT_SUB =
   "Link how BotBuy pays when you approve a deal. We don’t hold a balance.";
 
 export const VAULT_TRUST =
-  "Pay at purchase from your linked method. Hard spend limit still applies ($1,000 gate for now).";
+  "Pay at purchase from your linked method. Your spend limit still applies.";
 
 export function isVaultReady(rails = VAULT_FUND_IN_RAILS) {
   return rails.some((rail) => rail.badge === "Available");

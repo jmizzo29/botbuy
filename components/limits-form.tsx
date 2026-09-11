@@ -36,7 +36,7 @@ export function LimitsForm({ limits }: { limits: SpendLimits }) {
       router.refresh();
       return;
     }
-    setError("Hard gate $1,000. Auto-approve stays OFF.");
+    setError("Stay within your spend limit. Auto-approve stays OFF.");
   }
 
   return (
@@ -55,7 +55,7 @@ export function LimitsForm({ limits }: { limits: SpendLimits }) {
         />
         <p className="text-xs text-zinc-500">
           Ceiling is ${SPEND_HARD_GATE_USD.toLocaleString("en-US")}. Cannot
-          raise above the hard gate.
+          raise above this limit.
         </p>
       </div>
       <p className="text-xs text-zinc-500">{SPEND_POLICY_LABEL}</p>

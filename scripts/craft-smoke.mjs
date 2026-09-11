@@ -134,6 +134,7 @@ for (const [name, src, needle] of primaryBlocks) {
 
 assert(brand.includes('trustLine: "Demo · every deal needs your approval"'), "CPO trust line without $1k");
 assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
+assert(!brand.includes("gate for now"), "land brand has no gate for now");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(land), "land has no $1,000 gate");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(signup), "signup has no $1,000 gate");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(chrome), "public chrome has no $1,000 gate");
@@ -193,6 +194,17 @@ assert(approveUi.includes("APPROVE_LABEL") && approveUi.includes("REJECT_LABEL")
 assert(approveUi.includes("APPROVE_MICRO"), "approve micro on Needs you actions");
 assert(!approveUi.includes("{compact ? null"), "compact does not hide Reject");
 assert(vaultLib.includes('VAULT_H1 = "Add a payment method"'), "vault H1 lock");
+assert(
+  vaultLib.includes(
+    "Pay at purchase from your linked method. Your spend limit still applies.",
+  ),
+  "vault trust per-user spend limit",
+);
+assert(!vaultLib.includes("$1,000 gate"), "vault rails have no $1,000 gate");
+assert(!vaultLib.includes("gate for now"), "vault rails have no gate for now");
+assert(!vaultLib.includes("1000 gate"), "vault rails have no 1000 gate");
+assert(!vaultPage.includes("Hard gate"), "vault page has no Hard gate label");
+assert(!vaultPage.includes("$1,000 gate"), "vault page has no $1,000 gate");
 assert(!vaultPage.includes("Fund your vault"), "vault page has no Fund your vault");
 assert(!vaultPage.toLowerCase().includes("balance"), "vault page has no balance");
 assert(vaultApi.includes("VAULT_H1"), "vault API uses VAULT_H1");
@@ -600,8 +612,27 @@ assert(termsSoT.includes("## No custodial balances (product lock)"), "terms no-c
 assert(termsSoT.includes("executor of human-approved actions"), "terms human-approved executor");
 assert(privacySoT.includes("does not hold custodial stored-value"), "privacy no-custody");
 const vaultRails = read("lib/vault-rails.ts");
+const spendPolicy = read("lib/spend-policy.ts");
+const agentOrg = read("lib/agent-org.ts");
+const limitsForm = read("components/limits-form.tsx");
 assert(vaultRails.includes('VAULT_H1 = "Add a payment method"'), "vault H1 lock");
 assert(vaultRails.includes("We don’t hold a balance."), "vault sub no-balance lock");
+assert(
+  spendPolicy.includes(
+    "Your spend limit applies. Every deal needs approval before spend. Auto-approve OFF. Fail-closed.",
+  ),
+  "spend-policy label is per-user, not a public $1,000 gate",
+);
+assert(!spendPolicy.includes("Spend-out ceiling $1,000"), "spend-policy label dropped public $1,000 ceiling");
+assert(
+  agentOrg.includes(
+    "Agents never bypass your approval. Your spend limit still applies to buys.",
+  ),
+  "agent spend micro is per-user spend limit",
+);
+assert(!agentOrg.includes("Purchase gate $1,000"), "agent spend micro has no Purchase gate $1,000");
+assert(!limitsForm.includes("Hard gate $1,000"), "limits form has no Hard gate $1,000");
+assert(!goLive.includes("Hard gate"), "go-live recap has no Hard gate label");
 assert(!vaultRails.includes("Fund your vault"), "vault rails dropped Fund your vault");
 assert(!read("app/(app)/vault/page.tsx").includes("Fund your vault"), "vault page dropped Fund your vault");
 assert(!read("app/api/vault/route.ts").includes("Fund your vault"), "vault API dropped Fund your vault");

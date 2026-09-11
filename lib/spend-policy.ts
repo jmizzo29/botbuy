@@ -15,7 +15,7 @@ export const SPEND_DEFAULTS = {
 };
 
 export const SPEND_POLICY_LABEL =
-  "Spend-out ceiling $1,000. Every deal needs approval before spend. Auto-approve OFF. Fail-closed.";
+  "Your spend limit applies. Every deal needs approval before spend. Auto-approve OFF. Fail-closed.";
 
 export const INFRA_POLICY_NOTE =
   "Infra is near-zero. No assumed paid infra budget.";
