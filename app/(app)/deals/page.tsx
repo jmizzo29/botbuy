@@ -26,7 +26,7 @@ export default async function DealsPage({
     <div className="space-y-6">
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Deals</h1>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
           Append-only deal_events on each detail. Imported rows are labeled;
           agent_executed=false. Unverified amounts stay soft copy.
         </p>
@@ -71,8 +71,8 @@ function FilterChip({
       href={href}
       className={
         active
-          ? "rounded-full bg-white/10 px-3 py-1 text-xs text-white"
-          : "rounded-full px-3 py-1 text-xs text-zinc-500 ring-1 ring-white/8 hover:text-zinc-200"
+          ? "rounded-full bg-primary/12 px-3 py-1 text-xs text-foreground"
+          : "rounded-full px-3 py-1 text-xs text-muted ring-1 ring-[var(--bb-line)] hover:text-foreground"
       }
     >
       {label}

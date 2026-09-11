@@ -6,9 +6,11 @@ export const BRAND = {
   name: "BotBuy",
   domain: "botbuyer.ai",
   origin: "https://botbuyer.ai",
+  /** Land H1 + meta — John LOCKED one-liner. Vault is logo/brand only. */
   signupLine: LAND_META_LINE,
-  hero: "Set spend. Set intent. Approve the buy.",
-  heroSub: LAND_META_LINE,
+  hero: LAND_META_LINE,
+  heroSub:
+    "The automated agent that searches, purchases, and closes — within your limit.",
   easeMicro: "Three inputs, zero babysitting.",
   channelMicro:
     "Any software, any channel. Domains optional. Cars & real estate later.",
@@ -20,7 +22,7 @@ export const BRAND = {
   registration: "registered (Namecheap, 2026-09-11)",
 } as const;
 
-/** Locked land How-it-works steps. CPO owns words — do not invent copy. */
+/** Locked land How-it-works steps. Vault stays logo/brand only on land. */
 export const HOW_IT_WORKS = {
   heading: "How it works",
   steps: [

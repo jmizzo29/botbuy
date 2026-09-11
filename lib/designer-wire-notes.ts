@@ -1,13 +1,13 @@
 /**
  * Designer wire notes — CPO lock. Soft-signal HOLD.
  * Primary CTA chrome is --bb-primary (#2DD4BF) fill + --bb-primary-fg (#042F2E).
- * Demo gold is --bb-demo (#E8B84A) — never the CTA fill.
- * Never white-on-black from the prior craft pack. Never blank white-on-white.
+ * Demo gold is --bb-demo (#B8860B) — never the CTA fill.
+ * G Techlux light (John LOCKED 2026-09-11) is the default shell.
+ * Never black #050A0C as the default page background.
  * Go-live primary label is exactly "Run BotBuy" (never bare "Run").
- * Quiet Capital (John greenlit 2026-09-11): craft/feel only. --bb-* hexes LOCKED.
- * Vault cards: .bb-vault-rail / .bb-vault-card.--c|--b|--a (Designer CSS spec).
- * Decorative only. No glow. No fake metrics. Not a public launch.
+ * Quiet Capital type rhythm stays. .bb-vault-rail / .bb-vault-card stay decorative CSS only.
  * Header/PWA use the Vault mark + wordmark from the brand kit — never letter-B.
+ * Not a public launch.
  */
 
 import { PALETTE } from "@/lib/palette";

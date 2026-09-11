@@ -1,16 +1,22 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { DealApproveActions } from "@/components/deal-approve-actions";
 import { DealBadges } from "@/components/deal-badges";
 import { DealAmount } from "@/components/money";
 import { StatusControls } from "@/components/status-controls";
 import { StatusPill } from "@/components/status-pill";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivateAgents } from "@/components/activate-agents";
 import { SearchingEmpty } from "@/components/empty-ctas";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
+import { APPROVE_MICRO, MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { getAgentOrg } from "@/lib/agent-runtime";
 import { PersistRunDeal } from "@/components/persist-run-deal";
 import { DealUsageSection } from "@/components/usage-meter";
+import { formatUsd } from "@/lib/money";
+import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import {
   ensureSearchingUsageStub,
   getDeal,
@@ -54,19 +60,23 @@ export default async function DealDetailPage({
     <div className="space-y-6">
       {deal.source === "engine" ? <PersistRunDeal dealId={deal.id} /> : null}
       <div>
-        <Link href="/deals" className="text-xs text-zinc-500 hover:text-zinc-300">
-          ← Deals
-        </Link>
+        <p className="text-xs text-muted">
+          <Link href={MY_DEALS_HREF} className="hover:text-foreground">
+            {MY_DEALS_LABEL}
+          </Link>
+          {" → Deal detail"}
+        </p>
         <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-3xl font-semibold tracking-tight">
-                {deal.title}
-              </h1>
+              <Badge className={DEMO_PILL_CLASS}>Demo</Badge>
               <StatusPill status={deal.status} />
               <DealBadges deal={deal} />
             </div>
-            <p className="mt-2 text-sm text-zinc-400">
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight">
+              {deal.title}
+            </h1>
+            <p className="mt-2 text-sm text-muted">
               {deal.marketplace} · {deal.category}
               {deal.parentDealId ? (
                 <>
@@ -82,14 +92,44 @@ export default async function DealDetailPage({
               ) : null}
             </p>
             {isImported(deal) ? (
-              <p className="mt-2 text-sm text-zinc-500">{HISTORY_MICRO}</p>
+              <p className="mt-2 text-sm text-muted">{HISTORY_MICRO}</p>
             ) : null}
           </div>
           <DealAmount deal={deal} withStatus />
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 text-xs text-zinc-500">
+      <Card>
+        <CardContent className="grid gap-6 pt-5 md:grid-cols-2">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
+              Spend
+            </p>
+            <p className="money mt-2 text-2xl font-medium tracking-tight">
+              <DealAmount deal={deal} />
+              <span className="text-base text-muted">
+                {" "}
+                / {formatUsd(SPEND_HARD_GATE_USD)}
+              </span>
+            </p>
+            <p className="mt-3 text-sm text-muted">{APPROVE_MICRO}</p>
+            <p className="mt-1 text-xs text-muted">Auto-approve OFF</p>
+            <div className="mt-5">
+              <DealApproveActions dealId={deal.id} status={deal.status} />
+            </div>
+          </div>
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
+              Intent
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+              {deal.notes}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex flex-wrap gap-2 text-xs text-muted">
         <span>source={deal.source}</span>
         <span>agent_executed={String(deal.agentExecuted)}</span>
         <span>amount_status={deal.amountStatus}</span>
@@ -106,7 +146,7 @@ export default async function DealDetailPage({
             <CardTitle>Human gates</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="list-disc space-y-2 pl-5 text-sm text-amber-100/90">
+            <ul className="list-disc space-y-2 pl-5 text-sm text-demo">
               {deal.blockers.map((blocker) => (
                 <li key={blocker}>{blocker}</li>
               ))}
@@ -129,11 +169,11 @@ export default async function DealDetailPage({
       <Card>
         <CardHeader>
           <CardTitle>Verification</CardTitle>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-muted">
             Module path stub. Fail-closed. Not a live verifier.
           </p>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm text-zinc-300">
+        <CardContent className="space-y-2 text-sm text-foreground/80">
           <Row label="Path" value="stub" />
           <Row
             label="Passed"
@@ -180,7 +220,7 @@ export default async function DealDetailPage({
       <Card>
         <CardHeader>
           <CardTitle>deal_events</CardTitle>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-muted">
             Append-only audit. Imported vs reconstructed (agent_executed=false)
             vs engine — not just receipts.
           </p>
@@ -204,7 +244,7 @@ export default async function DealDetailPage({
             <CardHeader>
               <CardTitle>Receipt</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-zinc-300">
+            <CardContent className="space-y-2 text-sm text-foreground/80">
               <Row label="Merchant" value={deal.receipt.merchant} />
               <Row label="Order" value={deal.receipt.order_id} />
               {deal.receipt.txn_id ? (
@@ -231,7 +271,7 @@ export default async function DealDetailPage({
             <CardHeader>
               <CardTitle>Escrow</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-zinc-300">
+            <CardContent className="space-y-2 text-sm text-foreground/80">
               <Row label="Provider" value={deal.escrow.provider} />
               <Row label="Transaction" value={deal.escrow.transaction_id} />
               {deal.escrow.flippa_listing ? (
@@ -249,7 +289,7 @@ export default async function DealDetailPage({
             <CardHeader>
               <CardTitle>Domain transfer</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-zinc-300">
+            <CardContent className="space-y-2 text-sm text-foreground/80">
               <Row label="Registrar" value={deal.domainTransfer.registrar} />
               <Row label="Order" value={deal.domainTransfer.order_id} />
               <Row label="Fee" value="Imported · amount unverified" />
@@ -263,8 +303,8 @@ export default async function DealDetailPage({
             <CardTitle>Notes</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm leading-relaxed text-zinc-300">{deal.notes}</p>
-            <p className="mt-3 text-xs text-zinc-500">
+            <p className="text-sm leading-relaxed text-foreground/80">{deal.notes}</p>
+            <p className="mt-3 text-xs text-muted">
               Opened {formatDateTime(deal.openedAt)}
               {deal.closedAt ? ` · Closed ${formatDateTime(deal.closedAt)}` : ""}
             </p>
@@ -278,7 +318,7 @@ export default async function DealDetailPage({
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between gap-4">
-      <span className="text-zinc-500">{label}</span>
+      <span className="text-muted">{label}</span>
       <span className="text-right">{value}</span>
     </div>
   );
@@ -304,10 +344,10 @@ function TimelineItem({
     <li className="flex gap-4">
       <div className="flex w-4 flex-col items-center">
         <span className={`mt-1 h-2.5 w-2.5 rounded-full ${tone}`} />
-        {!last ? <span className="mt-1 w-px flex-1 bg-white/10" /> : null}
+        {!last ? <span className="mt-1 w-px flex-1 bg-[var(--bb-line)]" /> : null}
       </div>
       <div className="pb-6">
-        <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+        <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
           {event.actor}
           {event.actor === "reconstructed" ? " · agent_executed=false" : ""}
           {" · "}
@@ -315,7 +355,7 @@ function TimelineItem({
           {event.stage ? ` · ${event.stage}` : ""} · {formatDateTime(event.at)}
         </p>
         <p className="mt-1 text-sm font-medium">{event.title}</p>
-        <p className="mt-1 text-sm leading-relaxed text-zinc-400">
+        <p className="mt-1 text-sm leading-relaxed text-muted">
           {event.detail}
         </p>
       </div>

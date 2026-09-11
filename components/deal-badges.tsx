@@ -10,7 +10,7 @@ export function DealBadges({ deal }: { deal: Deal }) {
   return (
     <span className="inline-flex flex-wrap items-center gap-1.5">
       {isImported(deal) ? (
-        <Badge className="bg-sky-500/10 text-sky-200 ring-sky-400/25">
+        <Badge className="bg-sky-500/10 text-sky-800 ring-sky-400/25">
           Imported
         </Badge>
       ) : null}

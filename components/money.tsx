@@ -36,7 +36,7 @@ export function DealAmount({
   return (
     <span
       className={cn(
-        "text-sm font-medium text-amber-200 text-right",
+        "text-sm font-medium text-demo text-right",
         className,
       )}
     >

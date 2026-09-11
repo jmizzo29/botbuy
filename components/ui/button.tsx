@@ -12,10 +12,10 @@ const buttonVariants = cva(
       variant: {
         default: PRIMARY_BUTTON_CLASS,
         secondary:
-          "bg-white/5 text-stone-100 hover:bg-white/10 ring-1 ring-[color-mix(in_srgb,var(--bb-text)_6%,transparent)]",
-        ghost: "text-zinc-300 hover:bg-white/5 hover:text-white",
+          "bg-surface text-foreground hover:bg-black/[0.03] ring-1 ring-[var(--bb-line)]",
+        ghost: "text-muted hover:bg-black/[0.04] hover:text-foreground",
         outline:
-          "ring-1 ring-[color-mix(in_srgb,var(--bb-text)_6%,transparent)] bg-transparent text-stone-100 hover:bg-white/5",
+          "ring-1 ring-[var(--bb-line)] bg-transparent text-foreground hover:bg-black/[0.03]",
         danger: "bg-danger/15 text-danger hover:bg-danger/25",
       },
       size: {

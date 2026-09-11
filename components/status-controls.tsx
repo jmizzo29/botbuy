@@ -34,7 +34,7 @@ export function StatusControls({ deal }: { deal: Deal }) {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-zinc-500">
+      <p className="text-xs text-muted">
         Illegal transitions are rejected. Closing→Closed needs verification
         artifacts for agent-run deals. Personal imported Closed is allowed
         only with honesty flags and never books verified $ or Escrow complete.
@@ -55,7 +55,7 @@ export function StatusControls({ deal }: { deal: Deal }) {
           </Button>
         ))}
       </div>
-      {error ? <p className="text-sm text-amber-200">{error}</p> : null}
+      {error ? <p className="text-sm text-demo">{error}</p> : null}
     </div>
   );
 }

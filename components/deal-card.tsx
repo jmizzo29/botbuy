@@ -19,7 +19,7 @@ export function DealCard({ deal }: { deal: Deal }) {
   return (
     <Link
       href={`/deals/${deal.id}`}
-      className="block rounded-2xl bg-surface px-5 py-4 ring-1 ring-white/8 transition-colors hover:bg-[#102024] hover:ring-white/14"
+      className="block rounded-2xl bg-surface px-5 py-4 ring-1 ring-[var(--bb-line)] transition-colors hover:bg-black/[0.02]"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
@@ -30,20 +30,20 @@ export function DealCard({ deal }: { deal: Deal }) {
             <StatusPill status={deal.status} />
             <DealBadges deal={deal} />
           </div>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-muted">
             {deal.marketplace} · {deal.category} · {currentStage(deal)}
           </p>
         </div>
         <DealAmount deal={deal} withStatus className="shrink-0" />
       </div>
       {deal.blockers.length ? (
-        <ul className="mt-3 list-disc space-y-1 pl-4 text-xs text-amber-200/90">
+        <ul className="mt-3 list-disc space-y-1 pl-4 text-xs text-demo">
           {deal.blockers.map((blocker) => (
             <li key={blocker}>{blocker}</li>
           ))}
         </ul>
       ) : null}
-      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-500">
+      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
         <span>Opened {formatDate(deal.openedAt)}</span>
         {deal.closedAt ? <span>Closed {formatDate(deal.closedAt)}</span> : null}
         {deal.receipt ? (
@@ -55,7 +55,7 @@ export function DealCard({ deal }: { deal: Deal }) {
         {deal.escrow ? <span>Escrow {deal.escrow.transaction_id}</span> : null}
       </div>
       {isImported(deal) ? (
-        <p className="mt-2 text-xs text-zinc-500">{HISTORY_MICRO}</p>
+        <p className="mt-2 text-xs text-muted">{HISTORY_MICRO}</p>
       ) : null}
     </Link>
   );

@@ -27,7 +27,7 @@ export function ProofStrip({ compact = false }: { compact?: boolean }) {
           </p>
         )
       ) : (
-        <div className="mt-4 grid grid-cols-3 gap-3 border-t border-white/6 pt-4">
+        <div className="mt-4 grid grid-cols-3 gap-3 border-t border-[var(--bb-line)] pt-4">
           <Stat
             label="Closed volume"
             value={formatUsd(proof.closedVolumeUsd ?? 0)}

@@ -1,23 +1,12 @@
-import Link from "next/link";
-import { DealCard } from "@/components/deal-card";
-import {
-  AgentsEmptySecondary,
-  NeedsYouCta,
-  SearchingEmpty,
-} from "@/components/empty-ctas";
-import { Card } from "@/components/ui/card";
+import { DealsTable } from "@/components/deals-table";
+import { NeedsYouCta, SearchingEmpty } from "@/components/empty-ctas";
+import { Badge } from "@/components/ui/badge";
 import { getCurrentUser } from "@/lib/auth";
-import {
-  AGENT_DEMO_BANNER,
-  AGENT_DETAIL_MICRO,
-  AGENT_EMPTY,
-  AGENT_HOLD_NOTE,
-  AGENT_OPEN_WORKSPACE,
-  AGENT_SPEND_MICRO,
-} from "@/lib/agent-org";
-import { listAgentOrgs } from "@/lib/agent-runtime";
-import { isVerifiedAmount } from "@/lib/deal-ui";
+import { APPROVE_MICRO, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { hydrateStore, listDeals } from "@/lib/store";
+import { formatUsd } from "@/lib/money";
+import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 export const metadata = {
   title: "My deals",
@@ -27,118 +16,45 @@ export default async function HomePage() {
   await hydrateStore();
   const user = getCurrentUser();
   const deals = listDeals(user.id);
-  const closed = deals.filter((deal) => deal.status === "Closed");
-  const closing = deals.filter((deal) => deal.status === "Closing");
-  const gated = deals.filter(
-    (deal) => deal.blockers.length > 0 || deal.status === "Needs you",
-  );
-  const unverifiedClosed = closed.filter((deal) => !isVerifiedAmount(deal));
-  const orgs = listAgentOrgs();
+  const gated = deals.filter((deal) => deal.status === "Needs you");
+  const searching = deals.some((deal) => deal.status === "Searching");
 
   return (
-    <div className="space-y-8">
-      <header className="space-y-3">
-        <p className="text-[11px] uppercase tracking-[0.18em] text-zinc-500">
-          {user.company} · My deals
+    <div className="space-y-6">
+      <header className="space-y-4">
+        <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
+          {user.company} · {MY_DEALS_LABEL}
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Personal history
-        </h1>
-        <p className="max-w-lg text-sm leading-relaxed text-zinc-400">
-          Signed in as {user.name} · customer #1. This list is not public proof.
-          Imported rows stay out of the land ProofStrip.
-        </p>
+        <h1 className="text-3xl font-semibold tracking-tight">{MY_DEALS_LABEL}</h1>
+        <div className="flex flex-wrap gap-2">
+          <Badge className={DEMO_PILL_CLASS}>
+            Spend remaining {formatUsd(SPEND_HARD_GATE_USD)} · Demo
+          </Badge>
+          <Badge className={DEMO_PILL_CLASS}>
+            {deals.length} deal{deals.length === 1 ? "" : "s"}
+          </Badge>
+          <Badge className={DEMO_PILL_CLASS}>Approval required</Badge>
+        </div>
+        <p className="text-sm text-muted">{APPROVE_MICRO}</p>
       </header>
 
-      <section className="grid gap-3 sm:grid-cols-3">
-        <Stat
-          label="My deals"
-          value={String(deals.length)}
-          hint="Imported ledger + HOLD search stubs"
-        />
-        <Stat
-          label="Closed"
-          value={String(closed.length)}
-          hint={
-            unverifiedClosed.length ? "Imported · amount unverified" : "Verified close"
-          }
-        />
-        <Stat
-          label="Needs you / closing"
-          value={String(closing.length + gated.filter((d) => d.status !== "Closing").length)}
-          hint={`${gated.length} with human gates`}
-        />
-      </section>
-
       {gated.length ? (
-        <Card className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">
-              Needs you
-            </p>
-            <p className="mt-1 text-sm text-zinc-400">
-              {gated.length} deal{gated.length === 1 ? "" : "s"} waiting on
-              human gates. Not live agent work.
-            </p>
-          </div>
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1.25rem] bg-surface px-5 py-4 ring-1 ring-[var(--bb-line)]">
+          <p className="text-sm text-muted">
+            {gated.length} deal{gated.length === 1 ? "" : "s"} need you. Auto-approve
+            OFF.
+          </p>
           <NeedsYouCta href={`/deals/${gated[0].id}`} />
-        </Card>
+        </div>
       ) : null}
 
-      <SearchingEmpty />
+      {searching ? <SearchingEmpty /> : null}
 
-      <section className="space-y-3">
-        <div>
-          <h2 className="text-lg font-medium tracking-tight">My deals</h2>
-          <p className="text-sm text-zinc-500">
-            Search, diligence, purchase, gates, close. Unverified $ are not spend.
-          </p>
-        </div>
-        <div className="grid gap-3">
-          {deals.map((deal) => (
-            <DealCard key={deal.id} deal={deal} />
-          ))}
-        </div>
-      </section>
+      <DealsTable deals={deals} />
 
-      <Card className="px-5 py-4">
-        <p className="text-lg font-medium tracking-tight">Your agents</p>
-        <p className="mt-1 text-xs text-amber-200/90">{AGENT_DEMO_BANNER}</p>
-        <p className="mt-2 text-sm text-zinc-400">
-          {orgs.length ? AGENT_DETAIL_MICRO : AGENT_EMPTY}
-        </p>
-        <p className="mt-2 text-xs text-zinc-500">{AGENT_SPEND_MICRO}</p>
-        <p className="mt-1 text-xs text-zinc-500">{AGENT_HOLD_NOTE}</p>
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <Link
-            href="/agents"
-            className="text-sm text-accent underline-offset-2 hover:underline"
-          >
-            {AGENT_OPEN_WORKSPACE}
-          </Link>
-          {orgs.length ? null : <AgentsEmptySecondary />}
-        </div>
-      </Card>
-    </div>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string;
-  hint: string;
-}) {
-  return (
-    <Card className="px-5 py-4">
-      <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
-        {label}
+      <p className="text-xs text-muted">
+        Demo · not live traction · no invented GMV
       </p>
-      <p className="money mt-1 text-2xl font-medium tracking-tight">{value}</p>
-      <p className="mt-1 text-xs text-zinc-500">{hint}</p>
-    </Card>
+    </div>
   );
 }

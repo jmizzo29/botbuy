@@ -25,7 +25,7 @@ export default async function OnboardingLayout({
             <li key={step.href}>
               <Link
                 href={step.href}
-                className="rounded-full bg-white/5 px-3 py-1 text-zinc-300 ring-1 ring-[color-mix(in_srgb,var(--bb-text)_6%,transparent)] hover:text-white"
+                className="rounded-full bg-surface px-3 py-1 text-muted ring-1 ring-[var(--bb-line)] hover:text-foreground"
               >
                 {index + 1}. {step.label}
               </Link>

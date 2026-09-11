@@ -43,12 +43,12 @@ export default function SignupPage() {
             Continue
           </Button>
         </form>
-        <p className="mt-8 text-xs leading-relaxed text-zinc-500">
+        <p className="mt-8 text-xs leading-relaxed text-muted">
           POC persist · in-memory session · not a live account. Email is stored
           on this demo isolate only. Continues as John / Build Star Labs. No
           paid Stripe. {BRAND.origin} is not announced live.
         </p>
-        <Link href="/" className="mt-8 inline-block text-xs text-zinc-500 hover:text-zinc-300">
+        <Link href="/" className="mt-8 inline-block text-xs text-muted hover:text-foreground">
           ← Land
         </Link>
       </div>
