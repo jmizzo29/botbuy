@@ -4,6 +4,7 @@ import {
   DEMO_NEEDS_YOU_DEAL,
   DEMO_NEEDS_YOU_EVENTS,
   DEMO_NEEDS_YOU_ID,
+  countsTowardCfoMoney,
 } from "@/lib/demo-needs-you";
 import { isVerifiedAmount } from "@/lib/deal-ui";
 import "@/lib/adapters";
@@ -568,12 +569,14 @@ export function isVerifiedSpend(deal: Deal) {
 
 export function verifiedSpendUsd(userId = DEMO_USER.id): number {
   return listDeals(userId)
+    .filter(countsTowardCfoMoney)
     .filter(isVerifiedSpend)
     .reduce((sum, deal) => sum + deal.priceUsd, 0);
 }
 
 export function listedUnverifiedUsd(userId = DEMO_USER.id): number {
   return listDeals(userId)
+    .filter(countsTowardCfoMoney)
     .filter((deal) => !isVerifiedSpend(deal))
     .reduce((sum, deal) => sum + deal.priceUsd, 0);
 }

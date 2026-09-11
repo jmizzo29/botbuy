@@ -8,6 +8,7 @@ import { HealthPill } from "@/components/health-pill";
 import { StatusPill } from "@/components/status-pill";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isAdmin } from "@/lib/auth";
+import { demoPendingListedUsd } from "@/lib/demo-needs-you";
 import { getOwnerFinance } from "@/lib/finance";
 import { formatUsd } from "@/lib/money";
 import { agentOrgAdmin } from "@/lib/agent-runtime";
@@ -34,6 +35,7 @@ export default async function AdminPage() {
   );
   const gated = deals.filter((deal) => deal.blockers.length > 0);
   const finance = getOwnerFinance(deals);
+  const demoPendingUsd = demoPendingListedUsd(deals);
   const agentOrgs = agentOrgAdmin();
   const usage = getAdminMetrics().usage;
 
@@ -72,6 +74,14 @@ export default async function AdminPage() {
               value={formatUsd(finance.startupCostsPendingUsd)}
               hint="Savedfast + xfer · not burn · not GMV"
             />
+            {demoPendingUsd > 0 ? (
+              <FinanceTile
+                label="Demo pending"
+                value={formatUsd(demoPendingUsd)}
+                hint="QA Needs-you fixture · not imported · not burn · not GMV"
+                empty
+              />
+            ) : null}
             <FinanceTile
               label="Burn"
               value="—"

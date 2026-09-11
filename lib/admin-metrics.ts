@@ -1,5 +1,6 @@
 import { flags, STUB_METRICS_BADGE } from "@/lib/flags";
 import { isVerifiedAmount } from "@/lib/deal-ui";
+import { countsTowardCfoMoney } from "@/lib/demo-needs-you";
 import { getOwnerFinance } from "@/lib/finance";
 import {
   listDeals,
@@ -84,6 +85,7 @@ export function getAdminMetrics(): AdminMetrics {
       byStatus,
       underManagementUsd: listedUnverifiedUsd(),
       closedUsd: closed
+        .filter(countsTowardCfoMoney)
         .filter(isVerifiedAmount)
         .reduce((sum, deal) => sum + deal.priceUsd, 0),
       successRate: deals.length ? closed.length / deals.length : null,
