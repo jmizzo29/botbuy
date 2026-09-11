@@ -177,6 +177,9 @@ export default async function DealDetailPage({
               {deal.receipt.txn_id ? (
                 <Row label="Txn" value={deal.receipt.txn_id} />
               ) : null}
+              {deal.receipt.payment_method ? (
+                <Row label="Payment" value={deal.receipt.payment_method} />
+              ) : null}
               {deal.receipt.term ? (
                 <Row label="Term" value={deal.receipt.term} />
               ) : null}

@@ -25,7 +25,8 @@ export function ProofStrip({ compact = false }: { compact?: boolean }) {
       {empty ? (
         <p className="mt-3 text-[11px] leading-relaxed text-zinc-600">
           Personal My deals are not public proof. Imported ledger rows are
-          excluded. Zeros appear only after CHO sets verified_at.
+          excluded — even CHO-verified personal $ is not platform traction.
+          Zeros appear only after CHO sets verified_at.
         </p>
       ) : (
         <div className="mt-4 grid grid-cols-3 gap-3 border-t border-white/6 pt-4">

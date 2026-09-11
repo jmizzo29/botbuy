@@ -7,7 +7,8 @@ export function isVerifiedAmount(
   deal: Pick<Deal, "priceVerified" | "amountVerified" | "amountStatus">,
 ) {
   return (
-    (deal.amountVerified || deal.priceVerified) &&
+    deal.priceVerified &&
+    deal.amountVerified &&
     deal.amountStatus === "verified"
   );
 }
@@ -22,6 +23,22 @@ export function amountCopy(
 
 export function isImported(deal: Pick<Deal, "source">) {
   return deal.source === "imported";
+}
+
+/** Personal imported history is never platform traction. */
+export function isPublicProofEligible(
+  deal: Pick<
+    Deal,
+    | "id"
+    | "source"
+    | "priceVerified"
+    | "amountVerified"
+    | "amountStatus"
+  >,
+) {
+  if (isImported(deal)) return false;
+  if (deal.id === "deal_botbuyer_ai") return false;
+  return isVerifiedAmount(deal);
 }
 
 export function isBoardPurchase(deal: Pick<Deal, "id" | "notes">) {

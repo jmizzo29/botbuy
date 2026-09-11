@@ -20,20 +20,33 @@
       "receipt": {
         "merchant": "Namecheap",
         "order_id": "213804743",
+        "transaction_id": "259700262",
         "term": "2 years",
-        "account": "johnmitchellbsl"
+        "account": "johnmitchellbsl",
+        "payment_method": "Credit Card ending 2986",
+        "evidence": [
+          "/workspace/botbuy/data/evidence/namecheap-213804743-receipt-1.png",
+          "/workspace/botbuy/data/evidence/namecheap-213804743-receipt-2.png",
+          "/workspace/botbuy/data/evidence/namecheap-213804743.json"
+        ],
+        "amount_usd": 179.96
       },
-      "notes": "Primary BotBuy product domain. Board-approved purchase.",
+      "notes": "Primary BotBuy product domain. Board-approved purchase. Amount VERIFIED against Namecheap receipt order 213804743 / txn 259700262.",
       "source": "imported",
       "agent_executed": false,
       "price_verified": true,
-      "amount_verified": true,
       "amount_status": "verified",
+      "amount_verified": true,
+      "verified_at": "2026-09-11T14:32:00Z",
+      "verified_by": "BotBuy CFO (receipt review)",
       "evidence": {
-        "path": "data/evidence/namecheap-213804743.json",
+        "path": "/workspace/botbuy/data/evidence/namecheap-213804743.json",
         "order_id": "213804743",
-        "verified_at": "2026-09-11T14:52:00Z"
-      }
+        "transaction_id": "259700262",
+        "cho_passed_at": "2026-09-11"
+      },
+      "cho_clear": true,
+      "cho_cleared_at": "2026-09-11T14:33:00Z"
     },
     {
       "id": "deal_savedfast",
@@ -67,7 +80,6 @@
       "source": "imported",
       "agent_executed": false,
       "price_verified": false,
-      "amount_verified": false,
       "amount_status": "imported_unverified"
     },
     {
@@ -91,20 +103,33 @@
       "source": "imported",
       "agent_executed": false,
       "price_verified": false,
-      "amount_verified": false,
       "amount_status": "imported_unverified"
     }
   ],
   "proof_strip_policy": "Only CHO-verified aggregates on public home. Personal history for John may show imported deals with source=imported and agent_executed=false. Unverified $ show as pending verify / imported_unverified.",
-  "updated_at": "2026-09-11T14:52:00Z",
+  "updated_at": "2026-09-11T14:33:00Z",
   "cho_review": {
     "date": "2026-09-11",
     "verdict": "personal_history_ok_with_flags",
-    "public_proof_strip": "empty",
+    "public_proof_strip": "empty \u2014 personal verified $ is not platform traction",
     "notes": [
-      "botbuyer.ai Closed PASS; amount VERIFIED $179.96 via data/evidence/namecheap-213804743.json",
+      "botbuyer.ai Closed PASS; price_usd VERIFIED by CFO 2026-09-11 against receipt 213804743 / txn 259700262",
       "Savedfast Closing PASS; Closed BLOCK until domain+WP verified",
       "xfer Closing PASS; Closed BLOCK until transfer complete"
-    ]
+    ],
+    "botbuyer_price": "PASS verified 179.96 via Namecheap receipt 213804743 / txn 259700262"
+  },
+  "cfo": {
+    "verified_startup_spend_usd": 179.96,
+    "verified_items": [
+      {
+        "id": "deal_botbuyer_ai",
+        "amount_usd": 179.96,
+        "order_id": "213804743",
+        "txn_id": "259700262"
+      }
+    ],
+    "pending_verify_usd": 416.68,
+    "note": "Savedfast + xfer remain imported_unverified / Closing. Public proof strip still CHO-empty. MRR=0."
   }
 }

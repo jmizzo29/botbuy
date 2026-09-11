@@ -1,4 +1,5 @@
 import ledgerJson from "@/data/john-deal-ledger.json";
+import { isPublicProofEligible, isVerifiedAmount } from "@/lib/deal-ui";
 import { importedClosedVerification } from "@/lib/verification";
 import type {
   AgentEvent,
@@ -7,9 +8,49 @@ import type {
   DealEvent,
   DealStatus,
   DealVerification,
+  Receipt,
 } from "@/lib/types";
 
 type RawDeal = (typeof ledgerJson.deals)[number];
+
+const BOTBUYER_EVIDENCE = "data/evidence/namecheap-213804743.json";
+const BOTBUYER_ARTIFACTS = [
+  BOTBUYER_EVIDENCE,
+  "data/evidence/namecheap-213804743-receipt-1.png",
+  "data/evidence/namecheap-213804743-receipt-2.png",
+  "data/evidence/botbuyer.ai-rdap.json",
+];
+
+function toRepoEvidencePath(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const marker = "data/evidence/";
+  const index = value.lastIndexOf(marker);
+  if (index >= 0) return value.slice(index);
+  return value.startsWith("data/") ? value : value;
+}
+
+function rawFlag(deal: RawDeal, key: "amount_verified" | "price_verified"): boolean {
+  return Boolean((deal as Record<string, unknown>)[key]);
+}
+
+function mapReceipt(deal: RawDeal): Receipt | null {
+  if (!("receipt" in deal) || !deal.receipt) return null;
+  const raw = deal.receipt as Record<string, unknown>;
+  const txn =
+    (typeof raw.txn_id === "string" && raw.txn_id) ||
+    (typeof raw.transaction_id === "string" && raw.transaction_id) ||
+    undefined;
+  return {
+    merchant: String(raw.merchant ?? ""),
+    order_id: String(raw.order_id ?? ""),
+    term: typeof raw.term === "string" ? raw.term : undefined,
+    account: typeof raw.account === "string" ? raw.account : undefined,
+    txn_id: txn || undefined,
+    item: typeof raw.item === "string" ? raw.item : undefined,
+    payment_method:
+      typeof raw.payment_method === "string" ? raw.payment_method : undefined,
+  };
+}
 
 function asStatus(value: string): DealStatus {
   const allowed: DealStatus[] = [
@@ -28,10 +69,11 @@ function asStatus(value: string): DealStatus {
 
 function verificationFor(deal: RawDeal): DealVerification {
   const receipt_refs: Record<string, string> = {};
-  if ("receipt" in deal && deal.receipt) {
-    receipt_refs.merchant = deal.receipt.merchant;
-    receipt_refs.order_id = deal.receipt.order_id;
-    if (deal.receipt.txn_id) receipt_refs.txn_id = deal.receipt.txn_id;
+  const receipt = mapReceipt(deal);
+  if (receipt) {
+    receipt_refs.merchant = receipt.merchant;
+    receipt_refs.order_id = receipt.order_id;
+    if (receipt.txn_id) receipt_refs.txn_id = receipt.txn_id;
   }
   if ("escrow" in deal && deal.escrow) {
     receipt_refs.escrow_provider = deal.escrow.provider;
@@ -43,7 +85,7 @@ function verificationFor(deal: RawDeal): DealVerification {
     if (deal.id === "deal_botbuyer_ai") {
       return {
         ...seeded,
-        artifacts: ["data/evidence/namecheap-213804743.json"],
+        artifacts: BOTBUYER_ARTIFACTS,
       };
     }
     return seeded;
@@ -81,7 +123,7 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         stage: "purchase",
         title: "Purchase",
         detail:
-          "Namecheap order 213804743 · amount verified $179.96 · account johnmitchellbsl.",
+          "Namecheap order 213804743 · txn 259700262 · amount verified $179.96 · account johnmitchellbsl.",
         at: "2026-09-11T14:24:00Z",
         status: "done",
       },
@@ -90,7 +132,7 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         stage: "close",
         title: "Close",
         detail:
-          "Imported as Closed. verification.skipped_reason=imported_ledger. Amount verified $179.96 (Namecheap 213804743).",
+          "Imported as Closed. verification.skipped_reason=imported_ledger. CHO PASS amount verified $179.96 (Namecheap 213804743 / txn 259700262). Not public proof.",
         at: "2026-09-11T14:26:00Z",
         status: "done",
       },
@@ -183,7 +225,7 @@ function mapDeal(deal: RawDeal): Deal {
     openedAt: deal.opened_at,
     closedAt: deal.closed_at,
     parentDealId: "parent_deal_id" in deal ? (deal.parent_deal_id ?? null) : null,
-    receipt: "receipt" in deal ? (deal.receipt ?? null) : null,
+    receipt: mapReceipt(deal),
     escrow: "escrow" in deal ? (deal.escrow ?? null) : null,
     domainTransfer:
       "domain_transfer" in deal ? (deal.domain_transfer ?? null) : null,
@@ -191,11 +233,13 @@ function mapDeal(deal: RawDeal): Deal {
     notes: deal.notes,
     source: deal.source,
     agentExecuted: deal.agent_executed,
-    priceVerified: deal.price_verified,
-    amountVerified: Boolean(deal.amount_verified),
+    priceVerified: rawFlag(deal, "price_verified"),
+    amountVerified: rawFlag(deal, "amount_verified"),
     amountStatus: deal.amount_status as AmountStatus,
     evidencePath:
-      "evidence" in deal && deal.evidence ? deal.evidence.path : null,
+      "evidence" in deal && deal.evidence
+        ? toRepoEvidencePath(deal.evidence.path)
+        : null,
     verification: verificationFor(deal),
     timeline: timelineFor(deal),
   };
@@ -263,12 +307,17 @@ function assertJohnLedger(deals: Deal[]) {
     !botbuyer.priceVerified ||
     botbuyer.amountStatus !== "verified" ||
     botbuyer.priceUsd !== 179.96 ||
-    botbuyer.evidencePath !== "data/evidence/namecheap-213804743.json"
+    botbuyer.evidencePath !== BOTBUYER_EVIDENCE
   ) {
     throw new Error("deal_botbuyer_ai amount must be verified $179.96.");
   }
   if (botbuyer.status !== "Closed") {
     throw new Error("deal_botbuyer_ai status must be Closed.");
+  }
+  if (!isVerifiedAmount(botbuyer) || isPublicProofEligible(botbuyer)) {
+    throw new Error(
+      "deal_botbuyer_ai must display verified $179.96 and stay out of public proof.",
+    );
   }
   if (savedfast.status !== "Closing" || !savedfast.blockers.some((item) => item.includes("403"))) {
     throw new Error("deal_savedfast must stay Closing with WP 403 blocker.");

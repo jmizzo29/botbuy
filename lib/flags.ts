@@ -11,6 +11,6 @@ export const flags = {
 };
 
 export const CHO_PROOF_POLICY =
-  "CHO-gated only. verified_at null → Proof coming when deals close. source=imported rows never enter public proof. Personal My deals ≠ public proof.";
+  "CHO-gated only. verified_at null → Proof coming when deals close. source=imported rows never enter public proof — including CHO-cleared personal verified $. Personal My deals ≠ platform traction.";
 
 export const STUB_METRICS_BADGE = "Demo / stub metrics — not live";

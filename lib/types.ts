@@ -37,6 +37,7 @@ export interface Receipt {
   account?: string;
   txn_id?: string;
   item?: string;
+  payment_method?: string;
 }
 
 export interface Escrow {
