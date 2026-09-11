@@ -20,14 +20,18 @@
       "receipt": {
         "merchant": "Namecheap",
         "order_id": "213804743",
+        "transaction_id": "259700262",
         "term": "2 years",
-        "account": "johnmitchellbsl"
+        "account": "johnmitchellbsl",
+        "payment_method": "Credit Card ending 2986",
+        "evidence": "data/evidence/namecheap-213804743.json"
       },
       "notes": "Primary BotBuy product domain. Board-approved purchase.",
       "source": "imported",
       "agent_executed": false,
       "price_verified": false,
-      "amount_status": "pending_verify"
+      "amount_status": "pending_verify",
+      "amount_verified": true
     },
     {
       "id": "deal_savedfast",
@@ -88,7 +92,7 @@
     }
   ],
   "proof_strip_policy": "Only CHO-verified aggregates on public home. Personal history for John may show imported deals with source=imported and agent_executed=false. Unverified $ show as pending verify / imported_unverified.",
-  "updated_at": "2026-09-11T14:28:00Z",
+  "updated_at": "2026-09-11T14:32:00Z",
   "cho_review": {
     "date": "2026-09-11",
     "verdict": "personal_history_ok_with_flags",
