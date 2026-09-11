@@ -18,6 +18,35 @@ export const ADMIN_USAGE_MICRO =
 export const SETTINGS_USAGE_MICRO =
   "This account only. Demo · Estimate. Never Actual $.";
 
+export const USAGE_YOUR_LABEL = "Your usage" as const;
+export const USAGE_UNTIL_METERED = "Estimate until metered" as const;
+export const USAGE_NOT_A_BILL = "Not a bill" as const;
+export const USAGE_NO_PRECISE =
+  "No precise costs yet. Live tokens/cost ship when metering + CHO verify. Demo numbers stay coarse on purpose." as const;
+
+export const USAGE_SURFACES = [
+  { id: "search", label: "Search", phases: ["search"] },
+  { id: "deal_ops", label: "Deal ops", phases: ["buy", "close"] },
+  { id: "other", label: "Other", phases: ["operate"] },
+] as const;
+
+export function rollupUsageBySurface(events: UsageEvent[]) {
+  for (const event of events) assertUsageNeverActual(event);
+  const totals = {
+    search: 0,
+    deal_ops: 0,
+    other: 0,
+  };
+  for (const event of events) {
+    const tokens = event.tokensEst.total ?? 0;
+    if (event.phase === "search") totals.search += tokens;
+    else if (event.phase === "buy" || event.phase === "close") {
+      totals.deal_ops += tokens;
+    } else totals.other += tokens;
+  }
+  return totals;
+}
+
 /** Synthetic search-phase stub. Labeled Estimate / Demo — not billed. */
 export const SEARCH_USAGE_STUB = {
   modelCalls: 1,
@@ -166,4 +195,13 @@ export function formatCount(value: number) {
 export function formatTokensEst(value: number | null) {
   if (value == null) return "—";
   return `${formatCount(value)} est`;
+}
+
+export function formatTokensApprox(value: number | null) {
+  if (value == null || value === 0) return "—";
+  if (value >= 1000) {
+    const k = value / 1000;
+    return `~${k >= 10 ? Math.round(k) : k.toFixed(1)}k`;
+  }
+  return `~${formatCount(value)}`;
 }

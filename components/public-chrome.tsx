@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand-lockup";
+import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { BRAND } from "@/lib/brand";
@@ -39,6 +40,7 @@ export function PublicChrome({
             <PublicNav />
           </div>
         </header>
+        <InstallHint />
         <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8">{children}</main>
         <footer className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-8">
           <SiteFooter />

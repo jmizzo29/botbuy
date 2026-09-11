@@ -9,7 +9,7 @@ import {
   listDeals,
   listUsageEvents,
 } from "@/lib/store";
-import { rollupUsageByDay, rollupUsageTotals } from "@/lib/usage";
+import { rollupUsageTotals } from "@/lib/usage";
 import { formatDateTime } from "@/lib/utils";
 
 export const metadata = {
@@ -29,16 +29,17 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-8">
-      <header>
+      <header className="hidden md:block">
         <h1 className="text-3xl font-semibold tracking-tight">Settings</h1>
         <p className="mt-2 text-sm text-muted">
           Account, {SETTINGS_USAGE_TITLE.toLowerCase()}, and the audit trail. No
           payment secrets here.
         </p>
       </header>
+      <p className="text-xs text-muted md:hidden">Settings</p>
 
       <SettingsUsageSection
-        days={rollupUsageByDay(usageEvents)}
+        events={usageEvents}
         totals={rollupUsageTotals(usageEvents)}
       />
 

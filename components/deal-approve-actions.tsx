@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   APPROVE_LABEL,
   APPROVE_MICRO,
-  APPROVE_REVIEW_LABEL,
   APPROVE_STATUS,
   REJECT_LABEL,
   REJECT_STATUS,
@@ -19,12 +18,16 @@ export function DealApproveActions({
   status,
   title,
   spend,
+  remaining,
+  payment,
   compact = false,
 }: {
   dealId: string;
   status: DealStatus;
   title?: string;
   spend?: string;
+  remaining?: string;
+  payment?: string;
   compact?: boolean;
 }) {
   const router = useRouter();
@@ -58,20 +61,28 @@ export function DealApproveActions({
 
   return (
     <div className={compact ? "space-y-1.5" : "space-y-3"}>
-      <div className="md:hidden">
+      <div className={compact ? "flex gap-2 md:hidden" : "grid grid-cols-2 gap-2 md:hidden"}>
         <Button
           type="button"
           size={size}
-          className={compact ? "min-h-11 min-w-[5.5rem]" : "min-h-11 w-full"}
+          className="min-h-11 w-full"
           disabled={pending !== null}
           onClick={() => setSheetOpen(true)}
         >
-          {APPROVE_REVIEW_LABEL}
+          {APPROVE_LABEL}
         </Button>
-        <p className={compact ? "mt-1.5 text-[11px] text-muted" : "mt-3 text-sm text-muted"}>
-          {APPROVE_MICRO}
-        </p>
+        <Button
+          type="button"
+          size={size}
+          variant="secondary"
+          className="min-h-11 w-full"
+          disabled={pending !== null}
+          onClick={() => setSheetOpen(true)}
+        >
+          {REJECT_LABEL}
+        </Button>
       </div>
+      <p className="text-[11px] text-muted md:hidden">{APPROVE_MICRO}</p>
       <div
         className={
           compact
@@ -113,6 +124,9 @@ export function DealApproveActions({
         <ApproveSheet
           title={title ?? "Needs you"}
           spend={spend}
+          remaining={remaining}
+          status={status}
+          payment={payment}
           pending={pending}
           error={error}
           onApprove={() => decide(APPROVE_STATUS)}

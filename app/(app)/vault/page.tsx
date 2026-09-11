@@ -6,6 +6,7 @@ import { SPEND_HARD_GATE_USD, SPEND_POLICY_LABEL } from "@/lib/spend-policy";
 import {
   getSpendLimits,
   listedUnverifiedUsd,
+  listVaultRefs,
   verifiedSpendUsd,
 } from "@/lib/store";
 import { VAULT_H1, VAULT_SUB, VAULT_TRUST } from "@/lib/vault-rails";
@@ -18,6 +19,7 @@ export default function VaultPage() {
   const limits = getSpendLimits();
   const spent = verifiedSpendUsd();
   const listed = listedUnverifiedUsd();
+  const card = listVaultRefs()[0];
 
   return (
     <div className="space-y-8">
@@ -36,7 +38,7 @@ export default function VaultPage() {
           <CardTitle>Payment methods</CardTitle>
         </CardHeader>
         <CardContent>
-          <VaultRails />
+          <VaultRails cardBrand={card?.brand} cardLast4={card?.last4} />
         </CardContent>
       </Card>
 

@@ -6,12 +6,20 @@ import { formatDateTime } from "@/lib/utils";
 import {
   ADMIN_USAGE_MICRO,
   formatCount,
+  formatTokensApprox,
   formatTokensEst,
   SETTINGS_USAGE_MICRO,
   USAGE_DEMO_BADGE,
   USAGE_ESTIMATE_LABEL,
   USAGE_HOLD_NOTE,
+  USAGE_NO_PRECISE,
+  USAGE_NOT_A_BILL,
+  USAGE_SURFACES,
+  USAGE_UNTIL_METERED,
+  USAGE_YOUR_LABEL,
+  rollupUsageBySurface,
 } from "@/lib/usage";
+import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import type {
   UsageDayRollup,
   UsageEvent,
@@ -153,10 +161,10 @@ export function DealUsageSection({ events }: { events: UsageEvent[] }) {
 }
 
 export function SettingsUsageSection({
-  days,
+  events,
   totals,
 }: {
-  days: UsageDayRollup[];
+  events: UsageEvent[];
   totals: {
     runs: number;
     modelCalls: number;
@@ -164,14 +172,74 @@ export function SettingsUsageSection({
     tokensEst: UsageTokensEst;
   };
 }) {
+  const surfaces = rollupUsageBySurface(events);
+  const max = Math.max(surfaces.search, surfaces.deal_ops, surfaces.other, 1);
+
   return (
-    <div id="usage">
-      <AdminUsageRollup
-        days={days}
-        totals={totals}
-        title="Usage"
-        micro={SETTINGS_USAGE_MICRO}
-      />
+    <div id="usage" data-surface="settings-usage">
+      <header className="mb-4">
+        <h2 className="text-2xl font-semibold tracking-tight">Usage</h2>
+        <p className="mt-1 text-sm text-muted">{USAGE_YOUR_LABEL}</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Badge className={DEMO_PILL_CLASS}>Demo</Badge>
+          <Badge className={DEMO_PILL_CLASS}>{USAGE_UNTIL_METERED}</Badge>
+        </div>
+        <p className="mt-2 text-xs text-muted">{SETTINGS_USAGE_MICRO}</p>
+      </header>
+      <div className="grid grid-cols-2 gap-3">
+        <Counter
+          label="This period"
+          value={formatTokensApprox(totals.tokensEst.total)}
+        />
+        <div className="rounded-[var(--bb-radius)] bg-surface px-4 py-3 ring-1 ring-[var(--bb-line)]">
+          <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
+            Estimate
+          </p>
+          <p className="mt-1 text-2xl font-medium tracking-tight">—</p>
+          <p className="mt-1 text-xs text-muted">{USAGE_NOT_A_BILL}</p>
+        </div>
+      </div>
+      <div className="mt-4 rounded-[var(--bb-radius)] bg-surface px-4 py-4 ring-1 ring-[var(--bb-line)]">
+        <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
+          By agent / surface
+        </p>
+        <ul className="mt-3 space-y-3">
+          {USAGE_SURFACES.map((surface) => {
+            const value = surfaces[surface.id];
+            const width = `${Math.round((value / max) * 100)}%`;
+            return (
+              <li key={surface.id}>
+                <div className="flex items-center justify-between text-sm">
+                  <span>{surface.label}</span>
+                  <span className="text-muted">{formatTokensApprox(value)}</span>
+                </div>
+                <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-black/[0.04]">
+                  <div
+                    className="h-full rounded-full bg-primary"
+                    style={{ width: value ? width : "0%" }}
+                  />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="mt-3 text-xs text-muted">
+          Your token usage — estimate until metering. {USAGE_NOT_A_BILL}.
+        </p>
+      </div>
+      <div className="mt-4 rounded-[var(--bb-radius)] bg-surface px-4 py-4 ring-1 ring-[var(--bb-line)]">
+        <p className="text-sm font-medium">No precise costs yet</p>
+        <p className="mt-1 text-sm text-muted">{USAGE_NO_PRECISE}</p>
+        <p className="mt-3 text-xs text-muted">{USAGE_HOLD_NOTE}</p>
+        <p className="mt-4">
+          <a
+            href={MY_DEALS_HREF}
+            className="inline-flex min-h-11 items-center rounded-full bg-surface px-4 text-sm ring-1 ring-[var(--bb-line)]"
+          >
+            Back to {MY_DEALS_LABEL}
+          </a>
+        </p>
+      </div>
     </div>
   );
 }

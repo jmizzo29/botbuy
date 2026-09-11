@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DealApproveActions } from "@/components/deal-approve-actions";
+import { DealsPhoneList } from "@/components/deals-phone-list";
 import { DealAmount } from "@/components/money";
 import { Badge } from "@/components/ui/badge";
 import { DEMO_PILL_CLASS, SURFACE_RING_CLASS } from "@/lib/ui-tokens";
@@ -10,44 +11,18 @@ function updatedAt(deal: Deal) {
   return deal.timeline.at(-1)?.at ?? deal.openedAt;
 }
 
-export function DealsTable({ deals }: { deals: Deal[] }) {
+export function DealsTable({
+  deals,
+  remaining,
+  payment,
+}: {
+  deals: Deal[];
+  remaining: string;
+  payment: string;
+}) {
   return (
     <>
-      <ul className="space-y-3 md:hidden" data-surface="my-deals-cards">
-        {deals.map((deal) => (
-          <li
-            key={deal.id}
-            className={cn(
-              "rounded-[var(--bb-radius)] bg-surface px-4 py-4",
-              SURFACE_RING_CLASS,
-            )}
-          >
-            <Link href={`/deals/${deal.id}`} className="block">
-              <div className="flex items-start justify-between gap-3">
-                <p className="text-[15px] font-medium tracking-tight">
-                  {deal.title}
-                </p>
-                <DealAmount deal={deal} className="shrink-0 text-sm" />
-              </div>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                <Badge className={DEMO_PILL_CLASS}>{deal.status} · Demo</Badge>
-                <span className="text-xs text-muted">
-                  {formatRelative(updatedAt(deal))}
-                </span>
-              </div>
-            </Link>
-            {deal.status === "Needs you" ? (
-              <div className="mt-4">
-                <DealApproveActions
-                  dealId={deal.id}
-                  status={deal.status}
-                  title={deal.title}
-                />
-              </div>
-            ) : null}
-          </li>
-        ))}
-      </ul>
+      <DealsPhoneList deals={deals} remaining={remaining} payment={payment} />
       <div
         className={cn(
           "hidden overflow-x-auto rounded-[var(--bb-radius)] bg-surface md:block",
@@ -92,6 +67,16 @@ export function DealsTable({ deals }: { deals: Deal[] }) {
                       dealId={deal.id}
                       status={deal.status}
                       title={deal.title}
+                      spend={
+                        deal.priceUsd > 0
+                          ? new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(deal.priceUsd)
+                          : undefined
+                      }
+                      remaining={remaining}
+                      payment={payment}
                       compact
                     />
                   ) : (

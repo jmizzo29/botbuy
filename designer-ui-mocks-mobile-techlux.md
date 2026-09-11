@@ -2,6 +2,8 @@
 
 John GO · phone full-app · 2026-09-11. Soft-signal HOLD.
 
+Attached mocks: `01-home-bottom-nav` · `02-my-deals-phone` · `03-approve-sheet` · `04-payment-methods` · `05-add-to-home` · `06-usage`.
+
 Craft-only. CPO IA in `cpo-phone-first-full-app-ia-v1.md` and `cpo-usage-ia-phone-v1.md` wins if a mock and IA disagree. Demo / Coming stay honest. No fake live Stripe / purchase rails.
 
 Land trust stays exact: `Demo · every deal needs your approval`. No `$1,000` / `$1000` / `1,000 gate` on public land.
@@ -11,11 +13,9 @@ Land trust stays exact: `Demo · every deal needs your approval`. No `$1,000` / 
 - 390pt phone · Techlux light `#F7F8FA` · surface `#FFFFFF` · hairline `--bb-line`
 - Teal jewelry CTA `#2DD4BF` / `#042F2E` · Demo gold `#B8860B`
 - 44pt taps · safe-area insets · radius `0.85rem`
-- Vault lockup in the header. Never letter-B.
+- Vault lockup in the header. Never letter-B. Intent/Vault/Settings stay in the header menu (CPO).
 
 ## Bottom tabs
-
-Primary IA only. Not a 5/6-col cram.
 
 | Tab | Route | Who |
 | --- | --- | --- |
@@ -23,46 +23,33 @@ Primary IA only. Not a 5/6-col cram.
 | **Agents** | `/agents` | Signed-in |
 | **Admin** | `/admin` | Owner only |
 
-- White surface bar · top hairline · equal columns
-- Active: teal icon + dark label
-- Inactive: muted
-- **Needs you** badge on My deals (Demo gold)
-- Intent / Vault / Settings = header menu sheet, not tabs
+White bar · list icon on My deals · teal active · Needs you badge (danger) · not a 5/6-col cram.
 
 ## My deals
 
-- Phone: stacked surface cards (title, status pill, spend, updated)
-- Dense table OK from `md` up; horizontal scroll OK
-- Needs you card opens the **Approve sheet**
+- Pills: Demo · Your spend limit · Remaining {computed} · Auto-approve OFF
+- Filters: All · Needs you · Searching · Closed
+- Featured Needs you card (rose ring) + Approve / Reject
+- Remaining is hard gate minus verified spend — do not invent $840
 
 ## Approve sheet
 
-Bottom sheet over a veil. Not inline-only on phone.
-
-- Title: Approve this deal
-- Deal name · Needs you · Demo · spend
+- Title: `Approve deal?`
+- Lead: `Review spend, then approve or reject. Auto-approve is OFF.`
+- Rows: Deal · Spend · Within your limit · Status · Payment
+- Approve + Reject side by side
 - Micro: `BotBuy only runs what you approve.`
-- Approve = teal jewelry, full width, 44pt
-- Reject = secondary, full width, 44pt
-- Auto-approve stays OFF
 
 ## A2HS
 
-Soft dismissible card above the tab bar.
-
-- Title: Add to Home Screen
-- Body: Demo-honest — not an App Store or Play listing
-- Primary: Add to Home Screen · Ghost: Not now
-- localStorage dismiss · hidden when standalone
+- Top install bar: Install BotBuy · Add to Home Screen · Install · dismiss
+- How-to sheet: 3 Safari steps · Got it · Demo-honest · not a store listing
+- Installed start `/start` → My deals if signed in else land
 
 ## Usage
 
-1. Settings → Usage = this account only
-2. Deal detail = per-deal slice + link to Settings
-3. Admin = platform aggregate + by-user when metered
-
-Light counters (no dark zinc wash). Badge **Demo / Estimate**. Never Actual $.
+Settings → Usage = this account only. This period tokens (real estimate, not invented 48k). Estimate = not a bill. Bars by Search / Deal ops / Other. Never Actual $.
 
 ## Payment methods
 
-Vault H1 stays `Add a payment method`. Each rail is a surface card with Available ≠ live / Coming. No invented live rails. `$1,000` may appear in-app as John’s seeded spend ceiling only.
+Vault H1 `Add a payment method`. Rail cards. Available ≠ live / Coming. In-app `$1,000` is John’s seeded ceiling only.

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Bot,
-  Home,
+  LayoutList,
   Layers3,
   Lock,
   Settings,
@@ -12,6 +12,7 @@ import {
   Target,
 } from "lucide-react";
 import { AppMoreMenu } from "@/components/app-more-menu";
+import { InstallHint } from "@/components/install-hint";
 import { BrandLockup } from "@/components/brand-lockup";
 import { SiteFooter } from "@/components/site-footer";
 import {
@@ -24,7 +25,7 @@ import { cn } from "@/lib/utils";
 import type { User } from "@/lib/types";
 
 const desktopLinks = [
-  { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: Home },
+  { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: LayoutList },
   { href: "/deals", label: "Deals", icon: Layers3 },
   { href: "/agents", label: PHONE_TAB_AGENTS, icon: Bot },
   { href: "/intent", label: "Intent", icon: Target },
@@ -59,7 +60,7 @@ export function AppShell({
     ? [...desktopLinks, { href: "/admin", label: PHONE_TAB_ADMIN, icon: Shield }]
     : desktopLinks;
   const phoneTabs = [
-    { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: Home, badge: needsYouCount },
+    { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: LayoutList, badge: needsYouCount },
     { href: "/agents", label: PHONE_TAB_AGENTS, icon: Bot, badge: 0 },
     ...(isAdmin
       ? [{ href: "/admin", label: PHONE_TAB_ADMIN, icon: Shield, badge: 0 }]
@@ -112,6 +113,7 @@ export function AppShell({
           </Link>
           <AppMoreMenu />
         </header>
+        <InstallHint />
         <main className="mx-auto w-full max-w-5xl px-4 pb-8 pt-6 md:px-8 md:pb-8 md:pt-10">
           {children}
         </main>
@@ -144,7 +146,7 @@ export function AppShell({
                   />
                   {link.badge > 0 ? (
                     <span
-                      className="absolute -right-2.5 -top-1.5 min-w-4 rounded-full bg-[var(--bb-demo-bg)] px-1 text-center text-[9px] font-semibold leading-4 text-demo"
+                      className="absolute -right-2.5 -top-1.5 min-w-4 rounded-full bg-danger px-1 text-center text-[9px] font-semibold leading-4 text-white"
                       aria-label={`${link.badge} Needs you`}
                     >
                       {link.badge > 9 ? "9+" : link.badge}

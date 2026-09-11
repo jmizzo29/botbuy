@@ -172,7 +172,12 @@ assert(empty.includes('AGENTS_EMPTY_SECONDARY = "See how activation works"'), "A
 assert(empty.includes('"/deals?status=Closed"'), "Agents empty → Closed deals");
 assert(home.includes("DealsTable"), "My deals dense table");
 assert(home.includes("MY_DEALS_LABEL") || home.includes("My deals"), "My deals is /home");
-assert(home.includes("APPROVE_MICRO") || home.includes("BotBuy only runs what you approve."), "home approve micro");
+assert(
+  approveUi.includes("APPROVE_MICRO") ||
+    home.includes("APPROVE_MICRO") ||
+    home.includes("BotBuy only runs what you approve."),
+  "home approve micro",
+);
 assert(home.includes("no invented GMV"), "My deals invents no GMV");
 assert(dealDetail.includes("DealApproveActions"), "deal detail Approve/Reject");
 assert(dealDetail.includes("auto-approve OFF"), "deal detail auto-approve OFF");
@@ -412,7 +417,10 @@ assert(startGate.includes("redirect(MY_DEALS_HREF)") || startGate.includes('redi
 assert(startGate.includes('redirect("/")'), "unsigned start → land");
 const pwa = read("components/pwa-register.tsx");
 assert(pwa.includes('register("/sw.js"'), "PWA registers /sw.js");
-assert(pwa.includes("InstallHint"), "discreet A2HS hint mounted");
+assert(
+  shell.includes("InstallHint") && chrome.includes("InstallHint"),
+  "discreet A2HS hint mounted on app + land",
+);
 const a2hs = read("components/install-hint.tsx");
 const techlux = read("lib/cpo-techlux.ts");
 assert(a2hs.includes("beforeinstallprompt"), "A2HS listens for beforeinstallprompt");
@@ -439,8 +447,19 @@ assert(
   "CPO more links are Intent/Vault/Settings",
 );
 const dealsTable = read("components/deals-table.tsx");
+const dealsPhone = read("components/deals-phone-list.tsx");
 assert(dealsTable.includes("overflow-x-auto"), "My deals table scrolls on narrow");
 assert(dealsTable.includes("DealApproveActions"), "My deals table Approve/Reject");
+assert(dealsTable.includes("DealsPhoneList"), "desktop table defers phone list");
+assert(dealsPhone.includes("data-surface=\"my-deals-cards\""), "phone My deals cards");
+assert(dealsPhone.includes("md:hidden"), "phone cards hide on desktop");
+assert(
+  dealsPhone.includes('"All"') &&
+    dealsPhone.includes('"Needs you"') &&
+    dealsPhone.includes('"Searching"') &&
+    dealsPhone.includes('"Closed"'),
+  "phone My deals filters All / Needs you / Searching / Closed",
+);
 assert(approveUi.includes("w-full sm:w-auto") || approveUi.includes("w-full"), "deal detail Approve/Reject full-width on phone");
 assert(approveUi.includes("min-h-11"), "Approve/Reject 44pt taps");
 assert(existsSync(join(root, "designer-ui-mocks-mobile-techlux.md")), "designer mobile Techlux visual SoT");
@@ -454,14 +473,15 @@ assert(approveSheet.includes("createPortal"), "Approve sheet portals above A2HS"
 assert(approveSheet.includes("APPROVE_SHEET_TITLE"), "Approve sheet title lock");
 assert(approveSheet.includes("APPROVE_LABEL") && approveSheet.includes("REJECT_LABEL"), "Approve sheet has Approve + Reject");
 assert(approveUi.includes("ApproveSheet"), "Needs you opens Approve sheet on phone");
-assert(approveUi.includes("APPROVE_REVIEW_LABEL"), "phone Review opens sheet");
-assert(techlux.includes("APPROVE_SHEET_TITLE"), "CPO Approve sheet title");
-assert(a2hs.includes("A2HS_TITLE") && a2hs.includes("data-surface=\"a2hs\""), "A2HS uses designer title card");
-assert(a2hs.includes("A2HS_DISMISS"), "A2HS Not now lock");
+assert(approveUi.includes("setSheetOpen(true)"), "phone Approve/Reject open sheet");
+assert(techlux.includes('APPROVE_SHEET_TITLE = "Approve deal?"'), "CPO Approve sheet title");
+assert(a2hs.includes("A2HS_BAR_TITLE") && a2hs.includes("data-surface=\"a2hs\""), "A2HS uses designer install bar");
+assert(a2hs.includes("A2HS_GOT_IT") && a2hs.includes("A2HS_HOW"), "A2HS how-to sheet");
+assert(home.includes("SPEND_LIMIT_PILL") && home.includes("AUTO_APPROVE_OFF"), "My deals spend + auto-approve pills");
+assert(home.includes("remainingAfterVerified"), "My deals remaining is computed, not a fake $840");
+assert(!home.includes("Spend remaining"), "home dropped $1k remaining-as-limit badge");
 assert(shell.includes("data-surface=\"phone-tabs\""), "phone tabs designer surface");
 assert(shell.includes("text-primary"), "active tab icon is teal jewelry");
-assert(dealsTable.includes("data-surface=\"my-deals-cards\""), "phone My deals cards");
-assert(dealsTable.includes("md:hidden"), "phone cards hide on desktop");
 assert(!usageUi.includes("text-zinc-"), "usage UI is Techlux light, not dark zinc");
 assert(!usageUi.includes("bg-white/[0.03]"), "usage counters are not dark wash");
 const vaultRailsUi = read("components/vault-rails.tsx");
@@ -483,6 +503,15 @@ assert(admin.includes("byUser={usage.byUser}"), "Admin page passes platform by-u
 assert(usageUi.includes("/settings#usage"), "deal usage links to Settings");
 assert(usageUi.includes("USAGE_ESTIMATE_LABEL") && usageUi.includes("DemoBadge"), "usage badges Demo/Estimate");
 assert(!usageUi.includes("Actual $") || usage.includes("Never Actual $"), "usage UI invents no Actual $");
+assert(usage.includes("USAGE_NO_PRECISE") && usageUi.includes("USAGE_NO_PRECISE"), "Usage has no-precise-costs lock");
+assert(usage.includes('label: "Search"') && usage.includes('label: "Deal ops"') && usage.includes('label: "Other"'), "Usage bars Search / Deal ops / Other");
+assert(usage.includes("USAGE_NOT_A_BILL") && usageUi.includes("USAGE_NOT_A_BILL"), "Usage estimate is not a bill");
+assert(!usageUi.includes("~48k") && !home.includes("$840"), "Usage/home do not invent mock $840 or 48k tokens");
+assert(approveSheet.includes("APPROVE_SHEET_LEAD"), "Approve sheet lead lock");
+assert(techlux.includes("Auto-approve is OFF"), "Approve lead keeps auto-approve OFF");
+assert(a2hs.includes("BRAND.trustLine"), "A2HS how-to shows land trust line");
+assert(vaultRailsUi.includes("Available ≠ live"), "payment methods Available ≠ live");
+assert(vaultPage.includes("cardLast4") || vaultRailsUi.includes("cardLast4"), "payment methods can show seeded last4");
 
 const sitePages = read("lib/site-pages.ts");
 const legalMd = read("lib/legal-markdown.ts");

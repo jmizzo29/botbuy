@@ -10,9 +10,17 @@ import {
   vaultReadyCopy,
 } from "@/lib/vault-rails";
 
-export function VaultRails() {
+export function VaultRails({
+  cardBrand,
+  cardLast4,
+}: {
+  cardBrand?: string;
+  cardLast4?: string;
+}) {
   const ready = isVaultReady();
   const [addNote, setAddNote] = useState(false);
+  const linkedCard =
+    cardBrand && cardLast4 ? `${cardBrand} ··· ${cardLast4}` : null;
 
   return (
     <div className="space-y-4">
@@ -23,7 +31,9 @@ export function VaultRails() {
             className="flex flex-wrap items-start justify-between gap-3 rounded-[var(--bb-radius)] bg-surface px-4 py-3 ring-1 ring-[var(--bb-line)]"
           >
             <div>
-              <p className="text-sm font-medium">{rail.label}</p>
+              <p className="text-sm font-medium">
+                {rail.id === "card" && linkedCard ? linkedCard : rail.label}
+              </p>
               <p className="mt-1 text-xs leading-relaxed text-muted">
                 {rail.detail}
               </p>

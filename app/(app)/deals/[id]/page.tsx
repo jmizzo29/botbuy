@@ -15,7 +15,7 @@ import { getAgentOrg } from "@/lib/agent-runtime";
 import { PersistRunDeal } from "@/components/persist-run-deal";
 import { DealUsageSection } from "@/components/usage-meter";
 import { formatUsd } from "@/lib/money";
-import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
+import { remainingAfterVerified, SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import {
   ensureSearchingUsageStub,
@@ -23,6 +23,8 @@ import {
   hydrateStore,
   listDealEvents,
   listUsageEvents,
+  listVaultRefs,
+  verifiedSpendUsd,
 } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
 import { runVerificationStub } from "@/lib/verification";
@@ -55,6 +57,13 @@ export default async function DealDetailPage({
   }
   const verification = runVerificationStub(deal);
   const usage = listUsageEvents(deal.id);
+  const remaining = formatUsd(remainingAfterVerified(verifiedSpendUsd(deal.userId)));
+  const vault = listVaultRefs(deal.userId)[0];
+  const payment = deal.receipt?.payment_method
+    ? deal.receipt.payment_method
+    : vault
+      ? `${vault.brand} ··· ${vault.last4}`
+      : "Card · Available ≠ live";
 
   return (
     <div className="space-y-6">
@@ -100,6 +109,9 @@ export default async function DealDetailPage({
                 dealId={deal.id}
                 status={deal.status}
                 title={deal.title}
+                spend={deal.priceUsd > 0 ? formatUsd(deal.priceUsd) : undefined}
+                remaining={`Remaining ${remaining}`}
+                payment={payment}
               />
             </div>
           </div>

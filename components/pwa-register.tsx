@@ -1,7 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
-import { InstallHint } from "@/components/install-hint";
+import { useEffect } from "react";
 
 function markStandalone() {
   const standalone =
@@ -30,9 +29,5 @@ export function PwaRegister() {
     return () => media.removeEventListener("change", onChange);
   }, []);
 
-  return (
-    <Suspense fallback={null}>
-      <InstallHint />
-    </Suspense>
-  );
+  return null;
 }
