@@ -15,19 +15,19 @@ export const metadata = {
 export default function SignupPage() {
   return (
     <PublicChrome>
-      <div className="mx-auto max-w-md space-y-8 pt-10">
+      <div className="mx-auto max-w-md pt-16 md:pt-24">
         <div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
             Sign up
           </p>
-          <Badge className={`mt-3 ${DEMO_PILL_CLASS}`}>
+          <Badge className={`mt-6 ${DEMO_PILL_CLASS}`}>
             {BRAND.pocBanner}
           </Badge>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight">
+          <h1 className="display mt-8">
             {BRAND.signupLine}
           </h1>
         </div>
-        <form action={persistSignupAction} className="grid gap-4">
+        <form action={persistSignupAction} className="mt-10 grid gap-6">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -36,16 +36,19 @@ export default function SignupPage() {
               type="email"
               required
               defaultValue="john.mitchell@buildstarlabs.com"
+              className="h-12 rounded-full px-5"
             />
           </div>
-          <Button type="submit">Continue</Button>
+          <Button type="submit" size="lg" className="w-full">
+            Continue
+          </Button>
         </form>
-        <p className="text-xs leading-relaxed text-zinc-500">
+        <p className="mt-8 text-xs leading-relaxed text-zinc-500">
           POC persist · in-memory session · not a live account. Email is stored
           on this demo isolate only. Continues as John / Build Star Labs. No
           paid Stripe. {BRAND.origin} is not announced live.
         </p>
-        <Link href="/" className="text-xs text-zinc-500 hover:text-zinc-300">
+        <Link href="/" className="mt-8 inline-block text-xs text-zinc-500 hover:text-zinc-300">
           ← Land
         </Link>
       </div>

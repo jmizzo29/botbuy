@@ -36,7 +36,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 
 | Route | What |
 | --- | --- |
-| `/` | Land — H1 + `POC · Demo · not live` + trust line `Demo · $1,000 gate · every deal needs your approval` + empty ProofStrip |
+| `/` | Land — H1 + `POC · Demo · not live` + trust line `Demo · $1,000 gate · every deal needs your approval` + Vault cards silhouette backdrop + How it works 3-card rail + empty ProofStrip. Quiet Capital craft · Electric Teal LOCKED · soft-signal HOLD |
 | `/signup` | Signup one-liner |
 | `/onboarding/intent` | Set intent — software-first John templates |
 | `/onboarding/spend` | Set spend |

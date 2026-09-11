@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { HowItWorksRail } from "@/components/how-it-works";
 import { ProofStrip } from "@/components/proof-strip";
 import { PublicChrome } from "@/components/public-chrome";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { VaultCardsBackdrop } from "@/components/vault-cards-backdrop";
 import { BRAND } from "@/lib/brand";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
@@ -14,52 +16,43 @@ export const metadata = {
 export default function LandPage() {
   return (
     <PublicChrome>
-      <div className="space-y-10 pt-10 md:pt-16">
-        <Badge className={DEMO_PILL_CLASS}>
-          {BRAND.pocBanner}
-        </Badge>
-        <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
-          {BRAND.origin} · {BRAND.registration}
-        </p>
-        <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-pretty sm:text-6xl">
-          {BRAND.hero}
-        </h1>
-        <p className="max-w-lg text-lg leading-relaxed text-foreground/80">
-          {BRAND.heroSub}
-        </p>
-        <div className="max-w-lg space-y-1 text-sm text-muted">
-          <p>{BRAND.easeMicro}</p>
-          <p>{BRAND.channelMicro}</p>
-        </div>
-        <div className="space-y-3">
-          <div className="flex flex-wrap gap-3">
-            <Button asChild size="lg">
-              <Link href="/signup">{BRAND.primaryCta}</Link>
-            </Button>
-            <Button asChild size="lg" variant="secondary">
-              <Link href="#how">{BRAND.secondaryCta}</Link>
-            </Button>
+      <div className="pt-16 md:pt-24">
+        <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="relative z-10">
+            <Badge className={DEMO_PILL_CLASS}>{BRAND.pocBanner}</Badge>
+            <p className="mt-6 text-[10px] uppercase tracking-[0.16em] text-muted/45">
+              {BRAND.origin} · {BRAND.registration}
+            </p>
+            <h1 className="display mt-8 max-w-xl text-pretty">
+              {BRAND.hero}
+            </h1>
+            <p className="mt-8 max-w-lg text-foreground/80">
+              {BRAND.heroSub}
+            </p>
+            <div className="mt-6 max-w-lg space-y-1 text-muted">
+              <p>{BRAND.easeMicro}</p>
+              <p>{BRAND.channelMicro}</p>
+            </div>
+            <div className="mt-10 space-y-6">
+              <div className="flex flex-wrap gap-3">
+                <Button asChild size="lg">
+                  <Link href="/signup">{BRAND.primaryCta}</Link>
+                </Button>
+                <Button asChild size="lg" variant="secondary">
+                  <Link href="#how">{BRAND.secondaryCta}</Link>
+                </Button>
+              </div>
+              <p className="text-sm text-muted">{BRAND.trustLine}</p>
+            </div>
           </div>
-          <p className="text-sm text-muted">{BRAND.trustLine}</p>
+          <VaultCardsBackdrop variant="fold" />
         </div>
-        <section id="how" className="max-w-lg scroll-mt-8 space-y-3">
-          <h2 className="text-lg font-medium tracking-tight">How it works</h2>
-          <ol className="space-y-2 text-sm leading-relaxed text-muted">
-            <li>
-              <span className="text-foreground">Set spend.</span> Your limit.
-              BotBuy stays inside it.
-            </li>
-            <li>
-              <span className="text-foreground">Set intent.</span> Any software,
-              any channel.
-            </li>
-            <li>
-              <span className="text-foreground">Vault it.</span> Then BotBuy
-              searches, purchases, and closes.
-            </li>
-          </ol>
-        </section>
-        <ProofStrip />
+        <div className="relative z-10 mt-16 md:mt-24">
+          <HowItWorksRail />
+        </div>
+        <div className="relative z-10 mt-16 md:mt-24">
+          <ProofStrip />
+        </div>
       </div>
     </PublicChrome>
   );

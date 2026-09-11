@@ -4,6 +4,9 @@
  * Demo gold is --bb-demo (#E8B84A) — never the CTA fill.
  * Never white-on-black from the prior craft pack. Never blank white-on-white.
  * Go-live primary label is exactly "Run BotBuy" (never bare "Run").
+ * Quiet Capital (John greenlit 2026-09-11): craft/feel only. --bb-* hexes LOCKED.
+ * Vault cards silhouette stack is the locked land/app background (decorative).
+ * No glow. No fake metrics. Not a public launch.
  */
 
 import { PALETTE } from "@/lib/palette";
@@ -19,4 +22,4 @@ export const DESIGNER_PRIMARY_STYLE = {
 } as const;
 
 export const DESIGNER_PRIMARY_CLASS =
-  "btn-primary font-semibold !text-[#042F2E] hover:bg-accent";
+  "btn-primary font-semibold tracking-[0.01em] shadow-none !text-[#042F2E] hover:bg-accent";

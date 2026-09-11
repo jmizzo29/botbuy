@@ -5,7 +5,7 @@ import { hasPublicSession } from "@/lib/session";
 export function PublicChrome({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh bg-background text-foreground">
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-5 md:px-8">
+      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 md:px-8">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="grid h-7 w-7 place-items-center rounded-lg bg-accent/15 text-[13px] font-semibold text-accent ring-1 ring-accent/25">
             B
@@ -14,8 +14,8 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
         </Link>
         <PublicNav />
       </header>
-      <main className="mx-auto w-full max-w-5xl px-4 pb-20 md:px-8">{children}</main>
-      <footer className="mx-auto w-full max-w-5xl px-4 pb-10 text-xs text-muted/80 md:px-8">
+      <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8">{children}</main>
+      <footer className="mx-auto w-full max-w-6xl px-4 pb-10 text-[10px] leading-relaxed text-muted/60 md:px-8">
         {BRAND.origin} · {BRAND.registration} · {BRAND.footerHold} · No paid
         Stripe
       </footer>
