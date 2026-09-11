@@ -20,7 +20,9 @@ export function PwaRegister() {
     media.addEventListener("change", onChange);
 
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {
+      navigator.serviceWorker
+        .register("/sw.js", { updateViaCache: "none" })
+        .catch(() => {
         // Installability still works via manifest if SW registration fails.
       });
     }
