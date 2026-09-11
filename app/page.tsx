@@ -20,16 +20,37 @@ export default function LandPage() {
           {BRAND.hero}
         </h1>
         <p className="max-w-lg text-lg leading-relaxed text-zinc-400">
-          {BRAND.signupLine}
+          {BRAND.heroSub}
+        </p>
+        <p className="max-w-lg text-sm text-zinc-500">
+          {BRAND.easeMicro}{" "}
+          <span className="text-zinc-600">·</span> {BRAND.channelMicro}
         </p>
         <div className="flex flex-wrap gap-3">
           <Button asChild>
-            <Link href="/signup">Get started</Link>
+            <Link href="/signup">{BRAND.primaryCta}</Link>
           </Button>
           <Button asChild variant="secondary">
-            <Link href="/home">My deals</Link>
+            <Link href="#how-it-works">{BRAND.secondaryCta}</Link>
           </Button>
         </div>
+        <section id="how-it-works" className="max-w-lg space-y-3">
+          <h2 className="text-lg font-medium tracking-tight">How it works</h2>
+          <ol className="space-y-2 text-sm leading-relaxed text-zinc-400">
+            <li>
+              <span className="text-zinc-200">Set spend.</span> Your limit.
+              BotBuy stays inside it.
+            </li>
+            <li>
+              <span className="text-zinc-200">Set intent.</span> Any software.
+              Any channel.
+            </li>
+            <li>
+              <span className="text-zinc-200">Vault it.</span> Then BotBuy
+              searches, purchases, and closes.
+            </li>
+          </ol>
+        </section>
         <ProofStrip />
       </div>
     </PublicChrome>
