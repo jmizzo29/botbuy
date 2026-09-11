@@ -1,6 +1,10 @@
 import type { MetadataRoute } from "next";
 import { LAND_META_LINE } from "@/lib/brand";
-import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
+import {
+  INSTALLED_START_HREF,
+  MY_DEALS_HREF,
+  MY_DEALS_LABEL,
+} from "@/lib/cpo-techlux";
 import { THEME_BG } from "@/lib/ui-tokens";
 
 export default function manifest(): MetadataRoute.Manifest {
@@ -9,7 +13,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "BotBuy",
     short_name: "BotBuy",
     description: LAND_META_LINE,
-    start_url: MY_DEALS_HREF,
+    start_url: INSTALLED_START_HREF,
     scope: "/",
     display: "standalone",
     display_override: ["standalone", "browser"],

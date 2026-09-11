@@ -11,24 +11,22 @@ import {
   Shield,
   Target,
 } from "lucide-react";
+import { AppMoreMenu } from "@/components/app-more-menu";
 import { BrandLockup } from "@/components/brand-lockup";
 import { SiteFooter } from "@/components/site-footer";
-import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
+import {
+  MY_DEALS_HREF,
+  MY_DEALS_LABEL,
+  PHONE_TAB_ADMIN,
+  PHONE_TAB_AGENTS,
+} from "@/lib/cpo-techlux";
 import { cn } from "@/lib/utils";
 import type { User } from "@/lib/types";
-
-const mobileLinks = [
-  { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: Home },
-  { href: "/intent", label: "Intent", icon: Target },
-  { href: "/vault", label: "Vault", icon: Lock },
-  { href: "/agents", label: "Agents", icon: Bot },
-  { href: "/settings", label: "Settings", icon: Settings },
-];
 
 const desktopLinks = [
   { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: Home },
   { href: "/deals", label: "Deals", icon: Layers3 },
-  { href: "/agents", label: "Agents", icon: Bot },
+  { href: "/agents", label: PHONE_TAB_AGENTS, icon: Bot },
   { href: "/intent", label: "Intent", icon: Target },
   { href: "/vault", label: "Vault", icon: Lock },
   { href: "/settings", label: "Settings", icon: Settings },
@@ -48,16 +46,25 @@ function mobileActive(pathname: string, href: string) {
 
 export function AppShell({
   user,
+  needsYouCount,
   children,
 }: {
   user: User;
+  needsYouCount: number;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const isAdmin = user.role === "admin";
   const links = isAdmin
-    ? [...desktopLinks, { href: "/admin", label: "Admin", icon: Shield }]
+    ? [...desktopLinks, { href: "/admin", label: PHONE_TAB_ADMIN, icon: Shield }]
     : desktopLinks;
+  const phoneTabs = [
+    { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: Home, badge: needsYouCount },
+    { href: "/agents", label: PHONE_TAB_AGENTS, icon: Bot, badge: 0 },
+    ...(isAdmin
+      ? [{ href: "/admin", label: PHONE_TAB_ADMIN, icon: Shield, badge: 0 }]
+      : []),
+  ];
 
   return (
     <div className="relative min-h-dvh bg-background text-foreground">
@@ -99,11 +106,14 @@ export function AppShell({
       </aside>
 
       <div className="relative z-10 md:pl-60">
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-[var(--bb-line)] bg-background/80 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
-          <Link href={MY_DEALS_HREF} className="flex items-center" aria-label="BotBuy home">
+        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-[var(--bb-line)] bg-background/80 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
+          <Link href={MY_DEALS_HREF} className="flex min-h-11 items-center" aria-label="BotBuy home">
             <BrandLockup />
           </Link>
-          <span className="text-xs text-muted">{user.name}</span>
+          <div className="flex items-center gap-1">
+            <span className="text-xs text-muted">{user.name}</span>
+            <AppMoreMenu />
+          </div>
         </header>
         <main className="mx-auto w-full max-w-5xl px-4 pb-8 pt-6 md:px-8 md:pb-8 md:pt-10">
           {children}
@@ -113,9 +123,12 @@ export function AppShell({
         </footer>
         <nav
           aria-label="App"
-          className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-[var(--bb-line)] bg-background/92 pl-[max(0.25rem,env(safe-area-inset-left))] pr-[max(0.25rem,env(safe-area-inset-right))] pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden"
+          className={cn(
+            "fixed inset-x-0 bottom-0 z-20 grid border-t border-[var(--bb-line)] bg-background/92 pl-[max(0.25rem,env(safe-area-inset-left))] pr-[max(0.25rem,env(safe-area-inset-right))] pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden",
+            phoneTabs.length === 3 ? "grid-cols-3" : "grid-cols-2",
+          )}
         >
-          {mobileLinks.map((link) => {
+          {phoneTabs.map((link) => {
             const active = mobileActive(pathname, link.href);
             return (
               <Link
@@ -123,13 +136,23 @@ export function AppShell({
                 href={link.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex min-h-12 min-w-0 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-[10px] leading-tight",
+                  "flex min-h-11 min-w-11 flex-col items-center justify-center gap-0.5 rounded-xl px-2 text-[11px] leading-tight",
                   active
                     ? "bg-primary/12 font-medium text-foreground"
                     : "text-muted",
                 )}
               >
-                <link.icon className="h-5 w-5" />
+                <span className="relative">
+                  <link.icon className="h-5 w-5" />
+                  {link.badge > 0 ? (
+                    <span
+                      className="absolute -right-2 -top-1.5 min-w-4 rounded-full bg-demo px-1 text-center text-[9px] font-semibold leading-4 text-white"
+                      aria-label={`${link.badge} Needs you`}
+                    >
+                      {link.badge > 9 ? "9+" : link.badge}
+                    </span>
+                  ) : null}
+                </span>
                 <span className="max-w-full text-center">{link.label}</span>
               </Link>
             );

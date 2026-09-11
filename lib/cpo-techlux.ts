@@ -27,3 +27,15 @@ export const A2HS_COPY =
 export const A2HS_IOS =
   "On iPhone: Share → Add to Home Screen. Demo · not an App Store app." as const;
 export const A2HS_ACTION = "Add to Home Screen" as const;
+
+/** CPO phone-first bottom IA. Intent/Vault/Settings are header/menu only. */
+export const PHONE_TAB_MY_DEALS = MY_DEALS_LABEL;
+export const PHONE_TAB_AGENTS = "Agents" as const;
+export const PHONE_TAB_ADMIN = "Admin" as const;
+export const PHONE_MORE_LINKS = [
+  { href: "/intent", label: "Intent" },
+  { href: "/vault", label: "Vault" },
+  { href: "/settings", label: "Settings" },
+] as const;
+
+export const INSTALLED_START_HREF = "/start" as const;

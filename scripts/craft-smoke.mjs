@@ -387,13 +387,23 @@ assert(manifest.includes("/icons/icon-192.png"), "manifest icon-192");
 assert(manifest.includes("/icons/icon-512.png"), "manifest icon-512");
 assert(manifest.includes("/icons/icon-512-maskable.png"), "manifest maskable icon");
 assert(manifest.includes('display: "standalone"'), "manifest display standalone");
-assert(manifest.includes("start_url: MY_DEALS_HREF") || manifest.includes('start_url: "/home"'), "A2HS starts in My deals");
+assert(
+  manifest.includes("start_url: INSTALLED_START_HREF") ||
+    manifest.includes('start_url: "/start"'),
+  "A2HS start gate /start",
+);
 assert(manifest.includes("id:"), "manifest id");
 const sw = read("public/sw.js");
-assert(sw.includes('CACHE = "botbuy-v2"'), "SW cache bumped to botbuy-v2");
-assert(sw.includes('"/home"') && sw.includes('"/deals"') && sw.includes('"/offline"'), "SW precaches app shell routes");
+assert(sw.includes('CACHE = "botbuy-v3"'), "SW cache bumped to botbuy-v3");
+assert(sw.includes('"/home"') && sw.includes('"/start"') && sw.includes('"/offline"'), "SW precaches app shell routes");
 assert(sw.includes("skipWaiting") && sw.includes("clients.claim"), "SW install/activate claim");
 assert(existsSync(join(root, "app/offline/page.tsx")), "offline shell page");
+assert(existsSync(join(root, "app/start/page.tsx")), "installed start gate");
+assert(existsSync(join(root, "cpo-phone-first-full-app-ia-v1.md")), "CPO phone-first IA pack");
+const startGate = read("app/start/page.tsx");
+assert(startGate.includes("hasPublicSession"), "start checks signed-in");
+assert(startGate.includes("redirect(MY_DEALS_HREF)") || startGate.includes('redirect("/home")'), "signed-in start → My deals");
+assert(startGate.includes('redirect("/")'), "unsigned start → land");
 const pwa = read("components/pwa-register.tsx");
 assert(pwa.includes('register("/sw.js")'), "PWA registers /sw.js");
 assert(pwa.includes("InstallHint"), "discreet A2HS hint mounted");
@@ -401,17 +411,34 @@ const a2hs = read("components/install-hint.tsx");
 const techlux = read("lib/cpo-techlux.ts");
 assert(a2hs.includes("beforeinstallprompt"), "A2HS listens for beforeinstallprompt");
 assert(a2hs.includes("A2HS_COPY"), "A2HS uses locked copy");
+assert(a2hs.includes("persistDismiss") || a2hs.includes("localStorage"), "A2HS dismiss persists");
 assert(techlux.includes("not an App Store or Play listing"), "A2HS copy is Demo-honest");
 assert(shell.includes("safe-area-inset-bottom"), "bottom nav safe-area");
 assert(shell.includes("safe-area-inset-top"), "sticky header safe-area");
-assert(shell.includes("grid-cols-5"), "mobile nav reduced density");
+assert(shell.includes("grid-cols-3"), "phone tabs are 3-col CPO IA");
+assert(!shell.includes("grid-cols-5") && !shell.includes("grid-cols-6"), "phone tabs are not 5/6-col cram");
 assert(shell.includes("MY_DEALS_LABEL") && !/>\s*Home\s*</.test(shell), "mobile label is My deals not Home");
-assert(shell.includes("min-h-12"), "mobile nav touch target");
+assert(shell.includes('href: "/agents"') && shell.includes("PHONE_TAB_ADMIN"), "phone tabs Agents + owner Admin");
+assert(!/mobileLinks[\s\S]*\/intent/.test(shell) && !/phoneTabs[\s\S]*\/vault/.test(shell), "Intent/Vault not bottom tabs");
+assert(shell.includes("AppMoreMenu"), "Intent/Vault/Settings via header menu");
+assert(shell.includes("needsYouCount") && shell.includes("Needs you"), "My deals Needs you badge");
+assert(shell.includes("min-h-11"), "mobile nav 44pt tap target");
 assert(css.includes("html.bb-standalone"), "standalone mode class");
+const moreMenu = read("components/app-more-menu.tsx");
+assert(moreMenu.includes("PHONE_MORE_LINKS"), "more menu uses CPO secondary links");
+assert(
+  techlux.includes('href: "/intent"') &&
+    techlux.includes('href: "/vault"') &&
+    techlux.includes('href: "/settings"'),
+  "CPO more links are Intent/Vault/Settings",
+);
 const dealsTable = read("components/deals-table.tsx");
 assert(dealsTable.includes("overflow-x-auto"), "My deals table scrolls on narrow");
 assert(dealsTable.includes("DealApproveActions"), "My deals table Approve/Reject");
-assert(approveUi.includes("w-full sm:w-auto"), "deal detail Approve/Reject full-width on phone");
+assert(approveUi.includes("w-full sm:w-auto") || approveUi.includes("w-full"), "deal detail Approve/Reject full-width on phone");
+assert(approveUi.includes("min-h-11"), "Approve/Reject 44pt taps");
+assert(usage.includes("Never Actual $"), "usage meter never Actual $");
+assert(usage.includes("Estimate until CHO promote"), "usage stays Estimate");
 
 const sitePages = read("lib/site-pages.ts");
 const legalMd = read("lib/legal-markdown.ts");

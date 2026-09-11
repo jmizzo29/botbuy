@@ -60,7 +60,7 @@ export function DealApproveActions({
         <Button
           type="button"
           size={size}
-          className={compact ? "min-h-9 min-w-[5.5rem]" : "w-full sm:w-auto"}
+          className={compact ? "min-h-11 min-w-[5.5rem]" : "min-h-11 w-full sm:w-auto"}
           disabled={pending !== null}
           onClick={() => decide(APPROVE_STATUS)}
         >
@@ -70,7 +70,7 @@ export function DealApproveActions({
           type="button"
           size={size}
           variant="secondary"
-          className={compact ? "min-h-9 min-w-[5.5rem]" : "w-full sm:w-auto"}
+          className={compact ? "min-h-11 min-w-[5.5rem]" : "min-h-11 w-full sm:w-auto"}
           disabled={pending !== null}
           onClick={() => decide(REJECT_STATUS)}
         >

@@ -41,9 +41,25 @@ function subscribeNoop() {
   return () => {};
 }
 
+function persistDismiss() {
+  try {
+    localStorage.setItem(DISMISS_KEY, "1");
+  } catch {
+    /* quota / private mode */
+  }
+}
+
+function dismissedSnapshot() {
+  if (isStandaloneDisplay()) return true;
+  try {
+    return localStorage.getItem(DISMISS_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 function iosHintSnapshot() {
-  if (isStandaloneDisplay()) return false;
-  if (sessionStorage.getItem(DISMISS_KEY) === "1") return false;
+  if (dismissedSnapshot()) return false;
   return isIosDevice();
 }
 
@@ -60,8 +76,7 @@ export function InstallHint() {
   );
 
   useEffect(() => {
-    if (isStandaloneDisplay()) return;
-    if (sessionStorage.getItem(DISMISS_KEY) === "1") return;
+    if (dismissedSnapshot()) return;
 
     const onPrompt = (event: Event) => {
       event.preventDefault();
@@ -80,12 +95,12 @@ export function InstallHint() {
     await deferred.userChoice.catch(() => undefined);
     setDeferred(null);
     setDismissed(true);
-    sessionStorage.setItem(DISMISS_KEY, "1");
+    persistDismiss();
   }
 
   function dismiss() {
     setDismissed(true);
-    sessionStorage.setItem(DISMISS_KEY, "1");
+    persistDismiss();
   }
 
   return (
@@ -104,11 +119,11 @@ export function InstallHint() {
       </p>
       <div className="mt-2 flex flex-wrap gap-2">
         {deferred ? (
-          <Button type="button" size="sm" onClick={() => void install()}>
+          <Button type="button" size="sm" className="min-h-11" onClick={() => void install()}>
             {A2HS_ACTION}
           </Button>
         ) : null}
-        <Button type="button" size="sm" variant="ghost" onClick={dismiss}>
+        <Button type="button" size="sm" variant="ghost" className="min-h-11" onClick={dismiss}>
           Not now
         </Button>
       </div>

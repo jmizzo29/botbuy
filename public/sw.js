@@ -1,13 +1,15 @@
-const CACHE = "botbuy-v2";
+const CACHE = "botbuy-v3";
 const OFFLINE = "/offline";
 const PRECACHE = [
   "/",
+  "/start",
   "/home",
   "/signup",
   "/deals",
   "/intent",
   "/vault",
   "/settings",
+  "/agents",
   OFFLINE,
   "/manifest.webmanifest",
 ];
