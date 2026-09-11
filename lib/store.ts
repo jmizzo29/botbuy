@@ -9,6 +9,7 @@ import type {
   DealStatus,
   Intent,
   SpendLimits,
+  User,
   VaultRef,
 } from "@/lib/types";
 
@@ -120,6 +121,10 @@ const auditLogs: AuditLog[] = [
     createdAt: "2026-09-04T18:00:00Z",
   },
 ];
+
+export function listDirectoryUsers(): User[] {
+  return [DEMO_USER];
+}
 
 export function listDeals(userId = DEMO_USER.id): Deal[] {
   return deals

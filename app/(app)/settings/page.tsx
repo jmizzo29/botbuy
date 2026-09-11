@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
 import { listAuditLogs } from "@/lib/store";
@@ -32,6 +33,14 @@ export default function SettingsPage() {
             label="Role"
             value={user.role === "admin" ? "Admin · owner" : "Customer"}
           />
+          {user.role === "admin" ? (
+            <p className="pt-1">
+              <Link href="/admin" className="text-accent underline-offset-2 hover:underline">
+                Owner Admin
+              </Link>
+              <span className="text-zinc-500"> · hidden from buyer nav</span>
+            </p>
+          ) : null}
         </CardContent>
       </Card>
 

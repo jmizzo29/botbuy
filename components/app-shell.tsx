@@ -7,7 +7,6 @@ import {
   Layers3,
   Lock,
   Settings,
-  Shield,
   Target,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -30,9 +29,7 @@ export function AppShell({
 }) {
   const pathname = usePathname();
   const isAdmin = user.role === "admin";
-  const links = isAdmin
-    ? [...customerLinks, { href: "/admin", label: "Admin", icon: Shield }]
-    : customerLinks;
+  const links = customerLinks;
 
   return (
     <div className="min-h-dvh bg-[#09090b] text-stone-100">
@@ -71,9 +68,12 @@ export function AppShell({
           <p className="text-sm font-medium">{user.name}</p>
           <p className="text-xs text-zinc-500">{user.company}</p>
           {isAdmin ? (
-            <p className="mt-1 text-[11px] uppercase tracking-[0.14em] text-accent">
-              Owner
-            </p>
+            <Link
+              href="/admin"
+              className="mt-2 block text-[11px] uppercase tracking-[0.14em] text-accent hover:text-accent/80"
+            >
+              Owner · Admin
+            </Link>
           ) : null}
         </div>
       </aside>
@@ -84,20 +84,7 @@ export function AppShell({
             <Mark />
             <span className="font-semibold tracking-tight">BotBuy</span>
           </Link>
-          <div className="flex items-center gap-3">
-            {isAdmin ? (
-              <Link
-                href="/admin"
-                className={cn(
-                  "text-xs",
-                  pathname.startsWith("/admin") ? "text-accent" : "text-zinc-400",
-                )}
-              >
-                Admin
-              </Link>
-            ) : null}
-            <span className="text-xs text-zinc-500">{user.name}</span>
-          </div>
+          <span className="text-xs text-zinc-500">{user.name}</span>
         </header>
         <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6 md:px-8 md:pb-16 md:pt-10">
           {children}

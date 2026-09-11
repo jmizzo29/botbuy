@@ -34,6 +34,19 @@ export function SourceBadge({
   );
 }
 
+export function DemoBadge({ className }: { className?: string }) {
+  return (
+    <Badge
+      className={cn(
+        "bg-amber-500/10 text-amber-200 ring-amber-400/25",
+        className,
+      )}
+    >
+      Demo
+    </Badge>
+  );
+}
+
 export function ProofBadge({ className }: { className?: string }) {
   return (
     <Badge
