@@ -36,7 +36,8 @@ export function StatusControls({ deal }: { deal: Deal }) {
     <div className="space-y-3">
       <p className="text-xs text-zinc-500">
         Illegal transitions are rejected. Closing→Closed needs verification
-        artifacts. Imported Closing deals cannot auto-close.
+        artifacts for agent-run deals. Personal imported Closed is allowed
+        only with honesty flags and never books verified $ or Escrow complete.
       </p>
       <div className="flex flex-wrap gap-2">
         {DEAL_STATUSES.map((status) => (

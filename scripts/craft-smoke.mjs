@@ -176,13 +176,34 @@ assert(usageUi.includes("tokens_est"), "usage labels tokens_est");
 assert(usageUi.includes("model_calls"), "usage labels model_calls");
 assert(usageUi.includes("tool_calls"), "usage labels tool_calls");
 
-const botbuyer = (ledger.deals ?? ledger).find?.(
-  (deal) => deal.id === "deal_botbuyer_ai",
-) ?? ledger.deals?.find((deal) => deal.id === "deal_botbuyer_ai");
 const deals = Array.isArray(ledger.deals) ? ledger.deals : Array.isArray(ledger) ? ledger : [];
-const row = deals.find((deal) => deal.id === "deal_botbuyer_ai") ?? botbuyer;
+const row = deals.find((deal) => deal.id === "deal_botbuyer_ai");
+const savedfast = deals.find((deal) => deal.id === "deal_savedfast");
+const xfer = deals.find((deal) => deal.id === "deal_namecheap_savedfast_xfer");
 assert(row, "ledger has deal_botbuyer_ai");
 assert(Number(row?.price_usd ?? row?.priceUsd) === 179.96, "ledger verified $179.96");
+assert(savedfast?.status === "Closed", "Savedfast personal Closed");
+assert(savedfast?.source === "imported", "Savedfast source imported");
+assert(savedfast?.agent_executed === false, "Savedfast agent_executed=false");
+assert(savedfast?.price_verified === false, "Savedfast not price_verified");
+assert(savedfast?.amount_status === "imported_unverified", "Savedfast imported_unverified");
+assert(
+  savedfast?.escrow?.stage === "accepted" ||
+    savedfast?.escrow?.stage === "seller-proceeds-processing",
+  "Savedfast escrow accepted / seller-proceeds-processing",
+);
+assert(
+  !String(savedfast?.escrow?.stage ?? "").toLowerCase().includes("complete"),
+  "Savedfast escrow is not complete",
+);
+assert(Number(savedfast?.price_usd) === 405, "Savedfast listed $405 stays unverified");
+assert(xfer?.status === "Closed", "xfer personal Closed");
+assert(xfer?.source === "imported", "xfer source imported");
+assert(xfer?.agent_executed === false, "xfer agent_executed=false");
+assert(xfer?.price_verified === false, "xfer not price_verified");
+assert(xfer?.amount_status === "imported_unverified", "xfer imported_unverified");
+assert(Number(xfer?.price_usd) === 11.68, "xfer listed $11.68 stays unverified");
+assert(ledger.cfo?.verified_startup_spend_usd === 179.96, "CFO verified burn $179.96 only");
 
 if (failures.length) {
   console.error("craft-smoke FAIL");
@@ -196,5 +217,6 @@ console.log(" - go-live Run BotBuy present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
 console.log(" - Admin Finance/Deals above stubs");
 console.log(" - GMV=0 · verified $179.96");
+console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #E8B84A");

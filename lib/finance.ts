@@ -99,7 +99,7 @@ export function getOwnerFinance(deals = listDeals()): OwnerFinance {
     live: flags.stripeLive,
     badge: "Demo",
     source: "imported_ledger",
-    note: "GMV empty until platform Closed deals. $179.96 is verified burn only (startup / seed cash-out / domains-infra). Savedfast $405 + xfer $11.68 stay Pending/Imported — never company burn or GMV. Infra near-zero. Not live Stripe. Not public proof.",
+    note: "GMV empty until platform Closed deals. $179.96 is verified burn only (startup / seed cash-out / domains-infra). Savedfast $405 + xfer $11.68 stay Pending/Imported even as personal Closed — never company burn or GMV. Infra near-zero. Not live Stripe. Not public proof.",
     startupCostsUsd,
     startupCostsPendingUsd,
     seedCashOutUsd: startupCostsUsd,
