@@ -5,7 +5,8 @@ import {
   type LegalSourceKind,
 } from "@/lib/site-pages";
 
-// Legal body SoT is the publish files (194b23e), not *-v1 drafts.
+// Legal body SoT: docs/legal/*-publish.md + docs/site-pages/{about,beta,contact}.md
+// See docs/legal/publish-notes-v1.md. Never load archive *-v1 drafts.
 // Cookie banner / CMP remains deferred — do not invent a banner here.
 
 export type MdBlock =

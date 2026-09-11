@@ -59,8 +59,9 @@ export const SITE_BETA_CTA = {
 } as const;
 
 /**
- * Publish-body SoT. Prefer these over *-v1 drafts.
- * Legal publish files landed in 194b23e.
+ * Publish-body SoT (docs/legal/publish-notes-v1.md).
+ * Privacy/Terms: *-publish.md — never archive drafts (*-v1.md).
+ * About/Beta/Contact: prefer docs/site-pages/{about,beta,contact}.md over *-v1 duplicates.
  */
 export const LEGAL_SOURCE_PATHS = {
   privacy: "docs/legal/privacy-policy-publish.md",
