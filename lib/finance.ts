@@ -9,6 +9,7 @@ export interface FinanceLine {
   listedUsd: number;
   amountStatus: Deal["amountStatus"];
   priceVerified: boolean;
+  amountVerified: boolean;
 }
 
 export interface OwnerFinance {
@@ -47,6 +48,7 @@ export function getOwnerFinance(deals = listDeals()): OwnerFinance {
     listedUsd: deal.priceUsd,
     amountStatus: deal.amountStatus,
     priceVerified: deal.priceVerified,
+    amountVerified: deal.amountVerified,
   }));
 
   const startupCostsUsd = money(

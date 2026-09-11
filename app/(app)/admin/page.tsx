@@ -162,7 +162,10 @@ export default function AdminPage() {
                     {line.bucket === "domain_infra"
                       ? "Domains / infra"
                       : "Acquisition"}{" "}
-                    · {line.amountStatus} · not verified spend
+                    · {line.amountStatus} ·{" "}
+                    {line.amountVerified
+                      ? "verified spend"
+                      : "not verified spend"}
                   </p>
                 </div>
                 <span className="money text-zinc-300">

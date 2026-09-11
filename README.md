@@ -50,13 +50,13 @@ Seeded from [`data/john-deal-ledger.json`](data/john-deal-ledger.json) on bootst
 
 | id | status | $ UI | labels |
 | --- | --- | --- | --- |
-| `deal_botbuyer_ai` | Closed | **Amount pending verify** | Imported · Board purchase · not agent-run |
+| `deal_botbuyer_ai` | Closed | **$179.96** verified | Imported · Board purchase · not agent-run · evidence `namecheap-213804743` |
 | `deal_savedfast` | Closing | **Imported · amount unverified** | Imported · blockers visible |
 | `deal_namecheap_savedfast_xfer` | Closing | **Imported · amount unverified** | Imported · parent → Savedfast |
 
 Detail microcopy on imported rows: `Added from your history. BotBuy didn’t execute this purchase.`
 
-Every imported row persists `source: "imported"`, `agent_executed: false`, plus `price_verified` and `amount_status` from JSON.
+Every imported row persists `source: "imported"`, `agent_executed: false`, plus `price_verified`, `amount_verified`, and `amount_status` from JSON. `deal_botbuyer_ai` is verified $179.96 (`data/evidence/namecheap-213804743.json`). Savedfast and the transfer fee stay unverified.
 
 ## Local
 

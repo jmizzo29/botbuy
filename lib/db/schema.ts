@@ -47,7 +47,9 @@ export const deals = pgTable("deals", {
   source: text("source").notNull().default("imported"),
   agentExecuted: boolean("agent_executed").notNull().default(false),
   priceVerified: boolean("price_verified").notNull().default(false),
+  amountVerified: boolean("amount_verified").notNull().default(false),
   amountStatus: text("amount_status").notNull().default("imported_unverified"),
+  evidencePath: text("evidence_path"),
   verification: jsonb("verification").$type<{
     passed: boolean;
     skipped_reason?: "imported_ledger" | null;

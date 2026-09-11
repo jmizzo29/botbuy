@@ -39,7 +39,14 @@ function verificationFor(deal: RawDeal): DealVerification {
   }
 
   if (deal.status === "Closed" && deal.source === "imported") {
-    return importedClosedVerification(receipt_refs);
+    const seeded = importedClosedVerification(receipt_refs);
+    if (deal.id === "deal_botbuyer_ai") {
+      return {
+        ...seeded,
+        artifacts: ["data/evidence/namecheap-213804743.json"],
+      };
+    }
+    return seeded;
   }
 
   return {
@@ -74,7 +81,7 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         stage: "purchase",
         title: "Purchase",
         detail:
-          "Namecheap order 213804743 · amount pending verify · account johnmitchellbsl.",
+          "Namecheap order 213804743 · amount verified $179.96 · account johnmitchellbsl.",
         at: "2026-09-11T14:24:00Z",
         status: "done",
       },
@@ -83,7 +90,7 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
         stage: "close",
         title: "Close",
         detail:
-          "Imported as Closed. verification.skipped_reason=imported_ledger. Amount is not verified spend.",
+          "Imported as Closed. verification.skipped_reason=imported_ledger. Amount verified $179.96 (Namecheap 213804743).",
         at: "2026-09-11T14:26:00Z",
         status: "done",
       },
@@ -185,7 +192,10 @@ function mapDeal(deal: RawDeal): Deal {
     source: deal.source,
     agentExecuted: deal.agent_executed,
     priceVerified: deal.price_verified,
+    amountVerified: Boolean(deal.amount_verified),
     amountStatus: deal.amount_status as AmountStatus,
+    evidencePath:
+      "evidence" in deal && deal.evidence ? deal.evidence.path : null,
     verification: verificationFor(deal),
     timeline: timelineFor(deal),
   };
@@ -248,8 +258,14 @@ function assertJohnLedger(deals: Deal[]) {
   if (botbuyer.source !== "imported" || botbuyer.agentExecuted) {
     throw new Error("deal_botbuyer_ai must be imported and not agent-executed.");
   }
-  if (botbuyer.priceVerified || botbuyer.amountStatus !== "pending_verify") {
-    throw new Error("deal_botbuyer_ai amount must stay pending_verify.");
+  if (
+    !botbuyer.amountVerified ||
+    !botbuyer.priceVerified ||
+    botbuyer.amountStatus !== "verified" ||
+    botbuyer.priceUsd !== 179.96 ||
+    botbuyer.evidencePath !== "data/evidence/namecheap-213804743.json"
+  ) {
+    throw new Error("deal_botbuyer_ai amount must be verified $179.96.");
   }
   if (botbuyer.status !== "Closed") {
     throw new Error("deal_botbuyer_ai status must be Closed.");

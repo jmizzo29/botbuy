@@ -73,7 +73,9 @@ export default async function DealDetailPage({
         <span>source={deal.source}</span>
         <span>agent_executed={String(deal.agentExecuted)}</span>
         <span>amount_status={deal.amountStatus}</span>
+        <span>amount_verified={String(deal.amountVerified)}</span>
         <span>price_verified={String(deal.priceVerified)}</span>
+        {deal.evidencePath ? <span>evidence={deal.evidencePath}</span> : null}
       </div>
 
       {deal.blockers.length ? (
@@ -115,6 +117,14 @@ export default async function DealDetailPage({
                 ? Object.entries(deal.verification.receipt_refs)
                     .map(([key, value]) => `${key} ${value}`)
                     .join(" · ")
+                : "—"
+            }
+          />
+          <Row
+            label="Artifacts"
+            value={
+              deal.verification.artifacts.length
+                ? deal.verification.artifacts.join(" · ")
                 : "—"
             }
           />

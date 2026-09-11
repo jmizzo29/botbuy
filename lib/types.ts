@@ -116,7 +116,9 @@ export interface Deal {
   source: string;
   agentExecuted: boolean;
   priceVerified: boolean;
+  amountVerified: boolean;
   amountStatus: AmountStatus;
+  evidencePath: string | null;
   verification: DealVerification;
   timeline: AgentEvent[];
 }

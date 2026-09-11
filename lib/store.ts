@@ -1,5 +1,6 @@
 import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
 import { DEMO_USER } from "@/lib/auth";
+import { isVerifiedAmount } from "@/lib/deal-ui";
 import { SPEND_DEFAULTS } from "@/lib/spend-policy";
 import { assertTransition, TransitionError } from "@/lib/status-engine";
 import type {
@@ -72,9 +73,11 @@ const auditLogs: AuditLog[] = [
     metadata: {
       source: "john-deal-ledger.json",
       order_id: "213804743",
-      amount_status: "pending_verify",
-      price_verified: false,
+      amount_status: "verified",
+      amount_verified: true,
+      price_verified: true,
       skipped_reason: "imported_ledger",
+      evidence: "data/evidence/namecheap-213804743.json",
     },
     createdAt: "2026-09-11T14:28:00Z",
   },
@@ -88,6 +91,7 @@ const auditLogs: AuditLog[] = [
       source: "john-deal-ledger.json",
       escrow_id: "13190302",
       amount_status: "imported_unverified",
+      amount_verified: false,
       price_verified: false,
     },
     createdAt: "2026-09-11T14:28:00Z",
@@ -102,6 +106,8 @@ const auditLogs: AuditLog[] = [
       source: "john-deal-ledger.json",
       order_id: "213803826",
       parent_deal_id: "deal_savedfast",
+      amount_status: "imported_unverified",
+      amount_verified: false,
       price_verified: false,
     },
     createdAt: "2026-09-11T14:28:00Z",
@@ -276,7 +282,7 @@ export function listAuditLogs(userId = DEMO_USER.id): AuditLog[] {
 }
 
 export function isVerifiedSpend(deal: Deal) {
-  return deal.priceVerified && deal.amountStatus === "verified";
+  return isVerifiedAmount(deal);
 }
 
 export function verifiedSpendUsd(userId = DEMO_USER.id): number {

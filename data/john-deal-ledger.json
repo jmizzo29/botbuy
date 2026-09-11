@@ -26,8 +26,14 @@
       "notes": "Primary BotBuy product domain. Board-approved purchase.",
       "source": "imported",
       "agent_executed": false,
-      "price_verified": false,
-      "amount_status": "pending_verify"
+      "price_verified": true,
+      "amount_verified": true,
+      "amount_status": "verified",
+      "evidence": {
+        "path": "data/evidence/namecheap-213804743.json",
+        "order_id": "213804743",
+        "verified_at": "2026-09-11T14:52:00Z"
+      }
     },
     {
       "id": "deal_savedfast",
@@ -61,6 +67,7 @@
       "source": "imported",
       "agent_executed": false,
       "price_verified": false,
+      "amount_verified": false,
       "amount_status": "imported_unverified"
     },
     {
@@ -84,17 +91,18 @@
       "source": "imported",
       "agent_executed": false,
       "price_verified": false,
+      "amount_verified": false,
       "amount_status": "imported_unverified"
     }
   ],
   "proof_strip_policy": "Only CHO-verified aggregates on public home. Personal history for John may show imported deals with source=imported and agent_executed=false. Unverified $ show as pending verify / imported_unverified.",
-  "updated_at": "2026-09-11T14:28:00Z",
+  "updated_at": "2026-09-11T14:52:00Z",
   "cho_review": {
     "date": "2026-09-11",
     "verdict": "personal_history_ok_with_flags",
     "public_proof_strip": "empty",
     "notes": [
-      "botbuyer.ai Closed PASS; price_usd BLOCK until receipt for 213804743",
+      "botbuyer.ai Closed PASS; amount VERIFIED $179.96 via data/evidence/namecheap-213804743.json",
       "Savedfast Closing PASS; Closed BLOCK until domain+WP verified",
       "xfer Closing PASS; Closed BLOCK until transfer complete"
     ]

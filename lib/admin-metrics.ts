@@ -1,4 +1,5 @@
 import { flags, STUB_METRICS_BADGE } from "@/lib/flags";
+import { isVerifiedAmount } from "@/lib/deal-ui";
 import { getOwnerFinance } from "@/lib/finance";
 import {
   listDeals,
@@ -75,7 +76,7 @@ export function getAdminMetrics(): AdminMetrics {
       byStatus,
       underManagementUsd: listedUnverifiedUsd(),
       closedUsd: closed
-        .filter((deal) => deal.priceVerified)
+        .filter(isVerifiedAmount)
         .reduce((sum, deal) => sum + deal.priceUsd, 0),
       successRate: deals.length ? closed.length / deals.length : null,
       dealCount: deals.length,

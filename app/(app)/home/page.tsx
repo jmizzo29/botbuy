@@ -15,7 +15,7 @@ export default function HomePage() {
   const gated = deals.filter(
     (deal) => deal.blockers.length > 0 || deal.status === "Needs you",
   );
-  const unverified = deals.filter((deal) => !deal.priceVerified);
+  const unverified = deals.filter((deal) => !deal.amountVerified);
 
   return (
     <div className="space-y-8">

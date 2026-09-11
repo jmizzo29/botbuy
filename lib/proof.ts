@@ -25,6 +25,7 @@ export function getPublicProof(): ProofStats {
   const eligible = listDeals().filter(
     (deal) =>
       deal.source !== "imported" &&
+      deal.amountVerified &&
       deal.priceVerified &&
       deal.amountStatus === "verified",
   );

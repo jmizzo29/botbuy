@@ -1,0 +1,18 @@
+{
+  "deal_id": "deal_botbuyer_ai",
+  "merchant": "Namecheap",
+  "order_id": "213804743",
+  "domain": "botbuyer.ai",
+  "amount_usd": 179.96,
+  "currency": "USD",
+  "term": "2 years",
+  "account": "johnmitchellbsl",
+  "verified_at": "2026-09-11T14:52:00Z",
+  "amount_verified": true,
+  "price_verified": true,
+  "amount_status": "verified",
+  "artifacts": [
+    "data/evidence/namecheap-213804743.json"
+  ],
+  "notes": "Amount verified at $179.96 from Namecheap order 213804743. Receipt images may sit beside this file in data/evidence/."
+}
