@@ -1,3 +1,4 @@
+import { AgentsEmptySecondary } from "@/components/empty-ctas";
 import { YourAgents } from "@/components/your-agents";
 import {
   AGENT_DEMO_BANNER,
@@ -36,7 +37,10 @@ export default function AgentsPage() {
           ))}
         </div>
       ) : (
-        <p className="text-sm text-zinc-400">{AGENT_EMPTY}</p>
+        <div className="space-y-4">
+          <p className="text-sm text-zinc-400">{AGENT_EMPTY}</p>
+          <AgentsEmptySecondary />
+        </div>
       )}
     </div>
   );

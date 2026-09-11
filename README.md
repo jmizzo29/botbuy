@@ -12,7 +12,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 2. Vault H1 `Fund your vault`. Card Available ≠ live (Stripe/Link is one card path). Bank / X Money / Bitcoin Coming. `+ Add payment method` always visible. Vault-ready = ≥1 Available. Coming does not unlock Run. Spend ceiling $1,000. Every deal needs approval. Infra near-zero — no assumed paid infra budget.
 3. Owner `/admin` Demo badges. Real deal counts OK. No invented live MRR/traffic/paid users. Finance verified-only $179.96; never $596.64 as burn.
 4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
-5. ProofStrip CHO-empty (`verified_at` null). No vapor defaults.
+5. ProofStrip empty until verified live aggregates. Public copy: personal deals never count as public proof. No placeholders. No CHO-gated / `verified_at` caption on land.
 6. Land + onboarding: `/` `/signup` `/onboarding/intent|spend|vault|go-live` `/home`
 7. After Closed, CTA **Activate agents on this asset** → sheet → `/agents` and `/agents/[assetId]`. Suite in every license. Demo · not live. HOLD. Agents never bypass $1,000 approval.
 
@@ -21,7 +21,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 ## Product / eng locks (CTO)
 
 - Status chips are frozen exact: Searching · Found · Buying · Needs you · Closing · Closed · Failed · Paused
-- Public ProofStrip is CHO-gated (`verified_at` null → “Proof coming when deals close”). Never invent metrics. Zeros only after CHO verifies. `source=imported` rows are excluded.
+- Public ProofStrip stays empty until verified live aggregates. Land caption never mentions CHO-gated or `verified_at`. Never invent metrics. `source=imported` rows are excluded.
 - Personal **My deals** ≠ public proof.
 - No paid Stripe / Issuing. No card PAN. Vault refs + last4 only.
 - If `price_verified === false`, do not render `price_usd` as verified spend.
@@ -36,7 +36,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 
 | Route | What |
 | --- | --- |
-| `/` | Land — H1 `Set spend. Set intent. Vault it. BotBuy buys.` + POC/Demo banner + empty ProofStrip |
+| `/` | Land — H1 + `POC · Demo · not live` + trust line `Demo · $1,000 gate · every deal needs your approval` + empty ProofStrip |
 | `/signup` | Signup one-liner |
 | `/onboarding/intent` | Set intent — software-first John templates |
 | `/onboarding/spend` | Set spend |

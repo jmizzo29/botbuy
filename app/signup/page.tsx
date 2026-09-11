@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { persistSignupAction } from "@/app/signup/actions";
 import { PublicChrome } from "@/components/public-chrome";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,9 @@ export default function SignupPage() {
           <p className="text-[11px] uppercase tracking-[0.18em] text-zinc-500">
             Sign up
           </p>
+          <Badge className="mt-3 bg-amber-500/10 text-amber-100 ring-amber-400/35">
+            {BRAND.pocBanner}
+          </Badge>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight">
             {BRAND.signupLine}
           </h1>

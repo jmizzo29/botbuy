@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
+import { hasPublicSession } from "@/lib/session";
 
 export function PublicChrome({ children }: { children: React.ReactNode }) {
   return (
@@ -11,20 +12,29 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
           </span>
           <span className="text-sm font-medium tracking-tight">{BRAND.domain}</span>
         </Link>
-        <div className="flex items-center gap-4 text-sm">
-          <Link href="/signup" className="text-zinc-400 hover:text-white">
-            Sign up
-          </Link>
-          <Link href="/home" className="text-zinc-400 hover:text-white">
-            My deals
-          </Link>
-        </div>
+        <PublicNav />
       </header>
       <main className="mx-auto w-full max-w-5xl px-4 pb-20 md:px-8">{children}</main>
       <footer className="mx-auto w-full max-w-5xl px-4 pb-10 text-xs text-zinc-600 md:px-8">
         {BRAND.origin} · {BRAND.registration} · {BRAND.footerHold} · No paid
         Stripe
       </footer>
+    </div>
+  );
+}
+
+async function PublicNav() {
+  const session = await hasPublicSession();
+  return (
+    <div className="flex items-center gap-4 text-sm">
+      <Link href="/signup" className="text-zinc-400 hover:text-white">
+        Sign up
+      </Link>
+      {session ? (
+        <Link href="/home" className="text-zinc-600 hover:text-zinc-400">
+          My deals
+        </Link>
+      ) : null}
     </div>
   );
 }

@@ -47,6 +47,14 @@ body {
   a {
     color: inherit;
   }
+
+  /* P0: primary CTA contrast — Link-as-child must never inherit light text. */
+  a.btn-primary,
+  button.btn-primary,
+  .btn-primary {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
 }
 
 .hairline {

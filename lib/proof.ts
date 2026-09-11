@@ -13,7 +13,10 @@ export const CHO_PROOF = {
   verified_at: null as string | null,
 };
 
-export const PROOF_EMPTY_COPY = "Proof coming when deals close";
+export const PROOF_EMPTY_COPY =
+  "Live platform stats show here only after they’re verified. Your personal deals never count as public proof.";
+
+export const PROOF_EMPTY_MICRO = "No placeholders.";
 
 export function getPublicProof(): ProofStats {
   if (!CHO_PROOF.verified_at) {

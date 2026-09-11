@@ -1,11 +1,11 @@
 import { ProofBadge } from "@/components/demo-badge";
 import { Card } from "@/components/ui/card";
 import { formatUsd } from "@/lib/money";
-import { getPublicProof } from "@/lib/proof";
+import { getPublicProof, PROOF_EMPTY_COPY, PROOF_EMPTY_MICRO } from "@/lib/proof";
 
 export function ProofStrip({ compact = false }: { compact?: boolean }) {
   const proof = getPublicProof();
-  const empty = !proof.verified_at;
+  const empty = proof.message != null;
 
   return (
     <Card className="px-5 py-4">
@@ -15,19 +15,17 @@ export function ProofStrip({ compact = false }: { compact?: boolean }) {
             Public proof
           </p>
           <p className="mt-1 text-sm text-zinc-300">
-            {empty
-              ? (proof.message ?? "Proof coming when deals close")
-              : "CHO-verified live aggregates"}
+            {empty ? PROOF_EMPTY_COPY : "Live platform aggregates"}
           </p>
         </div>
         {empty ? <ProofBadge /> : <span className="text-xs text-emerald-300">Live</span>}
       </div>
       {empty ? (
-        <p className="mt-3 text-[11px] leading-relaxed text-zinc-600">
-          Personal My deals are not public proof. Imported ledger rows are
-          excluded — even CHO-verified personal $ is not platform traction.
-          Zeros appear only after CHO sets verified_at.
-        </p>
+        compact ? null : (
+          <p className="mt-3 text-[11px] leading-relaxed text-zinc-600">
+            {PROOF_EMPTY_MICRO}
+          </p>
+        )
       ) : (
         <div className="mt-4 grid grid-cols-3 gap-3 border-t border-white/6 pt-4">
           <Stat
@@ -41,11 +39,6 @@ export function ProofStrip({ compact = false }: { compact?: boolean }) {
           <Stat label="Active buyers" value={String(proof.activeBuyers ?? 0)} />
         </div>
       )}
-      {!compact ? (
-        <p className="mt-3 text-[11px] leading-relaxed text-zinc-600">
-          CHO-gated. Never invent metrics.
-        </p>
-      ) : null}
     </Card>
   );
 }

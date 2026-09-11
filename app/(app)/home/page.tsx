@@ -1,5 +1,10 @@
 import Link from "next/link";
 import { DealCard } from "@/components/deal-card";
+import {
+  AgentsEmptySecondary,
+  NeedsYouCta,
+  SearchingEmpty,
+} from "@/components/empty-ctas";
 import { Card } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
 import {
@@ -65,6 +70,23 @@ export default async function HomePage() {
         />
       </section>
 
+      {gated.length ? (
+        <Card className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">
+              Needs you
+            </p>
+            <p className="mt-1 text-sm text-zinc-400">
+              {gated.length} deal{gated.length === 1 ? "" : "s"} waiting on
+              human gates. Not live agent work.
+            </p>
+          </div>
+          <NeedsYouCta href={`/deals/${gated[0].id}`} />
+        </Card>
+      ) : null}
+
+      <SearchingEmpty />
+
       <section className="space-y-3">
         <div>
           <h2 className="text-lg font-medium tracking-tight">My deals</h2>
@@ -87,12 +109,15 @@ export default async function HomePage() {
         </p>
         <p className="mt-2 text-xs text-zinc-500">{AGENT_SPEND_MICRO}</p>
         <p className="mt-1 text-xs text-zinc-500">{AGENT_HOLD_NOTE}</p>
-        <Link
-          href="/agents"
-          className="mt-3 inline-block text-sm text-accent underline-offset-2 hover:underline"
-        >
-          {AGENT_OPEN_WORKSPACE}
-        </Link>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <Link
+            href="/agents"
+            className="text-sm text-accent underline-offset-2 hover:underline"
+          >
+            {AGENT_OPEN_WORKSPACE}
+          </Link>
+          {orgs.length ? null : <AgentsEmptySecondary />}
+        </div>
       </Card>
     </div>
   );
