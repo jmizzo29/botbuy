@@ -4,8 +4,8 @@ import {
   AGENT_EMPTY,
   AGENT_HOLD_NOTE,
   AGENT_SPEND_MICRO,
-  listAgentOrgs,
 } from "@/lib/agent-org";
+import { listAgentOrgs } from "@/lib/agent-runtime";
 
 export const metadata = {
   title: "Your agents",

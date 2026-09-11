@@ -1,10 +1,12 @@
 import { DealCard } from "@/components/deal-card";
 import { DEAL_STATUSES } from "@/lib/types";
-import { listDeals } from "@/lib/store";
+import { hydrateStore, listDeals } from "@/lib/store";
 
 export const metadata = {
   title: "Deals",
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function DealsPage({
   searchParams,
@@ -12,6 +14,7 @@ export default async function DealsPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await searchParams;
+  await hydrateStore();
   const deals = listDeals();
   const filtered =
     status && DEAL_STATUSES.includes(status as (typeof DEAL_STATUSES)[number])

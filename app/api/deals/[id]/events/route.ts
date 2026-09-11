@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { getDeal, listDealEvents } from "@/lib/store";
+import { getDeal, hydrateStore, listDealEvents } from "@/lib/store";
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
+  await hydrateStore();
   if (!getDeal(id)) {
     return NextResponse.json({ error: "Deal not found" }, { status: 404 });
   }

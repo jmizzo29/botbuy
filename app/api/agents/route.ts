@@ -4,9 +4,8 @@ import {
   AGENT_DEMO_BANNER,
   AGENT_HOLD_NOTE,
   AGENT_SPEND_MICRO,
-  activateAgentOrg,
-  listAgentOrgs,
 } from "@/lib/agent-org";
+import { activateAgentOrg, listAgentOrgs } from "@/lib/agent-runtime";
 
 const activateBody = z.object({
   assetId: z.string().min(1),

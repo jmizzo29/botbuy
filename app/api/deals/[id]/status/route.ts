@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { DEAL_STATUSES } from "@/lib/types";
-import { getDeal, transitionDeal } from "@/lib/store";
+import { getDeal, hydrateStore, persistEngineStore, transitionDeal } from "@/lib/store";
 import { TransitionError } from "@/lib/status-engine";
 
 const bodySchema = z.object({
@@ -13,6 +13,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
+  await hydrateStore();
   if (!getDeal(id)) {
     return NextResponse.json({ error: "Deal not found" }, { status: 404 });
   }
@@ -25,6 +26,7 @@ export async function POST(
   }
   try {
     const deal = transitionDeal(id, parsed.data.status);
+    await persistEngineStore();
     return NextResponse.json({ deal });
   } catch (error) {
     const message =

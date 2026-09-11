@@ -9,16 +9,17 @@ import {
   AGENT_HOLD_NOTE,
   AGENT_OPEN_WORKSPACE,
   AGENT_SPEND_MICRO,
-  listAgentOrgs,
 } from "@/lib/agent-org";
+import { listAgentOrgs } from "@/lib/agent-runtime";
 import { isVerifiedAmount } from "@/lib/deal-ui";
-import { listDeals } from "@/lib/store";
+import { hydrateStore, listDeals } from "@/lib/store";
 
 export const metadata = {
   title: "My deals",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  await hydrateStore();
   const user = getCurrentUser();
   const deals = listDeals(user.id);
   const closed = deals.filter((deal) => deal.status === "Closed");
@@ -45,7 +46,11 @@ export default function HomePage() {
       </header>
 
       <section className="grid gap-3 sm:grid-cols-3">
-        <Stat label="My deals" value={String(deals.length)} hint="Imported ledger" />
+        <Stat
+          label="My deals"
+          value={String(deals.length)}
+          hint="Imported ledger + HOLD search stubs"
+        />
         <Stat
           label="Closed"
           value={String(closed.length)}

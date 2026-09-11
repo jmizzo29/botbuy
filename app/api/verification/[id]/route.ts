@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDeal } from "@/lib/store";
+import { getDeal, hydrateStore } from "@/lib/store";
 import { runVerificationStub } from "@/lib/verification";
 
 export async function GET(
@@ -7,6 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
+  await hydrateStore();
   const deal = getDeal(id);
   if (!deal) {
     return NextResponse.json({ error: "Deal not found" }, { status: 404 });
@@ -19,6 +20,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
+  await hydrateStore();
   const deal = getDeal(id);
   if (!deal) {
     return NextResponse.json({ error: "Deal not found" }, { status: 404 });

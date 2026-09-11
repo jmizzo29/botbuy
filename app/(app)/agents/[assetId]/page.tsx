@@ -6,8 +6,8 @@ import {
   AGENT_HOLD_NOTE,
   AGENT_IMPORTED_MICRO,
   AGENT_SPEND_MICRO,
-  getAgentOrg,
 } from "@/lib/agent-org";
+import { getAgentOrg } from "@/lib/agent-runtime";
 
 export async function generateMetadata({
   params,

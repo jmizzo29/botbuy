@@ -9,16 +9,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isAdmin } from "@/lib/auth";
 import { getOwnerFinance } from "@/lib/finance";
 import { formatUsd } from "@/lib/money";
-import { agentOrgAdmin } from "@/lib/agent-org";
-import { listDeals, listDirectoryUsers } from "@/lib/store";
+import { agentOrgAdmin } from "@/lib/agent-runtime";
+import { hydrateStore, listDeals, listDirectoryUsers } from "@/lib/store";
 import { DEAL_STATUSES } from "@/lib/types";
 
 export const metadata = {
   title: "Admin",
 };
 
-export default function AdminPage() {
+export default async function AdminPage() {
   if (!isAdmin()) notFound();
+  await hydrateStore();
 
   const deals = listDeals();
   const users = listDirectoryUsers();

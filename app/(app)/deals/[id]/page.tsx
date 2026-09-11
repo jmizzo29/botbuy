@@ -7,11 +7,14 @@ import { StatusPill } from "@/components/status-pill";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivateAgents } from "@/components/activate-agents";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
-import { getAgentOrg } from "@/lib/agent-org";
-import { getDeal, listDealEvents } from "@/lib/store";
+import { getAgentOrg } from "@/lib/agent-runtime";
+import { PersistRunDeal } from "@/components/persist-run-deal";
+import { getDeal, hydrateStore, listDealEvents } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
 import { runVerificationStub } from "@/lib/verification";
 import type { DealEvent } from "@/lib/types";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -19,6 +22,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  await hydrateStore();
   const deal = getDeal(id);
   return { title: deal?.title ?? "Deal" };
 }
@@ -29,12 +33,14 @@ export default async function DealDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  await hydrateStore();
   const deal = getDeal(id);
   if (!deal) notFound();
   const verification = runVerificationStub(deal);
 
   return (
     <div className="space-y-6">
+      {deal.source === "engine" ? <PersistRunDeal dealId={deal.id} /> : null}
       <div>
         <Link href="/deals" className="text-xs text-zinc-500 hover:text-zinc-300">
           ← Deals
