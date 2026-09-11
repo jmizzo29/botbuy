@@ -3,6 +3,7 @@
 Date: 2026-09-11 (PT)  
 **John greenlit PUBLISH:** `/privacy` `/terms` `/about` `/beta` `/contact`  
 **Soft-signal HOLD:** marketing posts / launch claims only (CHO) — **not** a block on these routes  
+**Operating entity (CEO/John lock):** Build Star Labs · Florida  
 Owner: BotBuy CPO · Partner: Legal (Privacy/Terms body) · Ship: CTO · Craft: Quiet Capital (Designer)
 
 ---
@@ -90,6 +91,8 @@ BotBuy helps you buy software across channels without living in a dozen merchant
 You set a **spend limit**, describe what you want, and connect a **payment vault**. BotBuy searches, presents deals, and supports purchase and close — **you approve every deal**. Auto-approve stays off.
 
 We’re in **early access** on [botbuyer.ai](https://botbuyer.ai). Some vault rails and post-close tools are labeled **Demo** or **Coming** — those aren’t live yet.
+
+**Operator:** Build Star Labs (Florida). BotBuy is offered on botbuyer.ai.
 
 **Not on this page:** fake traction, user counts, live pricing, Escrow claims, “we run your business.”
 
@@ -183,3 +186,49 @@ Title `Contact` · Body `We’re finishing a monitored inbox for early access. C
 | **CEO** | Effective date + any contact substitutions |
 
 *BotBuy CPO · Soft-signal HOLD for marketing posts only · Site routes greenlit*
+
+
+---
+
+## 9) Locked strings for Eng (ship verbatim)
+
+**Footer labels (order):** `Privacy` · `Terms` · `About` · `Beta` · `Contact`
+
+**Shared honesty line:** `BotBuy is early access. Features labeled Demo or Coming are not live commitments.`
+
+### About (`/about`)
+- **H1:** `About BotBuy`
+- **Lead:** `Spend-gated buying with approval built in — so you set the limit, and BotBuy does the search and close work.`
+- **Body paragraphs:**
+  1. `BotBuy helps you buy software across channels without living in a dozen merchant tabs.`
+  2. `You set a spend limit, describe what you want, and connect a payment vault. BotBuy searches, presents deals, and supports purchase and close — you approve every deal. Auto-approve stays off.`
+  3. `We’re in early access on botbuyer.ai. Some vault rails and post-close tools are labeled Demo or Coming — those aren’t live yet.`
+  4. `Operator: Build Star Labs (Florida).`
+- **Empty:** title `About BotBuy` · body `We’re writing this page for early access.` · CTA `Back home`
+
+### Beta (`/beta`)
+- **H1:** `Early access`
+- **Lead:** `BotBuy is in early access — real product, honest labels, limited scope.`
+- **Expect bullets:** `Spend limit + intent + vault setup` · `Deal search and approval before any spend` · `Demo / Coming labels where something isn’t live yet`
+- **Isn’t bullets:** `A full public launch announcement` · `A promise that every payment rail is live` · `Live operate-agents post-close (stubs / Demo until labeled otherwise)`
+- **How:** `Use Run BotBuy on the home page to start. Access may be limited while we grow carefully.`
+- **Secondary CTA:** `Run BotBuy` · muted `Questions?` → `/contact`
+- **Empty:** `Early access details will show here.` · `Back home`
+
+### Contact (`/contact`)
+- **H1:** `Contact`
+- **Lead:** `Reach us about BotBuy early access, privacy, or product questions.`
+- **Legal line:** `Privacy / legal: legal@botbuyer.ai` — **only if provisioned; else Ops/Legal substitute before ship**
+- **Advice line:** `We don’t provide financial, legal, or tax advice. Merchant refunds follow merchant and processor rules.`
+- **Form success:** `Message sent.` / `We’ll get back as soon as we can.`
+- **Form error:** `Couldn’t send — try email instead.`
+- **Empty (no inbox):** `We’re finishing a monitored inbox for early access. Check back shortly.` · `Back home`
+
+### Privacy / Terms chrome
+- Privacy H1 `Privacy Policy` · Lead `How we handle information when you use BotBuy.`
+- Terms H1 `Terms of Service` · Lead `The rules for using BotBuy’s early-access experience.`
+- Body: Legal SoT (`privacy-policy-v1.md` / `terms-of-service-v1.md`) with **Build Star Labs / Florida** replacing `[Operating Entity]` / `[Jurisdiction]` where CEO locked — Legal applies.
+
+### Shared empties
+- Unavailable: `This page isn’t ready yet` / `We’re finishing early-access copy. Try again shortly.` / `Back home`
+- 404: `Page not found` / `That link doesn’t exist on BotBuy.` / `Back home`
