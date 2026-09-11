@@ -1,5 +1,6 @@
 import { DealCard } from "@/components/deal-card";
 import { Card } from "@/components/ui/card";
+import { YourAgents } from "@/components/your-agents";
 import { getCurrentUser } from "@/lib/auth";
 import { isVerifiedAmount } from "@/lib/deal-ui";
 import { listDeals } from "@/lib/store";
@@ -62,6 +63,10 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {closed.map((deal) => (
+        <YourAgents key={deal.id} assetId={deal.id} assetTitle={deal.title} />
+      ))}
     </div>
   );
 }

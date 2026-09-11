@@ -5,6 +5,7 @@ import { DealAmount } from "@/components/money";
 import { StatusControls } from "@/components/status-controls";
 import { StatusPill } from "@/components/status-pill";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { YourAgents } from "@/components/your-agents";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
 import { getDeal, listDealEvents } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
@@ -91,6 +92,10 @@ export default async function DealDetailPage({
             </ul>
           </CardContent>
         </Card>
+      ) : null}
+
+      {deal.status === "Closed" ? (
+        <YourAgents assetId={deal.id} assetTitle={deal.title} />
       ) : null}
 
       <Card>

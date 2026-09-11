@@ -14,6 +14,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
 5. ProofStrip CHO-empty (`verified_at` null). No vapor defaults.
 6. Land + onboarding: `/` `/signup` `/onboarding/intent|spend|vault|go-live` `/home`
+7. After Closed, **Your agents** stub (CEO/CFO/CTO/CMO) — Stub · not live. No spend. No external mutations.
 
 No seven-figure claims in product UI. No paid Stripe/Issuing.
 
@@ -28,6 +29,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 - Closing→Closed requires `verification.passed` for agent-run deals. Imported Closed may skip the engine at seed with `verification.skipped_reason=imported_ledger`.
 - Spend-out ceiling $1,000. Auto-approve OFF always — every deal needs approval before spend. Fail-closed. Infra near-zero — no assumed paid infra budget.
 - Search/purchase: **all software products across all channels** via pluggable marketplace adapters. Not a merchant allowlist. Intent default category = software. John templates: Software (default), Software + domain, Domain (secondary).
+- After purchase, a licensed-user agent org (CEO/CFO/CTO/CMO) is stubbed on Closed assets. **Stub · not live.** No real spend or external mutations. Actions would be logged per agent.
 - Owner Admin (`/admin`): Demo until analytics+Stripe live. Traffic/revenue empty copy. Users = real directory (John customer #1). Finance = seeded known costs (botbuyer.ai $179.96, Savedfast $405, transfer $11.68); burn/runway placeholders. Deals ops = seeded table with Imported badges, not ProofStrip. Health: OK / Degraded / Not connected / Demo / Stub. No invented MRR or fake uptime.
 
 ## Routes
