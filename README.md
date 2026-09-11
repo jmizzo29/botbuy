@@ -50,7 +50,7 @@ Seeded from [`data/john-deal-ledger.json`](data/john-deal-ledger.json) on bootst
 
 | id | status | $ UI | labels |
 | --- | --- | --- | --- |
-| `deal_botbuyer_ai` | Closed | **$179.96** verified (CHO PASS) | Imported · Board purchase · not agent-run · not public proof · evidence `namecheap-213804743` |
+| `deal_botbuyer_ai` | Closed | **Closed · $179.96** | Imported · Board purchase · not agent-run · not public proof · evidence `namecheap-213804743` |
 | `deal_savedfast` | Closing | **Imported · amount unverified** | Imported · blockers visible |
 | `deal_namecheap_savedfast_xfer` | Closing | **Imported · amount unverified** | Imported · parent → Savedfast |
 

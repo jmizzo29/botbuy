@@ -1,6 +1,7 @@
 import { DealCard } from "@/components/deal-card";
 import { Card } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
+import { isVerifiedAmount } from "@/lib/deal-ui";
 import { listDeals } from "@/lib/store";
 
 export const metadata = {
@@ -15,7 +16,7 @@ export default function HomePage() {
   const gated = deals.filter(
     (deal) => deal.blockers.length > 0 || deal.status === "Needs you",
   );
-  const unverified = deals.filter((deal) => !deal.amountVerified);
+  const unverifiedClosed = closed.filter((deal) => !isVerifiedAmount(deal));
 
   return (
     <div className="space-y-8">
@@ -38,9 +39,7 @@ export default function HomePage() {
           label="Closed"
           value={String(closed.length)}
           hint={
-            unverified.some((deal) => deal.status === "Closed")
-              ? "Amount pending verify"
-              : "Verified close"
+            unverifiedClosed.length ? "Imported · amount unverified" : "Verified close"
           }
         />
         <Stat

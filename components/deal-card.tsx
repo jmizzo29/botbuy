@@ -34,7 +34,7 @@ export function DealCard({ deal }: { deal: Deal }) {
             {deal.marketplace} · {deal.category} · {currentStage(deal)}
           </p>
         </div>
-        <DealAmount deal={deal} className="shrink-0" />
+        <DealAmount deal={deal} withStatus className="shrink-0" />
       </div>
       {deal.blockers.length ? (
         <ul className="mt-3 list-disc space-y-1 pl-4 text-xs text-amber-200/90">

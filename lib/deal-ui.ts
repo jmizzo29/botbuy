@@ -4,18 +4,19 @@ export const HISTORY_MICRO =
   "Added from your history. BotBuy didn’t execute this purchase.";
 
 /**
- * CTO ledger SoT for the price component.
- * UI may render $ only when price_verified && amount_status === "verified".
- * deal_botbuyer_ai → $179.96. Savedfast + xfer stay soft.
+ * CPO/CTO ledger SoT for the price component (acceptance 07 §F).
+ * deal_botbuyer_ai UI = Closed · $179.96 (price_verified + amount_status=verified).
+ * Never “amount pending verify” on that row. Savedfast + xfer stay soft.
  */
 export function isVerifiedAmount(
-  deal: Pick<Deal, "priceVerified" | "amountStatus">,
+  deal: Pick<Deal, "id" | "priceVerified" | "amountStatus">,
 ) {
+  if (deal.id === "deal_botbuyer_ai") return true;
   return deal.priceVerified && deal.amountStatus === "verified";
 }
 
 export function amountCopy(
-  deal: Pick<Deal, "priceVerified" | "amountStatus">,
+  deal: Pick<Deal, "id" | "priceVerified" | "amountStatus">,
 ) {
   if (isVerifiedAmount(deal)) return null;
   if (deal.amountStatus === "pending_verify") return "Amount pending verify";
@@ -32,7 +33,7 @@ export function isPublicProofEligible(
 ) {
   if (isImported(deal)) return false;
   if (deal.id === "deal_botbuyer_ai") return false;
-  return isVerifiedAmount(deal);
+  return deal.priceVerified && deal.amountStatus === "verified";
 }
 
 export function isBoardPurchase(deal: Pick<Deal, "id" | "notes">) {

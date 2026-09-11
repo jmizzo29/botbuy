@@ -4,28 +4,31 @@ import { formatUsd } from "@/lib/money";
 import type { Deal } from "@/lib/types";
 
 /**
- * CTO SoT price component.
- * price_verified && amount_status=verified → show $ (botbuyer.ai $179.96).
- * Otherwise soft copy. This $ is never public ProofStrip traction.
+ * CPO confirm: botbuyer.ai = Closed · $179.96.
+ * Other rows stay soft unless price_verified && amount_status=verified.
+ * Never public ProofStrip traction.
  */
 export function DealAmount({
   deal,
   className,
+  withStatus = false,
 }: {
   deal: Deal;
   className?: string;
+  withStatus?: boolean;
 }) {
   if (isVerifiedAmount(deal)) {
+    const money = formatUsd(deal.priceUsd);
     return (
       <span
         className={cn("money inline-flex items-baseline", className)}
         title={
           deal.receipt
-            ? `Verified ${formatUsd(deal.priceUsd)} · ${deal.receipt.merchant} ${deal.receipt.order_id}${deal.receipt.txn_id ? ` / txn ${deal.receipt.txn_id}` : ""}`
-            : `Verified ${formatUsd(deal.priceUsd)}`
+            ? `Verified ${money} · ${deal.receipt.merchant} ${deal.receipt.order_id}${deal.receipt.txn_id ? ` / txn ${deal.receipt.txn_id}` : ""}`
+            : `Verified ${money}`
         }
       >
-        {formatUsd(deal.priceUsd)}
+        {withStatus ? `${deal.status} · ${money}` : money}
       </span>
     );
   }

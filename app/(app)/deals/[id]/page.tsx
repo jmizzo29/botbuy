@@ -65,7 +65,7 @@ export default async function DealDetailPage({
               <p className="mt-2 text-sm text-zinc-500">{HISTORY_MICRO}</p>
             ) : null}
           </div>
-          <DealAmount deal={deal} />
+          <DealAmount deal={deal} withStatus />
         </div>
       </div>
 
