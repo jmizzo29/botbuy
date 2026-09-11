@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
   },
   other: {
-    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
   },
   icons: {
     icon: [
