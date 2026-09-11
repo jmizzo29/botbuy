@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import {
   A2HS_ACTION,
   A2HS_COPY,
+  A2HS_DISMISS,
   A2HS_IOS,
+  A2HS_TITLE,
 } from "@/lib/cpo-techlux";
 import { SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
@@ -106,25 +108,27 @@ export function InstallHint() {
   return (
     <div
       role="status"
+      data-surface="a2hs"
       className={cn(
-        "fixed inset-x-3 z-30 rounded-[var(--bb-radius)] bg-surface/95 px-3 py-3 backdrop-blur",
+        "fixed inset-x-3 z-30 rounded-[var(--bb-radius)] bg-surface px-4 py-3.5",
         SURFACE_RING_CLASS,
         appHasBottomNav(pathname)
           ? "bottom-[calc(4.75rem+env(safe-area-inset-bottom))] md:bottom-4"
           : "bottom-[max(1rem,env(safe-area-inset-bottom))]",
       )}
     >
-      <p className="text-xs leading-relaxed text-muted">
+      <p className="text-sm font-medium tracking-tight">{A2HS_TITLE}</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted">
         {deferred ? A2HS_COPY : A2HS_IOS}
       </p>
-      <div className="mt-2 flex flex-wrap gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         {deferred ? (
           <Button type="button" size="sm" className="min-h-11" onClick={() => void install()}>
             {A2HS_ACTION}
           </Button>
         ) : null}
         <Button type="button" size="sm" variant="ghost" className="min-h-11" onClick={dismiss}>
-          Not now
+          {A2HS_DISMISS}
         </Button>
       </div>
     </div>

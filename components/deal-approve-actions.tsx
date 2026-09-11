@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ApproveSheet } from "@/components/approve-sheet";
 import { Button } from "@/components/ui/button";
 import {
   APPROVE_LABEL,
   APPROVE_MICRO,
+  APPROVE_REVIEW_LABEL,
   APPROVE_STATUS,
   REJECT_LABEL,
   REJECT_STATUS,
@@ -15,15 +17,20 @@ import type { DealStatus } from "@/lib/types";
 export function DealApproveActions({
   dealId,
   status,
+  title,
+  spend,
   compact = false,
 }: {
   dealId: string;
   status: DealStatus;
+  title?: string;
+  spend?: string;
   compact?: boolean;
 }) {
   const router = useRouter();
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   if (status !== "Needs you") return null;
 
@@ -43,6 +50,7 @@ export function DealApproveActions({
       setError(body?.error ?? "Transition rejected.");
       return;
     }
+    setSheetOpen(false);
     router.refresh();
   }
 
@@ -50,11 +58,25 @@ export function DealApproveActions({
 
   return (
     <div className={compact ? "space-y-1.5" : "space-y-3"}>
+      <div className="md:hidden">
+        <Button
+          type="button"
+          size={size}
+          className={compact ? "min-h-11 min-w-[5.5rem]" : "min-h-11 w-full"}
+          disabled={pending !== null}
+          onClick={() => setSheetOpen(true)}
+        >
+          {APPROVE_REVIEW_LABEL}
+        </Button>
+        <p className={compact ? "mt-1.5 text-[11px] text-muted" : "mt-3 text-sm text-muted"}>
+          {APPROVE_MICRO}
+        </p>
+      </div>
       <div
         className={
           compact
-            ? "flex flex-nowrap gap-2"
-            : "flex flex-col gap-2 sm:flex-row sm:flex-wrap"
+            ? "hidden flex-nowrap gap-2 md:flex"
+            : "hidden flex-col gap-2 md:flex md:flex-row md:flex-wrap"
         }
       >
         <Button
@@ -77,10 +99,27 @@ export function DealApproveActions({
           {pending === REJECT_STATUS ? "…" : REJECT_LABEL}
         </Button>
       </div>
-      <p className={compact ? "text-[11px] text-muted" : "text-sm text-muted"}>
+      <p
+        className={
+          compact
+            ? "hidden text-[11px] text-muted md:block"
+            : "hidden text-sm text-muted md:block"
+        }
+      >
         {APPROVE_MICRO}
       </p>
-      {error ? <p className="text-sm text-demo">{error}</p> : null}
+      {error && !sheetOpen ? <p className="text-sm text-demo">{error}</p> : null}
+      {sheetOpen ? (
+        <ApproveSheet
+          title={title ?? "Needs you"}
+          spend={spend}
+          pending={pending}
+          error={error}
+          onApprove={() => decide(APPROVE_STATUS)}
+          onReject={() => decide(REJECT_STATUS)}
+          onClose={() => setSheetOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

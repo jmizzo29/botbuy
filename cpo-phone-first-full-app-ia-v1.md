@@ -4,6 +4,8 @@ John LOCK · CPO Eng pack · 2026-09-11. Soft-signal HOLD.
 
 BotBuy on a phone is a Home Screen app, not a 6-column prototype chrome. Demo / Coming stay honest. No fake live rails. Usage meter stays Demo / Estimate — never Actual $ token COGS.
 
+Visual SoT mid-flight: `designer-ui-mocks-mobile-techlux.md` (Techlux light). IA in this file wins if craft and IA disagree.
+
 ## Auth bottom tabs
 
 Primary IA only. Not a 6-col cram.

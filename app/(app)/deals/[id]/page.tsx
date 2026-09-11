@@ -96,7 +96,11 @@ export default async function DealDetailPage({
               Every deal needs your approval · auto-approve OFF
             </p>
             <div className="mt-6">
-              <DealApproveActions dealId={deal.id} status={deal.status} />
+              <DealApproveActions
+                dealId={deal.id}
+                status={deal.status}
+                title={deal.title}
+              />
             </div>
           </div>
           <div>

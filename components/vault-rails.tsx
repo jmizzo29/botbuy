@@ -16,11 +16,11 @@ export function VaultRails() {
 
   return (
     <div className="space-y-4">
-      <ul className="divide-y divide-[var(--bb-line)]">
+      <ul className="space-y-3" data-surface="payment-methods">
         {VAULT_FUND_IN_RAILS.map((rail) => (
           <li
             key={rail.id}
-            className="flex flex-wrap items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
+            className="flex flex-wrap items-start justify-between gap-3 rounded-[var(--bb-radius)] bg-surface px-4 py-3 ring-1 ring-[var(--bb-line)]"
           >
             <div>
               <p className="text-sm font-medium">{rail.label}</p>

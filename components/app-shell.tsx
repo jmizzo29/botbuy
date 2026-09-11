@@ -106,14 +106,11 @@ export function AppShell({
       </aside>
 
       <div className="relative z-10 md:pl-60">
-        <header className="sticky top-0 z-30 flex items-center justify-between overflow-visible border-b border-[var(--bb-line)] bg-background/80 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
+        <header className="sticky top-0 z-30 flex items-center justify-between overflow-visible border-b border-[var(--bb-line)] bg-surface/90 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
           <Link href={MY_DEALS_HREF} className="flex min-h-11 items-center" aria-label="BotBuy home">
             <BrandLockup />
           </Link>
-          <div className="flex items-center gap-1">
-            <span className="text-xs text-muted">{user.name}</span>
-            <AppMoreMenu />
-          </div>
+          <AppMoreMenu />
         </header>
         <main className="mx-auto w-full max-w-5xl px-4 pb-8 pt-6 md:px-8 md:pb-8 md:pt-10">
           {children}
@@ -123,8 +120,9 @@ export function AppShell({
         </footer>
         <nav
           aria-label="App"
+          data-surface="phone-tabs"
           className={cn(
-            "fixed inset-x-0 bottom-0 z-20 grid border-t border-[var(--bb-line)] bg-background/92 pl-[max(0.25rem,env(safe-area-inset-left))] pr-[max(0.25rem,env(safe-area-inset-right))] pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden",
+            "fixed inset-x-0 bottom-0 z-20 grid border-t border-[var(--bb-line)] bg-surface pl-[max(0.25rem,env(safe-area-inset-left))] pr-[max(0.25rem,env(safe-area-inset-right))] pt-1.5 pb-[max(0.45rem,env(safe-area-inset-bottom))] md:hidden",
             phoneTabs.length === 3 ? "grid-cols-3" : "grid-cols-2",
           )}
         >
@@ -136,17 +134,17 @@ export function AppShell({
                 href={link.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex min-h-11 min-w-11 flex-col items-center justify-center gap-0.5 rounded-xl px-2 text-[11px] leading-tight",
-                  active
-                    ? "bg-primary/12 font-medium text-foreground"
-                    : "text-muted",
+                  "flex min-h-11 min-w-11 flex-col items-center justify-center gap-0.5 px-2 text-[11px] leading-tight",
+                  active ? "font-medium text-foreground" : "text-muted",
                 )}
               >
                 <span className="relative">
-                  <link.icon className="h-5 w-5" />
+                  <link.icon
+                    className={cn("h-5 w-5", active ? "text-primary" : "text-muted")}
+                  />
                   {link.badge > 0 ? (
                     <span
-                      className="absolute -right-2 -top-1.5 min-w-4 rounded-full bg-demo px-1 text-center text-[9px] font-semibold leading-4 text-white"
+                      className="absolute -right-2.5 -top-1.5 min-w-4 rounded-full bg-[var(--bb-demo-bg)] px-1 text-center text-[9px] font-semibold leading-4 text-demo"
                       aria-label={`${link.badge} Needs you`}
                     >
                       {link.badge > 9 ? "9+" : link.badge}

@@ -35,11 +35,13 @@ function Counter({
   value: string;
 }) {
   return (
-    <div className="rounded-xl bg-white/[0.03] px-4 py-3 ring-1 ring-white/6">
-      <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+    <div className="rounded-[var(--bb-radius)] bg-surface px-4 py-3 ring-1 ring-[var(--bb-line)]">
+      <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
         {label}
       </p>
-      <p className="mt-1 text-2xl font-medium tracking-tight">{value}</p>
+      <p className="mt-1 text-2xl font-medium tracking-tight text-foreground">
+        {value}
+      </p>
     </div>
   );
 }
@@ -71,7 +73,7 @@ export function DealUsageSection({ events }: { events: UsageEvent[] }) {
       <CardHeader className="flex flex-row items-start justify-between gap-3">
         <div>
           <CardTitle>Usage</CardTitle>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-muted">
             Coarse token / call meter · {USAGE_DEMO_BADGE}
           </p>
         </div>
@@ -89,13 +91,13 @@ export function DealUsageSection({ events }: { events: UsageEvent[] }) {
             value={formatTokensEst(totals.tokensEst.total)}
           />
         </div>
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-muted">
           tokens_est {tokensLine(totals.tokensEst)}
         </p>
         {events.length ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="text-[11px] uppercase tracking-[0.12em] text-zinc-500">
+              <thead className="text-[11px] uppercase tracking-[0.12em] text-muted">
                 <tr>
                   <th className="pb-2 pr-3 font-medium">Run / phase</th>
                   <th className="pb-2 pr-3 font-medium">Calls</th>
@@ -103,29 +105,29 @@ export function DealUsageSection({ events }: { events: UsageEvent[] }) {
                   <th className="pb-2 font-medium">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/6">
+              <tbody className="divide-y divide-[var(--bb-line)]">
                 {events.map((event) => (
                   <tr key={event.id}>
                     <td className="py-3 pr-3">
                       <p>
                         {event.phase} · {event.runId}
                       </p>
-                      <p className="text-xs text-zinc-500">
+                      <p className="text-xs text-muted">
                         {event.provider} / {event.model} ·{" "}
                         {formatDateTime(event.startedAt)}
                         {event.endedAt ? ` → ${formatDateTime(event.endedAt)}` : ""}
                       </p>
                     </td>
-                    <td className="py-3 pr-3 text-zinc-300">
+                    <td className="py-3 pr-3 text-foreground/80">
                       model {formatCount(event.modelCalls)} · tool{" "}
                       {formatCount(event.toolCalls)}
                     </td>
-                    <td className="py-3 pr-3 text-zinc-300">
+                    <td className="py-3 pr-3 text-foreground/80">
                       {tokensLine(event.tokensEst)}
                     </td>
                     <td className="py-3">
-                      <span className="text-zinc-300">{event.status}</span>
-                      <p className="text-xs text-amber-200/80">
+                      <span className="text-foreground/80">{event.status}</span>
+                      <p className="text-xs text-demo">
                         {USAGE_ESTIMATE_LABEL}
                       </p>
                     </td>
@@ -135,11 +137,11 @@ export function DealUsageSection({ events }: { events: UsageEvent[] }) {
             </table>
           </div>
         ) : (
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-muted">
             No usage events. Imported history is not a billed run.
           </p>
         )}
-        <p className="text-xs text-zinc-500">{USAGE_HOLD_NOTE}</p>
+        <p className="text-xs text-muted">{USAGE_HOLD_NOTE}</p>
         <p className="text-xs text-muted">
           <a href="/settings#usage" className="underline-offset-2 hover:underline">
             All usage in Settings
@@ -217,7 +219,7 @@ export function AdminUsageRollup({
         {days.length ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="text-[11px] uppercase tracking-[0.12em] text-zinc-500">
+              <thead className="text-[11px] uppercase tracking-[0.12em] text-muted">
                 <tr>
                   <th className="pb-2 pr-3 font-medium">Day</th>
                   <th className="pb-2 pr-3 font-medium">Runs</th>
@@ -225,12 +227,12 @@ export function AdminUsageRollup({
                   <th className="pb-2 font-medium">tokens_est</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/6">
+              <tbody className="divide-y divide-[var(--bb-line)]">
                 {days.map((row) => (
                   <tr key={row.day}>
                     <td className="py-3 pr-3">
                       {row.day}
-                      <p className="text-xs text-amber-200/80">
+                      <p className="text-xs text-demo">
                         {USAGE_ESTIMATE_LABEL}
                       </p>
                     </td>
@@ -246,7 +248,7 @@ export function AdminUsageRollup({
             </table>
           </div>
         ) : (
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-muted">
             No usage events yet. Run BotBuy opens a Searching estimate stub.
           </p>
         )}
@@ -289,7 +291,7 @@ export function AdminUsageRollup({
             </p>
           )
         ) : null}
-        <p className="text-xs text-zinc-500">{USAGE_HOLD_NOTE}</p>
+        <p className="text-xs text-muted">{USAGE_HOLD_NOTE}</p>
       </CardContent>
     </Card>
   );

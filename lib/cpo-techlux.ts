@@ -13,6 +13,8 @@ export const APPROVE_MICRO =
 
 export const APPROVE_LABEL = "Approve" as const;
 export const REJECT_LABEL = "Reject" as const;
+export const APPROVE_SHEET_TITLE = "Approve this deal" as const;
+export const APPROVE_REVIEW_LABEL = "Review" as const;
 
 /** Needs you → Buying continues the deal after a human gate. */
 export const APPROVE_STATUS = "Buying" as const;
@@ -26,7 +28,9 @@ export const A2HS_COPY =
   "Add BotBuy to your Home Screen. Demo · not an App Store or Play listing." as const;
 export const A2HS_IOS =
   "On iPhone: Share → Add to Home Screen. Demo · not an App Store app." as const;
+export const A2HS_TITLE = "Add to Home Screen" as const;
 export const A2HS_ACTION = "Add to Home Screen" as const;
+export const A2HS_DISMISS = "Not now" as const;
 
 /** CPO phone-first bottom IA. Intent/Vault/Settings are header/menu only. */
 export const PHONE_TAB_MY_DEALS = MY_DEALS_LABEL;
