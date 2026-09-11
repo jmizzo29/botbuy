@@ -6,6 +6,7 @@ import { StatusControls } from "@/components/status-controls";
 import { StatusPill } from "@/components/status-pill";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivateAgents } from "@/components/activate-agents";
+import { SearchingEmpty } from "@/components/empty-ctas";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
 import { getAgentOrg } from "@/lib/agent-runtime";
 import { PersistRunDeal } from "@/components/persist-run-deal";
@@ -85,6 +86,8 @@ export default async function DealDetailPage({
         <span>price_verified={String(deal.priceVerified)}</span>
         {deal.evidencePath ? <span>evidence={deal.evidencePath}</span> : null}
       </div>
+
+      {deal.status === "Searching" ? <SearchingEmpty /> : null}
 
       {deal.blockers.length ? (
         <Card className="ring-amber-400/20">

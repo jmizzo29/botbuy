@@ -30,17 +30,16 @@ export default function LandPage() {
           <p>{BRAND.easeMicro}</p>
           <p>{BRAND.channelMicro}</p>
         </div>
-        <div className="flex flex-wrap gap-3">
-          <Button
-            asChild
-            size="lg"
-            className="bg-white font-semibold !text-black hover:bg-zinc-100"
-          >
-            <Link href="/signup">{BRAND.primaryCta}</Link>
-          </Button>
-          <Button asChild size="lg" variant="secondary">
-            <Link href="#how">{BRAND.secondaryCta}</Link>
-          </Button>
+        <div className="space-y-3">
+          <div className="flex flex-wrap gap-3">
+            <Button asChild size="lg">
+              <Link href="/signup">{BRAND.primaryCta}</Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary">
+              <Link href="#how">{BRAND.secondaryCta}</Link>
+            </Button>
+          </div>
+          <p className="text-sm text-zinc-400">{BRAND.trustLine}</p>
         </div>
         <section id="how" className="max-w-lg scroll-mt-8 space-y-3">
           <h2 className="text-lg font-medium tracking-tight">How it works</h2>

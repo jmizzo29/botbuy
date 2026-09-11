@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DealAmount } from "@/components/money";
@@ -44,69 +45,6 @@ export default async function AdminPage() {
           Owner overview · not customer-facing
         </p>
       </header>
-
-      <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-3">
-          <div>
-            <CardTitle>Web traffic</CardTitle>
-            <p className="mt-1 text-sm text-zinc-400">
-              Traffic connects when analytics is live.
-            </p>
-          </div>
-          <DemoBadge />
-        </CardHeader>
-        <CardContent className="text-sm text-zinc-500">
-          CHO-gated. No visits, uniques, or referrers until Plausible or Vercel
-          Analytics is live. Demo samples are not shown as real.
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-3">
-          <div>
-            <CardTitle>Users</CardTitle>
-            <p className="mt-1 text-sm text-zinc-400">
-              Directory count from seed/DB. Not a paid-user total.
-            </p>
-          </div>
-          <DemoBadge />
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-2xl font-medium tracking-tight">{users.length}</p>
-          <ul className="divide-y divide-white/6">
-            {users.map((user) => (
-              <li key={user.id} className="py-3 text-sm">
-                <p className="font-medium">{user.name}</p>
-                <p className="text-zinc-500">
-                  {user.id === "john-mitchell"
-                    ? "customer #1"
-                    : user.role}{" "}
-                  · {user.company} · {user.email}
-                </p>
-              </li>
-            ))}
-          </ul>
-          <p className="text-xs text-zinc-500">
-            Paid users are not counted. Stripe is not live — no invented totals.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-3">
-          <div>
-            <CardTitle>MRR / revenue</CardTitle>
-            <p className="mt-1 text-sm text-zinc-400">
-              Revenue connects when Stripe is live.
-            </p>
-          </div>
-          <DemoBadge />
-        </CardHeader>
-        <CardContent className="text-sm text-zinc-500">
-          No MRR, ARR, ARPU, or paid-vs-trial claim. No paid Stripe or Issuing
-          in this POC.
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-3">
@@ -251,6 +189,73 @@ export default async function AdminPage() {
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-3">
           <div>
+            <CardTitle>Web traffic</CardTitle>
+            <p className="mt-1 text-sm text-zinc-400">
+              Traffic connects when analytics is live.
+            </p>
+          </div>
+          <DemoBadge />
+        </CardHeader>
+        <CardContent>
+          <DemoStub>
+            No visits, uniques, or referrers until Plausible or Vercel Analytics
+            is live. Demo samples are not shown as real.
+          </DemoStub>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-start justify-between gap-3">
+          <div>
+            <CardTitle>Users</CardTitle>
+            <p className="mt-1 text-sm text-zinc-400">
+              Directory count from seed/DB. Not a paid-user total.
+            </p>
+          </div>
+          <DemoBadge />
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-2xl font-medium tracking-tight">{users.length}</p>
+          <ul className="divide-y divide-white/6">
+            {users.map((user) => (
+              <li key={user.id} className="py-3 text-sm">
+                <p className="font-medium">{user.name}</p>
+                <p className="text-zinc-500">
+                  {user.id === "john-mitchell"
+                    ? "customer #1"
+                    : user.role}{" "}
+                  · {user.company} · {user.email}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <DemoStub>
+            Paid users are not counted. Stripe is not live — no invented totals.
+          </DemoStub>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-start justify-between gap-3">
+          <div>
+            <CardTitle>MRR / revenue</CardTitle>
+            <p className="mt-1 text-sm text-zinc-400">
+              Revenue connects when Stripe is live.
+            </p>
+          </div>
+          <DemoBadge />
+        </CardHeader>
+        <CardContent>
+          <DemoStub>
+            No MRR, ARR, ARPU, or paid-vs-trial claim. No paid Stripe or Issuing
+            in this POC.
+          </DemoStub>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-start justify-between gap-3">
+          <div>
             <CardTitle>Agent orgs</CardTitle>
             <p className="mt-1 text-sm text-zinc-400">{agentOrgs.badge}</p>
           </div>
@@ -337,6 +342,17 @@ export default async function AdminPage() {
           </ul>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function DemoStub({ children }: { children: ReactNode }) {
+  return (
+    <div className="rounded-xl border border-dashed border-amber-400/30 bg-amber-500/[0.05] px-4 py-3">
+      <p className="text-[11px] uppercase tracking-[0.14em] text-amber-200/85">
+        Demo stub
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-zinc-400">{children}</p>
     </div>
   );
 }
