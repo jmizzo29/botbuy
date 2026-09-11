@@ -1,5 +1,10 @@
 import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
 import { DEMO_USER } from "@/lib/auth";
+import {
+  DEMO_NEEDS_YOU_DEAL,
+  DEMO_NEEDS_YOU_EVENTS,
+  DEMO_NEEDS_YOU_ID,
+} from "@/lib/demo-needs-you";
 import { isVerifiedAmount } from "@/lib/deal-ui";
 import "@/lib/adapters";
 import {
@@ -120,6 +125,16 @@ function ensureEngineUsageStubs() {
   }
 }
 
+function ensureDemoNeedsYou() {
+  const engine = engineState();
+  if (engine.deals.some((deal) => deal.id === DEMO_NEEDS_YOU_ID)) return;
+  if (ledgerDeals.some((deal) => deal.id === DEMO_NEEDS_YOU_ID)) return;
+  rememberEngineDeal(
+    structuredClone(DEMO_NEEDS_YOU_DEAL),
+    structuredClone(DEMO_NEEDS_YOU_EVENTS),
+  );
+}
+
 export async function hydrateStore() {
   const engine = engineState();
   const durable = await readDurableJournal();
@@ -129,6 +144,7 @@ export async function hydrateStore() {
       durable,
     ),
   );
+  ensureDemoNeedsYou();
   ensureEngineUsageStubs();
 }
 

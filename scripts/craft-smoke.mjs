@@ -169,6 +169,9 @@ assert(home.includes("APPROVE_MICRO") || home.includes("BotBuy only runs what yo
 assert(home.includes("no invented GMV"), "My deals invents no GMV");
 assert(dealDetail.includes("DealApproveActions"), "deal detail Approve/Reject");
 assert(dealDetail.includes("auto-approve OFF"), "deal detail auto-approve OFF");
+const demoNeedsYou = read("lib/demo-needs-you.ts");
+assert(demoNeedsYou.includes('status: "Needs you"'), "demo Needs you fixture status");
+assert(store.includes("ensureDemoNeedsYou") || store.includes("DEMO_NEEDS_YOU"), "store seeds Needs you demo");
 assert(approveUi.includes("APPROVE_LABEL") && approveUi.includes("REJECT_LABEL"), "Needs you ships Approve and Reject");
 assert(approveUi.includes("APPROVE_MICRO"), "approve micro on Needs you actions");
 assert(!approveUi.includes("{compact ? null"), "compact does not hide Reject");
