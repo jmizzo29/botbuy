@@ -1,6 +1,6 @@
 import { flags } from "@/lib/flags";
 import { isVerifiedAmount } from "@/lib/deal-ui";
-import { countsTowardCfoMoney, isDemoQaFixture } from "@/lib/demo-needs-you";
+import { countsTowardCfoMoney, isNonLedgerDemoSeed } from "@/lib/demo-needs-you";
 import { listDeals } from "@/lib/store";
 import type { Deal } from "@/lib/types";
 
@@ -98,9 +98,9 @@ export function getOwnerFinance(deals = listDeals()): OwnerFinance {
     startupCostsUsd === FORBIDDEN_IMPORTED_TOTAL_USD ||
     domainsInfraUsd === 191.64 ||
     startupCostsPendingUsd !== EXPECTED_IMPORTED_PENDING_USD ||
-    moneyDeals.some(isDemoQaFixture) ||
-    verified.some(isDemoQaFixture) ||
-    pending.some(isDemoQaFixture)
+    moneyDeals.some(isNonLedgerDemoSeed) ||
+    verified.some(isNonLedgerDemoSeed) ||
+    pending.some(isNonLedgerDemoSeed)
   ) {
     throw new Error(
       "CHO BLOCK: customer GMV must stay 0. Do not book $179.96 personal domain as GMV, $596.64 as verified totals, unverified $191.64 domains/infra, or demo Needs-you $420 as pending/burn.",

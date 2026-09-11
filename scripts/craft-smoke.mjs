@@ -174,7 +174,8 @@ const demoNeedsYou = read("lib/demo-needs-you.ts");
 assert(demoNeedsYou.includes('status: "Needs you"'), "demo Needs you fixture status");
 assert(demoNeedsYou.includes("DEMO_NEEDS_YOU_LISTED_USD = 420"), "demo Needs you listed $420");
 assert(demoNeedsYou.includes("countsTowardCfoMoney"), "demo fixture opted out of CFO money");
-assert(dealUi.includes("isDemoQaFixture(deal)"), "public proof excludes demo QA fixture");
+assert(demoNeedsYou.includes("isNonLedgerDemoSeed"), "engine/demo seed opted out of CFO money");
+assert(dealUi.includes("isNonLedgerDemoSeed(deal)"), "public proof excludes engine/demo seed");
 assert(store.includes("ensureDemoNeedsYou") || store.includes("DEMO_NEEDS_YOU"), "store seeds Needs you demo");
 assert(store.includes(".filter(countsTowardCfoMoney)"), "store money helpers skip demo fixture");
 assert(approveUi.includes("APPROVE_LABEL") && approveUi.includes("REJECT_LABEL"), "Needs you ships Approve and Reject");
@@ -211,6 +212,9 @@ assert(finance.includes("countsTowardCfoMoney"), "CFO rollup excludes demo QA fi
 assert(store.includes("countsTowardCfoMoney"), "listed/verified spend exclude demo QA fixture");
 assert(admin.includes("botbuyer.ai $179.96"), "admin verified $179.96");
 assert(admin.includes("GMV empty until platform Closed deals"), "admin GMV empty copy");
+assert(admin.includes("Savedfast + xfer · not burn · not GMV"), "admin pending is Savedfast-only");
+assert(admin.includes("Demo pending"), "admin labels Demo pending separately");
+assert(admin.includes("demoPendingListedUsd"), "admin Demo pending uses fixture helper");
 
 assert(usage.includes('costKind: "estimate"') || usage.includes('USAGE_COST_KIND'), "usage costKind estimate");
 assert(usage.includes("Estimate until CHO promote"), "usage Estimate until CHO");

@@ -1,4 +1,4 @@
-import { isDemoQaFixture } from "@/lib/demo-needs-you";
+import { isNonLedgerDemoSeed } from "@/lib/demo-needs-you";
 import type { Deal } from "@/lib/types";
 
 export const HISTORY_MICRO =
@@ -75,7 +75,7 @@ export function isHonestPersonalClosedEscrow(
 export function isPublicProofEligible(
   deal: Pick<Deal, "id" | "source" | "priceVerified" | "amountStatus">,
 ) {
-  if (isDemoQaFixture(deal)) return false;
+  if (isNonLedgerDemoSeed(deal)) return false;
   if (isImported(deal)) return false;
   if (deal.id === "deal_botbuyer_ai") return false;
   return deal.priceVerified && deal.amountStatus === "verified";

@@ -11,9 +11,30 @@ export function isDemoQaFixture(deal: Pick<Deal, "id">) {
   return deal.id === DEMO_NEEDS_YOU_ID;
 }
 
-/** My deals may show the fixture. Owner money rollups must not. */
-export function countsTowardCfoMoney(deal: Pick<Deal, "id">) {
-  return !isDemoQaFixture(deal);
+/** Engine / deal_demo_* QA fixtures. Not imported ledger history. */
+export function isNonLedgerDemoSeed(deal: Pick<Deal, "id" | "source">) {
+  return (
+    isDemoQaFixture(deal) ||
+    deal.source === "engine" ||
+    deal.id.startsWith("deal_demo_")
+  );
+}
+
+/** My deals may show fixtures. Owner imported/pending must not. */
+export function countsTowardCfoMoney(deal: Pick<Deal, "id" | "source">) {
+  return !isNonLedgerDemoSeed(deal);
+}
+
+export function demoPendingListedUsd(
+  deals: Pick<Deal, "id" | "source" | "priceUsd">[],
+) {
+  return (
+    Math.round(
+      deals
+        .filter(isNonLedgerDemoSeed)
+        .reduce((sum, deal) => sum + deal.priceUsd, 0) * 100,
+    ) / 100
+  );
 }
 
 export const DEMO_NEEDS_YOU_DEAL: Deal = {
