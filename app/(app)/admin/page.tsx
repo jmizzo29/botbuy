@@ -7,6 +7,8 @@ import { HealthPill } from "@/components/health-pill";
 import { StatusPill } from "@/components/status-pill";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isAdmin } from "@/lib/auth";
+import { getOwnerFinance } from "@/lib/finance";
+import { formatUsd } from "@/lib/money";
 import { listDeals, listDirectoryUsers } from "@/lib/store";
 import { DEAL_STATUSES } from "@/lib/types";
 
@@ -26,6 +28,7 @@ export default function AdminPage() {
     ]),
   );
   const gated = deals.filter((deal) => deal.blockers.length > 0);
+  const finance = getOwnerFinance(deals);
 
   return (
     <div className="space-y-6">
@@ -99,6 +102,76 @@ export default function AdminPage() {
         <CardContent className="text-sm text-zinc-500">
           No MRR, ARR, ARPU, or paid-vs-trial claim. No paid Stripe or Issuing
           in this POC.
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-start justify-between gap-3">
+          <div>
+            <CardTitle>Finance</CardTitle>
+            <p className="mt-1 text-sm text-zinc-400">
+              CFO widgets. Seeded known costs — Demo until Stripe is live.
+            </p>
+          </div>
+          <DemoBadge />
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <FinanceTile
+              label="Startup costs"
+              value={formatUsd(finance.startupCostsUsd)}
+              hint="Imported ledger total"
+            />
+            <FinanceTile
+              label="Burn"
+              value="—"
+              hint={finance.burn.label}
+              empty
+            />
+            <FinanceTile
+              label="Runway"
+              value="—"
+              hint={finance.runway.label}
+              empty
+            />
+            <FinanceTile
+              label="Domains / infra"
+              value={formatUsd(finance.domainsInfraUsd)}
+              hint="botbuyer.ai + transfer fee"
+            />
+            <FinanceTile
+              label="Customer GMV under management"
+              value={formatUsd(finance.customerGmvUsd)}
+              hint="Customer #1 seeded deals · not public proof"
+            />
+          </div>
+          <ul className="divide-y divide-white/6 text-sm">
+            {finance.lines.map((line) => (
+              <li
+                key={line.dealId}
+                className="flex items-center justify-between gap-3 py-2"
+              >
+                <div>
+                  <Link
+                    href={`/deals/${line.dealId}`}
+                    className="underline-offset-2 hover:underline"
+                  >
+                    {line.title}
+                  </Link>
+                  <p className="text-xs text-zinc-500">
+                    {line.bucket === "domain_infra"
+                      ? "Domains / infra"
+                      : "Acquisition"}{" "}
+                    · {line.amountStatus} · not verified spend
+                  </p>
+                </div>
+                <span className="money text-zinc-300">
+                  {formatUsd(line.listedUsd)}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-xs text-zinc-500">{finance.note}</p>
         </CardContent>
       </Card>
 
@@ -191,6 +264,36 @@ export default function AdminPage() {
           </ul>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function FinanceTile({
+  label,
+  value,
+  hint,
+  empty = false,
+}: {
+  label: string;
+  value: string;
+  hint: string;
+  empty?: boolean;
+}) {
+  return (
+    <div className="rounded-xl bg-white/[0.03] px-4 py-3 ring-1 ring-white/6">
+      <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+        {label}
+      </p>
+      <p
+        className={
+          empty
+            ? "money mt-1 text-2xl font-medium text-zinc-600"
+            : "money mt-1 text-2xl font-medium tracking-tight"
+        }
+      >
+        {value}
+      </p>
+      <p className="mt-1 text-xs text-zinc-500">{hint}</p>
     </div>
   );
 }

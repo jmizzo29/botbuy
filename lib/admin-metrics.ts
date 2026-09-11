@@ -1,4 +1,5 @@
 import { flags, STUB_METRICS_BADGE } from "@/lib/flags";
+import { getOwnerFinance } from "@/lib/finance";
 import {
   listDeals,
   listedUnverifiedUsd,
@@ -27,6 +28,7 @@ export function getAdminMetrics(): AdminMetrics {
   ); // deal_events seeded 1:1 from timeline + import row
   const agentRunsExecuted = deals.filter((deal) => deal.agentExecuted).length;
   const limits = getSpendLimits();
+  const finance = getOwnerFinance(deals);
 
   return {
     live: false,
@@ -88,6 +90,17 @@ export function getAdminMetrics(): AdminMetrics {
       spendMonthUsd: verifiedSpendUsd(),
       monthlyLimitUsd: limits.monthlyLimitUsd,
       note: "Derived from seeded ledger and vault limits. Not live agent telemetry.",
+    },
+    finance: {
+      source: "imported_ledger",
+      live: finance.live,
+      startupCostsUsd: finance.startupCostsUsd,
+      domainsInfraUsd: finance.domainsInfraUsd,
+      customerGmvUsd: finance.customerGmvUsd,
+      seedCashOutUsd: finance.seedCashOutUsd,
+      burnMonthlyUsd: finance.burn.monthlyUsd,
+      runwayMonths: finance.runway.months,
+      note: finance.note,
     },
   };
 }

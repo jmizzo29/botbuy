@@ -16,7 +16,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 - Illegal status transitions are rejected. `deal_events` is append-only.
 - Closing→Closed requires `verification.passed` for agent-run deals. Imported Closed may skip the engine at seed with `verification.skipped_reason=imported_ledger`.
 - Spend proposed defaults (not GTM facts): day $500 / month $2,000 / auto-approve OFF. Fail-closed.
-- Owner Admin (`/admin`): Demo until analytics+Stripe live. Traffic/revenue empty copy. Users = real directory (John customer #1). Deals ops = seeded table with Imported badges, not ProofStrip. Health: OK / Degraded / Not connected / Demo / Stub. No invented MRR or fake uptime.
+- Owner Admin (`/admin`): Demo until analytics+Stripe live. Traffic/revenue empty copy. Users = real directory (John customer #1). Finance = seeded known costs (botbuyer.ai $179.96, Savedfast $405, transfer $11.68); burn/runway placeholders. Deals ops = seeded table with Imported badges, not ProofStrip. Health: OK / Degraded / Not connected / Demo / Stub. No invented MRR or fake uptime.
 
 ## Routes
 

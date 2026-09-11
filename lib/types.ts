@@ -217,4 +217,15 @@ export interface AdminMetrics {
     monthlyLimitUsd: number;
     note: string;
   };
+  finance: {
+    source: MetricSource;
+    live: boolean;
+    startupCostsUsd: number;
+    domainsInfraUsd: number;
+    customerGmvUsd: number;
+    seedCashOutUsd: number;
+    burnMonthlyUsd: number | null;
+    runwayMonths: number | null;
+    note: string;
+  };
 }
