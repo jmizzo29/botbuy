@@ -81,16 +81,18 @@ export function getOwnerFinance(deals = listDeals()): OwnerFinance {
       .filter((deal) => bucketFor(deal) === "domain_infra")
       .reduce((sum, deal) => sum + deal.priceUsd, 0),
   );
-  const customerGmvUsd = startupCostsUsd;
-  const customerGmvPendingUsd = startupCostsPendingUsd;
+  // CHO/CEO/CFO: never book personal imported botbuyer.ai $179.96 as Customer GMV.
+  const customerGmvUsd = 0;
+  const customerGmvPendingUsd = 0;
 
   if (
     startupCostsUsd === FORBIDDEN_IMPORTED_TOTAL_USD ||
-    customerGmvUsd === FORBIDDEN_IMPORTED_TOTAL_USD ||
+    customerGmvUsd !== 0 ||
+    customerGmvPendingUsd !== 0 ||
     domainsInfraUsd === 191.64
   ) {
     throw new Error(
-      "CHO BLOCK: do not book $596.64 or unverified $191.64 domains/infra as verified totals.",
+      "CHO BLOCK: do not book $596.64 or unverified $191.64 domains/infra as verified totals. Customer GMV stays 0 until platform Closed deals.",
     );
   }
 
@@ -98,7 +100,7 @@ export function getOwnerFinance(deals = listDeals()): OwnerFinance {
     live: flags.stripeLive,
     badge: "Demo",
     source: "imported_ledger",
-    note: "CHO BLOCK: verified startup/GMV is botbuyer.ai $179.96 only. Savedfast $405 + xfer $11.68 stay Pending/Imported — never company burn. Infra near-zero. Not live Stripe. Not public proof.",
+    note: "GMV empty until platform Closed deals; $179.96 is verified burn/startup only. Savedfast $405 + xfer $11.68 stay Pending/Imported — never company burn. Infra near-zero. Not live Stripe. Not public proof.",
     startupCostsUsd,
     startupCostsPendingUsd,
     seedCashOutUsd: startupCostsUsd,
