@@ -109,7 +109,7 @@ export function getOwnerFinance(deals = listDeals()): OwnerFinance {
     burn: {
       monthlyUsd: null,
       label:
-        "Burn is a placeholder. Never treat imported_unverified $596.64 as burn.",
+        "Burn is a placeholder. Imported/unverified rows are never booked as burn.",
     },
     runway: {
       months: null,
