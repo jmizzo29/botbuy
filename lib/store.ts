@@ -2,7 +2,20 @@ import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
 import { DEMO_USER } from "@/lib/auth";
 import { isVerifiedAmount } from "@/lib/deal-ui";
 import "@/lib/adapters";
+import {
+  mergeJournals,
+  readDurableJournal,
+  writeDurableJournal,
+  type EngineJournal,
+} from "@/lib/engine-journal";
 import { JOHN_INTENT_TEMPLATES } from "@/lib/intent-templates";
+import {
+  assertRunDealSoftHold,
+  isEngineRunDealId,
+  RUN_SEARCHING_DEAL_ID,
+  runDealFromIntent,
+  seedRunDealEvents,
+} from "@/lib/run-deal";
 import {
   SPEND_DEFAULTS,
   SPEND_HARD_GATE_USD,
@@ -20,9 +33,87 @@ import type {
   VaultRef,
 } from "@/lib/types";
 
-const deals = loadLedgerDeals();
+const ledgerDeals = loadLedgerDeals();
 
-const dealEvents: DealEvent[] = deals.flatMap((deal) => seedDealEvents(deal));
+const ledgerEvents: DealEvent[] = ledgerDeals.flatMap((deal) =>
+  seedDealEvents(deal),
+);
+
+type EngineMemory = EngineJournal & { hydrated: boolean };
+
+const engineMemory: EngineMemory = {
+  deals: [],
+  events: [],
+  hydrated: false,
+};
+
+function engineState(): EngineMemory {
+  const globalStore = globalThis as typeof globalThis & {
+    __botbuyEngine?: EngineMemory;
+  };
+  if (!globalStore.__botbuyEngine) {
+    globalStore.__botbuyEngine = engineMemory;
+  }
+  return globalStore.__botbuyEngine;
+}
+
+function allDeals(): Deal[] {
+  const engine = engineState();
+  return [...engine.deals, ...ledgerDeals];
+}
+
+function allEvents(): DealEvent[] {
+  return [...ledgerEvents, ...engineState().events];
+}
+
+function replaceEngine(journal: EngineJournal) {
+  const engine = engineState();
+  engine.deals = journal.deals.filter((deal) => deal.source === "engine");
+  engine.events = journal.events;
+  engine.hydrated = true;
+}
+
+export async function hydrateStore() {
+  const engine = engineState();
+  const durable = await readDurableJournal();
+  replaceEngine(
+    mergeJournals({ deals: engine.deals, events: engine.events }, durable),
+  );
+}
+
+export async function persistEngineStore() {
+  const engine = engineState();
+  await writeDurableJournal({ deals: engine.deals, events: engine.events });
+}
+
+function rememberEngineDeal(deal: Deal, events: DealEvent[]) {
+  const engine = engineState();
+  engine.deals = [deal, ...engine.deals.filter((row) => row.id !== deal.id)];
+  const eventIds = new Set(events.map((event) => event.id));
+  engine.events = [
+    ...engine.events.filter((event) => !eventIds.has(event.id)),
+    ...events,
+  ];
+}
+
+function openSearchingEngineDeal() {
+  return engineState().deals.find((deal) => deal.status === "Searching");
+}
+
+function materializeRunDeal(id = RUN_SEARCHING_DEAL_ID): Deal {
+  const existing =
+    engineState().deals.find((deal) => deal.id === id) ??
+    openSearchingEngineDeal() ??
+    engineState().deals.find((deal) => deal.id === RUN_SEARCHING_DEAL_ID);
+  if (existing) {
+    assertRunDealSoftHold(existing);
+    return existing;
+  }
+  const deal = runDealFromIntent(listIntents()[0], id);
+  assertRunDealSoftHold(deal);
+  rememberEngineDeal(deal, seedRunDealEvents(deal, getSignupSession()?.email));
+  return deal;
+}
 
 const intents: Intent[] = [
   {
@@ -178,92 +269,38 @@ export function getSignupSession(): SignupSession | null {
   return signupSession;
 }
 
-export function createSearchingDealFromRun(): Deal {
+export async function createSearchingDealFromRun(): Promise<Deal> {
+  await hydrateStore();
+  const reused = openSearchingEngineDeal();
+  if (reused) {
+    assertRunDealSoftHold(reused);
+    await persistEngineStore();
+    return reused;
+  }
+
   const intent = listIntents()[0];
   const signup = getSignupSession();
-  const now = new Date().toISOString();
-  const id = `deal_run_${crypto.randomUUID().slice(0, 8)}`;
-  const title = intent?.summary?.slice(0, 80) || "First BotBuy search";
-  const category = intent?.categories[0] ?? "software";
-  const deal: Deal = {
-    id,
-    userId: DEMO_USER.id,
-    title,
-    category,
-    marketplace: "any_channel",
-    status: "Searching",
-    priceUsd: 0,
-    currency: "USD",
-    openedAt: now,
-    closedAt: null,
-    parentDealId: null,
-    receipt: null,
-    escrow: null,
-    domainTransfer: null,
-    blockers: [],
-    notes:
-      "Opened from go-live Run. Search stub · not a live agent purchase. HOLD.",
-    source: "engine",
-    agentExecuted: false,
-    priceVerified: false,
-    amountVerified: false,
-    amountStatus: "pending_verify",
-    evidencePath: null,
-    verification: {
-      passed: false,
-      skipped_reason: null,
-      artifacts: [],
-      receipt_refs: {},
-    },
-    timeline: [
-      {
-        id: `ev_${id}_search`,
-        stage: "search",
-        title: "Searching",
-        detail: intent
-          ? `PLAN intent: ${intent.summary}`
-          : "Opened from Run. Searching within spend limit.",
-        at: now,
-        status: "active",
-      },
-    ],
-  };
-  deals.unshift(deal);
-  appendDealEvent({
-    dealId: id,
-    type: "status",
-    title: "Deal opened",
-    detail: `Go-live Run created Searching deal${signup ? ` · ${signup.email}` : ""}.`,
-    at: now,
-    status: "done",
-    actor: "engine",
-    fromStatus: null,
-    toStatus: "Searching",
-  });
-  appendDealEvent({
-    dealId: id,
-    type: "search",
-    stage: "search",
-    title: "Searching",
-    detail: deal.timeline[0]?.detail ?? "Searching",
-    at: now,
-    status: "active",
-    actor: "engine",
-    toStatus: "Searching",
-  });
+  const id = engineState().deals.some((row) => row.id === RUN_SEARCHING_DEAL_ID)
+    ? `deal_run_${crypto.randomUUID().slice(0, 8)}`
+    : RUN_SEARCHING_DEAL_ID;
+  const deal = runDealFromIntent(intent, id);
+  assertRunDealSoftHold(deal);
+  rememberEngineDeal(deal, seedRunDealEvents(deal, signup?.email));
   auditLogs.unshift({
     id: `aud_${crypto.randomUUID().slice(0, 8)}`,
     userId: DEMO_USER.id,
     action: "deal.opened_from_run",
     entityType: "deal",
-    entityId: id,
+    entityId: deal.id,
     metadata: {
       status: "Searching",
       intentId: intent?.id ?? null,
       email: signup?.email ?? null,
+      reused: false,
     },
-    createdAt: now,
+    createdAt: deal.openedAt,
   });
+  await persistEngineStore();
   return deal;
 }
 
@@ -272,14 +309,24 @@ export function listDirectoryUsers(): User[] {
 }
 
 export function listDeals(userId = DEMO_USER.id): Deal[] {
-  return deals
+  return allDeals()
     .filter((deal) => deal.userId === userId)
     .slice()
     .sort((a, b) => +new Date(b.openedAt) - +new Date(a.openedAt));
 }
 
 export function getDeal(id: string, userId = DEMO_USER.id): Deal | undefined {
-  return deals.find((deal) => deal.id === id && deal.userId === userId);
+  const found = allDeals().find((deal) => deal.id === id && deal.userId === userId);
+  if (found) return found;
+  if (isEngineRunDealId(id)) {
+    const deal = materializeRunDeal(
+      engineState().deals.some((row) => row.id === RUN_SEARCHING_DEAL_ID)
+        ? RUN_SEARCHING_DEAL_ID
+        : id,
+    );
+    return deal.userId === userId ? deal : undefined;
+  }
+  return undefined;
 }
 
 export function appendDealEvent(
@@ -290,12 +337,13 @@ export function appendDealEvent(
     actor: event.actor ?? "engine",
     id: event.id ?? `evt_${crypto.randomUUID()}`,
   };
-  dealEvents.push(row);
+  const engine = engineState();
+  engine.events.push(row);
   return row;
 }
 
 export function listDealEvents(dealId: string): DealEvent[] {
-  return dealEvents
+  return allEvents()
     .filter((event) => event.dealId === dealId)
     .slice()
     .sort((a, b) => +new Date(a.at) - +new Date(b.at));
@@ -338,6 +386,10 @@ export function transitionDeal(id: string, to: DealStatus): Deal {
       status: "done",
     },
   ];
+  if (deal.source === "engine") {
+    rememberEngineDeal(deal, []);
+    void persistEngineStore();
+  }
   return deal;
 }
 

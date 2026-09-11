@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PublicChrome } from "@/components/public-chrome";
+import { hydrateStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
@@ -10,11 +11,12 @@ const steps = [
   { href: "/onboarding/go-live", label: "Go live" },
 ];
 
-export default function OnboardingLayout({
+export default async function OnboardingLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await hydrateStore();
   return (
     <PublicChrome>
       <div className="mx-auto max-w-xl space-y-8 pt-6">

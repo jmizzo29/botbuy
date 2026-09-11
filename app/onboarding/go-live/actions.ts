@@ -8,6 +8,6 @@ export async function runFirstBuyAction() {
   if (!isVaultReady()) {
     throw new Error("Coming rails alone do not unlock Run.");
   }
-  const deal = createSearchingDealFromRun();
+  const deal = await createSearchingDealFromRun();
   redirect(`/deals/${deal.id}`);
 }

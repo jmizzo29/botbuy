@@ -3,8 +3,8 @@ import {
   AGENT_DEMO_BANNER,
   AGENT_HOLD_NOTE,
   AGENT_SPEND_MICRO,
-  getAgentOrg,
 } from "@/lib/agent-org";
+import { getAgentOrg } from "@/lib/agent-runtime";
 
 export async function GET(
   _request: Request,

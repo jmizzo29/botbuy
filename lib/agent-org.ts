@@ -3,8 +3,6 @@
  * Suite in every license. Demo · not live. HOLD.
  * Agents never bypass John spend approval.
  */
-import { getDeal, listDeals } from "@/lib/store";
-import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
 import type { Deal } from "@/lib/types";
 
 export const AGENT_ORG_ROLES = ["CEO", "CFO", "CTO", "CMO"] as const;
@@ -79,6 +77,16 @@ function oneLiner(role: AgentOrgRole) {
 
 const activatedAt = new Map<string, string>();
 
+export function markAgentOrgActivated(dealId: string) {
+  const at = new Date().toISOString();
+  activatedAt.set(dealId, at);
+  return at;
+}
+
+export function agentOrgAlreadyActivated(dealId: string) {
+  return activatedAt.has(dealId);
+}
+
 export function licensedAgentsForAsset(assetId: string): LicensedAgent[] {
   return AGENT_ORG_ROLES.map((role) => ({
     id: `agent_${assetId}_${role.toLowerCase()}`,
@@ -107,45 +115,6 @@ export function agentOrgForDeal(deal: Deal): AgentOrg {
   };
 }
 
-export function listClosedDealsForAgents() {
-  return listDeals().filter((deal) => deal.status === "Closed");
-}
-
-export function listAgentOrgs(): AgentOrg[] {
-  return listClosedDealsForAgents()
-    .map(agentOrgForDeal)
-    .filter((org) => org.activated);
-}
-
-export function getAgentOrg(assetId: string): AgentOrg | null {
-  const deal = getDeal(assetId);
-  if (!deal || deal.status !== "Closed") return null;
-  return agentOrgForDeal(deal);
-}
-
-export function activateAgentOrg(assetId: string) {
-  const deal = getDeal(assetId);
-  if (!deal || deal.status !== "Closed") {
-    return {
-      ok: false as const,
-      reason: "Activate agents is only for a Closed deal. One org per deal.",
-    };
-  }
-  if (activatedAt.has(deal.id)) {
-    return { ok: false as const, reason: AGENT_DUPLICATE };
-  }
-  activatedAt.set(deal.id, new Date().toISOString());
-  return { ok: true as const, org: agentOrgForDeal(deal) };
-}
-
-export function agentOrgAdmin() {
-  const orgs = listAgentOrgs();
-  return {
-    live: false,
-    badge: "Demo · not live" as const,
-    orgCount: orgs.length,
-    orgs,
-    empty: AGENT_ADMIN_EMPTY,
-    note: `${AGENT_HOLD_NOTE} ${AGENT_SPEND_MICRO} Gate $${SPEND_HARD_GATE_USD.toLocaleString("en-US")}.`,
-  };
+export function listClosedDealsForAgents(deals: Deal[]) {
+  return deals.filter((deal) => deal.status === "Closed");
 }

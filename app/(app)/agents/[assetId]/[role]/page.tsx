@@ -6,9 +6,9 @@ import {
   AGENT_DEMO_BANNER,
   AGENT_ORG_ROLES,
   AGENT_SPEND_MICRO,
-  getAgentOrg,
   type AgentOrgRole,
 } from "@/lib/agent-org";
+import { getAgentOrg } from "@/lib/agent-runtime";
 
 export default async function AgentRolePage({
   params,
