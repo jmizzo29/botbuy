@@ -31,7 +31,7 @@ export const SITE_PAGE_CHROME = {
     lead: "Spend-gated buying with approval built in — so you set the limit, and BotBuy does the search and close work.",
   },
   beta: {
-    title: "Early access",
+    title: "Early access (Beta)",
     lead: "BotBuy is in early access — real product, honest labels, limited scope.",
   },
   contact: {

@@ -8,10 +8,10 @@ import {
   listedUnverifiedUsd,
   verifiedSpendUsd,
 } from "@/lib/store";
-import { VAULT_H1 } from "@/lib/vault-rails";
+import { VAULT_H1, VAULT_SUB, VAULT_TRUST } from "@/lib/vault-rails";
 
 export const metadata = {
-  title: "Fund your vault",
+  title: VAULT_H1,
 };
 
 export default function VaultPage() {
@@ -24,8 +24,10 @@ export default function VaultPage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">{VAULT_H1}</h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-          Multi-rail vault. Card is Available. Coming rails do not unlock Run.
-          Soft-signal HOLD — never live.
+          {VAULT_SUB}
+        </p>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
+          {VAULT_TRUST}
         </p>
       </header>
 

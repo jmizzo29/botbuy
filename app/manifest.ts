@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
+import { LAND_META_LINE } from "@/lib/brand";
 import { THEME_BG } from "@/lib/ui-tokens";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "BotBuy",
     short_name: "BotBuy",
-    description: "Set spend. Set intent. Vault it. BotBuy buys.",
+    description: LAND_META_LINE,
     start_url: "/",
     scope: "/",
     display: "standalone",

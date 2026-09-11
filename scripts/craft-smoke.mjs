@@ -223,13 +223,27 @@ assert(xfer?.amount_status === "imported_unverified", "xfer imported_unverified"
 assert(Number(xfer?.price_usd) === 11.68, "xfer listed $11.68 stays unverified");
 assert(ledger.cfo?.verified_startup_spend_usd === 179.96, "CFO verified burn $179.96 only");
 
+const LAND_META =
+  "Set spend, intent, and a payment method. BotBuy executes what you approve.";
+assert(brand.includes(LAND_META), "land/meta one-liner lock");
+assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
+assert(brand.includes("heroSub: LAND_META_LINE"), "land H1 subcopy uses locked one-liner");
+assert(!brand.includes("Vault it."), "brand has no Vault it");
+assert(!/\band vault\b/.test(brand), "brand has no and vault");
+assert(!land.includes("Vault it"), "land page source has no Vault it");
+assert(!/\band vault\b/.test(land), "land page source has no and vault");
+assert(!signup.includes("and vault") && !signup.includes("Vault it"), "signup has no vault-as-balance line");
+assert(layout.includes("LAND_META_LINE"), "layout meta uses locked one-liner");
+assert(manifest.includes("LAND_META_LINE"), "manifest uses locked one-liner");
+assert(!layout.includes("BotBuy does the rest."), "layout dropped old vault one-liner");
+assert(!manifest.includes("Vault it."), "manifest dropped Vault it");
 assert(brand.includes('title: "Set spend."'), "how-it-works step 1 title lock");
 assert(brand.includes('body: "Your limit. BotBuy stays inside it."'), "how-it-works step 1 body lock");
 assert(brand.includes('title: "Set intent."'), "how-it-works step 2 title lock");
 assert(brand.includes('body: "Any software, any channel."'), "how-it-works step 2 body lock");
-assert(brand.includes('title: "Vault it."'), "how-it-works step 3 title lock");
+assert(brand.includes('title: "Add a payment method."'), "how-it-works step 3 title lock");
 assert(
-  brand.includes('body: "Then BotBuy searches, purchases, and closes."'),
+  brand.includes('body: "Link how we pay at purchase. We don’t hold a balance."'),
   "how-it-works step 3 body lock",
 );
 assert(land.includes("HowItWorksRail"), "land keeps How it works rail");
@@ -363,7 +377,33 @@ assert(privacySoT.includes("September 11, 2026"), "privacy publish effective dat
 assert(termsSoT.includes("State of Florida"), "terms publish Florida governing law");
 assert(termsSoT.includes("omitted until attorney supplies text"), "terms dispute omitted in SoT");
 assert(aboutSoT.includes("Operator:** Build Star Labs (Florida)"), "about operator");
-assert(betaSoT.includes("Use Run BotBuy on the home page"), "beta how-to copy");
+const BETA_OPERATOR =
+  "**Operator:** Build Star Labs (Florida). BotBuy is offered on botbuyer.ai.";
+function stripLeadingMeta(markdown) {
+  const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+  let i = 0;
+  if (lines[i]?.startsWith("# ")) i += 1;
+  while (i < lines.length && !lines[i].trim()) i += 1;
+  while (i < lines.length && lines[i].startsWith(">")) i += 1;
+  while (i < lines.length && !lines[i].trim()) i += 1;
+  return lines.slice(i).join("\n");
+}
+const betaBody = stripLeadingMeta(betaSoT);
+assert(betaSoT.includes(BETA_OPERATOR), "beta SoT Operator body line");
+assert(betaBody.includes(BETA_OPERATOR), "beta Operator survives meta strip");
+assert(betaBody.includes("Build Star Labs") && betaBody.includes("Florida"), "beta Operator is body text");
+assert(!/^## Lead/m.test(betaSoT), "beta no Lead paste-meta heading");
+assert(!betaSoT.includes("Muted:"), "beta no Muted paste-meta");
+assert(betaSoT.includes("Use **Run BotBuy** on the home page") || betaSoT.includes("Use Run BotBuy on the home page"), "beta how-to copy");
+assert(termsSoT.includes("## No custodial balances (product lock)"), "terms no-custody heading");
+assert(termsSoT.includes("executor of human-approved actions"), "terms human-approved executor");
+assert(privacySoT.includes("does not hold custodial stored-value"), "privacy no-custody");
+const vaultRails = read("lib/vault-rails.ts");
+assert(vaultRails.includes('VAULT_H1 = "Add a payment method"'), "vault H1 lock");
+assert(vaultRails.includes("We don’t hold a balance."), "vault sub no-balance lock");
+assert(!vaultRails.includes("Fund your vault"), "vault rails dropped Fund your vault");
+assert(!read("app/(app)/vault/page.tsx").includes("Fund your vault"), "vault page dropped Fund your vault");
+assert(!read("app/api/vault/route.ts").includes("Fund your vault"), "vault API dropped Fund your vault");
 assert(contactSoT.includes("legal@botbuyer.ai"), "contact legal inbox");
 assert(contactSoT.includes("Mailbox provisioning may still be completing"), "contact mailbox honesty");
 assert(siteShell.includes("EARLY_ACCESS_HONESTY"), "page chrome honesty line");

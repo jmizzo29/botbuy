@@ -1,12 +1,14 @@
 /** Canonical product chrome. Never botbuy.ai or getbotbuy.com. */
+export const LAND_META_LINE =
+  "Set spend, intent, and a payment method. BotBuy executes what you approve.";
+
 export const BRAND = {
   name: "BotBuy",
   domain: "botbuyer.ai",
   origin: "https://botbuyer.ai",
-  signupLine: "Set spend, intent, and vault. BotBuy does the rest.",
-  hero: "Set spend. Set intent. Vault it. BotBuy buys.",
-  heroSub:
-    "The automated agent that searches, purchases, and closes — within your limit.",
+  signupLine: LAND_META_LINE,
+  hero: "Set spend. Set intent. Approve the buy.",
+  heroSub: LAND_META_LINE,
   easeMicro: "Three inputs, zero babysitting.",
   channelMicro:
     "Any software, any channel. Domains optional. Cars & real estate later.",
@@ -31,8 +33,8 @@ export const HOW_IT_WORKS = {
       body: "Any software, any channel.",
     },
     {
-      title: "Vault it.",
-      body: "Then BotBuy searches, purchases, and closes.",
+      title: "Add a payment method.",
+      body: "Link how we pay at purchase. We don’t hold a balance.",
     },
   ],
 } as const;

@@ -1,6 +1,6 @@
 # BotBuy
 
-**https://botbuyer.ai** — set spend, intent, and vault. BotBuy does the rest.
+**https://botbuyer.ai** — Set spend, intent, and a payment method. BotBuy executes what you approve.
 
 Canonical chrome is **botbuyer.ai only**. Never botbuy.ai or getbotbuy.com. POC on botbuyer.ai · not an announced launch.
 
@@ -9,7 +9,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 ## Product spine (diligence evidence)
 
 1. Deals list/detail + append-only `deal_events` (imported / reconstructed `agent_executed=false` / engine)
-2. Vault H1 `Fund your vault`. Card Available ≠ live (Stripe/Link is one card path). Bank / X Money / Bitcoin Coming. `+ Add payment method` always visible. Vault-ready = ≥1 Available. Coming does not unlock Run. Spend ceiling $1,000. Every deal needs approval. Infra near-zero — no assumed paid infra budget.
+2. Vault screen H1 `Add a payment method` (vault = brand mark / linked methods / pay-at-purchase — not a held balance). Card Available ≠ live (Stripe/Link is one card path). Bank / X Money / Bitcoin Coming. `+ Add payment method` always visible. Vault-ready = ≥1 Available. Coming does not unlock Run. Spend ceiling $1,000. Every deal needs approval. Auto-approve OFF. Infra near-zero — no assumed paid infra budget.
 3. Owner `/admin` Demo badges. Real deal counts OK. No invented live MRR/traffic/paid users. Finance verified-only $179.96; never $596.64 as burn. Coarse usage meter v0: per-deal Estimate stub + per-day Admin tokens_est / calls rollup. Demo · not live. Never Actual $.
 4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
 5. ProofStrip empty until verified live aggregates. Public copy: personal deals never count as public proof. No placeholders. No CHO-gated / `verified_at` caption on land.
@@ -40,7 +40,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | `/signup` | Signup one-liner |
 | `/onboarding/intent` | Set intent — software-first John templates |
 | `/onboarding/spend` | Set spend |
-| `/onboarding/vault` | Fund your vault — multi-rail |
+| `/onboarding/vault` | Add a payment method — linked methods / pay-at-purchase |
 | `/onboarding/go-live` | Recap → **Run BotBuy** creates Searching deal + deal_events + usage Estimate stub |
 | `/home` | My deals (John’s personal history) |
 | `/deals` `/deals/[id]` | List + timeline / gates / status engine / usage Demo counters |

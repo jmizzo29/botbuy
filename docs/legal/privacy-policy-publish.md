@@ -16,6 +16,8 @@
 
 This Policy describes how Build Star Labs (“BotBuy,” “we,” “us”) handles personal information when you use BotBuy at https://botbuyer.ai.
 
+**No custodial stored-value.** BotBuy’s product model does not hold custodial stored-value balances. The vault is for linking payment methods and paying at purchase via payment partners — not a BotBuy-held customer balance.
+
 ## 1. Who we are
 
 BotBuy is a product offered at **https://botbuyer.ai** (site and PWA).
@@ -61,6 +63,7 @@ Depending on how you use BotBuy, we may collect:
 ### 3.4 Vault / payment-method information (processor tokens — not full card numbers in our systems, if design holds)
 - Payment vault uses **provider references / tokens** via third-party processors
 - **Intended design:** no raw PAN/CVC stored in BotBuy application databases or logs
+- Vault means **linked payment methods / pay-at-purchase** via partners — not a BotBuy account balance, stored-value wallet, or custodial float we hold
 - Multi-rail **vision** (cards, banks, X Money, BTC, etc.): many rails are **Coming / not live** — we do not claim live rails that are not available
 - We may receive limited payment-related metadata from processors (e.g., last4, brand, status) as needed to operate the vault UX
 
@@ -91,7 +94,7 @@ We use personal information to:
 
 - **Provide the service** — account, PWA/site access, vault UX, deal workflow
 - **Deal search / purchase / close workflow** — match intent, present deals, record approvals, support close steps with merchants/processors as needed
-- **Spend gating and approvals** — enforce spend limits; require account-holder approval before spend; keep auto-approve off unless expressly changed by product policy (current design: OFF)
+- **Spend gating and approvals** — enforce spend limits; require account-holder approval before spend; keep auto-approve off unless expressly changed by product policy (current design: OFF). BotBuy is an executor of human-approved actions, not an autonomous spender.
 - **Security** — authenticate users; detect fraud/abuse; captcha/2FA and bank/deal gates as configured
 - **Support** — respond to requests and troubleshoot
 - **Product improvement** — We may use usage data to fix bugs and improve search quality, within this Policy.
