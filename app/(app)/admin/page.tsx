@@ -137,7 +137,7 @@ export default function AdminPage() {
             <FinanceTile
               label="Domains / infra"
               value={formatUsd(finance.domainsInfraUsd)}
-              hint="botbuyer.ai + transfer fee"
+              hint="Seeded known costs · no assumed paid infra budget"
             />
             <FinanceTile
               label="Customer GMV under management"
@@ -255,12 +255,7 @@ export default function AdminPage() {
             <HealthRow
               label="Fund-in vault"
               state="Demo"
-              detail="Cards Demo. Bank / X Money / Bitcoin / other Coming soon. HOLD until built + CHO."
-            />
-            <HealthRow
-              label="Pay-out"
-              state="Not connected"
-              detail="Link may be used for pay-out only. Not fund-in. Not live."
+              detail="Card Available. Bank / X Money / Bitcoin Coming. HOLD — not live."
             />
             <HealthRow label="MCP" state="Stub" />
             <HealthRow label="Agent telemetry" state="Demo" />

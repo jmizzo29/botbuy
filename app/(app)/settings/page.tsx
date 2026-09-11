@@ -51,8 +51,8 @@ export default function SettingsPage() {
         <CardContent className="space-y-2 text-sm leading-relaxed text-zinc-400">
           <p>Card PAN is never stored in BotBuy, logs, or analytics events.</p>
           <p>
-            Vault is multi-rail fund-in (cards, bank, X Money, Bitcoin, other).
-            Refs + last4 only. No rail is live. Link is pay-out later, not fund-in.
+            Vault is multi-rail. Card Available (Stripe/Link is one path). Bank,
+            X Money / cash, and Bitcoin Coming. No rail is live.
           </p>
           <p>
             POC session is a seeded owner login. Replace with real auth before

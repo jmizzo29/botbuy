@@ -1,6 +1,7 @@
 import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
 import { DEMO_USER } from "@/lib/auth";
 import { isVerifiedAmount } from "@/lib/deal-ui";
+import "@/lib/adapters";
 import {
   SPEND_DEFAULTS,
   SPEND_HARD_GATE_USD,
@@ -26,9 +27,10 @@ const intents: Intent[] = [
   {
     id: "intent_micro_saas",
     userId: DEMO_USER.id,
-    summary: "Acquire a clean micro-SaaS or online tool under $500 with transferable domain.",
-    categories: ["software", "domain"],
-    maxPriceUsd: 500,
+    summary:
+      "Buy software products across vendor checkout, SaaS billing, marketplaces, and license stores.",
+    categories: ["software"],
+    maxPriceUsd: 1000,
     status: "active",
     createdAt: "2026-09-04T18:00:00Z",
   },
@@ -229,7 +231,7 @@ export function addIntent(
     status: input.status ?? "active",
     summary: input.summary,
     categories: input.categories,
-    maxPriceUsd: input.maxPriceUsd,
+    maxPriceUsd: clampSpendUsd(input.maxPriceUsd),
   };
   intents.unshift(intent);
   auditLogs.unshift({

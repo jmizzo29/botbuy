@@ -9,7 +9,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 ## Product spine (diligence evidence)
 
 1. Deals list/detail + append-only `deal_events` (imported / reconstructed `agent_executed=false` / engine)
-2. Vault shell is multi-rail fund-in (cards, bank ACH/wire, X Money, Bitcoin, other). Unwired rails = Coming soon / Demo — never live. Spend-out hard gate $1,000. Auto-approve OFF. Every deal needs John.
+2. Vault H1 `Fund your vault`. Card Available (Stripe/Link is one card path). Bank / X Money / Bitcoin Coming. `+ Add payment method` always visible. Vault-ready = ≥1 Available. Coming does not unlock Run. Spend ceiling $1,000. Every deal needs approval. Infra near-zero — no assumed paid infra budget.
 3. Owner `/admin` Demo badges. Real deal counts OK. No invented live MRR/traffic/paid users.
 4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
 5. ProofStrip CHO-empty (`verified_at` null). No vapor defaults.
@@ -26,7 +26,8 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 - If `price_verified === false`, do not render `price_usd` as verified spend.
 - Illegal status transitions are rejected. `deal_events` is append-only.
 - Closing→Closed requires `verification.passed` for agent-run deals. Imported Closed may skip the engine at seed with `verification.skipped_reason=imported_ledger`.
-- Spend-out hard gate $1,000. Auto-approve OFF always — every deal needs John. Fail-closed. Dropped $500/day and $2,000/mo defaults.
+- Spend-out ceiling $1,000. Auto-approve OFF always — every deal needs approval before spend. Fail-closed. Infra near-zero — no assumed paid infra budget.
+- Search/purchase: all software products across all channels via pluggable marketplace adapters. Not a merchant allowlist. MCC may bias software. Domains OK — not domains-only.
 - Owner Admin (`/admin`): Demo until analytics+Stripe live. Traffic/revenue empty copy. Users = real directory (John customer #1). Finance = seeded known costs (botbuyer.ai $179.96, Savedfast $405, transfer $11.68); burn/runway placeholders. Deals ops = seeded table with Imported badges, not ProofStrip. Health: OK / Degraded / Not connected / Demo / Stub. No invented MRR or fake uptime.
 
 ## Routes
@@ -37,7 +38,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | `/signup` | Signup one-liner |
 | `/onboarding/intent` | Set intent |
 | `/onboarding/spend` | Set spend |
-| `/onboarding/vault` | Vault stub (no Issuing) |
+| `/onboarding/vault` | Fund your vault — multi-rail |
 | `/onboarding/go-live` | Recap → My deals |
 | `/home` | My deals (John’s personal history) |
 | `/deals` `/deals/[id]` | List + timeline / gates / status engine |

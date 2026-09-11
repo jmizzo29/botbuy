@@ -13,7 +13,9 @@ export default function OnboardingIntentPage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Set intent</h1>
         <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-          Tell BotBuy what to buy. Spend and vault come next.
+          All software products across all channels — vendor checkout, SaaS
+          billing, marketplaces, license stores. Domains are OK. Not
+          domains-only.
         </p>
       </header>
       <Card>

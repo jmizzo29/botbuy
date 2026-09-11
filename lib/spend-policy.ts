@@ -15,7 +15,10 @@ export const SPEND_DEFAULTS = {
 };
 
 export const SPEND_POLICY_LABEL =
-  "Spend-out hard gate $1,000. Every deal needs John approval. Auto-approve OFF. Fail-closed.";
+  "Spend-out ceiling $1,000. Every deal needs approval before spend. Auto-approve OFF. Fail-closed.";
+
+export const INFRA_POLICY_NOTE =
+  "Infra is near-zero. No assumed paid infra budget.";
 
 export function clampSpendUsd(value: number) {
   if (!Number.isFinite(value) || value < 0) return 0;

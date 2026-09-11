@@ -17,8 +17,8 @@ export default function IntentPage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Intent</h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-          Tell BotBuy what to buy and the ceiling. Spend stays inside the vault
-          limits.
+          All software products across all channels. Pluggable marketplace
+          adapters — not a merchant allowlist. Domains are OK. Not domains-only.
         </p>
       </header>
 

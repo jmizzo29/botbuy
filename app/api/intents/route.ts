@@ -5,7 +5,7 @@ import { addIntent, listIntents } from "@/lib/store";
 const createIntent = z.object({
   summary: z.string().min(3).max(280),
   categories: z.array(z.string().min(1)).max(8).default([]),
-  maxPriceUsd: z.number().positive().max(1_000_000),
+  maxPriceUsd: z.number().positive().max(1000),
 });
 
 export function GET() {

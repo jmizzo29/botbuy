@@ -5,6 +5,7 @@ import { BRAND } from "@/lib/brand";
 import { getSpendLimits, listIntents } from "@/lib/store";
 import { formatUsd } from "@/lib/money";
 import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
+import { isVaultReady, vaultReadyCopy } from "@/lib/vault-rails";
 
 export const metadata = {
   title: "Onboarding · Go live",
@@ -13,6 +14,7 @@ export const metadata = {
 export default function OnboardingGoLivePage() {
   const intent = listIntents()[0];
   const limits = getSpendLimits();
+  const ready = isVaultReady();
 
   return (
     <div className="space-y-6">
@@ -27,16 +29,26 @@ export default function OnboardingGoLivePage() {
           <Row label="Intent" value={intent?.summary ?? "Set in previous step"} />
           <Row label="Hard gate" value={formatUsd(SPEND_HARD_GATE_USD)} />
           <Row label="Working cap" value={formatUsd(limits.perDealLimitUsd)} />
-          <Row label="Auto-approve" value="OFF · every deal needs John" />
           <Row
-            label="Vault"
-            value="Multi-rail fund-in · Coming soon / Demo · not live"
+            label="Approval"
+            value="Every deal needs approval before spend"
           />
+          <Row label="Vault" value={vaultReadyCopy(ready)} />
         </CardContent>
       </Card>
-      <Button asChild>
-        <Link href="/home">Open My deals</Link>
-      </Button>
+      {ready ? (
+        <Button asChild>
+          <Link href="/home">Run</Link>
+        </Button>
+      ) : (
+        <div className="space-y-2">
+          <Button disabled>Run</Button>
+          <p className="text-xs text-zinc-500">
+            Coming rails alone do not unlock Run. Add an Available payment
+            method.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

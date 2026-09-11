@@ -16,7 +16,7 @@ export interface OwnerFinance {
   live: boolean;
   badge: "Demo";
   source: "imported_ledger";
-  note: "Seeded known costs from john-deal-ledger.json. Not live Stripe. Not public proof.";
+  note: "Seeded known costs from john-deal-ledger.json. Not live Stripe. Not public proof. Infra is near-zero — no assumed paid infra budget.";
   startupCostsUsd: number;
   seedCashOutUsd: number;
   domainsInfraUsd: number;
@@ -64,7 +64,7 @@ export function getOwnerFinance(deals = listDeals()): OwnerFinance {
     live: flags.stripeLive,
     badge: "Demo",
     source: "imported_ledger",
-    note: "Seeded known costs from john-deal-ledger.json. Not live Stripe. Not public proof.",
+    note: "Seeded known costs from john-deal-ledger.json. Not live Stripe. Not public proof. Infra is near-zero — no assumed paid infra budget.",
     startupCostsUsd,
     seedCashOutUsd: startupCostsUsd,
     domainsInfraUsd,

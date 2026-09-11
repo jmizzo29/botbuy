@@ -5,11 +5,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
 
 export function IntentForm() {
   const router = useRouter();
   const [summary, setSummary] = useState("");
-  const [maxPriceUsd, setMaxPriceUsd] = useState("500");
+  const [maxPriceUsd, setMaxPriceUsd] = useState(String(SPEND_HARD_GATE_USD));
   const [categories, setCategories] = useState("software");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +52,7 @@ export function IntentForm() {
           required
           value={summary}
           onChange={(event) => setSummary(event.target.value)}
-          placeholder="e.g. Aged .com with clean inbound, under $200"
+          placeholder="e.g. Micro-SaaS seat via vendor checkout, under $200"
         />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -61,6 +62,7 @@ export function IntentForm() {
             id="max"
             type="number"
             min="1"
+            max={SPEND_HARD_GATE_USD}
             step="0.01"
             required
             value={maxPriceUsd}
@@ -73,7 +75,7 @@ export function IntentForm() {
             id="cats"
             value={categories}
             onChange={(event) => setCategories(event.target.value)}
-            placeholder="software, domain"
+            placeholder="software"
           />
         </div>
       </div>
