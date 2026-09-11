@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand-lockup";
 import { SiteFooter } from "@/components/site-footer";
+import { Badge } from "@/components/ui/badge";
 import { BRAND } from "@/lib/brand";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
 
 export function PublicChrome({
@@ -30,7 +32,12 @@ export function PublicChrome({
           <Link href="/" className="flex items-center" aria-label="BotBuy home">
             <BrandLockup priority />
           </Link>
-          <PublicNav />
+          <div className="flex items-center gap-3">
+            {land ? (
+              <Badge className={DEMO_PILL_CLASS}>{BRAND.pocBanner}</Badge>
+            ) : null}
+            <PublicNav />
+          </div>
         </header>
         <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8">{children}</main>
         <footer className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-8">

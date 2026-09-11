@@ -71,7 +71,10 @@ export function AppShell({
             );
           })}
         </nav>
-        <div className="rounded-2xl bg-black/[0.03] px-3 py-3 ring-1 ring-[var(--bb-line)]">
+        <p className="mb-3 px-2 text-[10px] uppercase tracking-[0.14em] text-muted">
+          G · TECH-LUXURY LIGHT
+        </p>
+        <div className="rounded-[var(--bb-radius)] bg-black/[0.03] px-3 py-3 ring-1 ring-[var(--bb-line)]">
           <p className="text-sm font-medium">{user.name}</p>
           <p className="text-xs text-muted">{user.company}</p>
         </div>

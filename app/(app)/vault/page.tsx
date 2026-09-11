@@ -23,10 +23,10 @@ export default function VaultPage() {
     <div className="space-y-8">
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">{VAULT_H1}</h1>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
           {VAULT_SUB}
         </p>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
           {VAULT_TRUST}
         </p>
       </header>
@@ -42,15 +42,15 @@ export default function VaultPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Spend-out</CardTitle>
-          <p className="mt-1 text-sm text-zinc-400">{SPEND_POLICY_LABEL}</p>
+          <CardTitle>Spend policy</CardTitle>
+          <p className="mt-1 text-sm text-muted">{SPEND_POLICY_LABEL}</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <Cap label="Hard gate" value={formatUsd(SPEND_HARD_GATE_USD)} />
             <Cap label="Working cap" value={formatUsd(limits.perDealLimitUsd)} />
           </div>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-muted">
             Verified spend this period: {formatUsd(spent)}. Every deal needs
             approval before spend. Imported listed amounts are not spend
             {listed > 0 ? " and stay hidden from this cap" : ""}.
@@ -64,8 +64,8 @@ export default function VaultPage() {
 
 function Cap({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-white/[0.03] px-4 py-3 ring-1 ring-white/6">
-      <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+    <div className="rounded-[var(--bb-radius)] bg-surface px-4 py-3 ring-1 ring-[var(--bb-line)]">
+      <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
         {label}
       </p>
       <p className="money mt-1 text-xl font-medium">{value}</p>

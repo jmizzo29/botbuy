@@ -2,11 +2,13 @@ import Link from "next/link";
 import { HowItWorksRail } from "@/components/how-it-works";
 import { ProofStrip } from "@/components/proof-strip";
 import { PublicChrome } from "@/components/public-chrome";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BRAND } from "@/lib/brand";
-import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
-import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
+import {
+  LAND_FINDABILITY,
+  MY_DEALS_HREF,
+  MY_DEALS_LABEL,
+} from "@/lib/cpo-techlux";
 
 export const metadata = {
   title: "BotBuy",
@@ -20,11 +22,7 @@ export default function LandPage() {
     <PublicChrome land>
       <div className="pt-16 md:pt-24">
         <div className="relative z-10 max-w-xl">
-          <Badge className={DEMO_PILL_CLASS}>{BRAND.pocBanner}</Badge>
-          <p className="mt-6 text-[10px] uppercase tracking-[0.16em] text-muted">
-            {BRAND.origin} · {BRAND.registration}
-          </p>
-          <h1 className="display mt-8 text-pretty">
+          <h1 className="display text-pretty">
             {HERO_LINES.map((line) => (
               <span key={line} className="block">
                 {line}
@@ -49,7 +47,7 @@ export default function LandPage() {
             </div>
             <p className="text-sm text-muted">{BRAND.trustLine}</p>
             <p className="text-sm text-muted">
-              After you sign in, your deals live in{" "}
+              {LAND_FINDABILITY.replace(MY_DEALS_LABEL, "").trim()}{" "}
               <Link
                 href={MY_DEALS_HREF}
                 className="font-medium text-foreground underline-offset-2 hover:underline"

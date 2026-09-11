@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivateAgents } from "@/components/activate-agents";
 import { SearchingEmpty } from "@/components/empty-ctas";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
-import { APPROVE_MICRO, MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
+import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { getAgentOrg } from "@/lib/agent-runtime";
 import { PersistRunDeal } from "@/components/persist-run-deal";
 import { DealUsageSection } from "@/components/usage-meter";
@@ -95,7 +95,6 @@ export default async function DealDetailPage({
             <p className="mt-4 text-sm text-muted">
               Every deal needs your approval · auto-approve OFF
             </p>
-            <p className="mt-1 text-sm text-muted">{APPROVE_MICRO}</p>
             <div className="mt-6">
               <DealApproveActions dealId={deal.id} status={deal.status} />
             </div>

@@ -38,6 +38,10 @@ const wire = read("lib/designer-wire-notes.ts");
 const palette = read("lib/palette.ts");
 const demoBadge = read("components/demo-badge.tsx");
 const shell = read("components/app-shell.tsx");
+const approveUi = read("components/deal-approve-actions.tsx");
+const vaultLib = read("lib/vault-rails.ts");
+const vaultPage = read("app/(app)/vault/page.tsx");
+const vaultApi = read("app/api/vault/route.ts");
 const layout = read("app/layout.tsx");
 const manifest = read("app/manifest.ts");
 const lockup = read("components/brand-lockup.tsx");
@@ -98,7 +102,12 @@ assert(
 );
 assert(!css.includes("--bb-bg: #050A0C"), "default bg is not black #050A0C");
 assert(!css.includes("background-color: var(--bb-demo)"), "Demo gold is not CTA fill");
-assert(land.includes("DEMO_PILL_CLASS") || land.includes("bg-demo"), "land Demo pill token");
+assert(
+  land.includes("DEMO_PILL_CLASS") ||
+    chrome.includes("DEMO_PILL_CLASS") ||
+    land.includes("bg-demo"),
+  "land Demo pill token",
+);
 assert(shell.includes("bg-background"), "app shell uses palette bg");
 assert(chrome.includes("bg-background"), "land chrome uses palette bg");
 assert(demoBadge.includes("DEMO_PILL_CLASS"), "Demo badge uses demo token");
@@ -125,7 +134,10 @@ for (const [name, src, needle] of primaryBlocks) {
 assert(brand.includes('trustLine: "Demo · $1,000 gate · every deal needs your approval"'), "CPO trust line");
 assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock");
 assert(land.includes("BRAND.trustLine"), "land renders trust line under CTAs");
-assert(land.includes("BRAND.pocBanner"), "land keeps POC pill");
+assert(
+  land.includes("BRAND.pocBanner") || chrome.includes("BRAND.pocBanner"),
+  "land keeps POC pill",
+);
 assert(signup.includes("BRAND.pocBanner"), "signup Demo pill");
 assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("Continue"), "signup Continue label");
@@ -156,7 +168,15 @@ assert(home.includes("MY_DEALS_LABEL") || home.includes("My deals"), "My deals i
 assert(home.includes("APPROVE_MICRO") || home.includes("BotBuy only runs what you approve."), "home approve micro");
 assert(home.includes("no invented GMV"), "My deals invents no GMV");
 assert(dealDetail.includes("DealApproveActions"), "deal detail Approve/Reject");
-assert(dealDetail.includes("APPROVE_MICRO") || dealDetail.includes("BotBuy only runs what you approve."), "deal detail approve micro");
+assert(dealDetail.includes("auto-approve OFF"), "deal detail auto-approve OFF");
+assert(approveUi.includes("APPROVE_LABEL") && approveUi.includes("REJECT_LABEL"), "Needs you ships Approve and Reject");
+assert(approveUi.includes("APPROVE_MICRO"), "approve micro on Needs you actions");
+assert(!approveUi.includes("{compact ? null"), "compact does not hide Reject");
+assert(vaultLib.includes('VAULT_H1 = "Add a payment method"'), "vault H1 lock");
+assert(!vaultPage.includes("Fund your vault"), "vault page has no Fund your vault");
+assert(!vaultPage.toLowerCase().includes("balance"), "vault page has no balance");
+assert(vaultApi.includes("VAULT_H1"), "vault API uses VAULT_H1");
+assert(chrome.includes("BRAND.pocBanner") || chrome.includes("POC · Demo · not live"), "land header Demo pill");
 assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuy only runs what you approve."), "go-live approve micro");
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
 assert(existsSync(join(root, "public/brand/botbuy-logo-header-light.svg")), "light Vault lockup committed");
@@ -272,7 +292,11 @@ assert(land.includes("HowItWorksRail"), "land keeps How it works rail");
 assert(land.includes("ProofStrip"), "land ProofStrip stays");
 assert(land.includes("techlux-air") || chrome.includes("techlux-air") || css.includes("land-bg-techlux-air"), "land uses techlux-air");
 assert(css.includes(".bb-land-veil") && css.includes("var(--bb-veil)"), "land veil token");
-assert(land.includes("After you sign in, your deals live in"), "land My deals findability");
+assert(
+  land.includes("LAND_FINDABILITY") ||
+    land.includes("After you sign in, your deals live in"),
+  "land My deals findability",
+);
 assert(!shell.includes("VaultCardsBackdrop"), "app shell is clean light chrome");
 assert(vaultBg.includes('data-bg="vault-cards"'), "vault cards decorative marker");
 assert(vaultBg.includes('aria-hidden="true"'), "vault cards are decorative");

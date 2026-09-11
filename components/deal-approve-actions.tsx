@@ -46,32 +46,32 @@ export function DealApproveActions({
     router.refresh();
   }
 
+  const size = compact ? "sm" : "lg";
+
   return (
-    <div className={compact ? "flex flex-wrap items-center gap-2" : "space-y-3"}>
+    <div className={compact ? "space-y-1.5" : "space-y-3"}>
       <div className="flex flex-wrap gap-2">
         <Button
           type="button"
-          size={compact ? "sm" : "lg"}
+          size={size}
           disabled={pending !== null}
           onClick={() => decide(APPROVE_STATUS)}
         >
           {pending === APPROVE_STATUS ? "…" : APPROVE_LABEL}
         </Button>
-        {compact ? null : (
-          <Button
-            type="button"
-            size="lg"
-            variant="secondary"
-            disabled={pending !== null}
-            onClick={() => decide(REJECT_STATUS)}
-          >
-            {pending === REJECT_STATUS ? "…" : REJECT_LABEL}
-          </Button>
-        )}
+        <Button
+          type="button"
+          size={size}
+          variant="secondary"
+          disabled={pending !== null}
+          onClick={() => decide(REJECT_STATUS)}
+        >
+          {pending === REJECT_STATUS ? "…" : REJECT_LABEL}
+        </Button>
       </div>
-      {compact ? null : (
-        <p className="text-sm text-muted">{APPROVE_MICRO}</p>
-      )}
+      <p className={compact ? "text-[11px] text-muted" : "text-sm text-muted"}>
+        {APPROVE_MICRO}
+      </p>
       {error ? <p className="text-sm text-demo">{error}</p> : null}
     </div>
   );
