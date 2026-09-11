@@ -1,4 +1,5 @@
 import { flags } from "@/lib/flags";
+import { isVerifiedAmount } from "@/lib/deal-ui";
 import { listDeals } from "@/lib/store";
 import type { Deal } from "@/lib/types";
 
@@ -16,11 +17,14 @@ export interface OwnerFinance {
   live: boolean;
   badge: "Demo";
   source: "imported_ledger";
-  note: "Seeded known costs from john-deal-ledger.json. Not live Stripe. Not public proof. Infra is near-zero — no assumed paid infra budget.";
+  note: string;
   startupCostsUsd: number;
+  startupCostsPendingUsd: number;
   seedCashOutUsd: number;
   domainsInfraUsd: number;
+  domainsInfraPendingUsd: number;
   customerGmvUsd: number;
+  customerGmvPendingUsd: number;
   burn: {
     monthlyUsd: number | null;
     label: string;
@@ -32,12 +36,19 @@ export interface OwnerFinance {
   lines: FinanceLine[];
 }
 
+/** CHO BLOCK — never book this imported_unverified sum as burn/GMV. */
+export const FORBIDDEN_IMPORTED_TOTAL_USD = 596.64;
+
 function money(value: number) {
   return Math.round(value * 100) / 100;
 }
 
 function bucketFor(deal: Deal): FinanceLine["bucket"] {
   return deal.category === "domain" ? "domain_infra" : "acquisition";
+}
+
+function isVerifiedFinanceLine(deal: Deal) {
+  return isVerifiedAmount(deal);
 }
 
 export function getOwnerFinance(deals = listDeals()): OwnerFinance {
@@ -51,27 +62,54 @@ export function getOwnerFinance(deals = listDeals()): OwnerFinance {
     amountVerified: deal.amountVerified,
   }));
 
+  const verified = deals.filter(isVerifiedFinanceLine);
+  const pending = deals.filter((deal) => !isVerifiedFinanceLine(deal));
+
   const startupCostsUsd = money(
-    lines.reduce((sum, line) => sum + line.listedUsd, 0),
+    verified.reduce((sum, deal) => sum + deal.priceUsd, 0),
+  );
+  const startupCostsPendingUsd = money(
+    pending.reduce((sum, deal) => sum + deal.priceUsd, 0),
   );
   const domainsInfraUsd = money(
-    lines
-      .filter((line) => line.bucket === "domain_infra")
-      .reduce((sum, line) => sum + line.listedUsd, 0),
+    verified
+      .filter((deal) => bucketFor(deal) === "domain_infra")
+      .reduce((sum, deal) => sum + deal.priceUsd, 0),
   );
+  const domainsInfraPendingUsd = money(
+    pending
+      .filter((deal) => bucketFor(deal) === "domain_infra")
+      .reduce((sum, deal) => sum + deal.priceUsd, 0),
+  );
+  const customerGmvUsd = startupCostsUsd;
+  const customerGmvPendingUsd = startupCostsPendingUsd;
+
+  if (
+    startupCostsUsd === FORBIDDEN_IMPORTED_TOTAL_USD ||
+    customerGmvUsd === FORBIDDEN_IMPORTED_TOTAL_USD ||
+    domainsInfraUsd === 191.64
+  ) {
+    throw new Error(
+      "CHO BLOCK: do not book $596.64 or unverified $191.64 domains/infra as verified totals.",
+    );
+  }
 
   return {
     live: flags.stripeLive,
     badge: "Demo",
     source: "imported_ledger",
-    note: "Seeded known costs from john-deal-ledger.json. Not live Stripe. Not public proof. Infra is near-zero — no assumed paid infra budget.",
+    note: "CHO BLOCK: verified startup/GMV is botbuyer.ai $179.96 only. Savedfast $405 + xfer $11.68 stay Pending/Imported — never company burn. Infra near-zero. Not live Stripe. Not public proof.",
     startupCostsUsd,
+    startupCostsPendingUsd,
     seedCashOutUsd: startupCostsUsd,
     domainsInfraUsd,
-    customerGmvUsd: money(startupCostsUsd),
+    domainsInfraPendingUsd,
+    customerGmvUsd,
+    customerGmvPendingUsd,
     burn: {
       monthlyUsd: null,
-      label: "Burn is a placeholder until a live cash ledger exists.",
+      label:
+        "Burn is a placeholder. Imported/unverified rows are never booked as burn.",
     },
     runway: {
       months: null,

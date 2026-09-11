@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { runFirstBuyAction } from "@/app/onboarding/go-live/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BRAND } from "@/lib/brand";
@@ -21,7 +21,8 @@ export default function OnboardingGoLivePage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">BotBuy buys</h1>
         <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-          Recap. The app is not announced live. {BRAND.origin} DNS attaches later.
+          Recap. {BRAND.footerHold}. Run opens a Searching deal — agent runtime
+          is not live.
         </p>
       </header>
       <Card>
@@ -37,9 +38,9 @@ export default function OnboardingGoLivePage() {
         </CardContent>
       </Card>
       {ready ? (
-        <Button asChild>
-          <Link href="/home">Run</Link>
-        </Button>
+        <form action={runFirstBuyAction}>
+          <Button type="submit">Run</Button>
+        </form>
       ) : (
         <div className="space-y-2">
           <Button disabled>Run</Button>

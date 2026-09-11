@@ -42,7 +42,7 @@ export function DemoBadge({ className }: { className?: string }) {
         className,
       )}
     >
-      Demo
+      Demo · not live
     </Badge>
   );
 }
