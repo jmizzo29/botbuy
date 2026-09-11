@@ -34,6 +34,9 @@ const brand = read("lib/brand.ts");
 const empty = read("lib/empty-cta.ts");
 const emptyUi = read("components/empty-ctas.tsx");
 const how = read("components/how-it-works.tsx");
+const a2hsHook = read("components/use-a2hs.ts");
+const a2hsHowTo = read("components/a2hs-howto.tsx");
+const landInstall = read("components/land-install-button.tsx");
 const vaultBg = read("components/vault-cards-backdrop.tsx");
 const wire = read("lib/designer-wire-notes.ts");
 const palette = read("lib/palette.ts");
@@ -142,11 +145,9 @@ assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(layout), "layout meta has no 
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(manifest), "manifest marketing has no $1,000 gate");
 assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock");
 assert(land.includes("BRAND.trustLine"), "land renders trust line under CTAs");
-assert(
-  land.includes("BRAND.pocBanner") || chrome.includes("BRAND.pocBanner"),
-  "land keeps POC pill",
-);
+assert(!land.includes("BRAND.pocBanner"), "land fold has no POC banner stack");
 assert(signup.includes("BRAND.pocBanner"), "signup Demo pill");
+assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "POC stays footer meta");
 assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("Continue"), "signup Continue label");
 assert(!signup.includes("variant="), "signup Continue stays primary");
@@ -160,7 +161,8 @@ assert(
 assert(proofLib.includes('PROOF_EMPTY_MICRO = "No placeholders."'), "ProofStrip micro");
 assert(proof.includes("PROOF_EMPTY_COPY"), "ProofStrip uses empty body");
 assert(proof.includes("PROOF_EMPTY_MICRO"), "ProofStrip uses micro");
-assert(!proof.includes("CHO-gated"), "public proof caption has no CHO-gated");
+assert(proof.includes("LAND_PROOF_CAPTION") || proof.includes("CHO-gated"), "land proof is Demo/empty CHO-gated");
+assert(proofLib.includes("LAND_PROOF_CAPTION"), "proof lib keeps land CHO-gated caption");
 assert(!proof.includes("verified_at"), "public proof caption has no verified_at");
 
 assert(chrome.includes("hasPublicSession"), "nav gates My deals on session");
@@ -208,7 +210,8 @@ assert(!vaultPage.includes("$1,000 gate"), "vault page has no $1,000 gate");
 assert(!vaultPage.includes("Fund your vault"), "vault page has no Fund your vault");
 assert(!vaultPage.toLowerCase().includes("balance"), "vault page has no balance");
 assert(vaultApi.includes("VAULT_H1"), "vault API uses VAULT_H1");
-assert(chrome.includes("BRAND.pocBanner") || chrome.includes("POC · Demo · not live"), "land header Demo pill");
+assert(chrome.includes("DEMO_PILL_CLASS") && chrome.includes(">Demo<"), "land header Demo pill");
+assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
 assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuy only runs what you approve."), "go-live approve micro");
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
 assert(existsSync(join(root, "public/brand/botbuy-logo-header-light.svg")), "light Vault lockup committed");
@@ -304,7 +307,13 @@ const LAND_META =
   "Set spend, intent, and a payment method. BotBuy executes what you approve.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
-assert(brand.includes("hero: LAND_META_LINE"), "land H1 is locked one-liner");
+assert(brand.includes("hero: LAND_PRODUCT_H1") || brand.includes('hero: "BotBuy"'), "land H1 is product brand frame");
+assert(brand.includes("lead: LAND_META_LINE"), "land lead is locked one-liner");
+assert(brand.includes('productTag: LAND_PRODUCT_TAG') || brand.includes("Buy software. You approve."), "land product tag lock");
+assert(brand.includes('primaryCta: "Sign up"'), "land primary door is Sign up");
+assert(brand.includes('secondaryCta: "Install"'), "land peer door is Install");
+assert(!brand.includes("Start your first buy"), "land dropped Start your first buy");
+assert(!brand.includes("See how it works"), "land dropped equal-weight See how it works");
 assert(!brand.includes("Vault it."), "brand has no Vault it");
 assert(!/\band vault\b/.test(brand), "brand has no and vault");
 assert(!land.includes("Vault it"), "land page source has no Vault it");
@@ -314,13 +323,13 @@ assert(layout.includes("LAND_META_LINE"), "layout meta uses locked one-liner");
 assert(manifest.includes("LAND_META_LINE"), "manifest uses locked one-liner");
 assert(!layout.includes("BotBuy does the rest."), "layout dropped old vault one-liner");
 assert(!manifest.includes("Vault it."), "manifest dropped Vault it");
-assert(brand.includes('title: "Set spend."'), "how-it-works step 1 title lock");
+assert(brand.includes('title: "Set spend"'), "how-it-works step 1 title lock");
 assert(brand.includes('body: "Your limit. BotBuy stays inside it."'), "how-it-works step 1 body lock");
-assert(brand.includes('title: "Set intent."'), "how-it-works step 2 title lock");
+assert(brand.includes('title: "Set intent"'), "how-it-works step 2 title lock");
 assert(brand.includes('body: "Any software, any channel."'), "how-it-works step 2 body lock");
-assert(brand.includes('title: "Add a payment method."'), "how-it-works step 3 title lock");
+assert(brand.includes('title: "Add a payment method"'), "how-it-works step 3 title lock");
 assert(
-  brand.includes('body: "Link how we pay at purchase. We don’t hold a balance."'),
+  brand.includes('body: "Pay at purchase. We don’t hold a balance."'),
   "how-it-works step 3 body lock",
 );
 assert(
@@ -335,7 +344,16 @@ assert(!land.includes("Vault it"), "land has no Vault it");
 assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold");
 assert(land.includes("HowItWorksRail"), "land keeps How it works rail");
 assert(land.includes("ProofStrip"), "land ProofStrip stays");
-assert(land.includes("techlux-air") || chrome.includes("techlux-air") || css.includes("land-bg-techlux-air"), "land uses techlux-air");
+assert(land.includes("LAND_PRODUCT_H1") || land.includes("BotBuy"), "land product H1");
+assert(land.includes("LAND_PRODUCT_TAG") || land.includes("Buy software. You approve."), "land product tag");
+assert(land.includes("LAND_META_LINE"), "land lead one-liner");
+assert(land.includes("LandInstallButton"), "land Install door is wired");
+assert(!land.includes("Start your first buy"), "land fold has no Start your first buy");
+assert(!land.includes("See how it works"), "how-it-works is not a fold CTA");
+assert(!land.includes('href="#how"'), "how-it-works is secondary scroll only");
+assert(land.includes("LAND_INSTALL_HELPER") || land.includes("Add to Home Screen for the full app on your phone."), "land install helper");
+assert(land.includes("/brand/botbuy-mark.svg"), "land uses Vault mark");
+assert(css.includes("land-bg-techlux-air"), "techlux-air asset token stays");
 assert(css.includes(".bb-land-veil") && css.includes("var(--bb-veil)"), "land veil token");
 assert(
   land.includes("LAND_FINDABILITY") ||
@@ -433,12 +451,19 @@ assert(
   shell.includes("InstallHint") && chrome.includes("InstallHint"),
   "discreet A2HS hint mounted on app + land",
 );
-const a2hs = read("components/install-hint.tsx");
+const a2hs = [
+  read("components/install-hint.tsx"),
+  a2hsHook,
+  a2hsHowTo,
+  landInstall,
+].join("\n");
 const techlux = read("lib/cpo-techlux.ts");
 assert(a2hs.includes("beforeinstallprompt"), "A2HS listens for beforeinstallprompt");
 assert(a2hs.includes("setHowTo(true)"), "A2HS how-to opens when native install is unavailable or canceled");
 assert(a2hs.includes("A2HS_COPY"), "A2HS uses locked copy");
 assert(a2hs.includes("persistDismiss") || a2hs.includes("localStorage"), "A2HS dismiss persists");
+assert(landInstall.includes("useA2hs"), "land Install uses PR #25 A2HS flow");
+assert(land.includes("onLand") || read("components/install-hint.tsx").includes('pathname === "/"'), "land hides competing A2HS bar");
 assert(techlux.includes("not an App Store or Play listing"), "A2HS copy is Demo-honest");
 assert(shell.includes("safe-area-inset-bottom"), "bottom nav safe-area");
 assert(shell.includes("safe-area-inset-top"), "sticky header safe-area");
@@ -665,6 +690,6 @@ console.log(" - GMV=0 · verified $179.96");
 console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #B8860B");
-console.log(" - Quiet Capital type · techlux-air + veil · no glow");
+console.log(" - Quiet Capital type · Product door A · clean #F7F8FA");
 console.log(" - Vault mark+wordmark header · favicon/PWA/OG wired");
 console.log(" - site pages /privacy /terms /about /beta /contact · footer lock");

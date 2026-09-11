@@ -22,23 +22,12 @@ export function PublicChrome({
         land ? "bb-land-shell text-foreground" : "min-h-dvh bg-background text-foreground",
       )}
     >
-      {land ? (
-        <>
-          <div className="bb-land-air" aria-hidden="true" data-bg="techlux-air" />
-          <div className="bb-land-veil" aria-hidden="true" />
-        </>
-      ) : null}
       <div className={land ? "bb-land-content" : undefined}>
         <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8">
           <Link href="/" className="flex items-center" aria-label="BotBuy home">
             <BrandLockup priority />
           </Link>
-          <div className="flex items-center gap-3">
-            {land ? (
-              <Badge className={DEMO_PILL_CLASS}>{BRAND.pocBanner}</Badge>
-            ) : null}
-            <PublicNav />
-          </div>
+          <PublicNav land={land} />
         </header>
         <InstallHint />
         <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8">{children}</main>
@@ -54,18 +43,23 @@ export function PublicChrome({
   );
 }
 
-async function PublicNav() {
+async function PublicNav({ land }: { land: boolean }) {
   const session = await hasPublicSession();
   return (
-    <div className="flex items-center gap-4 text-sm">
-      <Link href="/signup" className="text-muted hover:text-foreground">
-        Sign up
-      </Link>
+    <div className="flex items-center gap-3 text-sm">
+      {land ? <Badge className={DEMO_PILL_CLASS}>Demo</Badge> : null}
       {session ? (
-        <Link href={MY_DEALS_HREF} className="text-muted hover:text-foreground">
+        <Link
+          href={MY_DEALS_HREF}
+          className="text-muted hover:text-foreground"
+        >
           {MY_DEALS_LABEL}
         </Link>
-      ) : null}
+      ) : (
+        <Link href="/signup" className="text-muted hover:text-foreground">
+          Sign up
+        </Link>
+      )}
     </div>
   );
 }
