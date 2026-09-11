@@ -1,5 +1,10 @@
 import ledgerJson from "@/data/john-deal-ledger.json";
-import { isPublicProofEligible, isVerifiedAmount } from "@/lib/deal-ui";
+import {
+  hasPersonalClosedHonestyFlags,
+  isHonestPersonalClosedEscrow,
+  isPublicProofEligible,
+  isVerifiedAmount,
+} from "@/lib/deal-ui";
 import { importedClosedVerification } from "@/lib/verification";
 import type {
   AgentEvent,
@@ -177,11 +182,11 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
       {
         id: "ev_savedfast_close",
         stage: "close",
-        title: "Closing",
+        title: "Closed",
         detail:
-          "Domain transfer / waiting WP + registrar transfer. Closed is blocked until verification artifacts.",
-        at: "2026-09-11T14:06:00Z",
-        status: "active",
+          "Personal Closed. source=imported · agent_executed=false · amount_status=imported_unverified · escrow=seller-proceeds-processing. $405 not price_verified. Not Escrow complete. Not GMV.",
+        at: "2026-09-11T18:00:00Z",
+        status: "done",
       },
     ];
   }
@@ -200,11 +205,11 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
       {
         id: "ev_xfer_close",
         stage: "close",
-        title: "Closing",
+        title: "Closed",
         detail:
-          "Transfer In — will begin shortly. Parent deal_savedfast. Closed blocked until transfer complete.",
-        at: "2026-09-11T14:06:00Z",
-        status: "active",
+          "Personal Closed. Parent deal_savedfast. source=imported · agent_executed=false · amount_status=imported_unverified. $11.68 not price_verified. Not GMV.",
+        at: "2026-09-11T18:00:00Z",
+        status: "done",
       },
     ];
   }
@@ -320,11 +325,29 @@ function assertJohnLedger(deals: Deal[]) {
       "deal_botbuyer_ai must display verified $179.96 and stay out of public proof.",
     );
   }
-  if (savedfast.status !== "Closing" || !savedfast.blockers.some((item) => item.includes("403"))) {
-    throw new Error("deal_savedfast must stay Closing with WP 403 blocker.");
+  if (savedfast.status !== "Closed" || !hasPersonalClosedHonestyFlags(savedfast)) {
+    throw new Error(
+      "deal_savedfast must be personal Closed with imported + agent_executed=false + imported_unverified + price_verified=false.",
+    );
   }
-  if (xfer.parentDealId !== "deal_savedfast" || xfer.status !== "Closing") {
-    throw new Error("transfer fee must be Closing and parented to deal_savedfast.");
+  if (!isHonestPersonalClosedEscrow(savedfast)) {
+    throw new Error(
+      "deal_savedfast escrow_stage must be accepted or seller-proceeds-processing (never Escrow complete).",
+    );
+  }
+  if (isVerifiedAmount(savedfast) || isPublicProofEligible(savedfast)) {
+    throw new Error("deal_savedfast $405 must stay imported_unverified and out of GMV/proof.");
+  }
+  if (xfer.parentDealId !== "deal_savedfast" || xfer.status !== "Closed") {
+    throw new Error("transfer fee must be personal Closed and parented to deal_savedfast.");
+  }
+  if (!hasPersonalClosedHonestyFlags(xfer)) {
+    throw new Error(
+      "transfer fee must keep imported + agent_executed=false + imported_unverified + price_verified=false.",
+    );
+  }
+  if (isVerifiedAmount(xfer) || isPublicProofEligible(xfer)) {
+    throw new Error("transfer fee $11.68 must stay imported_unverified and out of GMV/proof.");
   }
 }
 

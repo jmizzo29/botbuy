@@ -53,16 +53,16 @@
       "title": "Savedfast Online Tools (savedfast.com)",
       "category": "software",
       "marketplace": "Flippa",
-      "status": "Closing",
+      "status": "Closed",
       "price_usd": 405.0,
       "currency": "USD",
       "opened_at": "2026-09-05T00:00:00Z",
-      "closed_at": null,
+      "closed_at": "2026-09-11T18:00:00Z",
       "escrow": {
         "provider": "Escrow.com",
         "transaction_id": "13190302",
         "flippa_listing": "12890562",
-        "stage": "Domain Transfer / waiting WP + registrar transfer"
+        "stage": "seller-proceeds-processing"
       },
       "domain_transfer": {
         "registrar": "Namecheap",
@@ -76,22 +76,23 @@
         "Do not mark Escrow received until domain control + WP verified",
         "AdSense account carved out of sale (accepted)"
       ],
-      "notes": "First micro-acq via Flippa/Escrow; BotBuy-style deal to import as history.",
+      "notes": "Personal Closed. First micro-acq via Flippa/Escrow imported as history. Amount imported_unverified — not verified spend, not GMV, not Escrow complete.",
       "source": "imported",
       "agent_executed": false,
       "price_verified": false,
-      "amount_status": "imported_unverified"
+      "amount_status": "imported_unverified",
+      "amount_verified": false
     },
     {
       "id": "deal_namecheap_savedfast_xfer",
       "title": "savedfast.com inbound transfer fee",
       "category": "domain",
       "marketplace": "Namecheap",
-      "status": "Closing",
+      "status": "Closed",
       "price_usd": 11.68,
       "currency": "USD",
       "opened_at": "2026-09-11T14:00:00Z",
-      "closed_at": null,
+      "closed_at": "2026-09-11T18:00:00Z",
       "receipt": {
         "merchant": "Namecheap",
         "order_id": "213803826",
@@ -99,23 +100,24 @@
         "item": "1 year domain transfer"
       },
       "parent_deal_id": "deal_savedfast",
-      "notes": "Transfer fee tied to Savedfast acquisition.",
+      "notes": "Personal Closed. Transfer fee tied to Savedfast. Amount imported_unverified — not verified spend, not GMV.",
       "source": "imported",
       "agent_executed": false,
       "price_verified": false,
-      "amount_status": "imported_unverified"
+      "amount_status": "imported_unverified",
+      "amount_verified": false
     }
   ],
-  "proof_strip_policy": "Only CHO-verified aggregates on public home. Personal history for John may show imported deals with source=imported and agent_executed=false. deal_botbuyer_ai displays Closed · $179.96. Savedfast/xfer stay imported_unverified. Unverified $ show as pending verify / imported_unverified. Public ProofStrip ignores imported.",
-  "updated_at": "2026-09-11T14:33:00Z",
+  "proof_strip_policy": "Only CHO-verified aggregates on public home. Personal history for John may show imported deals with source=imported and agent_executed=false. deal_botbuyer_ai displays Closed · $179.96. Savedfast/xfer may be personal Closed with imported_unverified — never price_verified, never public ProofStrip GMV. Unverified $ show as pending verify / imported_unverified. Public ProofStrip ignores imported.",
+  "updated_at": "2026-09-11T18:00:00Z",
   "cho_review": {
     "date": "2026-09-11",
     "verdict": "personal_history_ok_with_flags",
     "public_proof_strip": "empty \u2014 personal verified $ is not platform traction",
     "notes": [
       "botbuyer.ai Closed PASS; price_usd VERIFIED by CFO 2026-09-11 against receipt 213804743 / txn 259700262",
-      "Savedfast Closing PASS; Closed BLOCK until domain+WP verified",
-      "xfer Closing PASS; Closed BLOCK until transfer complete"
+      "Savedfast personal Closed PASS; imported + agent_executed=false + imported_unverified; escrow seller-proceeds-processing (not Escrow complete); $405 not booked",
+      "xfer personal Closed PASS; imported_unverified $11.68 pending; parent Savedfast"
     ],
     "botbuyer_price": "PASS verified 179.96 via Namecheap receipt 213804743 / txn 259700262"
   },
@@ -130,6 +132,6 @@
       }
     ],
     "pending_verify_usd": 416.68,
-    "note": "Savedfast + xfer remain imported_unverified / Closing. Public proof strip still CHO-empty. MRR=0."
+    "note": "Savedfast + xfer are personal Closed with imported_unverified flags. $405 + $11.68 stay pending. Public proof strip still CHO-empty. MRR=0."
   }
 }

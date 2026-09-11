@@ -26,7 +26,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 - No paid Stripe / Issuing. No card PAN. Vault refs + last4 only.
 - If `price_verified === false`, do not render `price_usd` as verified spend.
 - Illegal status transitions are rejected. `deal_events` is append-only.
-- Closing→Closed requires `verification.passed` for agent-run deals. Imported Closed may skip the engine at seed with `verification.skipped_reason=imported_ledger`.
+- Closing→Closed requires `verification.passed` for agent-run deals. Personal imported Closed is allowed only with honesty flags (`imported`, `agent_executed=false`, `imported_unverified`, `price_verified=false`). Seeded imported Closed stores receipt refs + `verification.skipped_reason=imported_ledger`. Never books unverified $ as burn/GMV or marks Escrow complete.
 - Spend-out ceiling $1,000. Auto-approve OFF always — every deal needs approval before spend. Fail-closed. Infra near-zero — no assumed paid infra budget.
 - Search/purchase: **all software products across all channels** via pluggable marketplace adapters. Not a merchant allowlist. Intent default category = software. John templates: Software (default), Software + domain, Domain (secondary).
 - After purchase, a licensed-user agent org (CEO/CFO/CTO/CMO) is stubbed on Closed assets. **Stub · not live.** No real spend or external mutations. Actions would be logged per agent.
@@ -55,12 +55,12 @@ Seeded from [`data/john-deal-ledger.json`](data/john-deal-ledger.json) on bootst
 | id | status | $ UI | labels |
 | --- | --- | --- | --- |
 | `deal_botbuyer_ai` | Closed | **Closed · $179.96** | Imported · Board purchase · not agent-run · not public proof · evidence `namecheap-213804743` |
-| `deal_savedfast` | Closing | **Imported · amount unverified** | Imported · blockers visible |
-| `deal_namecheap_savedfast_xfer` | Closing | **Imported · amount unverified** | Imported · parent → Savedfast |
+| `deal_savedfast` | Closed (personal) | **Imported · amount unverified** | Imported · agent_executed=false · escrow seller-proceeds-processing · $405 not booked |
+| `deal_namecheap_savedfast_xfer` | Closed (personal) | **Imported · amount unverified** | Imported · parent → Savedfast · $11.68 not booked |
 
 Detail microcopy on imported rows: `Added from your history. BotBuy didn’t execute this purchase.`
 
-Every imported row persists `source: "imported"`, `agent_executed: false`, plus `price_verified`, `amount_verified`, and `amount_status` from JSON. `deal_botbuyer_ai` is CHO-cleared verified $179.96 (`price_verified=true`, `amount_status=verified`, `amount_verified=true`). That personal $ is **not** platform traction and stays out of the public ProofStrip. Savedfast and the transfer fee stay unverified.
+Every imported row persists `source: "imported"`, `agent_executed: false`, plus `price_verified`, `amount_verified`, and `amount_status` from JSON. `deal_botbuyer_ai` is CHO-cleared verified $179.96 (`price_verified=true`, `amount_status=verified`, `amount_verified=true`). That personal $ is **not** platform traction and stays out of the public ProofStrip. Savedfast and the transfer fee may be personal Closed with `imported_unverified` — never `price_verified`, never Customer GMV, never ProofStrip closed GMV.
 
 ## Local
 
@@ -75,7 +75,7 @@ npm run lint
 npm run build
 ```
 
-Open `/` (empty proof), `/home` (3 personal deals), `/deals/deal_savedfast` (Needs you gates).
+Open `/` (empty proof), `/home` (3 personal deals), `/deals/deal_savedfast` (personal Closed · imported_unverified).
 
 ## Vercel
 
