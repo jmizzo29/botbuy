@@ -1,0 +1,20 @@
+{
+  "merchant": "Namecheap",
+  "order_id": "213804743",
+  "transaction_id": "259700262",
+  "domain": "botbuyer.ai",
+  "term": "2 years",
+  "amount_usd": 179.96,
+  "currency": "USD",
+  "paid_at": "2026-09-11T14:26:00Z",
+  "paid_at_local_et": "2026-09-11 10:26 AM ET",
+  "payment_method": "Credit Card ending 2986",
+  "account": "johnmitchellbsl",
+  "verified": true,
+  "verified_at": "2026-09-11T14:32:00Z",
+  "evidence_files": [
+    "namecheap-213804743-receipt-1.png",
+    "namecheap-213804743-receipt-2.png",
+    "botbuyer.ai-rdap.json"
+  ]
+}
