@@ -106,7 +106,7 @@
       "amount_status": "imported_unverified"
     }
   ],
-  "proof_strip_policy": "Only CHO-verified aggregates on public home. Personal history for John may show imported deals with source=imported and agent_executed=false. deal_botbuyer_ai displays Closed · $179.96. Savedfast/xfer stay imported_unverified. Public ProofStrip ignores imported.",
+  "proof_strip_policy": "Only CHO-verified aggregates on public home. Personal history for John may show imported deals with source=imported and agent_executed=false. deal_botbuyer_ai displays Closed · $179.96. Savedfast/xfer stay imported_unverified. Unverified $ show as pending verify / imported_unverified. Public ProofStrip ignores imported.",
   "updated_at": "2026-09-11T14:33:00Z",
   "cho_review": {
     "date": "2026-09-11",
