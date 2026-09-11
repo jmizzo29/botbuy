@@ -95,6 +95,98 @@ body {
   }
 }
 
+/* Designer LOCKED Vault cards rail. Soft-signal HOLD. */
+.bb-vault-rail {
+  position: relative;
+  width: 380px;
+  height: 280px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.bb-vault-rail::before {
+  content: "";
+  position: absolute;
+  inset: -18% -8%;
+  background: radial-gradient(
+    ellipse 70% 60% at 55% 45%,
+    color-mix(in srgb, var(--bb-primary) 7%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.bb-vault-rail--shell {
+  position: absolute;
+  top: 6rem;
+  right: 1.5rem;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.bb-vault-card {
+  position: absolute;
+  width: 240px;
+  height: 152px;
+  border-radius: 16px;
+  background: var(--bb-surface);
+  border: 1px solid color-mix(in srgb, var(--bb-primary) 35%, transparent);
+  box-shadow: 0 10px 24px color-mix(in srgb, #000000 32%, transparent);
+  pointer-events: none;
+}
+
+.bb-vault-card::before {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: 24px;
+  width: 56px;
+  height: 8px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--bb-primary) 50%, transparent);
+}
+
+.bb-vault-card::after {
+  content: "";
+  position: absolute;
+  top: 52px;
+  left: 24px;
+  width: 70%;
+  height: 6px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--bb-muted) 40%, transparent);
+}
+
+.bb-vault-card.--c {
+  left: 48px;
+  top: 12px;
+  transform: rotate(-6deg);
+  opacity: 0.55;
+  z-index: 1;
+}
+
+.bb-vault-card.--b {
+  left: 88px;
+  top: 56px;
+  transform: rotate(-2deg);
+  opacity: 0.78;
+  z-index: 2;
+}
+
+.bb-vault-card.--a {
+  left: 128px;
+  top: 100px;
+  transform: rotate(2deg);
+  opacity: 1;
+  z-index: 3;
+}
+
+@media (max-width: 767px) {
+  .bb-vault-rail {
+    display: none;
+  }
+}
+
 .hairline {
   box-shadow: inset 0 0 0 1px var(--line);
 }
