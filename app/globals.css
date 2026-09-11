@@ -60,6 +60,15 @@ body {
   min-height: 100%;
 }
 
+html.bb-standalone,
+html.bb-standalone body {
+  overscroll-behavior: none;
+}
+
+html.bb-standalone .bb-browser-only {
+  display: none;
+}
+
 body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 1.0625rem;

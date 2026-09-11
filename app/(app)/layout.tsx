@@ -1,6 +1,6 @@
 import { AppShell } from "@/components/app-shell";
 import { getCurrentUser } from "@/lib/auth";
-import { hydrateStore } from "@/lib/store";
+import { hydrateStore, listDeals } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
@@ -11,5 +11,12 @@ export default async function AppLayout({
 }) {
   await hydrateStore();
   const user = getCurrentUser();
-  return <AppShell user={user}>{children}</AppShell>;
+  const needsYouCount = listDeals(user.id).filter(
+    (deal) => deal.status === "Needs you",
+  ).length;
+  return (
+    <AppShell user={user} needsYouCount={needsYouCount}>
+      {children}
+    </AppShell>
+  );
 }

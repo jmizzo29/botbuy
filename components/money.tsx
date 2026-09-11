@@ -12,10 +12,12 @@ export function DealAmount({
   deal,
   className,
   withStatus = false,
+  listedOk = false,
 }: {
   deal: Deal;
   className?: string;
   withStatus?: boolean;
+  listedOk?: boolean;
 }) {
   if (isVerifiedAmount(deal)) {
     const money = formatUsd(deal.priceUsd);
@@ -29,6 +31,17 @@ export function DealAmount({
         }
       >
         {withStatus ? `${deal.status} · ${money}` : money}
+      </span>
+    );
+  }
+
+  if (listedOk && typeof deal.priceUsd === "number" && deal.priceUsd > 0) {
+    return (
+      <span
+        className={cn("text-sm font-medium text-demo text-right", className)}
+        title="Listed · Demo · not verified spend"
+      >
+        {formatUsd(deal.priceUsd)}
       </span>
     );
   }

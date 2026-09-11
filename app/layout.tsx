@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     title: "BotBuy",
     statusBarStyle: "default",
   },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },

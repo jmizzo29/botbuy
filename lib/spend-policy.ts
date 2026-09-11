@@ -25,6 +25,16 @@ export function clampSpendUsd(value: number) {
   return Math.min(Math.round(value * 100) / 100, SPEND_HARD_GATE_USD);
 }
 
+export function remainingAfterVerified(verifiedUsd: number) {
+  if (!Number.isFinite(verifiedUsd) || verifiedUsd < 0) {
+    return SPEND_HARD_GATE_USD;
+  }
+  return Math.max(
+    0,
+    Math.round((SPEND_HARD_GATE_USD - verifiedUsd) * 100) / 100,
+  );
+}
+
 export function isWithinHardGate(value: number) {
   return Number.isFinite(value) && value >= 0 && value <= SPEND_HARD_GATE_USD;
 }

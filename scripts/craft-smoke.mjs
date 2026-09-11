@@ -132,8 +132,13 @@ for (const [name, src, needle] of primaryBlocks) {
   assert(src.includes(needle), `${name} primary present`);
 }
 
-assert(brand.includes('trustLine: "Demo · every deal needs your approval"'), "CPO trust line");
+assert(brand.includes('trustLine: "Demo · every deal needs your approval"'), "CPO trust line without $1k");
 assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(land), "land has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(signup), "signup has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(chrome), "public chrome has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(layout), "layout meta has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(manifest), "manifest marketing has no $1,000 gate");
 assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock");
 assert(land.includes("BRAND.trustLine"), "land renders trust line under CTAs");
 assert(
@@ -167,7 +172,12 @@ assert(empty.includes('AGENTS_EMPTY_SECONDARY = "See how activation works"'), "A
 assert(empty.includes('"/deals?status=Closed"'), "Agents empty → Closed deals");
 assert(home.includes("DealsTable"), "My deals dense table");
 assert(home.includes("MY_DEALS_LABEL") || home.includes("My deals"), "My deals is /home");
-assert(home.includes("APPROVE_MICRO") || home.includes("BotBuy only runs what you approve."), "home approve micro");
+assert(
+  approveUi.includes("APPROVE_MICRO") ||
+    home.includes("APPROVE_MICRO") ||
+    home.includes("BotBuy only runs what you approve."),
+  "home approve micro",
+);
 assert(home.includes("no invented GMV"), "My deals invents no GMV");
 assert(dealDetail.includes("DealApproveActions"), "deal detail Approve/Reject");
 assert(dealDetail.includes("auto-approve OFF"), "deal detail auto-approve OFF");
@@ -203,7 +213,12 @@ assert(financeIdx < dealsIdx, "Finance above Deals");
 assert(usageIdx > dealsIdx && usageIdx < trafficIdx, "Usage rollup after Deals, before stubs");
 assert(trafficIdx < mrrIdx, "traffic stub before MRR stub");
 assert(admin.includes("Demo stub") && admin.includes("DemoStub"), "in-card Demo stub styling");
-assert(admin.includes("No $ / user") || usageUi.includes("No $ / user"), "admin usage has no $/user");
+assert(
+  admin.includes("No $ / user") ||
+    usageUi.includes("No $ / user") ||
+    usage.includes("No $ / user"),
+  "admin usage has no $/user",
+);
 assert(!usageUi.includes("formatUsd") && !/\$\d/.test(usageUi), "usage UI invents no $ amounts");
 
 assert(finance.includes("const customerGmvUsd = 0"), "customer GMV locked at 0");
@@ -373,11 +388,131 @@ assert(!/>\s*B\s*</.test(chrome), "public chrome no letter-B tile");
 assert(layout.includes("/favicon.ico"), "layout links favicon.ico");
 assert(layout.includes("/favicon.svg"), "layout links favicon.svg");
 assert(layout.includes("/icons/apple-touch-icon.png"), "layout apple-touch-icon");
+assert(layout.includes("appleWebApp") && layout.includes("capable: true"), "layout appleWebApp capable");
+assert(layout.includes("statusBarStyle: \"default\""), "layout Apple status bar for light shell");
+assert(layout.includes("apple-mobile-web-app-capable"), "layout Apple capable meta");
 assert(layout.includes("/brand/og-1200x630.png"), "layout Open Graph image");
 assert(layout.includes("https://botbuyer.ai/brand/og-1200x630.png"), "twitter image Vault OG");
 assert(manifest.includes("/icons/icon-192.png"), "manifest icon-192");
 assert(manifest.includes("/icons/icon-512.png"), "manifest icon-512");
 assert(manifest.includes("/icons/icon-512-maskable.png"), "manifest maskable icon");
+assert(manifest.includes('display: "standalone"'), "manifest display standalone");
+assert(
+  manifest.includes("start_url: INSTALLED_START_HREF") ||
+    manifest.includes('start_url: "/start"'),
+  "A2HS start gate /start",
+);
+assert(manifest.includes("id:"), "manifest id");
+const sw = read("public/sw.js");
+assert(sw.includes('CACHE = "botbuy-v4"'), "SW cache bumped to botbuy-v4");
+assert(sw.includes('pathname.startsWith("/_next/")'), "SW does not intercept Next chunks");
+assert(sw.includes('"/home"') && sw.includes('"/start"') && sw.includes('"/offline"'), "SW precaches app shell routes");
+assert(sw.includes("skipWaiting") && sw.includes("clients.claim"), "SW install/activate claim");
+assert(existsSync(join(root, "app/offline/page.tsx")), "offline shell page");
+assert(existsSync(join(root, "app/start/page.tsx")), "installed start gate");
+assert(existsSync(join(root, "cpo-phone-first-full-app-ia-v1.md")), "CPO phone-first IA pack");
+const startGate = read("app/start/page.tsx");
+assert(startGate.includes("hasPublicSession"), "start checks signed-in");
+assert(startGate.includes("redirect(MY_DEALS_HREF)") || startGate.includes('redirect("/home")'), "signed-in start → My deals");
+assert(startGate.includes('redirect("/")'), "unsigned start → land");
+const pwa = read("components/pwa-register.tsx");
+assert(pwa.includes('register("/sw.js"'), "PWA registers /sw.js");
+assert(
+  shell.includes("InstallHint") && chrome.includes("InstallHint"),
+  "discreet A2HS hint mounted on app + land",
+);
+const a2hs = read("components/install-hint.tsx");
+const techlux = read("lib/cpo-techlux.ts");
+assert(a2hs.includes("beforeinstallprompt"), "A2HS listens for beforeinstallprompt");
+assert(a2hs.includes("setHowTo(true)"), "A2HS how-to opens when native install is unavailable or canceled");
+assert(a2hs.includes("A2HS_COPY"), "A2HS uses locked copy");
+assert(a2hs.includes("persistDismiss") || a2hs.includes("localStorage"), "A2HS dismiss persists");
+assert(techlux.includes("not an App Store or Play listing"), "A2HS copy is Demo-honest");
+assert(shell.includes("safe-area-inset-bottom"), "bottom nav safe-area");
+assert(shell.includes("safe-area-inset-top"), "sticky header safe-area");
+assert(shell.includes("grid-cols-3"), "phone tabs are 3-col CPO IA");
+assert(!shell.includes("grid-cols-5") && !shell.includes("grid-cols-6"), "phone tabs are not 5/6-col cram");
+assert(shell.includes("MY_DEALS_LABEL") && !/>\s*Home\s*</.test(shell), "mobile label is My deals not Home");
+assert(shell.includes('href: "/agents"') && shell.includes("PHONE_TAB_ADMIN"), "phone tabs Agents + owner Admin");
+assert(!/mobileLinks[\s\S]*\/intent/.test(shell) && !/phoneTabs[\s\S]*\/vault/.test(shell), "Intent/Vault not bottom tabs");
+assert(shell.includes("AppMoreMenu"), "Intent/Vault/Settings via header menu");
+assert(shell.includes("needsYouCount") && shell.includes("Needs you"), "My deals Needs you badge");
+assert(shell.includes("min-h-11"), "mobile nav 44pt tap target");
+assert(css.includes("html.bb-standalone"), "standalone mode class");
+const moreMenu = read("components/app-more-menu.tsx");
+assert(moreMenu.includes("PHONE_MORE_LINKS"), "more menu uses CPO secondary links");
+assert(
+  techlux.includes('href: "/intent"') &&
+    techlux.includes('href: "/vault"') &&
+    techlux.includes('href: "/settings"'),
+  "CPO more links are Intent/Vault/Settings",
+);
+const dealsTable = read("components/deals-table.tsx");
+const dealsPhone = read("components/deals-phone-list.tsx");
+assert(dealsTable.includes("overflow-x-auto"), "My deals table scrolls on narrow");
+assert(dealsTable.includes("DealApproveActions"), "My deals table Approve/Reject");
+assert(dealsTable.includes("DealsPhoneList"), "desktop table defers phone list");
+assert(dealsPhone.includes("data-surface=\"my-deals-cards\""), "phone My deals cards");
+assert(dealsPhone.includes("md:hidden"), "phone cards hide on desktop");
+assert(
+  dealsPhone.includes('"All"') &&
+    dealsPhone.includes('"Needs you"') &&
+    dealsPhone.includes('"Searching"') &&
+    dealsPhone.includes('"Closed"'),
+  "phone My deals filters All / Needs you / Searching / Closed",
+);
+assert(approveUi.includes("w-full sm:w-auto") || approveUi.includes("w-full"), "deal detail Approve/Reject full-width on phone");
+assert(approveUi.includes("min-h-11"), "Approve/Reject 44pt taps");
+assert(existsSync(join(root, "designer-ui-mocks-mobile-techlux.md")), "designer mobile Techlux visual SoT");
+const designerMocks = read("designer-ui-mocks-mobile-techlux.md");
+assert(designerMocks.includes("Demo · every deal needs your approval"), "designer SoT keeps land trust");
+assert(designerMocks.includes("Approve sheet"), "designer SoT locks Approve sheet");
+assert(designerMocks.includes("Add to Home Screen"), "designer SoT locks A2HS");
+const approveSheet = read("components/approve-sheet.tsx");
+assert(approveSheet.includes("data-surface=\"approve-sheet\""), "Approve sheet surface");
+assert(approveSheet.includes("createPortal"), "Approve sheet portals above A2HS");
+assert(approveSheet.includes("APPROVE_SHEET_TITLE"), "Approve sheet title lock");
+assert(approveSheet.includes("APPROVE_LABEL") && approveSheet.includes("REJECT_LABEL"), "Approve sheet has Approve + Reject");
+assert(approveUi.includes("ApproveSheet"), "Needs you opens Approve sheet on phone");
+assert(approveUi.includes("setSheetOpen(true)"), "phone Approve/Reject open sheet");
+assert(techlux.includes('APPROVE_SHEET_TITLE = "Approve deal?"'), "CPO Approve sheet title");
+assert(a2hs.includes("A2HS_BAR_TITLE") && a2hs.includes("data-surface=\"a2hs\""), "A2HS uses designer install bar");
+assert(a2hs.includes("A2HS_GOT_IT") && a2hs.includes("A2HS_HOW"), "A2HS how-to sheet");
+assert(home.includes("SPEND_LIMIT_PILL") && home.includes("AUTO_APPROVE_OFF"), "My deals spend + auto-approve pills");
+assert(home.includes("remainingAfterVerified"), "My deals remaining is computed, not a fake $840");
+assert(!home.includes("Spend remaining"), "home dropped $1k remaining-as-limit badge");
+assert(shell.includes("data-surface=\"phone-tabs\""), "phone tabs designer surface");
+assert(shell.includes("text-primary"), "active tab icon is teal jewelry");
+assert(!usageUi.includes("text-zinc-"), "usage UI is Techlux light, not dark zinc");
+assert(!usageUi.includes("bg-white/[0.03]"), "usage counters are not dark wash");
+const vaultRailsUi = read("components/vault-rails.tsx");
+assert(vaultRailsUi.includes("data-surface=\"payment-methods\""), "payment methods designer cards");
+assert(usage.includes("Never Actual $"), "usage meter never Actual $");
+assert(usage.includes("Estimate until CHO promote"), "usage stays Estimate");
+assert(existsSync(join(root, "cpo-usage-ia-phone-v1.md")), "CPO usage IA pack");
+assert(usage.includes("ADMIN_USAGE_MICRO") && usage.includes("all licensed users"), "Admin usage is platform aggregate");
+assert(usage.includes("SETTINGS_USAGE_MICRO") && usage.includes("This account only"), "Settings usage is per-user");
+assert(usage.includes("rollupUsageByUser"), "Admin by-user breakdown when metered");
+const settingsPage = read("app/(app)/settings/page.tsx");
+assert(settingsPage.includes("SettingsUsageSection"), "Settings is primary Usage surface");
+assert(settingsPage.includes("listDeals(user.id)"), "Settings usage is that account only");
+assert(usageUi.includes("SettingsUsageSection") && usageUi.includes('id="usage"'), "Settings usage anchor");
+assert(usageUi.includes("SETTINGS_USAGE_MICRO"), "Settings card uses per-user micro");
+assert(usageUi.includes("ADMIN_USAGE_MICRO"), "Admin card defaults to platform aggregate");
+assert(usageUi.includes("byUser"), "Admin usage accepts by-user rows");
+assert(admin.includes("byUser={usage.byUser}"), "Admin page passes platform by-user");
+assert(usageUi.includes("/settings#usage"), "deal usage links to Settings");
+assert(usageUi.includes("USAGE_ESTIMATE_LABEL") && usageUi.includes("DemoBadge"), "usage badges Demo/Estimate");
+assert(!usageUi.includes("Actual $") || usage.includes("Never Actual $"), "usage UI invents no Actual $");
+assert(usage.includes("USAGE_NO_PRECISE") && usageUi.includes("USAGE_NO_PRECISE"), "Usage has no-precise-costs lock");
+assert(usage.includes('label: "Search"') && usage.includes('label: "Deal ops"') && usage.includes('label: "Other"'), "Usage bars Search / Deal ops / Other");
+assert(usage.includes("USAGE_NOT_A_BILL") && usageUi.includes("USAGE_NOT_A_BILL"), "Usage estimate is not a bill");
+assert(!usageUi.includes("~48k") && !home.includes("$840"), "Usage/home do not invent mock $840 or 48k tokens");
+assert(approveSheet.includes("APPROVE_SHEET_LEAD"), "Approve sheet lead lock");
+assert(techlux.includes("Auto-approve is OFF"), "Approve lead keeps auto-approve OFF");
+assert(a2hs.includes("BRAND.trustLine"), "A2HS how-to shows land trust line");
+assert(vaultRailsUi.includes("Available ≠ live"), "payment methods Available ≠ live");
+assert(vaultPage.includes("cardLast4") || vaultRailsUi.includes("cardLast4"), "payment methods can show seeded last4");
 
 const sitePages = read("lib/site-pages.ts");
 const legalMd = read("lib/legal-markdown.ts");

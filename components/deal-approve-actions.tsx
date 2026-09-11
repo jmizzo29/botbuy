@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ApproveSheet } from "@/components/approve-sheet";
 import { Button } from "@/components/ui/button";
 import {
   APPROVE_LABEL,
@@ -15,15 +16,24 @@ import type { DealStatus } from "@/lib/types";
 export function DealApproveActions({
   dealId,
   status,
+  title,
+  spend,
+  remaining,
+  payment,
   compact = false,
 }: {
   dealId: string;
   status: DealStatus;
+  title?: string;
+  spend?: string;
+  remaining?: string;
+  payment?: string;
   compact?: boolean;
 }) {
   const router = useRouter();
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   if (status !== "Needs you") return null;
 
@@ -43,6 +53,7 @@ export function DealApproveActions({
       setError(body?.error ?? "Transition rejected.");
       return;
     }
+    setSheetOpen(false);
     router.refresh();
   }
 
@@ -50,10 +61,39 @@ export function DealApproveActions({
 
   return (
     <div className={compact ? "space-y-1.5" : "space-y-3"}>
-      <div className="flex flex-wrap gap-2">
+      <div className={compact ? "flex gap-2 md:hidden" : "grid grid-cols-2 gap-2 md:hidden"}>
         <Button
           type="button"
           size={size}
+          className="min-h-11 w-full"
+          disabled={pending !== null}
+          onClick={() => setSheetOpen(true)}
+        >
+          {APPROVE_LABEL}
+        </Button>
+        <Button
+          type="button"
+          size={size}
+          variant="secondary"
+          className="min-h-11 w-full"
+          disabled={pending !== null}
+          onClick={() => setSheetOpen(true)}
+        >
+          {REJECT_LABEL}
+        </Button>
+      </div>
+      <p className="text-[11px] text-muted md:hidden">{APPROVE_MICRO}</p>
+      <div
+        className={
+          compact
+            ? "hidden flex-nowrap gap-2 md:flex"
+            : "hidden flex-col gap-2 md:flex md:flex-row md:flex-wrap"
+        }
+      >
+        <Button
+          type="button"
+          size={size}
+          className={compact ? "min-h-11 min-w-[5.5rem]" : "min-h-11 w-full sm:w-auto"}
           disabled={pending !== null}
           onClick={() => decide(APPROVE_STATUS)}
         >
@@ -63,16 +103,37 @@ export function DealApproveActions({
           type="button"
           size={size}
           variant="secondary"
+          className={compact ? "min-h-11 min-w-[5.5rem]" : "min-h-11 w-full sm:w-auto"}
           disabled={pending !== null}
           onClick={() => decide(REJECT_STATUS)}
         >
           {pending === REJECT_STATUS ? "…" : REJECT_LABEL}
         </Button>
       </div>
-      <p className={compact ? "text-[11px] text-muted" : "text-sm text-muted"}>
+      <p
+        className={
+          compact
+            ? "hidden text-[11px] text-muted md:block"
+            : "hidden text-sm text-muted md:block"
+        }
+      >
         {APPROVE_MICRO}
       </p>
-      {error ? <p className="text-sm text-demo">{error}</p> : null}
+      {error && !sheetOpen ? <p className="text-sm text-demo">{error}</p> : null}
+      {sheetOpen ? (
+        <ApproveSheet
+          title={title ?? "Needs you"}
+          spend={spend}
+          remaining={remaining}
+          status={status}
+          payment={payment}
+          pending={pending}
+          error={error}
+          onApprove={() => decide(APPROVE_STATUS)}
+          onReject={() => decide(REJECT_STATUS)}
+          onClose={() => setSheetOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

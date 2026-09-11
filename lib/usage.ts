@@ -3,12 +3,49 @@ import type {
   UsageDayRollup,
   UsageEvent,
   UsageTokensEst,
+  UsageUserRollup,
+  User,
 } from "@/lib/types";
 
 export const USAGE_DEMO_BADGE = "Demo · not live";
 export const USAGE_ESTIMATE_LABEL = "Estimate";
 export const USAGE_HOLD_NOTE =
   "Estimate until CHO promote. Demo · not live · not billed. Never Actual $.";
+
+export const ADMIN_USAGE_MICRO =
+  "Platform aggregate across all licensed users. Sum of runs / model_calls / tool_calls / tokens_est. No $ / user. Demo · Estimate. Never Actual $.";
+
+export const SETTINGS_USAGE_MICRO =
+  "This account only. Demo · Estimate. Never Actual $.";
+
+export const USAGE_YOUR_LABEL = "Your usage" as const;
+export const USAGE_UNTIL_METERED = "Estimate until metered" as const;
+export const USAGE_NOT_A_BILL = "Not a bill" as const;
+export const USAGE_NO_PRECISE =
+  "No precise costs yet. Live tokens/cost ship when metering + CHO verify. Demo numbers stay coarse on purpose." as const;
+
+export const USAGE_SURFACES = [
+  { id: "search", label: "Search", phases: ["search"] },
+  { id: "deal_ops", label: "Deal ops", phases: ["buy", "close"] },
+  { id: "other", label: "Other", phases: ["operate"] },
+] as const;
+
+export function rollupUsageBySurface(events: UsageEvent[]) {
+  for (const event of events) assertUsageNeverActual(event);
+  const totals = {
+    search: 0,
+    deal_ops: 0,
+    other: 0,
+  };
+  for (const event of events) {
+    const tokens = event.tokensEst.total ?? 0;
+    if (event.phase === "search") totals.search += tokens;
+    else if (event.phase === "buy" || event.phase === "close") {
+      totals.deal_ops += tokens;
+    } else totals.other += tokens;
+  }
+  return totals;
+}
 
 /** Synthetic search-phase stub. Labeled Estimate / Demo — not billed. */
 export const SEARCH_USAGE_STUB = {
@@ -124,6 +161,33 @@ export function rollupUsageTotals(events: UsageEvent[]) {
   };
 }
 
+/** Admin-only. One row per licensed user that has metered events. */
+export function rollupUsageByUser(
+  events: UsageEvent[],
+  deals: Deal[],
+  users: User[],
+): UsageUserRollup[] {
+  for (const event of events) assertUsageNeverActual(event);
+  const userByDeal = new Map(deals.map((deal) => [deal.id, deal.userId]));
+  const nameByUser = new Map(users.map((user) => [user.id, user.name]));
+  const byUser = new Map<string, UsageEvent[]>();
+  for (const event of events) {
+    const userId = userByDeal.get(event.dealId);
+    if (!userId) continue;
+    const list = byUser.get(userId) ?? [];
+    list.push(event);
+    byUser.set(userId, list);
+  }
+  return [...byUser.entries()]
+    .map(([userId, rows]) => ({
+      userId,
+      name: nameByUser.get(userId) ?? userId,
+      ...rollupUsageTotals(rows),
+      costKind: "estimate" as const,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
 export function formatCount(value: number) {
   return value.toLocaleString("en-US");
 }
@@ -131,4 +195,13 @@ export function formatCount(value: number) {
 export function formatTokensEst(value: number | null) {
   if (value == null) return "—";
   return `${formatCount(value)} est`;
+}
+
+export function formatTokensApprox(value: number | null) {
+  if (value == null || value === 0) return "—";
+  if (value >= 1000) {
+    const k = value / 1000;
+    return `~${k >= 10 ? Math.round(k) : k.toFixed(1)}k`;
+  }
+  return `~${formatCount(value)}`;
 }

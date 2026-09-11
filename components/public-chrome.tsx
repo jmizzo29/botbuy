@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand-lockup";
+import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { BRAND } from "@/lib/brand";
@@ -28,7 +29,7 @@ export function PublicChrome({
         </>
       ) : null}
       <div className={land ? "bb-land-content" : undefined}>
-        <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 md:px-8">
+        <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8">
           <Link href="/" className="flex items-center" aria-label="BotBuy home">
             <BrandLockup priority />
           </Link>
@@ -39,6 +40,7 @@ export function PublicChrome({
             <PublicNav />
           </div>
         </header>
+        <InstallHint />
         <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8">{children}</main>
         <footer className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-8">
           <SiteFooter />
