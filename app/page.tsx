@@ -17,7 +17,7 @@ export default function LandPage() {
   return (
     <PublicChrome>
       <div className="pt-16 md:pt-24">
-        <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="grid items-start gap-12 md:grid-cols-2 md:gap-16">
           <div className="relative z-10">
             <Badge className={DEMO_PILL_CLASS}>{BRAND.pocBanner}</Badge>
             <p className="mt-6 text-[10px] uppercase tracking-[0.16em] text-muted/45">
