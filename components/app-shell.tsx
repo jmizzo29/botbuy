@@ -106,7 +106,7 @@ export function AppShell({
       </aside>
 
       <div className="relative z-10 md:pl-60">
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-[var(--bb-line)] bg-background/80 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
+        <header className="sticky top-0 z-30 flex items-center justify-between overflow-visible border-b border-[var(--bb-line)] bg-background/80 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
           <Link href={MY_DEALS_HREF} className="flex min-h-11 items-center" aria-label="BotBuy home">
             <BrandLockup />
           </Link>

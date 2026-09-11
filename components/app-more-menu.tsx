@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useId, useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { PHONE_MORE_LINKS } from "@/lib/cpo-techlux";
 import { SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ export function AppMoreMenu() {
   const open = openPath === pathname;
 
   return (
-    <div className="relative">
+    <>
       <button
         type="button"
         className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-[var(--bb-radius)] text-sm text-muted hover:bg-black/[0.04] hover:text-foreground"
@@ -24,7 +24,7 @@ export function AppMoreMenu() {
         aria-haspopup="menu"
         onClick={() => setOpenPath(open ? null : pathname)}
       >
-        <Menu className="h-5 w-5" />
+        {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         <span className="sr-only">Intent, Vault, Settings</span>
       </button>
       {open ? (
@@ -32,7 +32,8 @@ export function AppMoreMenu() {
           id={menuId}
           role="menu"
           className={cn(
-            "absolute right-0 top-full z-30 mt-2 min-w-44 rounded-[var(--bb-radius)] bg-surface p-1",
+            "fixed inset-x-3 z-40 rounded-[var(--bb-radius)] bg-surface p-1",
+            "top-[calc(3.25rem+env(safe-area-inset-top))]",
             SURFACE_RING_CLASS,
           )}
         >
@@ -56,6 +57,6 @@ export function AppMoreMenu() {
           })}
         </div>
       ) : null}
-    </div>
+    </>
   );
 }
