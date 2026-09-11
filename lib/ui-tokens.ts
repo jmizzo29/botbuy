@@ -21,6 +21,7 @@ export const PRIMARY_CONTRAST = {
   min: 4.5,
 } as const;
 
+/** Demo gold (--bb-demo). Distinct from primary CTA teal (--bb-primary). */
 export const DEMO_PILL_CLASS =
   "bg-demo/12 text-demo ring-demo/35";
 

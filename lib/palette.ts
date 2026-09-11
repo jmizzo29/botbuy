@@ -18,6 +18,20 @@ export const PALETTE = {
   success: "#34D399",
 } as const;
 
+/** Designer token handoff SoT — exact CSS custom properties. */
+export const CSS_VARS = {
+  bg: "--bb-bg",
+  surface: "--bb-surface",
+  text: "--bb-text",
+  muted: "--bb-muted",
+  primary: "--bb-primary",
+  primaryFg: "--bb-primary-fg",
+  accent: "--bb-accent",
+  demo: "--bb-demo",
+  danger: "--bb-danger",
+  success: "--bb-success",
+} as const;
+
 function channel(hex: string, offset: number) {
   return parseInt(hex.slice(offset, offset + 2), 16) / 255;
 }

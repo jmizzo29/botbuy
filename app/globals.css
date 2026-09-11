@@ -1,33 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #050A0C;
-  --bg-elevated: #0C1518;
+  /* Designer token handoff SoT — Electric Teal. Soft-signal HOLD. */
+  --bb-bg: #050A0C;
+  --bb-surface: #0C1518;
+  --bb-text: #F4FFFD;
+  --bb-muted: #7A9A96;
+  --bb-primary: #2DD4BF;
+  --bb-primary-fg: #042F2E;
+  --bb-accent: #5EEAD4;
+  --bb-demo: #E8B84A;
+  --bb-danger: #FB7185;
+  --bb-success: #34D399;
+
+  --bg: var(--bb-bg);
+  --bg-elevated: var(--bb-surface);
   --bg-soft: #102024;
-  --fg: #F4FFFD;
-  --muted: #7A9A96;
+  --fg: var(--bb-text);
+  --muted: var(--bb-muted);
   --faint: #5C7874;
-  --line: rgba(244, 255, 253, 0.08);
-  --line-strong: rgba(244, 255, 253, 0.14);
-  --accent: #5EEAD4;
-  --accent-dim: rgba(94, 234, 212, 0.12);
-  --primary: #2DD4BF;
-  --primary-fg: #042F2E;
-  --demo: #E8B84A;
-  --danger: #FB7185;
-  --success: #34D399;
+  --line: color-mix(in srgb, var(--bb-text) 8%, transparent);
+  --line-strong: color-mix(in srgb, var(--bb-text) 14%, transparent);
+  --accent: var(--bb-accent);
+  --accent-dim: color-mix(in srgb, var(--bb-accent) 12%, transparent);
+  --primary: var(--bb-primary);
+  --primary-fg: var(--bb-primary-fg);
+  --demo: var(--bb-demo);
+  --danger: var(--bb-danger);
+  --success: var(--bb-success);
 }
 
 @theme inline {
-  --color-background: var(--bg);
-  --color-foreground: var(--fg);
-  --color-surface: var(--bg-elevated);
-  --color-muted: var(--muted);
-  --color-accent: var(--accent);
-  --color-primary: var(--primary);
-  --color-demo: var(--demo);
-  --color-danger: var(--danger);
-  --color-success: var(--success);
+  --color-background: var(--bb-bg);
+  --color-foreground: var(--bb-text);
+  --color-surface: var(--bb-surface);
+  --color-muted: var(--bb-muted);
+  --color-accent: var(--bb-accent);
+  --color-primary: var(--bb-primary);
+  --color-demo: var(--bb-demo);
+  --color-danger: var(--bb-danger);
+  --color-success: var(--bb-success);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -38,8 +50,8 @@
 
 html,
 body {
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--bb-bg);
+  color: var(--bb-text);
   min-height: 100%;
 }
 
@@ -50,7 +62,7 @@ body {
 
 ::selection {
   background: var(--accent-dim);
-  color: var(--fg);
+  color: var(--bb-text);
 }
 
 @layer base {
@@ -58,19 +70,19 @@ body {
     color: inherit;
   }
 
-  /* P0: primary CTA contrast — teal fill + dark label, never white-on-white. */
+  /* P0: primary CTA = teal fill + dark label. Demo gold stays off the CTA. */
   a.btn-primary,
   button.btn-primary,
   .btn-primary {
-    background-color: #2DD4BF !important;
-    color: #042F2E !important;
+    background-color: var(--bb-primary) !important;
+    color: var(--bb-primary-fg) !important;
   }
 
   a.btn-primary:hover:not(:disabled),
   button.btn-primary:hover:not(:disabled),
   .btn-primary:hover:not(:disabled) {
-    background-color: #5EEAD4 !important;
-    color: #042F2E !important;
+    background-color: var(--bb-accent) !important;
+    color: var(--bb-primary-fg) !important;
   }
 }
 

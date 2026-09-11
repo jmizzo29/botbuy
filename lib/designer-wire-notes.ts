@@ -1,6 +1,7 @@
 /**
  * Designer wire notes — CPO lock. Soft-signal HOLD.
- * Primary CTA chrome is Electric Teal fill (#2DD4BF) + dark label (#042F2E).
+ * Primary CTA chrome is --bb-primary (#2DD4BF) fill + --bb-primary-fg (#042F2E).
+ * Demo gold is --bb-demo (#E8B84A) — never the CTA fill.
  * Never white-on-black from the prior craft pack. Never blank white-on-white.
  * Go-live primary label is exactly "Run BotBuy" (never bare "Run").
  */
@@ -13,8 +14,8 @@ export const DESIGNER_PRIMARY_BG = PALETTE.primary;
 export const DESIGNER_PRIMARY_FG = PALETTE.primaryLabel;
 
 export const DESIGNER_PRIMARY_STYLE = {
-  backgroundColor: DESIGNER_PRIMARY_BG,
-  color: DESIGNER_PRIMARY_FG,
+  backgroundColor: "var(--bb-primary)",
+  color: "var(--bb-primary-fg)",
 } as const;
 
 export const DESIGNER_PRIMARY_CLASS =
