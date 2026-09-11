@@ -356,7 +356,20 @@ assert(privacyPage.includes('loadLegalBlocks("privacy"'), "privacy renders publi
 assert(termsPage.includes('loadLegalBlocks("terms"'), "terms renders publish blocks");
 assert(aboutPage.includes('loadLegalBlocks("about"'), "about renders site-pages SoT");
 assert(betaPage.includes('loadLegalBlocks("beta"'), "beta renders site-pages SoT");
-assert(contactPage.includes('loadLegalBlocks("contact"'), "contact renders site-pages SoT");
+assert(contactPage.includes("CONTACT_COPY.mailboxHonesty"), "contact ships mailbox honesty");
+assert(contactPage.includes("mailto:${LEGAL_CONTACT_EMAIL}"), "contact legal mailto");
+assert(
+  sitePages.includes(
+    "Mailbox provisioning may still be completing. If mail bounces or you get no reply within a reasonable time, try again later or use in-product support channels when available.",
+  ),
+  "contact mailbox honesty exact CPO line",
+);
+assert(
+  contactSoT.includes(
+    "Mailbox provisioning may still be completing. If mail bounces or you get no reply within a reasonable time, try again later or use in-product support channels when available.",
+  ),
+  "contact.md mailbox honesty SoT",
+);
 assert(betaPage.includes("SITE_BETA_CTA.run"), "beta Run BotBuy CTA");
 assert(privacySoT.includes("Build Star Labs (Florida)"), "privacy publish entity");
 assert(privacySoT.includes("September 11, 2026"), "privacy publish effective date");

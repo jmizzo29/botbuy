@@ -58,6 +58,25 @@ export const SITE_BETA_CTA = {
   questionsHref: "/contact",
 } as const;
 
+/** Exact CPO Contact body from docs/site-pages/contact.md (75dbc5b). */
+export const CONTACT_COPY = {
+  legalHeading: "Privacy / legal",
+  legalLine:
+    "legal@botbuyer.ai — designated privacy/legal inbox for Build Star Labs / BotBuy.",
+  mailboxHonesty:
+    "Mailbox provisioning may still be completing. If mail bounces or you get no reply within a reasonable time, try again later or use in-product support channels when available.",
+  productHeading: "Product / early access",
+  productBeforeEmail:
+    "For product questions during early access, email ",
+  productAfterEmail:
+    " with subject line starting Product: until a separate product inbox is provisioned — or use in-app flows when signed in.",
+  expectHeading: "What not to expect",
+  advice:
+    "We don’t provide financial, legal, or tax advice. Merchant refunds follow merchant and processor rules.",
+  operator:
+    "Operator: Build Star Labs (Florida). Mailing address forthcoming.",
+} as const;
+
 /**
  * Publish-body SoT (docs/legal/publish-notes-v1.md).
  * Privacy/Terms: *-publish.md — never archive drafts (*-v1.md).
