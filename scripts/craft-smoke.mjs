@@ -38,6 +38,9 @@ const wire = read("lib/designer-wire-notes.ts");
 const palette = read("lib/palette.ts");
 const demoBadge = read("components/demo-badge.tsx");
 const shell = read("components/app-shell.tsx");
+const layout = read("app/layout.tsx");
+const manifest = read("app/manifest.ts");
+const lockup = read("components/brand-lockup.tsx");
 const ledger = JSON.parse(read("data/john-deal-ledger.json"));
 
 assert(wire.includes('GO_LIVE_PRIMARY_LABEL = "Run BotBuy"'), "wire notes label lock");
@@ -262,6 +265,20 @@ assert(!css.includes("box-shadow:") || css.includes("inset 0 0 0 1px var(--line)
 assert(wire.includes("Quiet Capital"), "wire notes record Quiet Capital HOLD craft");
 assert(wire.includes("Not a public launch"), "Quiet Capital docs stay HOLD");
 assert(wire.includes("Vault cards silhouette"), "wire notes record vault-cards HOLD backdrop");
+assert(lockup.includes("/brand/botbuy-logo-header.svg"), "BrandLockup uses header lockup SVG");
+assert(lockup.includes('alt="BotBuy"'), "BrandLockup accessible alt");
+assert(shell.includes("BrandLockup"), "app shell Vault header lockup");
+assert(chrome.includes("BrandLockup"), "public chrome Vault header lockup");
+assert(!/>\s*B\s*</.test(shell), "app shell no letter-B tile");
+assert(!/>\s*B\s*</.test(chrome), "public chrome no letter-B tile");
+assert(layout.includes("/favicon.ico"), "layout links favicon.ico");
+assert(layout.includes("/favicon.svg"), "layout links favicon.svg");
+assert(layout.includes("/icons/apple-touch-icon.png"), "layout apple-touch-icon");
+assert(layout.includes("/brand/og-1200x630.png"), "layout Open Graph image");
+assert(layout.includes("https://botbuyer.ai/brand/og-1200x630.png"), "twitter image Vault OG");
+assert(manifest.includes("/icons/icon-192.png"), "manifest icon-192");
+assert(manifest.includes("/icons/icon-512.png"), "manifest icon-512");
+assert(manifest.includes("/icons/icon-512-maskable.png"), "manifest maskable icon");
 
 if (failures.length) {
   console.error("craft-smoke FAIL");
@@ -279,3 +296,4 @@ console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #E8B84A");
 console.log(" - Quiet Capital craft · vault-cards backdrop · 3-card how · no glow");
+console.log(" - Vault mark+wordmark header · favicon/PWA/OG wired");
