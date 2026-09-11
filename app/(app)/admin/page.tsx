@@ -199,7 +199,11 @@ export default async function AdminPage() {
         </CardContent>
       </Card>
 
-      <AdminUsageRollup days={usage.days} totals={usage.totals} />
+      <AdminUsageRollup
+        days={usage.days}
+        totals={usage.totals}
+        byUser={usage.byUser}
+      />
 
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-3">

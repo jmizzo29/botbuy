@@ -3,8 +3,10 @@ import { isVerifiedAmount } from "@/lib/deal-ui";
 import { countsTowardCfoMoney } from "@/lib/demo-needs-you";
 import { getOwnerFinance } from "@/lib/finance";
 import {
+  listAllDeals,
   listDeals,
   listedUnverifiedUsd,
+  listDirectoryUsers,
   listUsageEvents,
   verifiedSpendUsd,
   getSpendLimits,
@@ -12,6 +14,7 @@ import {
 import { DEAL_STATUSES, type AdminMetrics, type DealStatus } from "@/lib/types";
 import {
   rollupUsageByDay,
+  rollupUsageByUser,
   rollupUsageTotals,
   USAGE_DEMO_BADGE,
   USAGE_HOLD_NOTE,
@@ -123,6 +126,11 @@ export function getAdminMetrics(): AdminMetrics {
       costKind: "estimate",
       billed: false,
       days: rollupUsageByDay(usageEvents),
+      byUser: rollupUsageByUser(
+        usageEvents,
+        listAllDeals(),
+        listDirectoryUsers(),
+      ),
       totals: rollupUsageTotals(usageEvents),
       note: USAGE_HOLD_NOTE,
     },

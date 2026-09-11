@@ -66,6 +66,16 @@ export interface UsageDayRollup {
   costKind: UsageCostKind;
 }
 
+export interface UsageUserRollup {
+  userId: string;
+  name: string;
+  runs: number;
+  modelCalls: number;
+  toolCalls: number;
+  tokensEst: UsageTokensEst;
+  costKind: UsageCostKind;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -289,6 +299,7 @@ export interface AdminMetrics {
     costKind: UsageCostKind;
     billed: false;
     days: UsageDayRollup[];
+    byUser: UsageUserRollup[];
     totals: {
       runs: number;
       modelCalls: number;

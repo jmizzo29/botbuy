@@ -391,6 +391,10 @@ export function listDirectoryUsers(): User[] {
   return [DEMO_USER];
 }
 
+export function listAllDeals(): Deal[] {
+  return allDeals().slice();
+}
+
 export function listDeals(userId = DEMO_USER.id): Deal[] {
   return allDeals()
     .filter((deal) => deal.userId === userId)

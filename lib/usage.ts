@@ -3,12 +3,20 @@ import type {
   UsageDayRollup,
   UsageEvent,
   UsageTokensEst,
+  UsageUserRollup,
+  User,
 } from "@/lib/types";
 
 export const USAGE_DEMO_BADGE = "Demo · not live";
 export const USAGE_ESTIMATE_LABEL = "Estimate";
 export const USAGE_HOLD_NOTE =
   "Estimate until CHO promote. Demo · not live · not billed. Never Actual $.";
+
+export const ADMIN_USAGE_MICRO =
+  "Platform aggregate across all licensed users. Sum of runs / model_calls / tool_calls / tokens_est. No $ / user. Demo · Estimate. Never Actual $.";
+
+export const SETTINGS_USAGE_MICRO =
+  "This account only. Demo · Estimate. Never Actual $.";
 
 /** Synthetic search-phase stub. Labeled Estimate / Demo — not billed. */
 export const SEARCH_USAGE_STUB = {
@@ -122,6 +130,33 @@ export function rollupUsageTotals(events: UsageEvent[]) {
     toolCalls: events.reduce((sum, event) => sum + event.toolCalls, 0),
     tokensEst: sumTokensEst(events),
   };
+}
+
+/** Admin-only. One row per licensed user that has metered events. */
+export function rollupUsageByUser(
+  events: UsageEvent[],
+  deals: Deal[],
+  users: User[],
+): UsageUserRollup[] {
+  for (const event of events) assertUsageNeverActual(event);
+  const userByDeal = new Map(deals.map((deal) => [deal.id, deal.userId]));
+  const nameByUser = new Map(users.map((user) => [user.id, user.name]));
+  const byUser = new Map<string, UsageEvent[]>();
+  for (const event of events) {
+    const userId = userByDeal.get(event.dealId);
+    if (!userId) continue;
+    const list = byUser.get(userId) ?? [];
+    list.push(event);
+    byUser.set(userId, list);
+  }
+  return [...byUser.entries()]
+    .map(([userId, rows]) => ({
+      userId,
+      name: nameByUser.get(userId) ?? userId,
+      ...rollupUsageTotals(rows),
+      costKind: "estimate" as const,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export function formatCount(value: number) {

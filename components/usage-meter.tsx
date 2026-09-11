@@ -4,13 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import { formatDateTime } from "@/lib/utils";
 import {
+  ADMIN_USAGE_MICRO,
   formatCount,
   formatTokensEst,
+  SETTINGS_USAGE_MICRO,
   USAGE_DEMO_BADGE,
   USAGE_ESTIMATE_LABEL,
   USAGE_HOLD_NOTE,
 } from "@/lib/usage";
-import type { UsageDayRollup, UsageEvent, UsageTokensEst } from "@/lib/types";
+import type {
+  UsageDayRollup,
+  UsageEvent,
+  UsageTokensEst,
+  UsageUserRollup,
+} from "@/lib/types";
 
 function EstimateBadge() {
   return (
@@ -161,7 +168,7 @@ export function SettingsUsageSection({
         days={days}
         totals={totals}
         title="Usage"
-        micro="Your deals. Coarse token / call meter. No $ / user."
+        micro={SETTINGS_USAGE_MICRO}
       />
     </div>
   );
@@ -170,8 +177,9 @@ export function SettingsUsageSection({
 export function AdminUsageRollup({
   days,
   totals,
+  byUser,
   title = "Usage",
-  micro = "Per-day rollup of tokens_est and calls. No $ / user.",
+  micro = ADMIN_USAGE_MICRO,
 }: {
   days: UsageDayRollup[];
   totals: {
@@ -180,6 +188,7 @@ export function AdminUsageRollup({
     toolCalls: number;
     tokensEst: UsageTokensEst;
   };
+  byUser?: UsageUserRollup[];
   title?: string;
   micro?: string;
 }) {
@@ -241,6 +250,45 @@ export function AdminUsageRollup({
             No usage events yet. Run BotBuy opens a Searching estimate stub.
           </p>
         )}
+        {byUser ? (
+          byUser.length ? (
+            <div className="overflow-x-auto">
+              <p className="mb-2 text-[11px] uppercase tracking-[0.12em] text-muted">
+                By licensed user
+              </p>
+              <table className="w-full text-left text-sm">
+                <thead className="text-[11px] uppercase tracking-[0.12em] text-muted">
+                  <tr>
+                    <th className="pb-2 pr-3 font-medium">User</th>
+                    <th className="pb-2 pr-3 font-medium">Runs</th>
+                    <th className="pb-2 pr-3 font-medium">Calls</th>
+                    <th className="pb-2 font-medium">tokens_est</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--bb-line)]">
+                  {byUser.map((row) => (
+                    <tr key={row.userId}>
+                      <td className="py-3 pr-3">
+                        {row.name}
+                        <p className="text-xs text-demo">{USAGE_ESTIMATE_LABEL}</p>
+                      </td>
+                      <td className="py-3 pr-3">{formatCount(row.runs)}</td>
+                      <td className="py-3 pr-3">
+                        model {formatCount(row.modelCalls)} · tool{" "}
+                        {formatCount(row.toolCalls)}
+                      </td>
+                      <td className="py-3">{tokensLine(row.tokensEst)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-sm text-muted">
+              By-user breakdown when licensed users are metered. Demo · Estimate.
+            </p>
+          )
+        ) : null}
         <p className="text-xs text-zinc-500">{USAGE_HOLD_NOTE}</p>
       </CardContent>
     </Card>

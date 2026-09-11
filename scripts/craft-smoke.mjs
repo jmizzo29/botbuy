@@ -208,7 +208,12 @@ assert(financeIdx < dealsIdx, "Finance above Deals");
 assert(usageIdx > dealsIdx && usageIdx < trafficIdx, "Usage rollup after Deals, before stubs");
 assert(trafficIdx < mrrIdx, "traffic stub before MRR stub");
 assert(admin.includes("Demo stub") && admin.includes("DemoStub"), "in-card Demo stub styling");
-assert(admin.includes("No $ / user") || usageUi.includes("No $ / user"), "admin usage has no $/user");
+assert(
+  admin.includes("No $ / user") ||
+    usageUi.includes("No $ / user") ||
+    usage.includes("No $ / user"),
+  "admin usage has no $/user",
+);
 assert(!usageUi.includes("formatUsd") && !/\$\d/.test(usageUi), "usage UI invents no $ amounts");
 
 assert(finance.includes("const customerGmvUsd = 0"), "customer GMV locked at 0");
@@ -440,10 +445,17 @@ assert(approveUi.includes("min-h-11"), "Approve/Reject 44pt taps");
 assert(usage.includes("Never Actual $"), "usage meter never Actual $");
 assert(usage.includes("Estimate until CHO promote"), "usage stays Estimate");
 assert(existsSync(join(root, "cpo-usage-ia-phone-v1.md")), "CPO usage IA pack");
+assert(usage.includes("ADMIN_USAGE_MICRO") && usage.includes("all licensed users"), "Admin usage is platform aggregate");
+assert(usage.includes("SETTINGS_USAGE_MICRO") && usage.includes("This account only"), "Settings usage is per-user");
+assert(usage.includes("rollupUsageByUser"), "Admin by-user breakdown when metered");
 const settingsPage = read("app/(app)/settings/page.tsx");
 assert(settingsPage.includes("SettingsUsageSection"), "Settings is primary Usage surface");
-assert(settingsPage.includes("rollupUsageByDay") && settingsPage.includes("listUsageEvents"), "Settings usage is customer-scoped");
+assert(settingsPage.includes("listDeals(user.id)"), "Settings usage is that account only");
 assert(usageUi.includes("SettingsUsageSection") && usageUi.includes('id="usage"'), "Settings usage anchor");
+assert(usageUi.includes("SETTINGS_USAGE_MICRO"), "Settings card uses per-user micro");
+assert(usageUi.includes("ADMIN_USAGE_MICRO"), "Admin card defaults to platform aggregate");
+assert(usageUi.includes("byUser"), "Admin usage accepts by-user rows");
+assert(admin.includes("byUser={usage.byUser}"), "Admin page passes platform by-user");
 assert(usageUi.includes("/settings#usage"), "deal usage links to Settings");
 assert(usageUi.includes("USAGE_ESTIMATE_LABEL") && usageUi.includes("DemoBadge"), "usage badges Demo/Estimate");
 assert(!usageUi.includes("Actual $") || usage.includes("Never Actual $"), "usage UI invents no Actual $");
