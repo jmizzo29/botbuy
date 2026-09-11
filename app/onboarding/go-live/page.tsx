@@ -40,13 +40,13 @@ export default function OnboardingGoLivePage() {
       {ready ? (
         <form action={runFirstBuyAction}>
           <Button type="submit" data-cta="go-live-run">
-            Run
+            Run BotBuy
           </Button>
         </form>
       ) : (
         <div className="space-y-2">
           <Button disabled data-cta="go-live-run">
-            Run
+            Run BotBuy
           </Button>
           <p className="text-xs text-zinc-500">
             Coming rails alone do not unlock Run. Add an Available payment

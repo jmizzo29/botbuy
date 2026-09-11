@@ -40,7 +40,12 @@ assert(
 );
 
 assert(goLive.includes('data-cta="go-live-run"'), "go-live Run marked");
-assert(/<Button[^>]*>\s*Run\s*<\/Button>/.test(goLive.replace(/\n/g, " ")), "go-live Run label");
+assert(
+  (goLive.replace(/\n/g, " ").match(/<Button[^>]*>\s*Run BotBuy\s*<\/Button>/g) || [])
+    .length === 2,
+  "go-live submit + disabled labels are Run BotBuy",
+);
+assert(!/>\s*Run\s*</.test(goLive), "go-live no bare Run label");
 assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not ghost");
 
 const primaryBlocks = [
@@ -113,7 +118,7 @@ if (failures.length) {
 
 console.log("craft-smoke PASS");
 console.log(" - primary contrast tokens bg-white / text-black");
-console.log(" - go-live Run present");
+console.log(" - go-live Run BotBuy present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
 console.log(" - Admin Finance/Deals above stubs");
 console.log(" - GMV=0 · verified $179.96");
