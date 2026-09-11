@@ -98,7 +98,6 @@ export function getOwnerFinance(deals = listDeals()): OwnerFinance {
     startupCostsUsd === FORBIDDEN_IMPORTED_TOTAL_USD ||
     domainsInfraUsd === 191.64 ||
     startupCostsPendingUsd !== EXPECTED_IMPORTED_PENDING_USD ||
-    startupCostsPendingUsd === FORBIDDEN_DEMO_INFLATED_PENDING_USD ||
     moneyDeals.some(isDemoQaFixture) ||
     verified.some(isDemoQaFixture) ||
     pending.some(isDemoQaFixture)
