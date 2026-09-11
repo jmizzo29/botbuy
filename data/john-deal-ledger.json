@@ -1,0 +1,102 @@
+{
+  "customer": {
+    "id": "john-mitchell",
+    "name": "John Mitchell",
+    "company": "Build Star Labs",
+    "email": "john.mitchell@buildstarlabs.com",
+    "role": "customer_1"
+  },
+  "deals": [
+    {
+      "id": "deal_botbuyer_ai",
+      "title": "botbuyer.ai",
+      "category": "domain",
+      "marketplace": "Namecheap",
+      "status": "Closed",
+      "price_usd": 179.96,
+      "currency": "USD",
+      "opened_at": "2026-09-11T14:22:00Z",
+      "closed_at": "2026-09-11T14:26:00Z",
+      "receipt": {
+        "merchant": "Namecheap",
+        "order_id": "213804743",
+        "term": "2 years",
+        "account": "johnmitchellbsl"
+      },
+      "notes": "Primary BotBuy product domain. Board-approved purchase.",
+      "source": "imported",
+      "agent_executed": false,
+      "price_verified": false,
+      "amount_status": "pending_verify"
+    },
+    {
+      "id": "deal_savedfast",
+      "title": "Savedfast Online Tools (savedfast.com)",
+      "category": "software",
+      "marketplace": "Flippa",
+      "status": "Closing",
+      "price_usd": 405.0,
+      "currency": "USD",
+      "opened_at": "2026-09-05T00:00:00Z",
+      "closed_at": null,
+      "escrow": {
+        "provider": "Escrow.com",
+        "transaction_id": "13190302",
+        "flippa_listing": "12890562",
+        "stage": "Domain Transfer / waiting WP + registrar transfer"
+      },
+      "domain_transfer": {
+        "registrar": "Namecheap",
+        "order_id": "213803826",
+        "amount_usd": 11.68,
+        "status": "Transfer In \u2014 will begin shortly",
+        "paid_at": "2026-09-11T14:06:00Z"
+      },
+      "blockers": [
+        "WordPress wp-login/wp-admin still LiteSpeed 403",
+        "Do not mark Escrow received until domain control + WP verified",
+        "AdSense account carved out of sale (accepted)"
+      ],
+      "notes": "First micro-acq via Flippa/Escrow; BotBuy-style deal to import as history.",
+      "source": "imported",
+      "agent_executed": false,
+      "price_verified": false,
+      "amount_status": "imported_unverified"
+    },
+    {
+      "id": "deal_namecheap_savedfast_xfer",
+      "title": "savedfast.com inbound transfer fee",
+      "category": "domain",
+      "marketplace": "Namecheap",
+      "status": "Closing",
+      "price_usd": 11.68,
+      "currency": "USD",
+      "opened_at": "2026-09-11T14:00:00Z",
+      "closed_at": null,
+      "receipt": {
+        "merchant": "Namecheap",
+        "order_id": "213803826",
+        "txn_id": "259699130",
+        "item": "1 year domain transfer"
+      },
+      "parent_deal_id": "deal_savedfast",
+      "notes": "Transfer fee tied to Savedfast acquisition.",
+      "source": "imported",
+      "agent_executed": false,
+      "price_verified": false,
+      "amount_status": "imported_unverified"
+    }
+  ],
+  "proof_strip_policy": "Only CHO-verified aggregates on public home. Personal history for John may show imported deals with source=imported and agent_executed=false. Unverified $ show as pending verify / imported_unverified.",
+  "updated_at": "2026-09-11T14:28:00Z",
+  "cho_review": {
+    "date": "2026-09-11",
+    "verdict": "personal_history_ok_with_flags",
+    "public_proof_strip": "empty",
+    "notes": [
+      "botbuyer.ai Closed PASS; price_usd BLOCK until receipt for 213804743",
+      "Savedfast Closing PASS; Closed BLOCK until domain+WP verified",
+      "xfer Closing PASS; Closed BLOCK until transfer complete"
+    ]
+  }
+}
