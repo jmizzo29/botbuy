@@ -439,6 +439,14 @@ assert(approveUi.includes("w-full sm:w-auto") || approveUi.includes("w-full"), "
 assert(approveUi.includes("min-h-11"), "Approve/Reject 44pt taps");
 assert(usage.includes("Never Actual $"), "usage meter never Actual $");
 assert(usage.includes("Estimate until CHO promote"), "usage stays Estimate");
+assert(existsSync(join(root, "cpo-usage-ia-phone-v1.md")), "CPO usage IA pack");
+const settingsPage = read("app/(app)/settings/page.tsx");
+assert(settingsPage.includes("SettingsUsageSection"), "Settings is primary Usage surface");
+assert(settingsPage.includes("rollupUsageByDay") && settingsPage.includes("listUsageEvents"), "Settings usage is customer-scoped");
+assert(usageUi.includes("SettingsUsageSection") && usageUi.includes('id="usage"'), "Settings usage anchor");
+assert(usageUi.includes("/settings#usage"), "deal usage links to Settings");
+assert(usageUi.includes("USAGE_ESTIMATE_LABEL") && usageUi.includes("DemoBadge"), "usage badges Demo/Estimate");
+assert(!usageUi.includes("Actual $") || usage.includes("Never Actual $"), "usage UI invents no Actual $");
 
 const sitePages = read("lib/site-pages.ts");
 const legalMd = read("lib/legal-markdown.ts");

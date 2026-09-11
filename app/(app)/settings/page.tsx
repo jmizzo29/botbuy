@@ -1,25 +1,46 @@
 import Link from "next/link";
+import { SettingsUsageSection } from "@/components/usage-meter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
-import { listAuditLogs } from "@/lib/store";
+import { SETTINGS_USAGE_TITLE } from "@/lib/cpo-techlux";
+import {
+  hydrateStore,
+  listAuditLogs,
+  listDeals,
+  listUsageEvents,
+} from "@/lib/store";
+import { rollupUsageByDay, rollupUsageTotals } from "@/lib/usage";
 import { formatDateTime } from "@/lib/utils";
 
 export const metadata = {
   title: "Settings",
 };
 
-export default function SettingsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function SettingsPage() {
+  await hydrateStore();
   const user = getCurrentUser();
   const logs = listAuditLogs().slice(0, 8);
+  const myDealIds = new Set(listDeals(user.id).map((deal) => deal.id));
+  const usageEvents = listUsageEvents().filter((event) =>
+    myDealIds.has(event.dealId),
+  );
 
   return (
     <div className="space-y-8">
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Settings</h1>
-        <p className="mt-2 text-sm text-zinc-400">
-          Account, role, and the audit trail. No payment secrets here.
+        <p className="mt-2 text-sm text-muted">
+          Account, {SETTINGS_USAGE_TITLE.toLowerCase()}, and the audit trail. No
+          payment secrets here.
         </p>
       </header>
+
+      <SettingsUsageSection
+        days={rollupUsageByDay(usageEvents)}
+        totals={rollupUsageTotals(usageEvents)}
+      />
 
       <Card>
         <CardHeader>
@@ -38,7 +59,7 @@ export default function SettingsPage() {
               <Link href="/admin" className="text-accent underline-offset-2 hover:underline">
                 Owner Admin
               </Link>
-              <span className="text-zinc-500"> · hidden from buyer nav</span>
+              <span className="text-muted"> · hidden from buyer nav</span>
             </p>
           ) : null}
         </CardContent>
@@ -48,7 +69,7 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle>Security</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm leading-relaxed text-zinc-400">
+        <CardContent className="space-y-2 text-sm leading-relaxed text-muted">
           <p>Card PAN is never stored in BotBuy, logs, or analytics events.</p>
           <p>
             Vault is multi-rail. Card Available (Stripe/Link is one path). Bank,
@@ -66,16 +87,16 @@ export default function SettingsPage() {
           <CardTitle>Audit log</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="divide-y divide-white/6">
+          <ul className="divide-y divide-[var(--bb-line)]">
             {logs.map((log) => (
               <li key={log.id} className="flex items-start justify-between gap-4 py-3">
                 <div>
                   <p className="text-sm">{log.action}</p>
-                  <p className="text-xs text-zinc-500">
+                  <p className="text-xs text-muted">
                     {log.entityType} · {log.entityId}
                   </p>
                 </div>
-                <p className="shrink-0 text-xs text-zinc-500">
+                <p className="shrink-0 text-xs text-muted">
                   {formatDateTime(log.createdAt)}
                 </p>
               </li>
@@ -101,7 +122,7 @@ export default function SettingsPage() {
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between gap-4">
-      <span className="text-zinc-500">{label}</span>
+      <span className="text-muted">{label}</span>
       <span>{value}</span>
     </div>
   );

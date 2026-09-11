@@ -133,12 +133,17 @@ export function DealUsageSection({ events }: { events: UsageEvent[] }) {
           </p>
         )}
         <p className="text-xs text-zinc-500">{USAGE_HOLD_NOTE}</p>
+        <p className="text-xs text-muted">
+          <a href="/settings#usage" className="underline-offset-2 hover:underline">
+            All usage in Settings
+          </a>
+        </p>
       </CardContent>
     </Card>
   );
 }
 
-export function AdminUsageRollup({
+export function SettingsUsageSection({
   days,
   totals,
 }: {
@@ -151,13 +156,39 @@ export function AdminUsageRollup({
   };
 }) {
   return (
+    <div id="usage">
+      <AdminUsageRollup
+        days={days}
+        totals={totals}
+        title="Usage"
+        micro="Your deals. Coarse token / call meter. No $ / user."
+      />
+    </div>
+  );
+}
+
+export function AdminUsageRollup({
+  days,
+  totals,
+  title = "Usage",
+  micro = "Per-day rollup of tokens_est and calls. No $ / user.",
+}: {
+  days: UsageDayRollup[];
+  totals: {
+    runs: number;
+    modelCalls: number;
+    toolCalls: number;
+    tokensEst: UsageTokensEst;
+  };
+  title?: string;
+  micro?: string;
+}) {
+  return (
     <Card>
       <CardHeader className="flex flex-row items-start justify-between gap-3">
         <div>
-          <CardTitle>Usage</CardTitle>
-          <p className="mt-1 text-sm text-zinc-400">
-            Per-day rollup of tokens_est and calls. No $ / user.
-          </p>
+          <CardTitle>{title}</CardTitle>
+          <p className="mt-1 text-sm text-muted">{micro}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <EstimateBadge />

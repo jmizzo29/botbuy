@@ -39,3 +39,7 @@ export const PHONE_MORE_LINKS = [
 ] as const;
 
 export const INSTALLED_START_HREF = "/start" as const;
+
+/** CPO Usage IA — Settings is the primary customer meter. */
+export const SETTINGS_USAGE_HREF = "/settings#usage" as const;
+export const SETTINGS_USAGE_TITLE = "Usage" as const;
