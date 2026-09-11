@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Bot,
   Home,
   Layers3,
   Lock,
@@ -15,6 +16,7 @@ import type { User } from "@/lib/types";
 const customerLinks = [
   { href: "/home", label: "Home", icon: Home },
   { href: "/deals", label: "Deals", icon: Layers3 },
+  { href: "/agents", label: "Agents", icon: Bot },
   { href: "/intent", label: "Intent", icon: Target },
   { href: "/vault", label: "Vault", icon: Lock },
   { href: "/settings", label: "Settings", icon: Settings },
@@ -89,7 +91,7 @@ export function AppShell({
         <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6 md:px-8 md:pb-16 md:pt-10">
           {children}
         </main>
-        <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-white/8 bg-[#09090b]/92 px-1 py-2 backdrop-blur md:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-6 border-t border-white/8 bg-[#09090b]/92 px-1 py-2 backdrop-blur md:hidden">
           {customerLinks.map(
             (link) => {
               const active =

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isAdmin } from "@/lib/auth";
 import { getOwnerFinance } from "@/lib/finance";
 import { formatUsd } from "@/lib/money";
+import { agentOrgAdmin } from "@/lib/agent-org";
 import { listDeals, listDirectoryUsers } from "@/lib/store";
 import { DEAL_STATUSES } from "@/lib/types";
 
@@ -29,6 +30,7 @@ export default function AdminPage() {
   );
   const gated = deals.filter((deal) => deal.blockers.length > 0);
   const finance = getOwnerFinance(deals);
+  const agentOrgs = agentOrgAdmin();
 
   return (
     <div className="space-y-6">
@@ -241,6 +243,42 @@ export default function AdminPage() {
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-3">
           <div>
+            <CardTitle>Agent orgs</CardTitle>
+            <p className="mt-1 text-sm text-zinc-400">
+              Owner diligence stub. One org per Closed deal. Not live.
+            </p>
+          </div>
+          <DemoBadge />
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm">
+          <p>
+            {agentOrgs.orgCount} org{agentOrgs.orgCount === 1 ? "" : "s"} ·{" "}
+            {agentOrgs.activatedCount} activated · {agentOrgs.roleCount} roles
+            in suite
+          </p>
+          <ul className="divide-y divide-white/6">
+            {agentOrgs.orgs.map((org) => (
+              <li key={org.id} className="flex justify-between gap-3 py-2">
+                <Link
+                  href={`/deals/${org.assetId}`}
+                  className="underline-offset-2 hover:underline"
+                >
+                  {org.title}
+                </Link>
+                <span className="text-xs text-zinc-500">
+                  {org.activated ? "Activated stub" : "Closed · not activated"} ·
+                  Demo / Coming
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-xs text-zinc-500">{agentOrgs.note}</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-start justify-between gap-3">
+          <div>
             <CardTitle>System health</CardTitle>
             <p className="mt-1 text-sm text-zinc-400">
               Calm status only. No invented availability.
@@ -258,7 +296,11 @@ export default function AdminPage() {
               detail="Card Available. Bank / X Money / Bitcoin Coming. HOLD — not live."
             />
             <HealthRow label="MCP" state="Stub" />
-            <HealthRow label="Agent telemetry" state="Demo" />
+            <HealthRow
+              label="Agent orgs"
+              state="Demo"
+              detail="HOLD. Runtime not live. Agents never bypass $1k John approval."
+            />
             <HealthRow
               label="Human gates"
               state={gated.length ? "Degraded" : "OK"}

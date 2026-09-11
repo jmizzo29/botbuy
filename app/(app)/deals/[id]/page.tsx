@@ -5,8 +5,9 @@ import { DealAmount } from "@/components/money";
 import { StatusControls } from "@/components/status-controls";
 import { StatusPill } from "@/components/status-pill";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { YourAgents } from "@/components/your-agents";
+import { ActivateAgents } from "@/components/activate-agents";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
+import { getAgentOrg } from "@/lib/agent-org";
 import { getDeal, listDealEvents } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
 import { runVerificationStub } from "@/lib/verification";
@@ -95,7 +96,10 @@ export default async function DealDetailPage({
       ) : null}
 
       {deal.status === "Closed" ? (
-        <YourAgents assetId={deal.id} assetTitle={deal.title} />
+        <ActivateAgents
+          assetId={deal.id}
+          activated={Boolean(getAgentOrg(deal.id)?.activated)}
+        />
       ) : null}
 
       <Card>

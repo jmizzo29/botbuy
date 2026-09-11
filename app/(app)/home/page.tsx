@@ -1,7 +1,13 @@
+import Link from "next/link";
 import { DealCard } from "@/components/deal-card";
 import { Card } from "@/components/ui/card";
-import { YourAgents } from "@/components/your-agents";
 import { getCurrentUser } from "@/lib/auth";
+import {
+  AGENT_HOLD_NOTE,
+  AGENT_LICENSE_COPY,
+  AGENT_SPEND_LOCK,
+  listAgentOrgs,
+} from "@/lib/agent-org";
 import { isVerifiedAmount } from "@/lib/deal-ui";
 import { listDeals } from "@/lib/store";
 
@@ -18,6 +24,7 @@ export default function HomePage() {
     (deal) => deal.blockers.length > 0 || deal.status === "Needs you",
   );
   const unverifiedClosed = closed.filter((deal) => !isVerifiedAmount(deal));
+  const orgs = listAgentOrgs();
 
   return (
     <div className="space-y-8">
@@ -64,9 +71,24 @@ export default function HomePage() {
         </div>
       </section>
 
-      {closed.map((deal) => (
-        <YourAgents key={deal.id} assetId={deal.id} assetTitle={deal.title} />
-      ))}
+      {closed.length ? (
+        <Card className="px-5 py-4">
+          <p className="text-lg font-medium tracking-tight">Your agents</p>
+          <p className="mt-1 text-sm text-zinc-400">
+            {orgs.length} org{orgs.length === 1 ? "" : "s"} · one per Closed
+            deal. License includes the suite.
+          </p>
+          <p className="mt-2 text-xs text-zinc-500">{AGENT_LICENSE_COPY}</p>
+          <p className="mt-1 text-xs text-zinc-500">{AGENT_SPEND_LOCK}</p>
+          <p className="mt-1 text-xs text-zinc-500">{AGENT_HOLD_NOTE}</p>
+          <Link
+            href="/agents"
+            className="mt-3 inline-block text-sm text-accent underline-offset-2 hover:underline"
+          >
+            Open agent workspace
+          </Link>
+        </Card>
+      ) : null}
     </div>
   );
 }
