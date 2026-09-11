@@ -32,11 +32,14 @@ Full IA: `cpo-site-pages-publish-ia-v1.md`
 ## Contact
 **H1** Contact  
 **Lead** Reach us about BotBuy early access, privacy, or product questions.  
-**Legal** Privacy / legal: legal@botbuyer.ai *(only if provisioned)*  
+**Legal** legal@botbuyer.ai — designated privacy/legal inbox for Build Star Labs / BotBuy.  
+**Honesty** Mailbox provisioning may still be completing. If mail bounces or you get no reply within a reasonable time, try again later or use in-product support channels when available.  
+**Product tip** For product questions, email legal@botbuyer.ai with subject starting `Product:` until a separate product inbox exists — or use in-app flows when signed in.  
 **Note** We don’t provide financial, legal, or tax advice. Merchant refunds follow merchant and processor rules.  
 **Success** Message sent. / We’ll get back as soon as we can.  
 **Error** Couldn’t send — try email instead.  
-**Empty** We’re finishing a monitored inbox for early access. Check back shortly. · Back home
+**Empty** We’re finishing a monitored inbox for early access. Check back shortly. · Back home  
+**SoT** Prefer `/workspace/botbuy/site-pages/contact.md` if it diverges.
 
 ## Privacy / Terms chrome
 Privacy Policy — How we handle information when you use BotBuy.  
