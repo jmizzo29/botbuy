@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BRAND } from "@/lib/brand";
 import { getSpendLimits, listIntents } from "@/lib/store";
 import { formatUsd } from "@/lib/money";
+import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
 
 export const metadata = {
   title: "Onboarding · Go live",
@@ -24,10 +25,13 @@ export default function OnboardingGoLivePage() {
       <Card>
         <CardContent className="space-y-3 pt-5 text-sm">
           <Row label="Intent" value={intent?.summary ?? "Set in previous step"} />
-          <Row label="Daily" value={formatUsd(limits.dailyLimitUsd)} />
-          <Row label="Monthly" value={formatUsd(limits.monthlyLimitUsd)} />
-          <Row label="Auto-approve" value={limits.autoApprove ? "ON" : "OFF"} />
-          <Row label="Vault" value="Stub ref only · no PAN · no Issuing" />
+          <Row label="Hard gate" value={formatUsd(SPEND_HARD_GATE_USD)} />
+          <Row label="Working cap" value={formatUsd(limits.perDealLimitUsd)} />
+          <Row label="Auto-approve" value="OFF · every deal needs John" />
+          <Row
+            label="Vault"
+            value="Multi-rail fund-in · Coming soon / Demo · not live"
+          />
         </CardContent>
       </Card>
       <Button asChild>

@@ -1,14 +1,27 @@
 /**
- * Proposed spend defaults — not GTM facts.
- * Auto-approve is OFF. Fail-closed: stubs never spend.
+ * John's spend-out lock. Fail-closed.
+ * Hard gate $1,000. Auto-approve always OFF — every deal needs John.
+ * Not GTM theater. Stubs never spend.
  */
+export const SPEND_HARD_GATE_USD = 1000;
+
 export const SPEND_DEFAULTS = {
-  dailyLimitUsd: 500,
-  weeklyLimitUsd: 500,
-  monthlyLimitUsd: 2000,
-  perDealLimitUsd: 500,
+  hardGateUsd: SPEND_HARD_GATE_USD,
+  dailyLimitUsd: SPEND_HARD_GATE_USD,
+  weeklyLimitUsd: SPEND_HARD_GATE_USD,
+  monthlyLimitUsd: SPEND_HARD_GATE_USD,
+  perDealLimitUsd: SPEND_HARD_GATE_USD,
   autoApprove: false as const,
 };
 
 export const SPEND_POLICY_LABEL =
-  "Proposed policy — not GTM facts. Day $500 / month $2,000 / auto-approve OFF.";
+  "Spend-out hard gate $1,000. Every deal needs John approval. Auto-approve OFF. Fail-closed.";
+
+export function clampSpendUsd(value: number) {
+  if (!Number.isFinite(value) || value < 0) return 0;
+  return Math.min(Math.round(value * 100) / 100, SPEND_HARD_GATE_USD);
+}
+
+export function isWithinHardGate(value: number) {
+  return Number.isFinite(value) && value >= 0 && value <= SPEND_HARD_GATE_USD;
+}

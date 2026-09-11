@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { VaultRails } from "@/components/vault-rails";
 import { listVaultRefs } from "@/lib/store";
 
 export const metadata = {
@@ -15,12 +16,21 @@ export default function OnboardingVaultPage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Vault it</h1>
         <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-          Card PAN never enters BotBuy. No paid Stripe or Issuing in this POC.
+          Multi-rail fund-in: cards, bank (ACH/wire), X Money, Bitcoin, and
+          other types. Card PAN never enters BotBuy. No rail is live.
         </p>
       </header>
       <Card>
         <CardHeader>
-          <CardTitle>Vault reference</CardTitle>
+          <CardTitle>Fund-in rails</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <VaultRails />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Card vault ref</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-zinc-300">
           {refs.map((ref) => (
@@ -29,13 +39,10 @@ export default function OnboardingVaultPage() {
                 {ref.brand} ···· {ref.last4}
               </p>
               <p className="mt-1 font-mono text-xs text-zinc-500">
-                {ref.vaultRef} · {ref.provider}
+                {ref.vaultRef} · Demo · not live
               </p>
             </div>
           ))}
-          <p className="text-xs text-zinc-500">
-            Fail-closed stub. Live vault attach is later — not GTM.
-          </p>
         </CardContent>
       </Card>
       <Button asChild>

@@ -1,8 +1,9 @@
 import { LimitsForm } from "@/components/limits-form";
+import { VaultRails } from "@/components/vault-rails";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatUsd } from "@/lib/money";
-import { SPEND_POLICY_LABEL } from "@/lib/spend-policy";
+import { SPEND_HARD_GATE_USD, SPEND_POLICY_LABEL } from "@/lib/spend-policy";
 import {
   getSpendLimits,
   listVaultRefs,
@@ -25,16 +26,29 @@ export default function VaultPage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Vault & limits</h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-          Hard-cap story. No live card spend. No paid Stripe or Issuing. PAN
-          never enters BotBuy.
+          Multi-rail fund-in. Spend-out hard gate {formatUsd(SPEND_HARD_GATE_USD)}.
+          Every deal needs John. No live rails. PAN never enters BotBuy.
         </p>
       </header>
 
       <Card>
         <CardHeader>
-          <CardTitle>Vault shell</CardTitle>
+          <CardTitle>Fund-in rails</CardTitle>
           <p className="mt-1 text-sm text-zinc-400">
-            Token reference only. Fail-closed until a processor is connected.
+            First-class vault architecture — not Link-only. Unwired rails stay
+            Coming soon / Demo.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <VaultRails />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Card vault ref</CardTitle>
+          <p className="mt-1 text-sm text-zinc-400">
+            Demo token only. Not a live charge path.
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -49,8 +63,8 @@ export default function VaultPage() {
                   last4 {ref.last4} · display only · not a live charge path
                 </p>
               </div>
-              <Badge className="bg-zinc-500/10 text-zinc-300 ring-zinc-500/20">
-                Stub · no live spend
+              <Badge className="bg-amber-500/10 text-amber-200 ring-amber-400/25">
+                Demo
               </Badge>
             </div>
           ))}
@@ -59,18 +73,17 @@ export default function VaultPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Hard caps</CardTitle>
+          <CardTitle>Spend-out</CardTitle>
           <p className="mt-1 text-sm text-zinc-400">{SPEND_POLICY_LABEL}</p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-3 sm:grid-cols-3">
-            <Cap label="Daily" value={formatUsd(limits.dailyLimitUsd)} />
-            <Cap label="Monthly" value={formatUsd(limits.monthlyLimitUsd)} />
-            <Cap label="Per deal" value={formatUsd(limits.perDealLimitUsd)} />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Cap label="Hard gate" value={formatUsd(SPEND_HARD_GATE_USD)} />
+            <Cap label="Working cap" value={formatUsd(limits.perDealLimitUsd)} />
           </div>
           <p className="text-sm text-zinc-400">
-            Verified spend this period: {formatUsd(spent)}. Auto-approve OFF.
-            Imported listed amounts are not spend
+            Verified spend this period: {formatUsd(spent)}. Auto-approve OFF —
+            every deal needs John. Imported listed amounts are not spend
             {listed > 0 ? " and stay hidden from this cap" : ""}.
           </p>
           <LimitsForm limits={limits} />

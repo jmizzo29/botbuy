@@ -252,7 +252,16 @@ export default function AdminPage() {
           <ul className="divide-y divide-white/6 text-sm">
             <HealthRow label="Analytics" state="Not connected" />
             <HealthRow label="Stripe" state="Not connected" />
-            <HealthRow label="Spend rails" state="Not connected" />
+            <HealthRow
+              label="Fund-in vault"
+              state="Demo"
+              detail="Cards Demo. Bank / X Money / Bitcoin / other Coming soon. HOLD until built + CHO."
+            />
+            <HealthRow
+              label="Pay-out"
+              state="Not connected"
+              detail="Link may be used for pay-out only. Not fund-in. Not live."
+            />
             <HealthRow label="MCP" state="Stub" />
             <HealthRow label="Agent telemetry" state="Demo" />
             <HealthRow

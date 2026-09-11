@@ -1,7 +1,11 @@
 import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
 import { DEMO_USER } from "@/lib/auth";
 import { isVerifiedAmount } from "@/lib/deal-ui";
-import { SPEND_DEFAULTS } from "@/lib/spend-policy";
+import {
+  SPEND_DEFAULTS,
+  SPEND_HARD_GATE_USD,
+  clampSpendUsd,
+} from "@/lib/spend-policy";
 import { assertTransition, TransitionError } from "@/lib/status-engine";
 import type {
   AuditLog,
@@ -41,11 +45,12 @@ const intents: Intent[] = [
 
 let spendLimits: SpendLimits = {
   userId: DEMO_USER.id,
+  hardGateUsd: SPEND_HARD_GATE_USD,
   dailyLimitUsd: SPEND_DEFAULTS.dailyLimitUsd,
   weeklyLimitUsd: SPEND_DEFAULTS.weeklyLimitUsd,
   monthlyLimitUsd: SPEND_DEFAULTS.monthlyLimitUsd,
   perDealLimitUsd: SPEND_DEFAULTS.perDealLimitUsd,
-  autoApprove: SPEND_DEFAULTS.autoApprove,
+  autoApprove: false,
   updatedAt: "2026-09-04T18:00:00Z",
 };
 
@@ -123,10 +128,9 @@ const auditLogs: AuditLog[] = [
     entityType: "spend_limits",
     entityId: DEMO_USER.id,
     metadata: {
-      monthlyLimitUsd: SPEND_DEFAULTS.monthlyLimitUsd,
-      dailyLimitUsd: SPEND_DEFAULTS.dailyLimitUsd,
+      hardGateUsd: SPEND_HARD_GATE_USD,
       autoApprove: false,
-      note: "proposed defaults — not GTM facts",
+      note: "Spend-out hard gate $1000. Every deal needs John. Fail-closed.",
     },
     createdAt: "2026-09-04T18:00:00Z",
   },
@@ -247,12 +251,22 @@ export function getSpendLimits(userId = DEMO_USER.id): SpendLimits {
 }
 
 export function updateSpendLimits(
-  patch: Partial<Omit<SpendLimits, "userId">>,
+  patch: Partial<Omit<SpendLimits, "userId" | "autoApprove" | "hardGateUsd">>,
 ): SpendLimits {
+  const working = clampSpendUsd(
+    patch.perDealLimitUsd ??
+      patch.dailyLimitUsd ??
+      patch.monthlyLimitUsd ??
+      patch.weeklyLimitUsd ??
+      spendLimits.perDealLimitUsd,
+  );
   spendLimits = {
-    ...spendLimits,
-    ...patch,
     userId: DEMO_USER.id,
+    hardGateUsd: SPEND_HARD_GATE_USD,
+    dailyLimitUsd: working,
+    weeklyLimitUsd: working,
+    monthlyLimitUsd: working,
+    perDealLimitUsd: working,
     autoApprove: false,
     updatedAt: new Date().toISOString(),
   };
@@ -263,10 +277,8 @@ export function updateSpendLimits(
     entityType: "spend_limits",
     entityId: DEMO_USER.id,
     metadata: {
-      dailyLimitUsd: spendLimits.dailyLimitUsd,
-      weeklyLimitUsd: spendLimits.weeklyLimitUsd,
-      monthlyLimitUsd: spendLimits.monthlyLimitUsd,
-      perDealLimitUsd: spendLimits.perDealLimitUsd,
+      hardGateUsd: SPEND_HARD_GATE_USD,
+      workingCapUsd: working,
       autoApprove: false,
     },
     createdAt: spendLimits.updatedAt,

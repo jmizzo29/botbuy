@@ -89,7 +89,7 @@ export function getAdminMetrics(): AdminMetrics {
       humanGateDeals: gated.length,
       humanGateItems: gated.reduce((sum, deal) => sum + deal.blockers.length, 0),
       spendMonthUsd: verifiedSpendUsd(),
-      monthlyLimitUsd: limits.monthlyLimitUsd,
+      monthlyLimitUsd: limits.hardGateUsd,
       note: "Derived from seeded ledger and vault limits. Not live agent telemetry.",
     },
     finance: {

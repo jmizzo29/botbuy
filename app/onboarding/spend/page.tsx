@@ -3,7 +3,8 @@ import { LimitsForm } from "@/components/limits-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSpendLimits } from "@/lib/store";
-import { SPEND_POLICY_LABEL } from "@/lib/spend-policy";
+import { SPEND_HARD_GATE_USD, SPEND_POLICY_LABEL } from "@/lib/spend-policy";
+import { formatUsd } from "@/lib/money";
 
 export const metadata = {
   title: "Onboarding · Spend",
@@ -22,14 +23,14 @@ export default function OnboardingSpendPage() {
       </header>
       <Card>
         <CardHeader>
-          <CardTitle>Limits</CardTitle>
+          <CardTitle>Hard gate {formatUsd(SPEND_HARD_GATE_USD)}</CardTitle>
         </CardHeader>
         <CardContent>
           <LimitsForm limits={limits} />
         </CardContent>
       </Card>
       <p className="text-xs text-zinc-500">
-        Auto-approve is off and fail-closed. Stubs never spend.
+        Auto-approve is locked off. Every deal needs John. Stubs never spend.
       </p>
       <Button asChild>
         <Link href="/onboarding/vault">Continue to vault</Link>

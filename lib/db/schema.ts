@@ -82,6 +82,9 @@ export const spendLimits = pgTable("spend_limits", {
   userId: text("user_id")
     .primaryKey()
     .references(() => users.id),
+  hardGateUsd: numeric("hard_gate_usd", { precision: 12, scale: 2 })
+    .notNull()
+    .default("1000"),
   dailyLimitUsd: numeric("daily_limit_usd", { precision: 12, scale: 2 }).notNull(),
   weeklyLimitUsd: numeric("weekly_limit_usd", { precision: 12, scale: 2 }).notNull(),
   monthlyLimitUsd: numeric("monthly_limit_usd", {

@@ -50,7 +50,10 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-2 text-sm leading-relaxed text-zinc-400">
           <p>Card PAN is never stored in BotBuy, logs, or analytics events.</p>
-          <p>Vault references and last4 only. Audit metadata is amount-safe.</p>
+          <p>
+            Vault is multi-rail fund-in (cards, bank, X Money, Bitcoin, other).
+            Refs + last4 only. No rail is live. Link is pay-out later, not fund-in.
+          </p>
           <p>
             POC session is a seeded owner login. Replace with real auth before
             any shared deploy.

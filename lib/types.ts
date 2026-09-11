@@ -144,11 +144,12 @@ export interface Intent {
 
 export interface SpendLimits {
   userId: string;
+  hardGateUsd: number;
   dailyLimitUsd: number;
   weeklyLimitUsd: number;
   monthlyLimitUsd: number;
   perDealLimitUsd: number;
-  autoApprove: boolean;
+  autoApprove: false;
   updatedAt: string;
 }
 
