@@ -30,7 +30,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 - Spend-out ceiling $1,000. Auto-approve OFF always — every deal needs approval before spend. Fail-closed. Infra near-zero — no assumed paid infra budget.
 - Search/purchase: **all software products across all channels** via pluggable marketplace adapters. Not a merchant allowlist. Intent default category = software. John templates: Software (default), Software + domain, Domain (secondary).
 - After purchase, a licensed-user agent org (CEO/CFO/CTO/CMO) is stubbed on Closed assets. **Stub · not live.** No real spend or external mutations. Actions would be logged per agent.
-- Owner Admin (`/admin`): Demo until analytics+Stripe live. Traffic/revenue empty copy. Users = real directory (John customer #1). Finance CHO BLOCK: verified startup/GMV = botbuyer.ai **$179.96** only. Savedfast $405 + xfer $11.68 are Pending/Imported — never booked as burn or GMV. Burn/runway placeholders. Deals ops = seeded table with Imported badges, not ProofStrip. Health: OK / Degraded / Not connected / Demo / Stub. No invented MRR or fake uptime.
+- Owner Admin (`/admin`): Demo until analytics+Stripe live. Traffic/revenue empty copy. Users = real directory (John customer #1). Finance CHO BLOCK: verified startup / domains-infra = botbuyer.ai **$179.96** only. Customer GMV is empty — personal imported domain is not GMV. Savedfast $405 + xfer $11.68 are Pending/Imported — never booked as burn or GMV. Burn/runway placeholders. Deals ops = seeded table with Imported badges, not ProofStrip. Health: OK / Degraded / Not connected / Demo / Stub. No invented MRR or fake uptime.
 
 ## Routes
 

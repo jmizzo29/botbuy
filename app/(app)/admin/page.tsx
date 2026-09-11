@@ -148,9 +148,10 @@ export default function AdminPage() {
               hint="Verified domain only · excludes unverified $11.68 xfer"
             />
             <FinanceTile
-              label="Customer GMV (verified)"
-              value={formatUsd(finance.customerGmvUsd)}
-              hint="Verified only · not public proof"
+              label="Customer GMV"
+              value={finance.customerGmvUsd === 0 ? "—" : formatUsd(finance.customerGmvUsd)}
+              hint="GMV empty until platform Closed deals. $179.96 is verified burn only."
+              empty
             />
           </div>
           <ul className="divide-y divide-white/6 text-sm">
