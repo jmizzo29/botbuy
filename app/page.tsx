@@ -34,7 +34,7 @@ export default function LandPage() {
           <Button
             asChild
             size="lg"
-            className="bg-white font-semibold text-black hover:bg-zinc-100"
+            className="bg-white font-semibold !text-black hover:bg-zinc-100"
           >
             <Link href="/signup">{BRAND.primaryCta}</Link>
           </Button>
