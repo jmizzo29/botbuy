@@ -132,8 +132,13 @@ for (const [name, src, needle] of primaryBlocks) {
   assert(src.includes(needle), `${name} primary present`);
 }
 
-assert(brand.includes('trustLine: "Demo · every deal needs your approval"'), "CPO trust line");
+assert(brand.includes('trustLine: "Demo · every deal needs your approval"'), "CPO trust line without $1k");
 assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(land), "land has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(signup), "signup has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(chrome), "public chrome has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(layout), "layout meta has no $1,000 gate");
+assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(manifest), "manifest marketing has no $1,000 gate");
 assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock");
 assert(land.includes("BRAND.trustLine"), "land renders trust line under CTAs");
 assert(
@@ -378,6 +383,32 @@ assert(layout.includes("https://botbuyer.ai/brand/og-1200x630.png"), "twitter im
 assert(manifest.includes("/icons/icon-192.png"), "manifest icon-192");
 assert(manifest.includes("/icons/icon-512.png"), "manifest icon-512");
 assert(manifest.includes("/icons/icon-512-maskable.png"), "manifest maskable icon");
+assert(manifest.includes('display: "standalone"'), "manifest display standalone");
+assert(manifest.includes("start_url: MY_DEALS_HREF") || manifest.includes('start_url: "/home"'), "A2HS starts in My deals");
+assert(manifest.includes("id:"), "manifest id");
+const sw = read("public/sw.js");
+assert(sw.includes('CACHE = "botbuy-v2"'), "SW cache bumped to botbuy-v2");
+assert(sw.includes('"/home"') && sw.includes('"/deals"') && sw.includes('"/offline"'), "SW precaches app shell routes");
+assert(sw.includes("skipWaiting") && sw.includes("clients.claim"), "SW install/activate claim");
+assert(existsSync(join(root, "app/offline/page.tsx")), "offline shell page");
+const pwa = read("components/pwa-register.tsx");
+assert(pwa.includes('register("/sw.js")'), "PWA registers /sw.js");
+assert(pwa.includes("InstallHint"), "discreet A2HS hint mounted");
+const a2hs = read("components/install-hint.tsx");
+const techlux = read("lib/cpo-techlux.ts");
+assert(a2hs.includes("beforeinstallprompt"), "A2HS listens for beforeinstallprompt");
+assert(a2hs.includes("A2HS_COPY"), "A2HS uses locked copy");
+assert(techlux.includes("not an App Store or Play listing"), "A2HS copy is Demo-honest");
+assert(shell.includes("safe-area-inset-bottom"), "bottom nav safe-area");
+assert(shell.includes("safe-area-inset-top"), "sticky header safe-area");
+assert(shell.includes("grid-cols-5"), "mobile nav reduced density");
+assert(shell.includes("MY_DEALS_LABEL") && !/>\s*Home\s*</.test(shell), "mobile label is My deals not Home");
+assert(shell.includes("min-h-12"), "mobile nav touch target");
+assert(css.includes("html.bb-standalone"), "standalone mode class");
+const dealsTable = read("components/deals-table.tsx");
+assert(dealsTable.includes("overflow-x-auto"), "My deals table scrolls on narrow");
+assert(dealsTable.includes("DealApproveActions"), "My deals table Approve/Reject");
+assert(approveUi.includes("w-full sm:w-auto"), "deal detail Approve/Reject full-width on phone");
 
 const sitePages = read("lib/site-pages.ts");
 const legalMd = read("lib/legal-markdown.ts");

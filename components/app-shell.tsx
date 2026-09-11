@@ -17,7 +17,15 @@ import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { cn } from "@/lib/utils";
 import type { User } from "@/lib/types";
 
-const customerLinks = [
+const mobileLinks = [
+  { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: Home },
+  { href: "/intent", label: "Intent", icon: Target },
+  { href: "/vault", label: "Vault", icon: Lock },
+  { href: "/agents", label: "Agents", icon: Bot },
+  { href: "/settings", label: "Settings", icon: Settings },
+];
+
+const desktopLinks = [
   { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: Home },
   { href: "/deals", label: "Deals", icon: Layers3 },
   { href: "/agents", label: "Agents", icon: Bot },
@@ -25,6 +33,18 @@ const customerLinks = [
   { href: "/vault", label: "Vault", icon: Lock },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
+
+function desktopActive(pathname: string, href: string) {
+  if (href === MY_DEALS_HREF) return pathname === MY_DEALS_HREF;
+  return pathname.startsWith(href);
+}
+
+function mobileActive(pathname: string, href: string) {
+  if (href === MY_DEALS_HREF) {
+    return pathname === MY_DEALS_HREF || pathname.startsWith("/deals");
+  }
+  return pathname.startsWith(href);
+}
 
 export function AppShell({
   user,
@@ -36,8 +56,8 @@ export function AppShell({
   const pathname = usePathname();
   const isAdmin = user.role === "admin";
   const links = isAdmin
-    ? [...customerLinks, { href: "/admin", label: "Admin", icon: Shield }]
-    : customerLinks;
+    ? [...desktopLinks, { href: "/admin", label: "Admin", icon: Shield }]
+    : desktopLinks;
 
   return (
     <div className="relative min-h-dvh bg-background text-foreground">
@@ -50,14 +70,12 @@ export function AppShell({
         </p>
         <nav className="mt-8 flex flex-1 flex-col gap-1">
           {links.map((link) => {
-            const active =
-              link.href === MY_DEALS_HREF
-                ? pathname === MY_DEALS_HREF
-                : pathname.startsWith(link.href);
+            const active = desktopActive(pathname, link.href);
             return (
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex items-center gap-3 rounded-[var(--bb-radius)] px-3 py-2 text-sm transition-colors",
                   active
@@ -71,7 +89,7 @@ export function AppShell({
             );
           })}
         </nav>
-        <p className="mb-3 px-2 text-[10px] uppercase tracking-[0.14em] text-muted">
+        <p className="bb-browser-only mb-3 px-2 text-[10px] uppercase tracking-[0.14em] text-muted">
           G · TECH-LUXURY LIGHT
         </p>
         <div className="rounded-[var(--bb-radius)] bg-black/[0.03] px-3 py-3 ring-1 ring-[var(--bb-line)]">
@@ -81,7 +99,7 @@ export function AppShell({
       </aside>
 
       <div className="relative z-10 md:pl-60">
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-[var(--bb-line)] bg-background/80 px-4 py-3 backdrop-blur md:hidden">
+        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-[var(--bb-line)] bg-background/80 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
           <Link href={MY_DEALS_HREF} className="flex items-center" aria-label="BotBuy home">
             <BrandLockup />
           </Link>
@@ -90,26 +108,29 @@ export function AppShell({
         <main className="mx-auto w-full max-w-5xl px-4 pb-8 pt-6 md:px-8 md:pb-8 md:pt-10">
           {children}
         </main>
-        <footer className="mx-auto w-full max-w-5xl px-4 pb-24 md:px-8 md:pb-16">
+        <footer className="mx-auto w-full max-w-5xl px-4 pb-[calc(6rem+env(safe-area-inset-bottom))] md:px-8 md:pb-16">
           <SiteFooter />
         </footer>
-        <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-6 border-t border-[var(--bb-line)] bg-background/92 px-1 py-2 backdrop-blur md:hidden">
-          {customerLinks.map((link) => {
-            const active =
-              link.href === MY_DEALS_HREF
-                ? pathname === MY_DEALS_HREF
-                : pathname.startsWith(link.href);
+        <nav
+          aria-label="App"
+          className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-[var(--bb-line)] bg-background/92 pl-[max(0.25rem,env(safe-area-inset-left))] pr-[max(0.25rem,env(safe-area-inset-right))] pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden"
+        >
+          {mobileLinks.map((link) => {
+            const active = mobileActive(pathname, link.href);
             return (
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-1 py-1 text-[10px]",
-                  active ? "text-foreground" : "text-muted",
+                  "flex min-h-12 min-w-0 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-[10px] leading-tight",
+                  active
+                    ? "bg-primary/12 font-medium text-foreground"
+                    : "text-muted",
                 )}
               >
-                <link.icon className="h-4 w-4" />
-                {link.label}
+                <link.icon className="h-5 w-5" />
+                <span className="max-w-full text-center">{link.label}</span>
               </Link>
             );
           })}

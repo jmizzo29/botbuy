@@ -88,9 +88,10 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle>Install</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm leading-relaxed text-zinc-400">
-          BotBuy is a PWA. On iPhone: Share → Add to Home Screen. On Chrome:
-          Install app from the address bar. Standalone theme is #F7F8FA.
+        <CardContent className="text-sm leading-relaxed text-muted">
+          Add BotBuy to your Home Screen from the browser prompt, or on iPhone
+          use Share → Add to Home Screen. Demo · not an App Store or Play
+          listing. Standalone theme is #F7F8FA.
         </CardContent>
       </Card>
     </div>

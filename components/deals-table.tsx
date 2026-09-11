@@ -14,11 +14,11 @@ export function DealsTable({ deals }: { deals: Deal[] }) {
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[var(--bb-radius)] bg-surface",
+        "overflow-x-auto rounded-[var(--bb-radius)] bg-surface",
         SURFACE_RING_CLASS,
       )}
     >
-      <table className="w-full text-left text-sm">
+      <table className="w-full min-w-[40rem] text-left text-sm">
         <thead>
           <tr className="border-b border-[var(--bb-line)] text-[11px] uppercase tracking-[0.14em] text-muted">
             <th className="px-5 py-3 font-medium">Deal</th>
@@ -50,7 +50,7 @@ export function DealsTable({ deals }: { deals: Deal[] }) {
               <td className="px-5 py-3.5 text-muted">
                 {formatRelative(updatedAt(deal))}
               </td>
-              <td className="px-5 py-3.5">
+              <td className="whitespace-nowrap px-5 py-3.5">
                 {deal.status === "Needs you" ? (
                   <DealApproveActions
                     dealId={deal.id}

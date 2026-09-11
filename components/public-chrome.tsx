@@ -28,7 +28,7 @@ export function PublicChrome({
         </>
       ) : null}
       <div className={land ? "bb-land-content" : undefined}>
-        <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 md:px-8">
+        <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8">
           <Link href="/" className="flex items-center" aria-label="BotBuy home">
             <BrandLockup priority />
           </Link>

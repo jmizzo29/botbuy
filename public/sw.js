@@ -1,4 +1,5 @@
-const CACHE = "botbuy-v1";
+const CACHE = "botbuy-v2";
+const OFFLINE = "/offline";
 const PRECACHE = [
   "/",
   "/home",
@@ -7,12 +8,19 @@ const PRECACHE = [
   "/intent",
   "/vault",
   "/settings",
+  OFFLINE,
   "/manifest.webmanifest",
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting()),
+    (async () => {
+      const cache = await caches.open(CACHE);
+      await Promise.all(
+        PRECACHE.map((url) => cache.add(url).catch(() => undefined)),
+      );
+      await self.skipWaiting();
+    })(),
   );
 });
 
@@ -36,10 +44,25 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+        }
         return response;
       })
-      .catch(() => caches.match(event.request).then((hit) => hit || caches.match("/"))),
+      .catch(async () => {
+        const hit =
+          (await caches.match(event.request)) ||
+          (await caches.match(url.pathname));
+        if (hit) return hit;
+        if (event.request.mode === "navigate") {
+          return (
+            (await caches.match(OFFLINE)) ||
+            (await caches.match("/home")) ||
+            (await caches.match("/"))
+          );
+        }
+        return caches.match(OFFLINE);
+      }),
   );
 });

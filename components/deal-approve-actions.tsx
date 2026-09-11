@@ -50,10 +50,17 @@ export function DealApproveActions({
 
   return (
     <div className={compact ? "space-y-1.5" : "space-y-3"}>
-      <div className="flex flex-wrap gap-2">
+      <div
+        className={
+          compact
+            ? "flex flex-nowrap gap-2"
+            : "flex flex-col gap-2 sm:flex-row sm:flex-wrap"
+        }
+      >
         <Button
           type="button"
           size={size}
+          className={compact ? "min-h-9 min-w-[5.5rem]" : "w-full sm:w-auto"}
           disabled={pending !== null}
           onClick={() => decide(APPROVE_STATUS)}
         >
@@ -63,6 +70,7 @@ export function DealApproveActions({
           type="button"
           size={size}
           variant="secondary"
+          className={compact ? "min-h-9 min-w-[5.5rem]" : "w-full sm:w-auto"}
           disabled={pending !== null}
           onClick={() => decide(REJECT_STATUS)}
         >

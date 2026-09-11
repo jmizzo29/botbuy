@@ -1,13 +1,36 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
+import { InstallHint } from "@/components/install-hint";
+
+function markStandalone() {
+  const standalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    ("standalone" in navigator &&
+      Boolean((navigator as Navigator & { standalone?: boolean }).standalone));
+  document.documentElement.classList.toggle("bb-standalone", standalone);
+  document.documentElement.dataset.standalone = standalone ? "true" : "false";
+}
 
 export function PwaRegister() {
   useEffect(() => {
-    if (!("serviceWorker" in navigator)) return;
-    navigator.serviceWorker.register("/sw.js").catch(() => {
-      // Installability still works via manifest if SW registration fails.
-    });
+    markStandalone();
+    const media = window.matchMedia("(display-mode: standalone)");
+    const onChange = () => markStandalone();
+    media.addEventListener("change", onChange);
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {
+        // Installability still works via manifest if SW registration fails.
+      });
+    }
+
+    return () => media.removeEventListener("change", onChange);
   }, []);
-  return null;
+
+  return (
+    <Suspense fallback={null}>
+      <InstallHint />
+    </Suspense>
+  );
 }
