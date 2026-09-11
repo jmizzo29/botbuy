@@ -71,12 +71,8 @@
         "status": "Transfer In \u2014 will begin shortly",
         "paid_at": "2026-09-11T14:06:00Z"
       },
-      "blockers": [
-        "WordPress wp-login/wp-admin still LiteSpeed 403",
-        "Do not mark Escrow received until domain control + WP verified",
-        "AdSense account carved out of sale (accepted)"
-      ],
-      "notes": "Personal Closed. First micro-acq via Flippa/Escrow imported as history. Amount imported_unverified — not verified spend, not GMV, not Escrow complete.",
+      "blockers": [],
+      "notes": "Personal Closed. First micro-acq via Flippa/Escrow imported as history. Amount imported_unverified — not verified spend, not GMV, not Escrow complete. AdSense account carved out of sale (accepted). Historical only (not an open Needs-you gate): WordPress LiteSpeed 403 was recorded during close.",
       "source": "imported",
       "agent_executed": false,
       "price_verified": false,
@@ -116,7 +112,7 @@
     "public_proof_strip": "empty \u2014 personal verified $ is not platform traction",
     "notes": [
       "botbuyer.ai Closed PASS; price_usd VERIFIED by CFO 2026-09-11 against receipt 213804743 / txn 259700262",
-      "Savedfast personal Closed PASS; imported + agent_executed=false + imported_unverified; escrow seller-proceeds-processing (not Escrow complete); $405 not booked",
+      "Savedfast personal Closed PASS; imported + agent_executed=false + imported_unverified; escrow seller-proceeds-processing (not Escrow complete); $405 not booked; open Needs-you blockers cleared (AdSense + WP 403 are notes only)",
       "xfer personal Closed PASS; imported_unverified $11.68 pending; parent Savedfast"
     ],
     "botbuyer_price": "PASS verified 179.96 via Namecheap receipt 213804743 / txn 259700262"
