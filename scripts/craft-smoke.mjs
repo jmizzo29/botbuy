@@ -299,6 +299,84 @@ assert(manifest.includes("/icons/icon-192.png"), "manifest icon-192");
 assert(manifest.includes("/icons/icon-512.png"), "manifest icon-512");
 assert(manifest.includes("/icons/icon-512-maskable.png"), "manifest maskable icon");
 
+const sitePages = read("lib/site-pages.ts");
+const legalMd = read("lib/legal-markdown.ts");
+const siteFooter = read("components/site-footer.tsx");
+const siteShell = read("components/site-page-shell.tsx");
+const privacyPage = read("app/privacy/page.tsx");
+const termsPage = read("app/terms/page.tsx");
+const aboutPage = read("app/about/page.tsx");
+const betaPage = read("app/beta/page.tsx");
+const contactPage = read("app/contact/page.tsx");
+const privacySoT = read("docs/legal/privacy-policy-publish.md");
+const termsSoT = read("docs/legal/terms-of-service-publish.md");
+const aboutSoT = read("docs/site-pages/about.md");
+const betaSoT = read("docs/site-pages/beta.md");
+const contactSoT = read("docs/site-pages/contact.md");
+const notFound = read("app/not-found.tsx");
+
+assert(sitePages.includes('href: "/privacy", label: "Privacy"'), "footer Privacy lock");
+assert(sitePages.includes('href: "/terms", label: "Terms"'), "footer Terms lock");
+assert(sitePages.includes('href: "/about", label: "About"'), "footer About lock");
+assert(sitePages.includes('href: "/beta", label: "Beta"'), "footer Beta lock");
+assert(sitePages.includes('href: "/contact", label: "Contact"'), "footer Contact lock");
+assert(
+  sitePages.indexOf('label: "Privacy"') < sitePages.indexOf('label: "Terms"') &&
+    sitePages.indexOf('label: "Terms"') < sitePages.indexOf('label: "About"') &&
+    sitePages.indexOf('label: "About"') < sitePages.indexOf('label: "Beta"') &&
+    sitePages.indexOf('label: "Beta"') < sitePages.indexOf('label: "Contact"'),
+  "footer order Privacy · Terms · About · Beta · Contact",
+);
+assert(
+  sitePages.includes(
+    "BotBuy is early access. Features labeled Demo or Coming are not live commitments.",
+  ),
+  "early-access honesty lock",
+);
+assert(sitePages.includes('SITE_OPERATOR = "Build Star Labs (Florida)"'), "entity lock");
+assert(sitePages.includes("September 11, 2026 (PT)"), "effective date PT lock");
+assert(sitePages.includes("docs/legal/privacy-policy-publish.md"), "privacy publish SoT path");
+assert(sitePages.includes("docs/legal/terms-of-service-publish.md"), "terms publish SoT path");
+assert(sitePages.includes("docs/site-pages/about.md"), "about SoT path");
+assert(sitePages.includes("docs/site-pages/beta.md"), "beta SoT path");
+assert(sitePages.includes("docs/site-pages/contact.md"), "contact SoT path");
+assert(!sitePages.includes("privacy-policy-v1.md"), "privacy does not use v1 draft");
+assert(!sitePages.includes("terms-of-service-v1.md"), "terms does not use v1 draft");
+assert(read("docs/legal/publish-notes-v1.md").includes("privacy-policy-publish.md"), "publish-notes SoT");
+assert(legalMd.includes("publish-notes-v1.md"), "loader cites publish-notes");
+assert(!legalMd.includes("privacy-policy-v1.md"), "loader never reads privacy v1");
+assert(!legalMd.includes("terms-of-service-v1.md"), "loader never reads terms v1");
+assert(!legalMd.includes("about-v1.md") && !legalMd.includes("beta-v1.md") && !legalMd.includes("contact-v1.md"), "loader prefers site-pages without -v1");
+assert(legalMd.includes("omitDisputeSection"), "terms omit dispute/venue section");
+assert(legalMd.includes("Cookie banner / CMP remains deferred"), "cookie banner deferred");
+assert(chrome.includes("SiteFooter"), "land chrome has site footer");
+assert(shell.includes("SiteFooter"), "app shell has site footer");
+assert(!chrome.includes("Cookie") && !shell.includes("cookie banner"), "no cookie banner invent");
+assert(privacyPage.includes('loadLegalBlocks("privacy"'), "privacy renders publish blocks");
+assert(termsPage.includes('loadLegalBlocks("terms"'), "terms renders publish blocks");
+assert(aboutPage.includes('loadLegalBlocks("about"'), "about renders site-pages SoT");
+assert(betaPage.includes('loadLegalBlocks("beta"'), "beta renders site-pages SoT");
+assert(contactPage.includes('loadLegalBlocks("contact"'), "contact renders site-pages SoT");
+assert(betaPage.includes("SITE_BETA_CTA.run"), "beta Run BotBuy CTA");
+assert(privacySoT.includes("Build Star Labs (Florida)"), "privacy publish entity");
+assert(privacySoT.includes("September 11, 2026"), "privacy publish effective date");
+assert(termsSoT.includes("State of Florida"), "terms publish Florida governing law");
+assert(termsSoT.includes("omitted until attorney supplies text"), "terms dispute omitted in SoT");
+assert(aboutSoT.includes("Operator:** Build Star Labs (Florida)"), "about operator");
+assert(betaSoT.includes("Use Run BotBuy on the home page"), "beta how-to copy");
+assert(contactSoT.includes("legal@botbuyer.ai"), "contact legal inbox");
+assert(contactSoT.includes("Mailbox provisioning may still be completing"), "contact mailbox honesty");
+assert(siteShell.includes("EARLY_ACCESS_HONESTY"), "page chrome honesty line");
+assert(siteFooter.includes("SITE_FOOTER_LINKS"), "footer uses locked links");
+assert(read("components/markdown-prose.tsx").includes("mailto:${LEGAL_CONTACT_EMAIL}"), "legal email mailto");
+assert(notFound.includes("SITE_EMPTY.notFoundTitle"), "404 uses CPO copy");
+assert(notFound.includes('href="/"'), "404 Back home → /");
+assert(css.includes("--bb-bg: #050A0C"), "no light theme flip — Electric Teal bg");
+assert(!css.includes(":root {\n  --bb-bg: #fff") && !css.includes("--bb-bg: #FFFFFF"), "no light bg");
+assert(css.includes(".bb-prose"), "legal prose styles");
+assert(!siteFooter.includes("Namecheap"), "footer row has no Namecheap");
+assert(!siteFooter.includes("Run BotBuy"), "footer does not compete with Run BotBuy");
+
 if (failures.length) {
   console.error("craft-smoke FAIL");
   for (const item of failures) console.error(" -", item);
@@ -316,3 +394,4 @@ console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #E8B84A");
 console.log(" - Quiet Capital craft · vault-cards backdrop · 3-card how · no glow");
 console.log(" - Vault mark+wordmark header · favicon/PWA/OG wired");
+console.log(" - site pages /privacy /terms /about /beta /contact · footer lock");

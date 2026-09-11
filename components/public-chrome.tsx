@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand-lockup";
+import { SiteFooter } from "@/components/site-footer";
 import { BRAND } from "@/lib/brand";
 import { hasPublicSession } from "@/lib/session";
 
@@ -13,9 +14,12 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
         <PublicNav />
       </header>
       <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8">{children}</main>
-      <footer className="mx-auto w-full max-w-6xl px-4 pb-10 text-[10px] leading-relaxed text-muted/60 md:px-8">
-        {BRAND.origin} · {BRAND.registration} · {BRAND.footerHold} · No paid
-        Stripe
+      <footer className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-8">
+        <SiteFooter />
+        <p className="mt-4 text-[10px] leading-relaxed text-muted/60">
+          {BRAND.origin} · {BRAND.registration} · {BRAND.footerHold} · No paid
+          Stripe
+        </p>
       </footer>
     </div>
   );

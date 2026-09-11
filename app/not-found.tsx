@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { SITE_EMPTY } from "@/lib/site-pages";
 
 export default function NotFound() {
   return (
@@ -9,13 +10,11 @@ export default function NotFound() {
           BotBuy
         </p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-          Not found
+          {SITE_EMPTY.notFoundTitle}
         </h1>
-        <p className="mt-2 text-sm text-muted">
-          That route isn&apos;t on this dashboard.
-        </p>
-        <Button asChild className="mt-6">
-          <Link href="/home">Back home</Link>
+        <p className="mt-2 text-sm text-muted">{SITE_EMPTY.notFoundBody}</p>
+        <Button asChild variant="secondary" className="mt-6">
+          <Link href="/">{SITE_EMPTY.backHome}</Link>
         </Button>
       </div>
     </div>

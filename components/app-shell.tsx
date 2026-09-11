@@ -11,6 +11,7 @@ import {
   Target,
 } from "lucide-react";
 import { BrandLockup } from "@/components/brand-lockup";
+import { SiteFooter } from "@/components/site-footer";
 import { VaultCardsBackdrop } from "@/components/vault-cards-backdrop";
 import { cn } from "@/lib/utils";
 import type { User } from "@/lib/types";
@@ -89,9 +90,12 @@ export function AppShell({
           </Link>
           <span className="text-xs text-muted">{user.name}</span>
         </header>
-        <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6 md:px-8 md:pb-16 md:pt-10">
+        <main className="mx-auto w-full max-w-5xl px-4 pb-8 pt-6 md:px-8 md:pb-8 md:pt-10">
           {children}
         </main>
+        <footer className="mx-auto w-full max-w-5xl px-4 pb-24 md:px-8 md:pb-16">
+          <SiteFooter />
+        </footer>
         <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-6 border-t border-[var(--line)] bg-background/92 px-1 py-2 backdrop-blur md:hidden">
           {customerLinks.map(
             (link) => {
