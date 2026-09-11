@@ -23,7 +23,11 @@ export const PRIMARY_CONTRAST = {
 
 /** Demo gold (--bb-demo). Distinct from primary CTA teal (--bb-primary). */
 export const DEMO_PILL_CLASS =
-  "bg-demo/12 text-demo ring-demo/35";
+  "text-demo bg-[color-mix(in_srgb,var(--bb-demo)_9%,transparent)] ring-[color-mix(in_srgb,var(--bb-demo)_25%,transparent)]";
+
+/** Quiet Capital default ring — ~6% text mix, not a hard sticker. */
+export const SURFACE_RING_CLASS =
+  "ring-1 ring-[color-mix(in_srgb,var(--bb-text)_6%,transparent)]";
 
 export const THEME_BG = PALETTE.bg;
 export const THEME_SURFACE = PALETTE.surface;

@@ -40,13 +40,13 @@ export default function OnboardingGoLivePage() {
       </Card>
       {ready ? (
         <form action={runFirstBuyAction}>
-          <Button type="submit" data-cta="go-live-run">
+          <Button type="submit" size="lg" data-cta="go-live-run">
             {GO_LIVE_PRIMARY_LABEL}
           </Button>
         </form>
       ) : (
         <div className="space-y-2">
-          <Button disabled data-cta="go-live-run">
+          <Button disabled size="lg" data-cta="go-live-run">
             {GO_LIVE_PRIMARY_LABEL}
           </Button>
           <p className="text-xs text-zinc-500">

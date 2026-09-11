@@ -19,8 +19,8 @@
   --fg: var(--bb-text);
   --muted: var(--bb-muted);
   --faint: #5C7874;
-  --line: color-mix(in srgb, var(--bb-text) 8%, transparent);
-  --line-strong: color-mix(in srgb, var(--bb-text) 14%, transparent);
+  --line: color-mix(in srgb, var(--bb-text) 6%, transparent);
+  --line-strong: color-mix(in srgb, var(--bb-text) 12%, transparent);
   --accent: var(--bb-accent);
   --accent-dim: color-mix(in srgb, var(--bb-accent) 12%, transparent);
   --primary: var(--bb-primary);
@@ -57,7 +57,16 @@ body {
 
 body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
   letter-spacing: -0.011em;
+}
+
+.display {
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 ::selection {

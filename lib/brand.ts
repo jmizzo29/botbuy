@@ -18,4 +18,23 @@ export const BRAND = {
   registration: "registered (Namecheap, 2026-09-11)",
 } as const;
 
+/** Locked land How-it-works steps. CPO owns words — do not invent copy. */
+export const HOW_IT_WORKS = {
+  heading: "How it works",
+  steps: [
+    {
+      title: "Set spend.",
+      body: "Your limit. BotBuy stays inside it.",
+    },
+    {
+      title: "Set intent.",
+      body: "Any software, any channel.",
+    },
+    {
+      title: "Vault it.",
+      body: "Then BotBuy searches, purchases, and closes.",
+    },
+  ],
+} as const;
+
 export const CANONICAL_HOSTS = ["botbuyer.ai", "www.botbuyer.ai"] as const;

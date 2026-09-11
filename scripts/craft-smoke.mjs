@@ -31,6 +31,8 @@ const dealDetail = read("app/(app)/deals/[id]/page.tsx");
 const usageUi = read("components/usage-meter.tsx");
 const brand = read("lib/brand.ts");
 const empty = read("lib/empty-cta.ts");
+const emptyUi = read("components/empty-ctas.tsx");
+const how = read("components/how-it-works.tsx");
 const wire = read("lib/designer-wire-notes.ts");
 const palette = read("lib/palette.ts");
 const demoBadge = read("components/demo-badge.tsx");
@@ -104,8 +106,8 @@ assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not gh
 
 const primaryBlocks = [
   ["land CTA", land, "<Button asChild size=\"lg\">"],
-  ["signup Continue", signup, "<Button type=\"submit\">Continue</Button>"],
-  ["go-live Run", goLive, "<Button type=\"submit\" data-cta=\"go-live-run\">"],
+  ["signup Continue", signup, "<Button type=\"submit\""],
+  ["go-live Run", goLive, "data-cta=\"go-live-run\""],
 ];
 for (const [name, src, needle] of primaryBlocks) {
   assert(src.includes(needle), `${name} primary present`);
@@ -117,6 +119,8 @@ assert(land.includes("BRAND.trustLine"), "land renders trust line under CTAs");
 assert(land.includes("BRAND.pocBanner"), "land keeps POC pill");
 assert(signup.includes("BRAND.pocBanner"), "signup Demo pill");
 assert(signup.includes("Sign up"), "signup eyebrow");
+assert(signup.includes("Continue"), "signup Continue label");
+assert(!signup.includes("variant="), "signup Continue stays primary");
 
 assert(
   proofLib.includes(
@@ -190,6 +194,40 @@ if (failures.length) {
   process.exit(1);
 }
 
+assert(brand.includes('title: "Set spend."'), "how-it-works step 1 title lock");
+assert(brand.includes('body: "Your limit. BotBuy stays inside it."'), "how-it-works step 1 body lock");
+assert(brand.includes('title: "Set intent."'), "how-it-works step 2 title lock");
+assert(brand.includes('body: "Any software, any channel."'), "how-it-works step 2 body lock");
+assert(brand.includes('title: "Vault it."'), "how-it-works step 3 title lock");
+assert(
+  brand.includes('body: "Then BotBuy searches, purchases, and closes."'),
+  "how-it-works step 3 body lock",
+);
+assert(land.includes("HowItWorksRail"), "land two-column how-it-works rail");
+assert(how.includes("HOW_IT_WORKS.steps"), "how rail uses locked steps");
+assert(how.includes("HOW_IT_WORKS.heading"), "how rail uses locked heading");
+assert(css.includes("--line: color-mix(in srgb, var(--bb-text) 6%, transparent)"), "Quiet Capital 6% rings");
+assert(css.includes("clamp(2.5rem, 5vw, 3.75rem)"), "Quiet Capital display H1");
+assert(css.includes("font-size: 1.0625rem"), "Quiet Capital body size");
+assert(css.includes("line-height: 1.65"), "Quiet Capital body leading");
+assert(
+  tokens.includes("var(--bb-demo)_9%") && tokens.includes("var(--bb-demo)_25%"),
+  "Demo pill calmer 9% wash / 25% ring",
+);
+assert(emptyUi.includes("px-5 py-8"), "empty panel air py-8 px-5");
+assert(emptyUi.includes("text-base font-medium"), "empty title text-base font-medium");
+assert(emptyUi.includes("text-sm leading-relaxed text-muted"), "empty body muted");
+assert(emptyUi.includes("mt-5 flex flex-wrap gap-3"), "empty CTA row mt-5 gap-3");
+assert(button.includes("px-7"), "primary lg px-7");
+assert(button.includes("shadow-none"), "primary no glow/shadow");
+assert(!button.includes("drop-shadow"), "no drop-shadow glow");
+assert(!button.includes("animate-pulse"), "no pulse motion");
+assert(!land.includes("animate-"), "land has no looping motion");
+assert(!emptyUi.includes("animate-"), "empties have no looping motion");
+assert(!css.includes("box-shadow:") || css.includes("inset 0 0 0 1px var(--line)"), "no glow box-shadow");
+assert(wire.includes("Quiet Capital"), "wire notes record Quiet Capital HOLD craft");
+assert(wire.includes("Not a public launch"), "Quiet Capital docs stay HOLD");
+
 console.log("craft-smoke PASS");
 console.log(" - electric-teal primary #2DD4BF / #042F2E ≥4.5:1");
 console.log(" - go-live Run BotBuy present");
@@ -198,3 +236,4 @@ console.log(" - Admin Finance/Deals above stubs");
 console.log(" - GMV=0 · verified $179.96");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #E8B84A");
+console.log(" - Quiet Capital craft · 3-card how rail · no glow");

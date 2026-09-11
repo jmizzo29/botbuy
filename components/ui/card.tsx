@@ -1,3 +1,4 @@
+import { SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
 
 export function Card({
@@ -7,7 +8,8 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-2xl bg-surface ring-1 ring-white/8",
+        "rounded-[1.25rem] bg-surface",
+        SURFACE_RING_CLASS,
         className,
       )}
       {...props}

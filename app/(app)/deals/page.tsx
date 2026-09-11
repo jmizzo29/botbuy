@@ -1,4 +1,5 @@
 import { DealCard } from "@/components/deal-card";
+import { EmptyPanel } from "@/components/empty-ctas";
 import { DEAL_STATUSES } from "@/lib/types";
 import { hydrateStore, listDeals } from "@/lib/store";
 
@@ -50,7 +51,7 @@ export default async function DealsPage({
           ))}
         </div>
       ) : (
-        <p className="text-sm text-zinc-500">No deals in this status.</p>
+        <EmptyPanel body="No deals in this status." />
       )}
     </div>
   );
