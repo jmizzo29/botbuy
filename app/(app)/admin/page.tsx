@@ -244,34 +244,50 @@ export default function AdminPage() {
         <CardHeader className="flex flex-row items-start justify-between gap-3">
           <div>
             <CardTitle>Agent orgs</CardTitle>
-            <p className="mt-1 text-sm text-zinc-400">
-              Owner diligence stub. One org per Closed deal. Not live.
-            </p>
+            <p className="mt-1 text-sm text-zinc-400">{agentOrgs.badge}</p>
           </div>
           <DemoBadge />
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
-          <p>
-            {agentOrgs.orgCount} org{agentOrgs.orgCount === 1 ? "" : "s"} ·{" "}
-            {agentOrgs.activatedCount} activated · {agentOrgs.roleCount} roles
-            in suite
-          </p>
-          <ul className="divide-y divide-white/6">
-            {agentOrgs.orgs.map((org) => (
-              <li key={org.id} className="flex justify-between gap-3 py-2">
-                <Link
-                  href={`/deals/${org.assetId}`}
-                  className="underline-offset-2 hover:underline"
-                >
-                  {org.title}
-                </Link>
-                <span className="text-xs text-zinc-500">
-                  {org.activated ? "Activated stub" : "Closed · not activated"} ·
-                  Demo / Coming
-                </span>
-              </li>
-            ))}
-          </ul>
+          {agentOrgs.orgs.length ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="text-[11px] uppercase tracking-[0.12em] text-zinc-500">
+                  <tr>
+                    <th className="pb-2 pr-3 font-medium">Asset</th>
+                    <th className="pb-2 pr-3 font-medium">Deal</th>
+                    <th className="pb-2 pr-3 font-medium">Agents</th>
+                    <th className="pb-2 pr-3 font-medium">Status</th>
+                    <th className="pb-2 font-medium">Activated</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/6">
+                  {agentOrgs.orgs.map((org) => (
+                    <tr key={org.id}>
+                      <td className="py-2 pr-3">{org.title}</td>
+                      <td className="py-2 pr-3">
+                        <Link
+                          href={`/deals/${org.dealId}`}
+                          className="underline-offset-2 hover:underline"
+                        >
+                          {org.dealId}
+                        </Link>
+                      </td>
+                      <td className="py-2 pr-3">CEO · CFO · CTO · CMO</td>
+                      <td className="py-2 pr-3">Demo · not live</td>
+                      <td className="py-2">
+                        {org.activatedAt
+                          ? org.activatedAt.slice(0, 10)
+                          : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-zinc-400">{agentOrgs.empty}</p>
+          )}
           <p className="text-xs text-zinc-500">{agentOrgs.note}</p>
         </CardContent>
       </Card>

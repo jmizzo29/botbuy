@@ -14,7 +14,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
 5. ProofStrip CHO-empty (`verified_at` null). No vapor defaults.
 6. Land + onboarding: `/` `/signup` `/onboarding/intent|spend|vault|go-live` `/home`
-7. After Closed, **Activate agents** CTA → `/agents` workspace. One org per Closed deal; license includes CEO/CFO/CTO/CMO suite. Demo / Coming · not live. Agents never bypass John spend approval.
+7. After Closed, CTA **Activate agents on this asset** → sheet → `/agents` and `/agents/[assetId]`. Suite in every license. Demo · not live. HOLD. Agents never bypass $1,000 approval.
 
 No seven-figure claims in product UI. No paid Stripe/Issuing.
 
@@ -44,7 +44,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | `/onboarding/go-live` | Recap → My deals |
 | `/home` | My deals (John’s personal history) |
 | `/deals` `/deals/[id]` | List + timeline / gates / status engine |
-| `/agents` | Licensed-user agent org workspace (Demo / Coming) |
+| `/agents` `/agents/[assetId]` | Your agents workspace · Demo · not live |
 | `/intent` `/vault` `/settings` | In-app |
 | `/admin` | Owner only — hidden from buyer nav and land. Persistent **Demo** badge. |
 

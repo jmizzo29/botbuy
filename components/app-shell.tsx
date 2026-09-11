@@ -16,7 +16,7 @@ import type { User } from "@/lib/types";
 const customerLinks = [
   { href: "/home", label: "Home", icon: Home },
   { href: "/deals", label: "Deals", icon: Layers3 },
-  { href: "/agents", label: "Agents", icon: Bot },
+  { href: "/agents", label: "Your agents", icon: Bot },
   { href: "/intent", label: "Intent", icon: Target },
   { href: "/vault", label: "Vault", icon: Lock },
   { href: "/settings", label: "Settings", icon: Settings },

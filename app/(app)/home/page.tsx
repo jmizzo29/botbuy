@@ -3,9 +3,12 @@ import { DealCard } from "@/components/deal-card";
 import { Card } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
 import {
+  AGENT_DEMO_BANNER,
+  AGENT_DETAIL_MICRO,
+  AGENT_EMPTY,
   AGENT_HOLD_NOTE,
-  AGENT_LICENSE_COPY,
-  AGENT_SPEND_LOCK,
+  AGENT_OPEN_WORKSPACE,
+  AGENT_SPEND_MICRO,
   listAgentOrgs,
 } from "@/lib/agent-org";
 import { isVerifiedAmount } from "@/lib/deal-ui";
@@ -71,24 +74,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {closed.length ? (
-        <Card className="px-5 py-4">
-          <p className="text-lg font-medium tracking-tight">Your agents</p>
-          <p className="mt-1 text-sm text-zinc-400">
-            {orgs.length} org{orgs.length === 1 ? "" : "s"} · one per Closed
-            deal. License includes the suite.
-          </p>
-          <p className="mt-2 text-xs text-zinc-500">{AGENT_LICENSE_COPY}</p>
-          <p className="mt-1 text-xs text-zinc-500">{AGENT_SPEND_LOCK}</p>
-          <p className="mt-1 text-xs text-zinc-500">{AGENT_HOLD_NOTE}</p>
-          <Link
-            href="/agents"
-            className="mt-3 inline-block text-sm text-accent underline-offset-2 hover:underline"
-          >
-            Open agent workspace
-          </Link>
-        </Card>
-      ) : null}
+      <Card className="px-5 py-4">
+        <p className="text-lg font-medium tracking-tight">Your agents</p>
+        <p className="mt-1 text-xs text-amber-200/90">{AGENT_DEMO_BANNER}</p>
+        <p className="mt-2 text-sm text-zinc-400">
+          {orgs.length ? AGENT_DETAIL_MICRO : AGENT_EMPTY}
+        </p>
+        <p className="mt-2 text-xs text-zinc-500">{AGENT_SPEND_MICRO}</p>
+        <p className="mt-1 text-xs text-zinc-500">{AGENT_HOLD_NOTE}</p>
+        <Link
+          href="/agents"
+          className="mt-3 inline-block text-sm text-accent underline-offset-2 hover:underline"
+        >
+          {AGENT_OPEN_WORKSPACE}
+        </Link>
+      </Card>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import {
+  AGENT_DEMO_BANNER,
   AGENT_HOLD_NOTE,
-  AGENT_SPEND_LOCK,
+  AGENT_SPEND_MICRO,
   activateAgentOrg,
   listAgentOrgs,
 } from "@/lib/agent-org";
@@ -14,8 +15,9 @@ const activateBody = z.object({
 export function GET() {
   return NextResponse.json({
     live: false,
+    banner: AGENT_DEMO_BANNER,
     hold: AGENT_HOLD_NOTE,
-    spendLock: AGENT_SPEND_LOCK,
+    spendLock: AGENT_SPEND_MICRO,
     orgs: listAgentOrgs(),
   });
 }
@@ -32,8 +34,9 @@ export async function POST(request: Request) {
   }
   return NextResponse.json({
     live: false,
+    banner: AGENT_DEMO_BANNER,
     hold: AGENT_HOLD_NOTE,
-    spendLock: AGENT_SPEND_LOCK,
+    spendLock: AGENT_SPEND_MICRO,
     org: result.org,
   });
 }

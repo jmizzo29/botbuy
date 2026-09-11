@@ -98,7 +98,9 @@ export default async function DealDetailPage({
       {deal.status === "Closed" ? (
         <ActivateAgents
           assetId={deal.id}
+          assetTitle={deal.title}
           activated={Boolean(getAgentOrg(deal.id)?.activated)}
+          imported={deal.source === "imported"}
         />
       ) : null}
 
