@@ -173,9 +173,9 @@ function timelineFor(deal: RawDeal): AgentEvent[] {
       {
         id: "ev_savedfast_gate",
         stage: "gate",
-        title: "Needs you",
+        title: "Gate",
         detail:
-          "WordPress wp-login/wp-admin still LiteSpeed 403 remains an operational note. Personal Closed does not mark Escrow received or Escrow complete.",
+          "Historical only. WP 403 and Escrow-received are not open Needs-you blockers on this personal Closed. AdSense carve-out accepted (see notes).",
         at: "2026-09-11T14:06:00Z",
         status: "done",
       },
@@ -328,6 +328,16 @@ function assertJohnLedger(deals: Deal[]) {
   if (savedfast.status !== "Closed" || !hasPersonalClosedHonestyFlags(savedfast)) {
     throw new Error(
       "deal_savedfast must be personal Closed with imported + agent_executed=false + imported_unverified + price_verified=false.",
+    );
+  }
+  if (savedfast.blockers.length > 0) {
+    throw new Error(
+      "deal_savedfast personal Closed must have no open human-gate blockers.",
+    );
+  }
+  if (!/adsense/i.test(savedfast.notes)) {
+    throw new Error(
+      "deal_savedfast must keep the AdSense carve-out as a note, not an open blocker.",
     );
   }
   if (!isHonestPersonalClosedEscrow(savedfast)) {

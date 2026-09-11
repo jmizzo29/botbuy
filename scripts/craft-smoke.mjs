@@ -197,6 +197,12 @@ assert(
   "Savedfast escrow is not complete",
 );
 assert(Number(savedfast?.price_usd) === 405, "Savedfast listed $405 stays unverified");
+assert(Array.isArray(savedfast?.blockers) && savedfast.blockers.length === 0, "Savedfast blockers empty");
+assert(
+  !savedfast.blockers.some((item) => /403|wp-login|wp-admin|Escrow received/i.test(String(item))),
+  "Savedfast has no open WP403 / Escrow-received Needs-you",
+);
+assert(/adsense/i.test(String(savedfast?.notes ?? "")), "Savedfast AdSense carve-out stays a note");
 assert(xfer?.status === "Closed", "xfer personal Closed");
 assert(xfer?.source === "imported", "xfer source imported");
 assert(xfer?.agent_executed === false, "xfer agent_executed=false");
