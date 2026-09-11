@@ -27,7 +27,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 - Illegal status transitions are rejected. `deal_events` is append-only.
 - Closing→Closed requires `verification.passed` for agent-run deals. Imported Closed may skip the engine at seed with `verification.skipped_reason=imported_ledger`.
 - Spend-out ceiling $1,000. Auto-approve OFF always — every deal needs approval before spend. Fail-closed. Infra near-zero — no assumed paid infra budget.
-- Search/purchase: all software products across all channels via pluggable marketplace adapters. Not a merchant allowlist. MCC may bias software. Domains OK — not domains-only.
+- Search/purchase: **all software products across all channels** via pluggable marketplace adapters. Not a merchant allowlist. Intent default category = software. John templates: Software (default), Software + domain, Domain (secondary).
 - Owner Admin (`/admin`): Demo until analytics+Stripe live. Traffic/revenue empty copy. Users = real directory (John customer #1). Finance = seeded known costs (botbuyer.ai $179.96, Savedfast $405, transfer $11.68); burn/runway placeholders. Deals ops = seeded table with Imported badges, not ProofStrip. Health: OK / Degraded / Not connected / Demo / Stub. No invented MRR or fake uptime.
 
 ## Routes
@@ -36,7 +36,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | --- | --- |
 | `/` | Land — H1 `Set spend. Set intent. Vault it. BotBuy buys.` + empty ProofStrip |
 | `/signup` | Signup one-liner |
-| `/onboarding/intent` | Set intent |
+| `/onboarding/intent` | Set intent — software-first John templates |
 | `/onboarding/spend` | Set spend |
 | `/onboarding/vault` | Fund your vault — multi-rail |
 | `/onboarding/go-live` | Recap → My deals |

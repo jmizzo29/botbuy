@@ -2,6 +2,7 @@ import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
 import { DEMO_USER } from "@/lib/auth";
 import { isVerifiedAmount } from "@/lib/deal-ui";
 import "@/lib/adapters";
+import { JOHN_INTENT_TEMPLATES } from "@/lib/intent-templates";
 import {
   SPEND_DEFAULTS,
   SPEND_HARD_GATE_USD,
@@ -25,14 +26,22 @@ const dealEvents: DealEvent[] = deals.flatMap((deal) => seedDealEvents(deal));
 
 const intents: Intent[] = [
   {
-    id: "intent_micro_saas",
+    id: "intent_software",
     userId: DEMO_USER.id,
-    summary:
-      "Buy software products across vendor checkout, SaaS billing, marketplaces, and license stores.",
-    categories: ["software"],
-    maxPriceUsd: 1000,
+    summary: JOHN_INTENT_TEMPLATES[0].summary,
+    categories: [...JOHN_INTENT_TEMPLATES[0].categories],
+    maxPriceUsd: JOHN_INTENT_TEMPLATES[0].maxPriceUsd,
     status: "active",
     createdAt: "2026-09-04T18:00:00Z",
+  },
+  {
+    id: "intent_software_domain",
+    userId: DEMO_USER.id,
+    summary: JOHN_INTENT_TEMPLATES[1].summary,
+    categories: [...JOHN_INTENT_TEMPLATES[1].categories],
+    maxPriceUsd: JOHN_INTENT_TEMPLATES[1].maxPriceUsd,
+    status: "active",
+    createdAt: "2026-09-05T12:00:00Z",
   },
   {
     id: "intent_product_domain",

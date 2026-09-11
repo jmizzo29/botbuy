@@ -19,7 +19,6 @@ export function amountCopy(
   deal: Pick<Deal, "id" | "priceVerified" | "amountStatus">,
 ) {
   if (isVerifiedAmount(deal)) return null;
-  if (deal.amountStatus === "pending_verify") return "Amount pending verify";
   return "Imported · amount unverified";
 }
 
