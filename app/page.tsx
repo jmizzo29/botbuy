@@ -4,6 +4,7 @@ import { ProofStrip } from "@/components/proof-strip";
 import { PublicChrome } from "@/components/public-chrome";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { VaultCardsBackdrop } from "@/components/vault-cards-backdrop";
 import { BRAND } from "@/lib/brand";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
@@ -17,7 +18,7 @@ export default function LandPage() {
     <PublicChrome>
       <div className="pt-16 md:pt-24">
         <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
-          <div>
+          <div className="relative z-10">
             <Badge className={DEMO_PILL_CLASS}>{BRAND.pocBanner}</Badge>
             <p className="mt-6 text-[10px] uppercase tracking-[0.16em] text-muted/45">
               {BRAND.origin} · {BRAND.registration}
@@ -44,9 +45,12 @@ export default function LandPage() {
               <p className="text-sm text-muted">{BRAND.trustLine}</p>
             </div>
           </div>
+          <VaultCardsBackdrop variant="fold" />
+        </div>
+        <div className="relative z-10 mt-16 md:mt-24">
           <HowItWorksRail />
         </div>
-        <div className="mt-16 md:mt-24">
+        <div className="relative z-10 mt-16 md:mt-24">
           <ProofStrip />
         </div>
       </div>

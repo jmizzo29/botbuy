@@ -10,6 +10,7 @@ import {
   Settings,
   Target,
 } from "lucide-react";
+import { VaultCardsBackdrop } from "@/components/vault-cards-backdrop";
 import { cn } from "@/lib/utils";
 import type { User } from "@/lib/types";
 
@@ -34,8 +35,9 @@ export function AppShell({
   const links = customerLinks;
 
   return (
-    <div className="min-h-dvh bg-background text-foreground">
-      <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-[var(--line)] px-4 py-6 md:flex md:flex-col">
+    <div className="relative min-h-dvh bg-background text-foreground">
+      <VaultCardsBackdrop variant="shell" />
+      <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 border-r border-[var(--line)] bg-background px-4 py-6 md:flex md:flex-col">
         <Link href="/home" className="flex items-center gap-2.5 px-2">
           <Mark />
           <span className="text-[17px] font-semibold tracking-tight">BotBuy</span>
@@ -80,7 +82,7 @@ export function AppShell({
         </div>
       </aside>
 
-      <div className="md:pl-60">
+      <div className="relative z-10 md:pl-60">
         <header className="sticky top-0 z-20 flex items-center justify-between border-b border-[var(--line)] bg-background/80 px-4 py-3 backdrop-blur md:hidden">
           <Link href="/home" className="flex items-center gap-2">
             <Mark />

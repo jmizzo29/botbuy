@@ -33,6 +33,7 @@ const brand = read("lib/brand.ts");
 const empty = read("lib/empty-cta.ts");
 const emptyUi = read("components/empty-ctas.tsx");
 const how = read("components/how-it-works.tsx");
+const vaultBg = read("components/vault-cards-backdrop.tsx");
 const wire = read("lib/designer-wire-notes.ts");
 const palette = read("lib/palette.ts");
 const demoBadge = read("components/demo-badge.tsx");
@@ -188,12 +189,6 @@ const row = deals.find((deal) => deal.id === "deal_botbuyer_ai") ?? botbuyer;
 assert(row, "ledger has deal_botbuyer_ai");
 assert(Number(row?.price_usd ?? row?.priceUsd) === 179.96, "ledger verified $179.96");
 
-if (failures.length) {
-  console.error("craft-smoke FAIL");
-  for (const item of failures) console.error(" -", item);
-  process.exit(1);
-}
-
 assert(brand.includes('title: "Set spend."'), "how-it-works step 1 title lock");
 assert(brand.includes('body: "Your limit. BotBuy stays inside it."'), "how-it-works step 1 body lock");
 assert(brand.includes('title: "Set intent."'), "how-it-works step 2 title lock");
@@ -203,7 +198,15 @@ assert(
   brand.includes('body: "Then BotBuy searches, purchases, and closes."'),
   "how-it-works step 3 body lock",
 );
-assert(land.includes("HowItWorksRail"), "land two-column how-it-works rail");
+assert(land.includes("HowItWorksRail"), "land keeps How it works rail");
+assert(land.includes("VaultCardsBackdrop"), "land vault-cards fold backdrop");
+assert(shell.includes("VaultCardsBackdrop"), "app shell vault-cards backdrop");
+assert(vaultBg.includes('data-bg="vault-cards"'), "vault cards decorative marker");
+assert(vaultBg.includes("pointer-events-none"), "vault cards do not steal clicks");
+assert(vaultBg.includes('aria-hidden="true"'), "vault cards are decorative");
+assert(!vaultBg.includes("animate-"), "vault cards have no motion");
+assert(!vaultBg.includes("drop-shadow"), "vault cards have no glow");
+assert(!vaultBg.includes("$"), "vault cards invent no metrics");
 assert(how.includes("HOW_IT_WORKS.steps"), "how rail uses locked steps");
 assert(how.includes("HOW_IT_WORKS.heading"), "how rail uses locked heading");
 assert(css.includes("--line: color-mix(in srgb, var(--bb-text) 6%, transparent)"), "Quiet Capital 6% rings");
@@ -227,6 +230,13 @@ assert(!emptyUi.includes("animate-"), "empties have no looping motion");
 assert(!css.includes("box-shadow:") || css.includes("inset 0 0 0 1px var(--line)"), "no glow box-shadow");
 assert(wire.includes("Quiet Capital"), "wire notes record Quiet Capital HOLD craft");
 assert(wire.includes("Not a public launch"), "Quiet Capital docs stay HOLD");
+assert(wire.includes("Vault cards silhouette"), "wire notes record vault-cards HOLD backdrop");
+
+if (failures.length) {
+  console.error("craft-smoke FAIL");
+  for (const item of failures) console.error(" -", item);
+  process.exit(1);
+}
 
 console.log("craft-smoke PASS");
 console.log(" - electric-teal primary #2DD4BF / #042F2E ≥4.5:1");
@@ -236,4 +246,4 @@ console.log(" - Admin Finance/Deals above stubs");
 console.log(" - GMV=0 · verified $179.96");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #E8B84A");
-console.log(" - Quiet Capital craft · 3-card how rail · no glow");
+console.log(" - Quiet Capital craft · vault-cards backdrop · 3-card how · no glow");

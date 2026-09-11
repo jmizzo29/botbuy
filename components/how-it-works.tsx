@@ -7,7 +7,7 @@ export function HowItWorksRail() {
       <h2 className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
         {HOW_IT_WORKS.heading}
       </h2>
-      <ol className="mt-6 grid list-none gap-3 p-0">
+      <ol className="mt-6 grid list-none gap-3 p-0 md:grid-cols-3">
         {HOW_IT_WORKS.steps.map((step, index) => (
           <li key={step.title}>
             <Card className="px-5 py-6">
