@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
 import { getDeal, listDealEvents } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
+import { runVerificationStub } from "@/lib/verification";
 import type { DealEvent } from "@/lib/types";
 
 export async function generateMetadata({
@@ -28,6 +29,7 @@ export default async function DealDetailPage({
   const { id } = await params;
   const deal = getDeal(id);
   if (!deal) notFound();
+  const verification = runVerificationStub(deal);
 
   return (
     <div className="space-y-6">
@@ -92,8 +94,12 @@ export default async function DealDetailPage({
       <Card>
         <CardHeader>
           <CardTitle>Verification</CardTitle>
+          <p className="mt-1 text-sm text-zinc-400">
+            Module path stub. Fail-closed. Not a live verifier.
+          </p>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-zinc-300">
+          <Row label="Path" value="stub" />
           <Row
             label="Passed"
             value={deal.verification.passed ? "true" : "false"}
@@ -112,10 +118,10 @@ export default async function DealDetailPage({
                 : "—"
             }
           />
-          <p className="text-xs text-zinc-500">
-            Closing→Closed requires verification.passed for agent-run deals.
-            Imported Closed may skip the engine with skipped_reason=imported_ledger.
-          </p>
+          <Row
+            label="Close gate"
+            value={verification.gate.ok ? "open" : verification.gate.reason}
+          />
         </CardContent>
       </Card>
 
@@ -132,8 +138,8 @@ export default async function DealDetailPage({
         <CardHeader>
           <CardTitle>deal_events</CardTitle>
           <p className="mt-1 text-sm text-zinc-400">
-            Append-only. Search, diligence, purchase, gates, close — not just
-            receipts.
+            Append-only audit. Imported vs reconstructed (agent_executed=false)
+            vs engine — not just receipts.
           </p>
         </CardHeader>
         <CardContent>
@@ -256,6 +262,9 @@ function TimelineItem({
       </div>
       <div className="pb-6">
         <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+          {event.actor}
+          {event.actor === "reconstructed" ? " · agent_executed=false" : ""}
+          {" · "}
           {event.type}
           {event.stage ? ` · ${event.stage}` : ""} · {formatDateTime(event.at)}
         </p>

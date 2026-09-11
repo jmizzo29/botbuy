@@ -6,6 +6,17 @@ Canonical chrome is **botbuyer.ai only**. Never botbuy.ai or getbotbuy.com. The 
 
 POC dashboard + installable PWA. The buyer agent tracks search, diligence, purchase, gates, and close — not just receipts.
 
+## Product spine (diligence evidence)
+
+1. Deals list/detail + append-only `deal_events` (imported / reconstructed `agent_executed=false` / engine)
+2. Vault shell + hard caps (day $500 / month $2k / auto-approve OFF). No live card spend.
+3. Owner `/admin` Demo badges. Real deal counts OK. No invented live MRR/traffic/paid users.
+4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
+5. ProofStrip CHO-empty (`verified_at` null). No vapor defaults.
+6. Land + onboarding: `/` `/signup` `/onboarding/intent|spend|vault|go-live` `/home`
+
+No seven-figure claims in product UI. No paid Stripe/Issuing.
+
 ## Product / eng locks (CTO)
 
 - Status chips are frozen exact: Searching · Found · Buying · Needs you · Closing · Closed · Failed · Paused

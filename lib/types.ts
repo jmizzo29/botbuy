@@ -73,6 +73,8 @@ export type DealEventType =
   | "close"
   | "note";
 
+export type DealEventActor = "imported" | "reconstructed" | "engine" | "agent";
+
 export interface DealEvent {
   id: string;
   dealId: string;
@@ -82,6 +84,7 @@ export interface DealEvent {
   detail: string;
   at: string;
   status: AgentEventStatus;
+  actor: DealEventActor;
   fromStatus?: DealStatus | null;
   toStatus?: DealStatus | null;
 }

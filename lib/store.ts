@@ -142,6 +142,7 @@ export function appendDealEvent(
 ): DealEvent {
   const row: DealEvent = {
     ...event,
+    actor: event.actor ?? "engine",
     id: event.id ?? `evt_${crypto.randomUUID()}`,
   };
   dealEvents.push(row);
@@ -177,6 +178,7 @@ export function transitionDeal(id: string, to: DealStatus): Deal {
     detail: `Append-only deal_events. Engine accepted ${from} → ${to}.`,
     at,
     status: "done",
+    actor: "engine",
     fromStatus: from,
     toStatus: to,
   });

@@ -23,8 +23,8 @@ export default async function DealsPage({
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Deals</h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-          My deals. Seed rows are Imported. Unverified amounts stay soft copy —
-          never confident $.
+          Append-only deal_events on each detail. Imported rows are labeled;
+          agent_executed=false. Unverified amounts stay soft copy.
         </p>
       </header>
 

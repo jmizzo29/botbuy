@@ -166,6 +166,7 @@ export const dealEvents = pgTable("deal_events", {
   status: text("status").notNull(),
   fromStatus: text("from_status"),
   toStatus: text("to_status"),
+  actor: text("actor").notNull().default("imported"),
 });
 
 export const proofSnapshots = pgTable("proof_snapshots", {

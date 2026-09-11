@@ -1,4 +1,5 @@
 import ledgerJson from "@/data/john-deal-ledger.json";
+import { importedClosedVerification } from "@/lib/verification";
 import type {
   AgentEvent,
   AmountStatus,
@@ -38,12 +39,7 @@ function verificationFor(deal: RawDeal): DealVerification {
   }
 
   if (deal.status === "Closed" && deal.source === "imported") {
-    return {
-      passed: false,
-      skipped_reason: "imported_ledger",
-      artifacts: [],
-      receipt_refs,
-    };
+    return importedClosedVerification(receipt_refs);
   }
 
   return {
@@ -205,6 +201,7 @@ export function seedDealEvents(deal: Deal): DealEvent[] {
       detail: `source=imported · agent_executed=${deal.agentExecuted} · amount_status=${deal.amountStatus}`,
       at: deal.openedAt,
       status: "done",
+      actor: "imported",
       toStatus: deal.status,
     },
   ];
@@ -219,6 +216,7 @@ export function seedDealEvents(deal: Deal): DealEvent[] {
       detail: item.detail,
       at: item.at,
       status: item.status,
+      actor: deal.agentExecuted ? "agent" : "reconstructed",
     });
   }
 
