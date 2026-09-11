@@ -86,7 +86,7 @@ export function ActivateAgents({
 
       {open ? (
         <div className="fixed inset-0 z-50 grid place-items-end bg-black/60 p-4 sm:place-items-center">
-          <div className="w-full max-w-md rounded-2xl bg-[#111113] p-5 ring-1 ring-white/10">
+          <div className="w-full max-w-md rounded-2xl bg-surface p-5 ring-1 ring-white/10">
             <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
               {AGENT_DEMO_BANNER}
             </p>

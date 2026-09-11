@@ -32,21 +32,65 @@ const usageUi = read("components/usage-meter.tsx");
 const brand = read("lib/brand.ts");
 const empty = read("lib/empty-cta.ts");
 const wire = read("lib/designer-wire-notes.ts");
+const palette = read("lib/palette.ts");
+const demoBadge = read("components/demo-badge.tsx");
+const shell = read("components/app-shell.tsx");
 const ledger = JSON.parse(read("data/john-deal-ledger.json"));
 
 assert(wire.includes('GO_LIVE_PRIMARY_LABEL = "Run BotBuy"'), "wire notes label lock");
-assert(wire.includes('DESIGNER_PRIMARY_BG = "#ffffff"'), "wire notes primary bg-white");
-assert(wire.includes('DESIGNER_PRIMARY_FG = "#000000"'), "wire notes primary text-black");
+assert(palette.includes('PALETTE_ID = "electric-teal"'), "palette id electric-teal");
+assert(palette.includes('PALETTE_SIGNAL = "HOLD"'), "soft-signal HOLD");
+assert(palette.includes('bg: "#050A0C"'), "palette bg");
+assert(palette.includes('surface: "#0C1518"'), "palette surface");
+assert(palette.includes('text: "#F4FFFD"'), "palette text");
+assert(palette.includes('muted: "#7A9A96"'), "palette muted");
+assert(palette.includes('primary: "#2DD4BF"'), "palette primary teal");
+assert(palette.includes('primaryLabel: "#042F2E"'), "palette primary dark label");
+assert(palette.includes('accent: "#5EEAD4"'), "palette accent");
+assert(palette.includes('demo: "#E8B84A"'), "palette demo");
+assert(palette.includes('danger: "#FB7185"'), "palette danger");
+assert(palette.includes('success: "#34D399"'), "palette success");
+assert(wire.includes("PALETTE.primary"), "wire notes primary from palette");
+assert(wire.includes("PALETTE.primaryLabel"), "wire notes label from palette");
+assert(!wire.includes("#ffffff"), "wire notes dropped craft-pack white fill");
+assert(!wire.includes("#000000"), "wire notes dropped craft-pack black label");
 assert(tokens.includes("DESIGNER_PRIMARY_BG"), "tokens follow wire notes bg");
 assert(tokens.includes("DESIGNER_PRIMARY_FG"), "tokens follow wire notes fg");
+assert(wire.includes('backgroundColor: "var(--bb-primary)"'), "primary inline style uses --bb-primary");
+assert(wire.includes('color: "var(--bb-primary-fg)"'), "primary inline style uses --bb-primary-fg");
+assert(tokens.includes("PRIMARY_CONTRAST_RATIO"), "tokens keep measured contrast");
+assert(tokens.includes("min: 4.5"), "primary contrast floor 4.5:1");
 assert(button.includes("PRIMARY_BUTTON_STYLE"), "Button applies inline primary style");
 assert(button.includes("PRIMARY_BUTTON_CLASS"), "Button uses primary class token");
 assert(button.includes('data-contrast={isPrimary ? "primary"'), "primary contrast marker");
+assert(palette.includes('"--bb-bg"'), "palette CSS var --bb-bg");
+assert(palette.includes('"--bb-primary-fg"'), "palette CSS var --bb-primary-fg");
 assert(
-  css.includes("color: #000000 !important") &&
-    css.includes("background-color: #ffffff !important"),
-  "globals force primary contrast",
+  css.includes("color: var(--bb-primary-fg) !important") &&
+    css.includes("background-color: var(--bb-primary) !important"),
+  "globals force teal fill + dark label via --bb-primary",
 );
+assert(!css.includes("background-color: #ffffff !important"), "globals no white primary fill");
+assert(!css.includes("color: #000000 !important"), "globals no black primary label");
+assert(css.includes("--bb-bg: #050A0C"), "handoff --bb-bg");
+assert(css.includes("--bb-surface: #0C1518"), "handoff --bb-surface");
+assert(css.includes("--bb-text: #F4FFFD"), "handoff --bb-text");
+assert(css.includes("--bb-muted: #7A9A96"), "handoff --bb-muted");
+assert(css.includes("--bb-primary: #2DD4BF"), "handoff --bb-primary");
+assert(css.includes("--bb-primary-fg: #042F2E"), "handoff --bb-primary-fg");
+assert(css.includes("--bb-accent: #5EEAD4"), "handoff --bb-accent");
+assert(css.includes("--bb-demo: #E8B84A"), "handoff --bb-demo");
+assert(css.includes("--bb-danger: #FB7185"), "handoff --bb-danger");
+assert(css.includes("--bb-success: #34D399"), "handoff --bb-success");
+assert(
+  css.includes("--bb-demo: #E8B84A") && css.includes("--bb-primary: #2DD4BF"),
+  "Demo gold distinct from primary CTA teal",
+);
+assert(!css.includes("background-color: var(--bb-demo)"), "Demo gold is not CTA fill");
+assert(land.includes("DEMO_PILL_CLASS") || land.includes("bg-demo"), "land Demo pill token");
+assert(shell.includes("bg-background"), "app shell uses palette bg");
+assert(chrome.includes("bg-background"), "land chrome uses palette bg");
+assert(demoBadge.includes("DEMO_PILL_CLASS"), "Demo badge uses demo token");
 
 assert(goLive.includes('data-cta="go-live-run"'), "go-live Run marked");
 assert(goLive.includes("GO_LIVE_PRIMARY_LABEL"), "go-live uses wire-notes label");
@@ -147,9 +191,10 @@ if (failures.length) {
 }
 
 console.log("craft-smoke PASS");
-console.log(" - primary contrast tokens bg-white / text-black");
+console.log(" - electric-teal primary #2DD4BF / #042F2E ≥4.5:1");
 console.log(" - go-live Run BotBuy present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
 console.log(" - Admin Finance/Deals above stubs");
 console.log(" - GMV=0 · verified $179.96");
 console.log(" - usage meter Estimate / Demo · not live");
+console.log(" - soft-signal HOLD · Demo pill #E8B84A");

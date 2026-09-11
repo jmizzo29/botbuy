@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BRAND } from "@/lib/brand";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 export const metadata = {
   title: "Sign up",
@@ -16,10 +17,10 @@ export default function SignupPage() {
     <PublicChrome>
       <div className="mx-auto max-w-md space-y-8 pt-10">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-zinc-500">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
             Sign up
           </p>
-          <Badge className="mt-3 bg-amber-500/10 text-amber-100 ring-amber-400/35">
+          <Badge className={`mt-3 ${DEMO_PILL_CLASS}`}>
             {BRAND.pocBanner}
           </Badge>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight">

@@ -7,7 +7,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-2xl bg-[#111113] ring-1 ring-white/8",
+        "rounded-2xl bg-surface ring-1 ring-white/8",
         className,
       )}
       {...props}
@@ -39,7 +39,7 @@ export function CardDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={cn("text-sm text-zinc-400 leading-relaxed", className)} {...props} />
+    <p className={cn("text-sm text-muted leading-relaxed", className)} {...props} />
   );
 }
 

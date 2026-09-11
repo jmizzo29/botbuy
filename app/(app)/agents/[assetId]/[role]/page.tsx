@@ -9,6 +9,7 @@ import {
   type AgentOrgRole,
 } from "@/lib/agent-org";
 import { getAgentOrg } from "@/lib/agent-runtime";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 export default async function AgentRolePage({
   params,
@@ -36,7 +37,7 @@ export default async function AgentRolePage({
             <CardTitle>
               {agent.role} · {org.title}
             </CardTitle>
-            <Badge className="bg-amber-500/10 text-amber-200 ring-amber-400/25">
+            <Badge className={DEMO_PILL_CLASS}>
               {AGENT_DEMO_BANNER}
             </Badge>
           </div>

@@ -6,6 +6,7 @@ import {
   AGENT_SPEND_MICRO,
   type AgentOrg,
 } from "@/lib/agent-org";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 export function YourAgents({ org }: { org: AgentOrg }) {
   return (
@@ -31,7 +32,7 @@ export function YourAgents({ org }: { org: AgentOrg }) {
             >
               <div className="flex items-start justify-between gap-3">
                 <p className="text-sm font-medium">{agent.role}</p>
-                <Badge className="bg-amber-500/10 text-amber-200 ring-amber-400/25">
+                <Badge className={DEMO_PILL_CLASS}>
                   {agent.badge}
                 </Badge>
               </div>

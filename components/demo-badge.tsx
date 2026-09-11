@@ -1,11 +1,12 @@
 import { Badge } from "@/components/ui/badge";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
 import type { MetricSource } from "@/lib/types";
 
 const copy: Record<MetricSource, { label: string; className: string }> = {
   stub: {
     label: "Demo / stub metrics — not live",
-    className: "bg-amber-500/10 text-amber-200 ring-amber-400/25",
+    className: DEMO_PILL_CLASS,
   },
   imported_ledger: {
     label: "Imported ledger",
@@ -17,7 +18,7 @@ const copy: Record<MetricSource, { label: string; className: string }> = {
   },
   live: {
     label: "Live",
-    className: "bg-emerald-500/10 text-emerald-200 ring-emerald-400/20",
+    className: "bg-success/10 text-success ring-success/25",
   },
 };
 
@@ -38,7 +39,7 @@ export function DemoBadge({ className }: { className?: string }) {
   return (
     <Badge
       className={cn(
-        "bg-amber-500/10 text-amber-200 ring-amber-400/25",
+        DEMO_PILL_CLASS,
         className,
       )}
     >
@@ -51,7 +52,7 @@ export function ProofBadge({ className }: { className?: string }) {
   return (
     <Badge
       className={cn(
-        "bg-amber-500/10 text-amber-200 ring-amber-400/25",
+        DEMO_PILL_CLASS,
         className,
       )}
     >

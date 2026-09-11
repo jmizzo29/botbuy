@@ -4,6 +4,7 @@ import { PublicChrome } from "@/components/public-chrome";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BRAND } from "@/lib/brand";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 export const metadata = {
   title: "BotBuy",
@@ -14,19 +15,19 @@ export default function LandPage() {
   return (
     <PublicChrome>
       <div className="space-y-10 pt-10 md:pt-16">
-        <Badge className="bg-amber-500/10 text-amber-100 ring-amber-400/35">
+        <Badge className={DEMO_PILL_CLASS}>
           {BRAND.pocBanner}
         </Badge>
-        <p className="text-[11px] uppercase tracking-[0.18em] text-zinc-500">
+        <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
           {BRAND.origin} · {BRAND.registration}
         </p>
         <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-pretty sm:text-6xl">
           {BRAND.hero}
         </h1>
-        <p className="max-w-lg text-lg leading-relaxed text-zinc-300">
+        <p className="max-w-lg text-lg leading-relaxed text-foreground/80">
           {BRAND.heroSub}
         </p>
-        <div className="max-w-lg space-y-1 text-sm text-zinc-400">
+        <div className="max-w-lg space-y-1 text-sm text-muted">
           <p>{BRAND.easeMicro}</p>
           <p>{BRAND.channelMicro}</p>
         </div>
@@ -39,21 +40,21 @@ export default function LandPage() {
               <Link href="#how">{BRAND.secondaryCta}</Link>
             </Button>
           </div>
-          <p className="text-sm text-zinc-400">{BRAND.trustLine}</p>
+          <p className="text-sm text-muted">{BRAND.trustLine}</p>
         </div>
         <section id="how" className="max-w-lg scroll-mt-8 space-y-3">
           <h2 className="text-lg font-medium tracking-tight">How it works</h2>
-          <ol className="space-y-2 text-sm leading-relaxed text-zinc-400">
+          <ol className="space-y-2 text-sm leading-relaxed text-muted">
             <li>
-              <span className="text-zinc-200">Set spend.</span> Your limit.
+              <span className="text-foreground">Set spend.</span> Your limit.
               BotBuy stays inside it.
             </li>
             <li>
-              <span className="text-zinc-200">Set intent.</span> Any software,
+              <span className="text-foreground">Set intent.</span> Any software,
               any channel.
             </li>
             <li>
-              <span className="text-zinc-200">Vault it.</span> Then BotBuy
+              <span className="text-foreground">Vault it.</span> Then BotBuy
               searches, purchases, and closes.
             </li>
           </ol>

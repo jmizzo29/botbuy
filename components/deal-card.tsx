@@ -19,7 +19,7 @@ export function DealCard({ deal }: { deal: Deal }) {
   return (
     <Link
       href={`/deals/${deal.id}`}
-      className="block rounded-2xl bg-[#111113] px-5 py-4 ring-1 ring-white/8 transition-colors hover:bg-[#161618] hover:ring-white/14"
+      className="block rounded-2xl bg-surface px-5 py-4 ring-1 ring-white/8 transition-colors hover:bg-[#102024] hover:ring-white/14"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
