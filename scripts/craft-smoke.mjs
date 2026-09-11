@@ -132,7 +132,8 @@ for (const [name, src, needle] of primaryBlocks) {
   assert(src.includes(needle), `${name} primary present`);
 }
 
-assert(brand.includes('trustLine: "Demo · $1,000 gate · every deal needs your approval"'), "CPO trust line");
+assert(brand.includes('trustLine: "Demo · every deal needs your approval"'), "CPO trust line");
+assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
 assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock");
 assert(land.includes("BRAND.trustLine"), "land renders trust line under CTAs");
 assert(
