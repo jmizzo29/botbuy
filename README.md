@@ -41,7 +41,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | `/onboarding/intent` | Set intent — software-first John templates |
 | `/onboarding/spend` | Set spend |
 | `/onboarding/vault` | Fund your vault — multi-rail |
-| `/onboarding/go-live` | Recap → Run creates Searching deal + deal_events |
+| `/onboarding/go-live` | Recap → **Run BotBuy** creates Searching deal + deal_events |
 | `/home` | My deals (John’s personal history) |
 | `/deals` `/deals/[id]` | List + timeline / gates / status engine |
 | `/agents` `/agents/[assetId]` | Your agents workspace · Demo · not live |

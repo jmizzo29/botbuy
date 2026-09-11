@@ -26,10 +26,14 @@ const admin = read("app/(app)/admin/page.tsx");
 const finance = read("lib/finance.ts");
 const brand = read("lib/brand.ts");
 const empty = read("lib/empty-cta.ts");
+const wire = read("lib/designer-wire-notes.ts");
 const ledger = JSON.parse(read("data/john-deal-ledger.json"));
 
-assert(tokens.includes('PRIMARY_BUTTON_BG = "#ffffff"'), "token bg-white");
-assert(tokens.includes('PRIMARY_BUTTON_FG = "#000000"'), "token text-black");
+assert(wire.includes('GO_LIVE_PRIMARY_LABEL = "Run BotBuy"'), "wire notes label lock");
+assert(wire.includes('DESIGNER_PRIMARY_BG = "#ffffff"'), "wire notes primary bg-white");
+assert(wire.includes('DESIGNER_PRIMARY_FG = "#000000"'), "wire notes primary text-black");
+assert(tokens.includes("DESIGNER_PRIMARY_BG"), "tokens follow wire notes bg");
+assert(tokens.includes("DESIGNER_PRIMARY_FG"), "tokens follow wire notes fg");
 assert(button.includes("PRIMARY_BUTTON_STYLE"), "Button applies inline primary style");
 assert(button.includes("PRIMARY_BUTTON_CLASS"), "Button uses primary class token");
 assert(button.includes('data-contrast={isPrimary ? "primary"'), "primary contrast marker");
@@ -40,12 +44,13 @@ assert(
 );
 
 assert(goLive.includes('data-cta="go-live-run"'), "go-live Run marked");
+assert(goLive.includes("GO_LIVE_PRIMARY_LABEL"), "go-live uses wire-notes label");
 assert(
-  (goLive.replace(/\n/g, " ").match(/<Button[^>]*>\s*Run BotBuy\s*<\/Button>/g) || [])
-    .length === 2,
+  (goLive.replace(/\n/g, " ").match(/\{GO_LIVE_PRIMARY_LABEL\}/g) || []).length === 2,
   "go-live submit + disabled labels are Run BotBuy",
 );
 assert(!/>\s*Run\s*</.test(goLive), "go-live no bare Run label");
+assert(!goLive.includes(">Run BotBuy<") && !goLive.includes(">Run<"), "go-live no hardcoded Run");
 assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not ghost");
 
 const primaryBlocks = [
@@ -79,7 +84,7 @@ assert(!proof.includes("verified_at"), "public proof caption has no verified_at"
 assert(chrome.includes("hasPublicSession"), "nav gates My deals on session");
 assert(chrome.includes("My deals"), "My deals still exists after session");
 
-assert(empty.includes('SEARCHING_EMPTY_PRIMARY = "Run BotBuy"'), "Searching Run BotBuy");
+assert(empty.includes("GO_LIVE_PRIMARY_LABEL"), "Searching empty uses Run BotBuy lock");
 assert(empty.includes('SEARCHING_EMPTY_SECONDARY = "Edit intent"'), "Searching Edit intent");
 assert(empty.includes('NEEDS_YOU_CTA = "Review gates"'), "Needs-you Review gates");
 assert(empty.includes('AGENTS_EMPTY_SECONDARY = "See how activation works"'), "Agents empty secondary");
