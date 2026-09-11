@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -38,24 +38,28 @@ const wire = read("lib/designer-wire-notes.ts");
 const palette = read("lib/palette.ts");
 const demoBadge = read("components/demo-badge.tsx");
 const shell = read("components/app-shell.tsx");
+const approveUi = read("components/deal-approve-actions.tsx");
+const vaultLib = read("lib/vault-rails.ts");
+const vaultPage = read("app/(app)/vault/page.tsx");
+const vaultApi = read("app/api/vault/route.ts");
 const layout = read("app/layout.tsx");
 const manifest = read("app/manifest.ts");
 const lockup = read("components/brand-lockup.tsx");
 const ledger = JSON.parse(read("data/john-deal-ledger.json"));
 
 assert(wire.includes('GO_LIVE_PRIMARY_LABEL = "Run BotBuy"'), "wire notes label lock");
-assert(palette.includes('PALETTE_ID = "electric-teal"'), "palette id electric-teal");
+assert(palette.includes('PALETTE_ID = "g-techlux"'), "palette id g-techlux");
 assert(palette.includes('PALETTE_SIGNAL = "HOLD"'), "soft-signal HOLD");
-assert(palette.includes('bg: "#050A0C"'), "palette bg");
-assert(palette.includes('surface: "#0C1518"'), "palette surface");
-assert(palette.includes('text: "#F4FFFD"'), "palette text");
-assert(palette.includes('muted: "#7A9A96"'), "palette muted");
+assert(palette.includes('bg: "#F7F8FA"'), "palette bg");
+assert(palette.includes('surface: "#FFFFFF"'), "palette surface");
+assert(palette.includes('text: "#0A0A0A"'), "palette text");
+assert(palette.includes('muted: "#737373"'), "palette muted");
 assert(palette.includes('primary: "#2DD4BF"'), "palette primary teal");
 assert(palette.includes('primaryLabel: "#042F2E"'), "palette primary dark label");
 assert(palette.includes('accent: "#5EEAD4"'), "palette accent");
-assert(palette.includes('demo: "#E8B84A"'), "palette demo");
-assert(palette.includes('danger: "#FB7185"'), "palette danger");
-assert(palette.includes('success: "#34D399"'), "palette success");
+assert(palette.includes('demo: "#B8860B"'), "palette demo");
+assert(palette.includes('danger: "#E11D48"'), "palette danger");
+assert(palette.includes('success: "#059669"'), "palette success");
 assert(wire.includes("PALETTE.primary"), "wire notes primary from palette");
 assert(wire.includes("PALETTE.primaryLabel"), "wire notes label from palette");
 assert(!wire.includes("#ffffff"), "wire notes dropped craft-pack white fill");
@@ -78,22 +82,32 @@ assert(
 );
 assert(!css.includes("background-color: #ffffff !important"), "globals no white primary fill");
 assert(!css.includes("color: #000000 !important"), "globals no black primary label");
-assert(css.includes("--bb-bg: #050A0C"), "handoff --bb-bg");
-assert(css.includes("--bb-surface: #0C1518"), "handoff --bb-surface");
-assert(css.includes("--bb-text: #F4FFFD"), "handoff --bb-text");
-assert(css.includes("--bb-muted: #7A9A96"), "handoff --bb-muted");
+assert(css.includes("--bb-bg: #F7F8FA"), "handoff --bb-bg");
+assert(css.includes("--bb-surface: #FFFFFF"), "handoff --bb-surface");
+assert(css.includes("--bb-text: #0A0A0A"), "handoff --bb-text");
+assert(css.includes("--bb-muted: #737373"), "handoff --bb-muted");
 assert(css.includes("--bb-primary: #2DD4BF"), "handoff --bb-primary");
 assert(css.includes("--bb-primary-fg: #042F2E"), "handoff --bb-primary-fg");
 assert(css.includes("--bb-accent: #5EEAD4"), "handoff --bb-accent");
-assert(css.includes("--bb-demo: #E8B84A"), "handoff --bb-demo");
-assert(css.includes("--bb-danger: #FB7185"), "handoff --bb-danger");
-assert(css.includes("--bb-success: #34D399"), "handoff --bb-success");
+assert(css.includes("--bb-demo: #B8860B"), "handoff --bb-demo");
+assert(css.includes("--bb-line: rgba(0, 0, 0, 0.07)"), "handoff --bb-line");
+assert(css.includes("--bb-veil: rgba(247, 248, 250, 0.78)"), "handoff --bb-veil");
+assert(css.includes("--bb-demo-bg: rgba(232, 184, 74, 0.12)"), "handoff --bb-demo-bg");
+assert(css.includes("--bb-danger: #E11D48"), "handoff --bb-danger");
+assert(css.includes("--bb-success: #059669"), "handoff --bb-success");
+assert(css.includes("--bb-radius: 0.85rem"), "handoff --bb-radius");
 assert(
-  css.includes("--bb-demo: #E8B84A") && css.includes("--bb-primary: #2DD4BF"),
+  css.includes("--bb-demo: #B8860B") && css.includes("--bb-primary: #2DD4BF"),
   "Demo gold distinct from primary CTA teal",
 );
+assert(!css.includes("--bb-bg: #050A0C"), "default bg is not black #050A0C");
 assert(!css.includes("background-color: var(--bb-demo)"), "Demo gold is not CTA fill");
-assert(land.includes("DEMO_PILL_CLASS") || land.includes("bg-demo"), "land Demo pill token");
+assert(
+  land.includes("DEMO_PILL_CLASS") ||
+    chrome.includes("DEMO_PILL_CLASS") ||
+    land.includes("bg-demo"),
+  "land Demo pill token",
+);
 assert(shell.includes("bg-background"), "app shell uses palette bg");
 assert(chrome.includes("bg-background"), "land chrome uses palette bg");
 assert(demoBadge.includes("DEMO_PILL_CLASS"), "Demo badge uses demo token");
@@ -120,7 +134,10 @@ for (const [name, src, needle] of primaryBlocks) {
 assert(brand.includes('trustLine: "Demo · $1,000 gate · every deal needs your approval"'), "CPO trust line");
 assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock");
 assert(land.includes("BRAND.trustLine"), "land renders trust line under CTAs");
-assert(land.includes("BRAND.pocBanner"), "land keeps POC pill");
+assert(
+  land.includes("BRAND.pocBanner") || chrome.includes("BRAND.pocBanner"),
+  "land keeps POC pill",
+);
 assert(signup.includes("BRAND.pocBanner"), "signup Demo pill");
 assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("Continue"), "signup Continue label");
@@ -139,15 +156,33 @@ assert(!proof.includes("CHO-gated"), "public proof caption has no CHO-gated");
 assert(!proof.includes("verified_at"), "public proof caption has no verified_at");
 
 assert(chrome.includes("hasPublicSession"), "nav gates My deals on session");
-assert(chrome.includes("My deals"), "My deals still exists after session");
+assert(chrome.includes("MY_DEALS_LABEL") || chrome.includes("My deals"), "My deals still exists after session");
 
 assert(empty.includes("GO_LIVE_PRIMARY_LABEL"), "Searching empty uses Run BotBuy lock");
 assert(empty.includes('SEARCHING_EMPTY_SECONDARY = "Edit intent"'), "Searching Edit intent");
 assert(empty.includes('NEEDS_YOU_CTA = "Review gates"'), "Needs-you Review gates");
 assert(empty.includes('AGENTS_EMPTY_SECONDARY = "See how activation works"'), "Agents empty secondary");
 assert(empty.includes('"/deals?status=Closed"'), "Agents empty → Closed deals");
-assert(home.includes("SearchingEmpty"), "home Searching empty");
-assert(home.includes("NeedsYouCta"), "home Needs-you CTA");
+assert(home.includes("DealsTable"), "My deals dense table");
+assert(home.includes("MY_DEALS_LABEL") || home.includes("My deals"), "My deals is /home");
+assert(home.includes("APPROVE_MICRO") || home.includes("BotBuy only runs what you approve."), "home approve micro");
+assert(home.includes("no invented GMV"), "My deals invents no GMV");
+assert(dealDetail.includes("DealApproveActions"), "deal detail Approve/Reject");
+assert(dealDetail.includes("auto-approve OFF"), "deal detail auto-approve OFF");
+const demoNeedsYou = read("lib/demo-needs-you.ts");
+assert(demoNeedsYou.includes('status: "Needs you"'), "demo Needs you fixture status");
+assert(store.includes("ensureDemoNeedsYou") || store.includes("DEMO_NEEDS_YOU"), "store seeds Needs you demo");
+assert(approveUi.includes("APPROVE_LABEL") && approveUi.includes("REJECT_LABEL"), "Needs you ships Approve and Reject");
+assert(approveUi.includes("APPROVE_MICRO"), "approve micro on Needs you actions");
+assert(!approveUi.includes("{compact ? null"), "compact does not hide Reject");
+assert(vaultLib.includes('VAULT_H1 = "Add a payment method"'), "vault H1 lock");
+assert(!vaultPage.includes("Fund your vault"), "vault page has no Fund your vault");
+assert(!vaultPage.toLowerCase().includes("balance"), "vault page has no balance");
+assert(vaultApi.includes("VAULT_H1"), "vault API uses VAULT_H1");
+assert(chrome.includes("BRAND.pocBanner") || chrome.includes("POC · Demo · not live"), "land header Demo pill");
+assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuy only runs what you approve."), "go-live approve micro");
+assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
+assert(existsSync(join(root, "public/brand/botbuy-logo-header-light.svg")), "light Vault lockup committed");
 assert(agents.includes("AgentsEmptySecondary"), "agents empty secondary");
 
 const financeIdx = admin.indexOf("<CardTitle>Finance</CardTitle>");
@@ -227,7 +262,7 @@ const LAND_META =
   "Set spend, intent, and a payment method. BotBuy executes what you approve.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
-assert(brand.includes("heroSub: LAND_META_LINE"), "land H1 subcopy uses locked one-liner");
+assert(brand.includes("hero: LAND_META_LINE"), "land H1 is locked one-liner");
 assert(!brand.includes("Vault it."), "brand has no Vault it");
 assert(!/\band vault\b/.test(brand), "brand has no and vault");
 assert(!land.includes("Vault it"), "land page source has no Vault it");
@@ -246,10 +281,26 @@ assert(
   brand.includes('body: "Link how we pay at purchase. We don’t hold a balance."'),
   "how-it-works step 3 body lock",
 );
+assert(
+  brand.includes(
+    "Set spend, intent, and a payment method. BotBuy executes what you approve.",
+  ),
+  "land/meta one-liner lock",
+);
+assert(!brand.includes("Set spend, intent, and vault"), "old vault land line removed");
+assert(!brand.includes("Vault it"), "Vault it removed from land brand copy");
+assert(!land.includes("Vault it"), "land has no Vault it");
+assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold");
 assert(land.includes("HowItWorksRail"), "land keeps How it works rail");
-assert(land.includes("VaultCardsBackdrop"), "land vault-cards fold backdrop");
-assert(land.includes("ProofStrip"), "land ProofStrip not replaced by vault cards");
-assert(shell.includes("VaultCardsBackdrop"), "app shell vault-cards backdrop");
+assert(land.includes("ProofStrip"), "land ProofStrip stays");
+assert(land.includes("techlux-air") || chrome.includes("techlux-air") || css.includes("land-bg-techlux-air"), "land uses techlux-air");
+assert(css.includes(".bb-land-veil") && css.includes("var(--bb-veil)"), "land veil token");
+assert(
+  land.includes("LAND_FINDABILITY") ||
+    land.includes("After you sign in, your deals live in"),
+  "land My deals findability",
+);
+assert(!shell.includes("VaultCardsBackdrop"), "app shell is clean light chrome");
 assert(vaultBg.includes('data-bg="vault-cards"'), "vault cards decorative marker");
 assert(vaultBg.includes('aria-hidden="true"'), "vault cards are decorative");
 assert(vaultBg.includes("bb-vault-rail"), "vault rail class");
@@ -275,13 +326,13 @@ assert(css.includes("@media (max-width: 767px)"), "vault rail hides below 768px"
 assert(!css.includes("filter: drop-shadow") && !css.includes("text-shadow"), "no glow filters");
 assert(how.includes("HOW_IT_WORKS.steps"), "how rail uses locked steps");
 assert(how.includes("HOW_IT_WORKS.heading"), "how rail uses locked heading");
-assert(css.includes("--line: color-mix(in srgb, var(--bb-text) 6%, transparent)"), "Quiet Capital 6% rings");
+assert(css.includes("--line: var(--bb-line)"), "Techlux hairline --bb-line");
 assert(css.includes("clamp(2.5rem, 5vw, 3.75rem)"), "Quiet Capital display H1");
 assert(css.includes("font-size: 1.0625rem"), "Quiet Capital body size");
 assert(css.includes("line-height: 1.65"), "Quiet Capital body leading");
 assert(
-  tokens.includes("var(--bb-demo)_9%") && tokens.includes("var(--bb-demo)_25%"),
-  "Demo pill calmer 9% wash / 25% ring",
+  tokens.includes("bb-demo-bg") && tokens.includes("text-demo"),
+  "Demo pill uses --bb-demo-bg + demo text",
 );
 assert(emptyUi.includes("px-5 py-8"), "empty panel air py-8 px-5");
 assert(emptyUi.includes("text-base font-medium"), "empty title text-base font-medium");
@@ -298,7 +349,7 @@ assert(wire.includes("Quiet Capital"), "wire notes record Quiet Capital HOLD cra
 assert(wire.includes("Not a public launch"), "Quiet Capital docs stay HOLD");
 assert(wire.includes(".bb-vault-rail"), "wire notes record Designer vault-rail spec");
 assert(wire.includes("never letter-B"), "wire notes keep Vault mark — no letter-B");
-assert(lockup.includes("/brand/botbuy-logo-header.svg"), "BrandLockup uses header lockup SVG");
+assert(lockup.includes("/brand/botbuy-logo-header-light.svg"), "BrandLockup uses light Vault lockup SVG");
 assert(lockup.includes('alt="BotBuy"'), "BrandLockup accessible alt");
 assert(shell.includes("BrandLockup"), "app shell Vault header lockup");
 assert(chrome.includes("BrandLockup"), "public chrome Vault header lockup");
@@ -411,8 +462,8 @@ assert(siteFooter.includes("SITE_FOOTER_LINKS"), "footer uses locked links");
 assert(read("components/markdown-prose.tsx").includes("mailto:${LEGAL_CONTACT_EMAIL}"), "legal email mailto");
 assert(notFound.includes("SITE_EMPTY.notFoundTitle"), "404 uses CPO copy");
 assert(notFound.includes('href="/"'), "404 Back home → /");
-assert(css.includes("--bb-bg: #050A0C"), "no light theme flip — Electric Teal bg");
-assert(!css.includes(":root {\n  --bb-bg: #fff") && !css.includes("--bb-bg: #FFFFFF"), "no light bg");
+assert(css.includes("--bb-bg: #F7F8FA"), "default shell is G Techlux light");
+assert(!css.includes("--bb-bg: #050A0C"), "black is not the default bg");
 assert(css.includes(".bb-prose"), "legal prose styles");
 assert(!siteFooter.includes("Namecheap"), "footer row has no Namecheap");
 assert(!siteFooter.includes("Run BotBuy"), "footer does not compete with Run BotBuy");
@@ -424,14 +475,15 @@ if (failures.length) {
 }
 
 console.log("craft-smoke PASS");
-console.log(" - electric-teal primary #2DD4BF / #042F2E ≥4.5:1");
+console.log(" - g-techlux light #F7F8FA · teal #2DD4BF / #042F2E ≥4.5:1");
+console.log(" - land/meta one-liner payment method lock · no Vault it");
 console.log(" - go-live Run BotBuy present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
 console.log(" - Admin Finance/Deals above stubs");
 console.log(" - GMV=0 · verified $179.96");
 console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");
-console.log(" - soft-signal HOLD · Demo pill #E8B84A");
-console.log(" - Quiet Capital craft · vault-cards backdrop · 3-card how · no glow");
+console.log(" - soft-signal HOLD · Demo pill #B8860B");
+console.log(" - Quiet Capital type · techlux-air + veil · no glow");
 console.log(" - Vault mark+wordmark header · favicon/PWA/OG wired");
 console.log(" - site pages /privacy /terms /about /beta /contact · footer lock");

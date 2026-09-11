@@ -6,7 +6,7 @@ import {
 } from "@/lib/designer-wire-notes";
 import { PALETTE, PRIMARY_CONTRAST_RATIO } from "@/lib/palette";
 
-/** Primary CTA token. Contrast is a P0 — never render blank on dark chrome. */
+/** Primary CTA token. Contrast is a P0 — teal jewelry on light or dark. */
 export const PRIMARY_BUTTON_BG = DESIGNER_PRIMARY_BG;
 export const PRIMARY_BUTTON_FG = DESIGNER_PRIMARY_FG;
 
@@ -21,13 +21,12 @@ export const PRIMARY_CONTRAST = {
   min: 4.5,
 } as const;
 
-/** Demo gold (--bb-demo). Distinct from primary CTA teal (--bb-primary). */
+/** Demo gold (--bb-demo #B8860B) on --bb-demo-bg. Not alarm. */
 export const DEMO_PILL_CLASS =
-  "text-demo bg-[color-mix(in_srgb,var(--bb-demo)_9%,transparent)] ring-[color-mix(in_srgb,var(--bb-demo)_25%,transparent)]";
+  "bg-[var(--bb-demo-bg)] text-demo ring-[var(--bb-line)]";
 
-/** Quiet Capital default ring — ~6% text mix, not a hard sticker. */
-export const SURFACE_RING_CLASS =
-  "ring-1 ring-[color-mix(in_srgb,var(--bb-text)_6%,transparent)]";
+/** G Techlux hairline — --bb-line rgba(0,0,0,.07). */
+export const SURFACE_RING_CLASS = "ring-1 ring-[var(--bb-line)]";
 
 export const THEME_BG = PALETTE.bg;
 export const THEME_SURFACE = PALETTE.surface;

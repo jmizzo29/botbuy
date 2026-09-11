@@ -1,21 +1,26 @@
 /**
- * John LOCKED SoT — designer-palette-variations-v1.md §2 Electric Teal.
- * Soft-signal HOLD. Do not treat this as a launch palette.
+ * John LOCKED SoT — G Techlux light shell (2026-09-11).
+ * Soft-signal HOLD. Teal jewelry CTA unchanged. Not a launch palette.
  */
-export const PALETTE_ID = "electric-teal" as const;
+export const PALETTE_ID = "g-techlux" as const;
 export const PALETTE_SIGNAL = "HOLD" as const;
 
 export const PALETTE = {
-  bg: "#050A0C",
-  surface: "#0C1518",
-  text: "#F4FFFD",
-  muted: "#7A9A96",
+  bg: "#F7F8FA",
+  surface: "#FFFFFF",
+  text: "#0A0A0A",
+  muted: "#737373",
   primary: "#2DD4BF",
   primaryLabel: "#042F2E",
   accent: "#5EEAD4",
-  demo: "#E8B84A",
-  danger: "#FB7185",
-  success: "#34D399",
+  demo: "#B8860B",
+  demoBg: "rgba(232, 184, 74, 0.12)",
+  line: "rgba(0,0,0,.07)",
+  veil: "rgba(247,248,250,.78)",
+  danger: "#E11D48",
+  success: "#059669",
+  radius: "0.85rem",
+  radiusPill: "999px",
 } as const;
 
 /** Designer token handoff SoT — exact CSS custom properties. */
@@ -28,6 +33,9 @@ export const CSS_VARS = {
   primaryFg: "--bb-primary-fg",
   accent: "--bb-accent",
   demo: "--bb-demo",
+  demoBg: "--bb-demo-bg",
+  line: "--bb-line",
+  veil: "--bb-veil",
   danger: "--bb-danger",
   success: "--bb-success",
 } as const;
@@ -64,6 +72,6 @@ export const PRIMARY_CONTRAST_RATIO = contrastRatio(
 
 if (PRIMARY_CONTRAST_RATIO < 4.5) {
   throw new Error(
-    `electric-teal primary contrast ${PRIMARY_CONTRAST_RATIO.toFixed(2)}:1 is below 4.5:1`,
+    `g-techlux primary contrast ${PRIMARY_CONTRAST_RATIO.toFixed(2)}:1 is below 4.5:1`,
   );
 }

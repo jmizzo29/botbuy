@@ -1,28 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  /* Designer token handoff SoT — Electric Teal. Soft-signal HOLD. */
-  --bb-bg: #050A0C;
-  --bb-surface: #0C1518;
-  --bb-text: #F4FFFD;
-  --bb-muted: #7A9A96;
+  /* Designer token handoff SoT — G Techlux light. Soft-signal HOLD. */
+  --bb-bg: #F7F8FA;
+  --bb-surface: #FFFFFF;
+  --bb-text: #0A0A0A;
+  --bb-muted: #737373;
   --bb-primary: #2DD4BF;
   --bb-primary-fg: #042F2E;
   --bb-accent: #5EEAD4;
-  --bb-demo: #E8B84A;
-  --bb-danger: #FB7185;
-  --bb-success: #34D399;
+  --bb-demo: #B8860B;
+  --bb-demo-bg: rgba(232, 184, 74, 0.12);
+  --bb-danger: #E11D48;
+  --bb-success: #059669;
+  --bb-line: rgba(0, 0, 0, 0.07);
+  --bb-veil: rgba(247, 248, 250, 0.78);
+  --bb-radius: 0.85rem;
+  --bb-radius-pill: 999px;
 
   --bg: var(--bb-bg);
   --bg-elevated: var(--bb-surface);
-  --bg-soft: #102024;
+  --bg-soft: #EEF0F3;
   --fg: var(--bb-text);
   --muted: var(--bb-muted);
-  --faint: #5C7874;
-  --line: color-mix(in srgb, var(--bb-text) 6%, transparent);
-  --line-strong: color-mix(in srgb, var(--bb-text) 12%, transparent);
+  --faint: #8A8A8A;
+  --line: var(--bb-line);
+  --line-strong: rgba(0, 0, 0, 0.12);
   --accent: var(--bb-accent);
-  --accent-dim: color-mix(in srgb, var(--bb-accent) 12%, transparent);
+  --accent-dim: color-mix(in srgb, var(--bb-primary) 12%, transparent);
   --primary: var(--bb-primary);
   --primary-fg: var(--bb-primary-fg);
   --demo: var(--bb-demo);
@@ -185,6 +190,41 @@ body {
   .bb-vault-rail {
     display: none;
   }
+}
+
+.bb-land-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  background: var(--bb-bg);
+}
+
+.bb-land-air {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--bb-bg)
+    url("/brand/techlux/land-bg-techlux-air.png") center / cover no-repeat;
+  pointer-events: none;
+}
+
+.bb-land-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    var(--bb-veil) 0%,
+    var(--bb-veil) 38%,
+    rgba(247, 248, 250, 0.42) 62%,
+    transparent 82%
+  );
+  pointer-events: none;
+}
+
+.bb-land-content {
+  position: relative;
+  z-index: 2;
 }
 
 .hairline {

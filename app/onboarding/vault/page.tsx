@@ -15,10 +15,10 @@ export default function OnboardingVaultPage() {
     <div className="space-y-6">
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">{VAULT_H1}</h1>
-        <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+        <p className="mt-2 text-sm leading-relaxed text-muted">
           {VAULT_SUB}
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+        <p className="mt-2 text-sm leading-relaxed text-muted">
           {VAULT_TRUST}
         </p>
       </header>
@@ -31,8 +31,8 @@ export default function OnboardingVaultPage() {
         <Link href="/onboarding/go-live">Continue</Link>
       </Button>
       {!ready ? (
-        <p className="text-xs text-zinc-500">
-          Run stays locked until an Available method is on the vault.
+        <p className="text-xs text-muted">
+          Run stays locked until an Available method is on file.
         </p>
       ) : null}
     </div>

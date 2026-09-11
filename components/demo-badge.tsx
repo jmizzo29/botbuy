@@ -14,7 +14,7 @@ const copy: Record<MetricSource, { label: string; className: string }> = {
   },
   derived_seed: {
     label: "Derived from seed",
-    className: "bg-zinc-500/15 text-zinc-200 ring-zinc-400/20",
+    className: "bg-black/[0.04] text-muted ring-[var(--bb-line)]",
   },
   live: {
     label: "Live",

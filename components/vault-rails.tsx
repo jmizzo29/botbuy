@@ -16,7 +16,7 @@ export function VaultRails() {
 
   return (
     <div className="space-y-4">
-      <ul className="divide-y divide-white/6">
+      <ul className="divide-y divide-[var(--bb-line)]">
         {VAULT_FUND_IN_RAILS.map((rail) => (
           <li
             key={rail.id}
@@ -24,7 +24,7 @@ export function VaultRails() {
           >
             <div>
               <p className="text-sm font-medium">{rail.label}</p>
-              <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+              <p className="mt-1 text-xs leading-relaxed text-muted">
                 {rail.detail}
               </p>
             </div>
@@ -40,12 +40,12 @@ export function VaultRails() {
         + Add payment method
       </Button>
       {addNote ? (
-        <p className="text-xs leading-relaxed text-amber-200/90">
+        <p className="text-xs leading-relaxed text-demo">
           HOLD. New rails attach here when built and CHO-cleared. Not live.
         </p>
       ) : null}
-      <p className="text-sm text-zinc-300">{vaultReadyCopy(ready)}</p>
-      <p className="text-xs leading-relaxed text-zinc-500">{VAULT_HOLD_NOTE}</p>
+      <p className="text-sm text-muted">{vaultReadyCopy(ready)}</p>
+      <p className="text-xs leading-relaxed text-muted">{VAULT_HOLD_NOTE}</p>
     </div>
   );
 }
@@ -61,8 +61,8 @@ function RailBadge({
     <Badge
       className={
         badge === "Available"
-          ? "bg-emerald-500/10 text-emerald-200 ring-emerald-400/25"
-          : "bg-zinc-500/10 text-zinc-400 ring-zinc-500/20"
+          ? "bg-success/10 text-success ring-success/20"
+          : "bg-black/[0.04] text-muted ring-[var(--bb-line)]"
       }
     >
       {badge === "Available" && !live ? "Available ≠ live" : badge}

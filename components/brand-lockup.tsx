@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-/** Locked Vault mark + BotBuy wordmark. Dark chrome only. */
+/** Locked Vault mark + BotBuy wordmark. Light Techlux header. */
 export function BrandLockup({
   priority = false,
 }: {
@@ -8,7 +8,7 @@ export function BrandLockup({
 }) {
   return (
     <Image
-      src="/brand/botbuy-logo-header.svg"
+      src="/brand/botbuy-logo-header-light.svg"
       alt="BotBuy"
       width={160}
       height={36}

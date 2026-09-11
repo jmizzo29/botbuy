@@ -36,7 +36,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 
 | Route | What |
 | --- | --- |
-| `/` | Land — H1 + `POC · Demo · not live` + trust line `Demo · $1,000 gate · every deal needs your approval` + Designer Vault cards rail (`.bb-vault-rail`) + How it works 3-card rail + empty ProofStrip. Quiet Capital craft · Electric Teal LOCKED · soft-signal HOLD |
+| `/` | Land — G Techlux light · locked one-liner `Set spend, intent, and a payment method. BotBuy executes what you approve.` + `POC · Demo · not live` + trust line + techlux-air + veil + How it works 3-card rail + empty ProofStrip. Vault is logo only. Soft-signal HOLD |
 | `/signup` | Signup one-liner |
 | `/onboarding/intent` | Set intent — software-first John templates |
 | `/onboarding/spend` | Set spend |
