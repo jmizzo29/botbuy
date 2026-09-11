@@ -3,7 +3,8 @@ import { listDeals } from "@/lib/store";
 import type { ProofStats } from "@/lib/types";
 
 /**
- * CHO-gated public proof. verified_at null → honest empty.
+ * CHO-gated public proof / proof.stats.
+ * verified_at null → honest empty.
  * source=imported rows are never included — including CHO-cleared
  * personal verified $ (deal_botbuyer_ai $179.96 is not platform traction).
  * Zeros only after CHO verifies live platform aggregates.

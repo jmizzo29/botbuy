@@ -46,7 +46,12 @@ export function DealCard({ deal }: { deal: Deal }) {
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-500">
         <span>Opened {formatDate(deal.openedAt)}</span>
         {deal.closedAt ? <span>Closed {formatDate(deal.closedAt)}</span> : null}
-        {deal.receipt ? <span>Order {deal.receipt.order_id}</span> : null}
+        {deal.receipt ? (
+          <span>
+            Order {deal.receipt.order_id}
+            {deal.receipt.txn_id ? ` · txn ${deal.receipt.txn_id}` : ""}
+          </span>
+        ) : null}
         {deal.escrow ? <span>Escrow {deal.escrow.transaction_id}</span> : null}
       </div>
       {isImported(deal) ? (

@@ -252,7 +252,7 @@ export function seedDealEvents(deal: Deal): DealEvent[] {
       dealId: deal.id,
       type: "import",
       title: "Imported ledger",
-      detail: `source=imported · agent_executed=${deal.agentExecuted} · amount_status=${deal.amountStatus}`,
+      detail: `source=${deal.source} · agent_executed=${deal.agentExecuted} · price_verified=${deal.priceVerified} · amount_status=${deal.amountStatus} · amount_verified=${deal.amountVerified}`,
       at: deal.openedAt,
       status: "done",
       actor: "imported",
@@ -284,6 +284,7 @@ export const ledgerMeta = {
   choReview: ledgerJson.cho_review,
 };
 
+/** Seed SoT: data/john-deal-ledger.json. Re-import on boot. */
 export function loadLedgerDeals(): Deal[] {
   const deals = ledgerJson.deals.map(mapDeal);
   assertJohnLedger(deals);

@@ -3,18 +3,19 @@ import type { Deal } from "@/lib/types";
 export const HISTORY_MICRO =
   "Added from your history. BotBuy didn’t execute this purchase.";
 
+/**
+ * CTO ledger SoT for the price component.
+ * UI may render $ only when price_verified && amount_status === "verified".
+ * deal_botbuyer_ai → $179.96. Savedfast + xfer stay soft.
+ */
 export function isVerifiedAmount(
-  deal: Pick<Deal, "priceVerified" | "amountVerified" | "amountStatus">,
+  deal: Pick<Deal, "priceVerified" | "amountStatus">,
 ) {
-  return (
-    deal.priceVerified &&
-    deal.amountVerified &&
-    deal.amountStatus === "verified"
-  );
+  return deal.priceVerified && deal.amountStatus === "verified";
 }
 
 export function amountCopy(
-  deal: Pick<Deal, "priceVerified" | "amountVerified" | "amountStatus">,
+  deal: Pick<Deal, "priceVerified" | "amountStatus">,
 ) {
   if (isVerifiedAmount(deal)) return null;
   if (deal.amountStatus === "pending_verify") return "Amount pending verify";
@@ -27,14 +28,7 @@ export function isImported(deal: Pick<Deal, "source">) {
 
 /** Personal imported history is never platform traction. */
 export function isPublicProofEligible(
-  deal: Pick<
-    Deal,
-    | "id"
-    | "source"
-    | "priceVerified"
-    | "amountVerified"
-    | "amountStatus"
-  >,
+  deal: Pick<Deal, "id" | "source" | "priceVerified" | "amountStatus">,
 ) {
   if (isImported(deal)) return false;
   if (deal.id === "deal_botbuyer_ai") return false;
