@@ -87,12 +87,20 @@ export function InstallHint() {
 
   async function install() {
     if (deferred) {
-      await deferred.prompt();
-      await deferred.userChoice.catch(() => undefined);
-      setDeferred(null);
-      setDismissed(true);
-      persistDismiss();
-      return;
+      try {
+        await deferred.prompt();
+        const choice = await deferred.userChoice.catch(() => ({
+          outcome: "dismissed" as const,
+        }));
+        setDeferred(null);
+        if (choice.outcome === "accepted") {
+          setDismissed(true);
+          persistDismiss();
+          return;
+        }
+      } catch {
+        setDeferred(null);
+      }
     }
     setHowTo(true);
   }

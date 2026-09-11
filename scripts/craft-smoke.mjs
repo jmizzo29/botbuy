@@ -424,6 +424,7 @@ assert(
 const a2hs = read("components/install-hint.tsx");
 const techlux = read("lib/cpo-techlux.ts");
 assert(a2hs.includes("beforeinstallprompt"), "A2HS listens for beforeinstallprompt");
+assert(a2hs.includes("setHowTo(true)"), "A2HS how-to opens when native install is unavailable or canceled");
 assert(a2hs.includes("A2HS_COPY"), "A2HS uses locked copy");
 assert(a2hs.includes("persistDismiss") || a2hs.includes("localStorage"), "A2HS dismiss persists");
 assert(techlux.includes("not an App Store or Play listing"), "A2HS copy is Demo-honest");
