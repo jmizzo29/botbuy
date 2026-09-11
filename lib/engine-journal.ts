@@ -1,14 +1,15 @@
-import type { Deal, DealEvent } from "@/lib/types";
+import type { Deal, DealEvent, UsageEvent } from "@/lib/types";
 
 export const ENGINE_JOURNAL_COOKIE = "bb_engine_journal";
 
 export interface EngineJournal {
   deals: Deal[];
   events: DealEvent[];
+  usage: UsageEvent[];
 }
 
 export function emptyJournal(): EngineJournal {
-  return { deals: [], events: [] };
+  return { deals: [], events: [], usage: [] };
 }
 
 function decodeJournal(raw: string | null | undefined): EngineJournal {
@@ -18,6 +19,7 @@ function decodeJournal(raw: string | null | undefined): EngineJournal {
     return {
       deals: Array.isArray(parsed.deals) ? parsed.deals : [],
       events: Array.isArray(parsed.events) ? parsed.events : [],
+      usage: Array.isArray(parsed.usage) ? parsed.usage : [],
     };
   } catch {
     return emptyJournal();
@@ -28,12 +30,14 @@ export function encodeJournal(journal: EngineJournal): string {
   return JSON.stringify({
     deals: journal.deals,
     events: journal.events,
+    usage: journal.usage ?? [],
   });
 }
 
 export function mergeJournals(...journals: EngineJournal[]): EngineJournal {
   const deals = new Map<string, Deal>();
   const events = new Map<string, DealEvent>();
+  const usage = new Map<string, UsageEvent>();
   for (const journal of journals) {
     for (const deal of journal.deals) {
       const current = deals.get(deal.id);
@@ -44,12 +48,18 @@ export function mergeJournals(...journals: EngineJournal[]): EngineJournal {
     for (const event of journal.events) {
       events.set(event.id, event);
     }
+    for (const row of journal.usage ?? []) {
+      usage.set(row.id, row);
+    }
   }
   return {
     deals: [...deals.values()].sort(
       (a, b) => +new Date(b.openedAt) - +new Date(a.openedAt),
     ),
     events: [...events.values()].sort((a, b) => +new Date(a.at) - +new Date(b.at)),
+    usage: [...usage.values()].sort(
+      (a, b) => +new Date(a.startedAt) - +new Date(b.startedAt),
+    ),
   };
 }
 

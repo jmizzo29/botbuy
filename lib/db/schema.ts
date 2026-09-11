@@ -174,6 +174,28 @@ export const dealEvents = pgTable("deal_events", {
   actor: text("actor").notNull().default("imported"),
 });
 
+/** Coarse usage meter v0. Estimate until CHO promote. Never store Actual $. */
+export const usageEvents = pgTable("usage_events", {
+  id: text("id").primaryKey(),
+  dealId: text("deal_id").notNull(),
+  runId: text("run_id").notNull(),
+  phase: text("phase").notNull(),
+  stage: text("stage").notNull(),
+  modelCalls: integer("model_calls").notNull(),
+  toolCalls: integer("tool_calls").notNull(),
+  tokensEstInput: integer("tokens_est_input"),
+  tokensEstOutput: integer("tokens_est_output"),
+  tokensEstTotal: integer("tokens_est_total"),
+  provider: text("provider").notNull().default("unknown"),
+  model: text("model").notNull().default("unknown"),
+  startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
+  endedAt: timestamp("ended_at", { withTimezone: true }),
+  status: text("status").notNull(),
+  costKind: text("cost_kind").notNull().default("estimate"),
+  billed: boolean("billed").notNull().default(false),
+  live: boolean("live").notNull().default(false),
+});
+
 export const proofSnapshots = pgTable("proof_snapshots", {
   id: text("id").primaryKey(),
   verifiedAt: timestamp("verified_at", { withTimezone: true }),

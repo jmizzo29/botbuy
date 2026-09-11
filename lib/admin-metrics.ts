@@ -4,10 +4,17 @@ import { getOwnerFinance } from "@/lib/finance";
 import {
   listDeals,
   listedUnverifiedUsd,
+  listUsageEvents,
   verifiedSpendUsd,
   getSpendLimits,
 } from "@/lib/store";
 import { DEAL_STATUSES, type AdminMetrics, type DealStatus } from "@/lib/types";
+import {
+  rollupUsageByDay,
+  rollupUsageTotals,
+  USAGE_DEMO_BADGE,
+  USAGE_HOLD_NOTE,
+} from "@/lib/usage";
 
 export function getAdminMetrics(): AdminMetrics {
   const deals = listDeals();
@@ -30,6 +37,7 @@ export function getAdminMetrics(): AdminMetrics {
   const agentRunsExecuted = deals.filter((deal) => deal.agentExecuted).length;
   const limits = getSpendLimits();
   const finance = getOwnerFinance(deals);
+  const usageEvents = listUsageEvents();
 
   return {
     live: false,
@@ -105,6 +113,16 @@ export function getAdminMetrics(): AdminMetrics {
       burnMonthlyUsd: finance.burn.monthlyUsd,
       runwayMonths: finance.runway.months,
       note: finance.note,
+    },
+    usage: {
+      live: false,
+      badge: USAGE_DEMO_BADGE,
+      source: "stub",
+      costKind: "estimate",
+      billed: false,
+      days: rollupUsageByDay(usageEvents),
+      totals: rollupUsageTotals(usageEvents),
+      note: USAGE_HOLD_NOTE,
     },
   };
 }

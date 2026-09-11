@@ -22,6 +22,10 @@ import {
   clampSpendUsd,
 } from "@/lib/spend-policy";
 import { assertTransition, TransitionError } from "@/lib/status-engine";
+import {
+  assertUsageNeverActual,
+  buildSearchingUsageStub,
+} from "@/lib/usage";
 import type {
   AuditLog,
   Deal,
@@ -29,6 +33,7 @@ import type {
   DealStatus,
   Intent,
   SpendLimits,
+  UsageEvent,
   User,
   VaultRef,
 } from "@/lib/types";
@@ -44,6 +49,7 @@ type EngineMemory = EngineJournal & { hydrated: boolean };
 const engineMemory: EngineMemory = {
   deals: [],
   events: [],
+  usage: [],
   hydrated: false,
 };
 
@@ -53,6 +59,9 @@ function engineState(): EngineMemory {
   };
   if (!globalStore.__botbuyEngine) {
     globalStore.__botbuyEngine = engineMemory;
+  }
+  if (!globalStore.__botbuyEngine.usage) {
+    globalStore.__botbuyEngine.usage = [];
   }
   return globalStore.__botbuyEngine;
 }
@@ -70,20 +79,66 @@ function replaceEngine(journal: EngineJournal) {
   const engine = engineState();
   engine.deals = journal.deals.filter((deal) => deal.source === "engine");
   engine.events = journal.events;
+  engine.usage = journal.usage ?? [];
   engine.hydrated = true;
+}
+
+function rememberUsage(event: UsageEvent) {
+  assertUsageNeverActual(event);
+  const engine = engineState();
+  engine.usage = [
+    ...engine.usage.filter((row) => row.id !== event.id),
+    event,
+  ];
+}
+
+export function listUsageEvents(dealId?: string): UsageEvent[] {
+  return engineState()
+    .usage.filter((row) => (dealId ? row.dealId === dealId : true))
+    .slice()
+    .sort((a, b) => +new Date(a.startedAt) - +new Date(b.startedAt));
+}
+
+export function ensureSearchingUsageStub(deal: Deal): UsageEvent {
+  const existing = listUsageEvents(deal.id).find(
+    (row) => row.phase === "search" && row.dealId === deal.id,
+  );
+  if (existing) {
+    assertUsageNeverActual(existing);
+    return existing;
+  }
+  const event = buildSearchingUsageStub(deal);
+  rememberUsage(event);
+  return event;
+}
+
+function ensureEngineUsageStubs() {
+  for (const deal of engineState().deals) {
+    if (deal.status === "Searching" || isEngineRunDealId(deal.id)) {
+      ensureSearchingUsageStub(deal);
+    }
+  }
 }
 
 export async function hydrateStore() {
   const engine = engineState();
   const durable = await readDurableJournal();
   replaceEngine(
-    mergeJournals({ deals: engine.deals, events: engine.events }, durable),
+    mergeJournals(
+      { deals: engine.deals, events: engine.events, usage: engine.usage },
+      durable,
+    ),
   );
+  ensureEngineUsageStubs();
 }
 
 export async function persistEngineStore() {
   const engine = engineState();
-  await writeDurableJournal({ deals: engine.deals, events: engine.events });
+  await writeDurableJournal({
+    deals: engine.deals,
+    events: engine.events,
+    usage: engine.usage ?? [],
+  });
 }
 
 function rememberEngineDeal(deal: Deal, events: DealEvent[]) {
@@ -107,11 +162,13 @@ function materializeRunDeal(id = RUN_SEARCHING_DEAL_ID): Deal {
     engineState().deals.find((deal) => deal.id === RUN_SEARCHING_DEAL_ID);
   if (existing) {
     assertRunDealSoftHold(existing);
+    ensureSearchingUsageStub(existing);
     return existing;
   }
   const deal = runDealFromIntent(listIntents()[0], id);
   assertRunDealSoftHold(deal);
   rememberEngineDeal(deal, seedRunDealEvents(deal, getSignupSession()?.email));
+  ensureSearchingUsageStub(deal);
   return deal;
 }
 
@@ -274,6 +331,7 @@ export async function createSearchingDealFromRun(): Promise<Deal> {
   const reused = openSearchingEngineDeal();
   if (reused) {
     assertRunDealSoftHold(reused);
+    ensureSearchingUsageStub(reused);
     await persistEngineStore();
     return reused;
   }
@@ -286,6 +344,7 @@ export async function createSearchingDealFromRun(): Promise<Deal> {
   const deal = runDealFromIntent(intent, id);
   assertRunDealSoftHold(deal);
   rememberEngineDeal(deal, seedRunDealEvents(deal, signup?.email));
+  ensureSearchingUsageStub(deal);
   auditLogs.unshift({
     id: `aud_${crypto.randomUUID().slice(0, 8)}`,
     userId: DEMO_USER.id,

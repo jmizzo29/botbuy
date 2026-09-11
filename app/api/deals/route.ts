@@ -4,6 +4,7 @@ import {
   hydrateStore,
   listDealEvents,
   listDeals,
+  listUsageEvents,
 } from "@/lib/store";
 import { isVaultReady } from "@/lib/vault-rails";
 
@@ -21,7 +22,11 @@ export async function POST() {
   }
   const deal = await createSearchingDealFromRun();
   return NextResponse.json(
-    { deal, events: listDealEvents(deal.id) },
+    {
+      deal,
+      events: listDealEvents(deal.id),
+      usage: listUsageEvents(deal.id),
+    },
     { status: 201 },
   );
 }
