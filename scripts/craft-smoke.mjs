@@ -24,6 +24,11 @@ const agents = read("app/(app)/agents/page.tsx");
 const goLive = read("app/onboarding/go-live/page.tsx");
 const admin = read("app/(app)/admin/page.tsx");
 const finance = read("lib/finance.ts");
+const usage = read("lib/usage.ts");
+const store = read("lib/store.ts");
+const journal = read("lib/engine-journal.ts");
+const dealDetail = read("app/(app)/deals/[id]/page.tsx");
+const usageUi = read("components/usage-meter.tsx");
 const brand = read("lib/brand.ts");
 const empty = read("lib/empty-cta.ts");
 const wire = read("lib/designer-wire-notes.ts");
@@ -95,17 +100,37 @@ assert(agents.includes("AgentsEmptySecondary"), "agents empty secondary");
 
 const financeIdx = admin.indexOf("<CardTitle>Finance</CardTitle>");
 const dealsIdx = admin.indexOf("<CardTitle>Deals ops</CardTitle>");
+const usageIdx = admin.indexOf("<AdminUsageRollup");
 const trafficIdx = admin.indexOf("<CardTitle>Web traffic</CardTitle>");
 const mrrIdx = admin.indexOf("<CardTitle>MRR / revenue</CardTitle>");
 assert(financeIdx > -1 && dealsIdx > -1 && trafficIdx > -1, "admin sections present");
 assert(financeIdx < trafficIdx && dealsIdx < trafficIdx, "Finance/Deals above analytics stubs");
 assert(financeIdx < dealsIdx, "Finance above Deals");
+assert(usageIdx > dealsIdx && usageIdx < trafficIdx, "Usage rollup after Deals, before stubs");
 assert(trafficIdx < mrrIdx, "traffic stub before MRR stub");
 assert(admin.includes("Demo stub") && admin.includes("DemoStub"), "in-card Demo stub styling");
+assert(admin.includes("No $ / user") || usageUi.includes("No $ / user"), "admin usage has no $/user");
+assert(!usageUi.includes("formatUsd") && !/\$\d/.test(usageUi), "usage UI invents no $ amounts");
 
 assert(finance.includes("const customerGmvUsd = 0"), "customer GMV locked at 0");
 assert(admin.includes("botbuyer.ai $179.96"), "admin verified $179.96");
 assert(admin.includes("GMV empty until platform Closed deals"), "admin GMV empty copy");
+
+assert(usage.includes('costKind: "estimate"') || usage.includes('USAGE_COST_KIND'), "usage costKind estimate");
+assert(usage.includes("Estimate until CHO promote"), "usage Estimate until CHO");
+assert(usage.includes("Never Actual $"), "usage never Actual $");
+assert(usage.includes("billed: false") || usage.includes("not billed"), "usage not billed");
+assert(usage.includes('phase: "search"'), "searching stub phase search");
+assert(usage.includes("unknown"), "provider/model unknown fallback");
+assert(store.includes("ensureSearchingUsageStub"), "Run records usage stub");
+assert(store.includes("createSearchingDealFromRun"), "go-live Searching run wired");
+assert(journal.includes("usage: journal.usage"), "journal persists usage");
+assert(journal.includes("ENGINE_JOURNAL_COOKIE"), "cookie journal still used");
+assert(dealDetail.includes("DealUsageSection"), "deal detail usage section");
+assert(usageUi.includes("Demo · not live") || usageUi.includes("USAGE_DEMO_BADGE"), "usage Demo badge");
+assert(usageUi.includes("tokens_est"), "usage labels tokens_est");
+assert(usageUi.includes("model_calls"), "usage labels model_calls");
+assert(usageUi.includes("tool_calls"), "usage labels tool_calls");
 
 const botbuyer = (ledger.deals ?? ledger).find?.(
   (deal) => deal.id === "deal_botbuyer_ai",
@@ -127,3 +152,4 @@ console.log(" - go-live Run BotBuy present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
 console.log(" - Admin Finance/Deals above stubs");
 console.log(" - GMV=0 · verified $179.96");
+console.log(" - usage meter Estimate / Demo · not live");

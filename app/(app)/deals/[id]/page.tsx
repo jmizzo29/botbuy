@@ -10,7 +10,14 @@ import { SearchingEmpty } from "@/components/empty-ctas";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
 import { getAgentOrg } from "@/lib/agent-runtime";
 import { PersistRunDeal } from "@/components/persist-run-deal";
-import { getDeal, hydrateStore, listDealEvents } from "@/lib/store";
+import { DealUsageSection } from "@/components/usage-meter";
+import {
+  ensureSearchingUsageStub,
+  getDeal,
+  hydrateStore,
+  listDealEvents,
+  listUsageEvents,
+} from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
 import { runVerificationStub } from "@/lib/verification";
 import type { DealEvent } from "@/lib/types";
@@ -37,7 +44,11 @@ export default async function DealDetailPage({
   await hydrateStore();
   const deal = getDeal(id);
   if (!deal) notFound();
+  if (deal.source === "engine") {
+    ensureSearchingUsageStub(deal);
+  }
   const verification = runVerificationStub(deal);
+  const usage = listUsageEvents(deal.id);
 
   return (
     <div className="space-y-6">
@@ -112,6 +123,8 @@ export default async function DealDetailPage({
           imported={deal.source === "imported"}
         />
       ) : null}
+
+      <DealUsageSection events={usage} />
 
       <Card>
         <CardHeader>

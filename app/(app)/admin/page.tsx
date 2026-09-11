@@ -11,8 +11,10 @@ import { isAdmin } from "@/lib/auth";
 import { getOwnerFinance } from "@/lib/finance";
 import { formatUsd } from "@/lib/money";
 import { agentOrgAdmin } from "@/lib/agent-runtime";
+import { getAdminMetrics } from "@/lib/admin-metrics";
 import { hydrateStore, listDeals, listDirectoryUsers } from "@/lib/store";
 import { DEAL_STATUSES } from "@/lib/types";
+import { AdminUsageRollup } from "@/components/usage-meter";
 
 export const metadata = {
   title: "Admin",
@@ -33,6 +35,7 @@ export default async function AdminPage() {
   const gated = deals.filter((deal) => deal.blockers.length > 0);
   const finance = getOwnerFinance(deals);
   const agentOrgs = agentOrgAdmin();
+  const usage = getAdminMetrics().usage;
 
   return (
     <div className="space-y-6">
@@ -186,6 +189,8 @@ export default async function AdminPage() {
         </CardContent>
       </Card>
 
+      <AdminUsageRollup days={usage.days} totals={usage.totals} />
+
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-3">
           <div>
@@ -325,6 +330,11 @@ export default async function AdminPage() {
               detail="Card Available. Bank / X Money / Bitcoin Coming. HOLD — not live."
             />
             <HealthRow label="MCP" state="Stub" />
+            <HealthRow
+              label="Usage meter"
+              state="Demo"
+              detail="Estimate until CHO promote. No Actual $. Not billed."
+            />
             <HealthRow
               label="Agent orgs"
               state="Demo"

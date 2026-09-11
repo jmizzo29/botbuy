@@ -10,7 +10,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 
 1. Deals list/detail + append-only `deal_events` (imported / reconstructed `agent_executed=false` / engine)
 2. Vault H1 `Fund your vault`. Card Available ≠ live (Stripe/Link is one card path). Bank / X Money / Bitcoin Coming. `+ Add payment method` always visible. Vault-ready = ≥1 Available. Coming does not unlock Run. Spend ceiling $1,000. Every deal needs approval. Infra near-zero — no assumed paid infra budget.
-3. Owner `/admin` Demo badges. Real deal counts OK. No invented live MRR/traffic/paid users. Finance verified-only $179.96; never $596.64 as burn.
+3. Owner `/admin` Demo badges. Real deal counts OK. No invented live MRR/traffic/paid users. Finance verified-only $179.96; never $596.64 as burn. Coarse usage meter v0: per-deal Estimate stub + per-day Admin tokens_est / calls rollup. Demo · not live. Never Actual $.
 4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
 5. ProofStrip empty until verified live aggregates. Public copy: personal deals never count as public proof. No placeholders. No CHO-gated / `verified_at` caption on land.
 6. Land + onboarding: `/` `/signup` `/onboarding/intent|spend|vault|go-live` `/home`
@@ -30,7 +30,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 - Spend-out ceiling $1,000. Auto-approve OFF always — every deal needs approval before spend. Fail-closed. Infra near-zero — no assumed paid infra budget.
 - Search/purchase: **all software products across all channels** via pluggable marketplace adapters. Not a merchant allowlist. Intent default category = software. John templates: Software (default), Software + domain, Domain (secondary).
 - After purchase, a licensed-user agent org (CEO/CFO/CTO/CMO) is stubbed on Closed assets. **Stub · not live.** No real spend or external mutations. Actions would be logged per agent.
-- Owner Admin (`/admin`): Demo until analytics+Stripe live. Traffic/revenue empty copy. Users = real directory (John customer #1). Finance CHO BLOCK: verified startup / domains-infra = botbuyer.ai **$179.96** only. Customer GMV is empty — personal imported domain is not GMV. Savedfast $405 + xfer $11.68 are Pending/Imported — never booked as burn or GMV. Burn/runway placeholders. Deals ops = seeded table with Imported badges, not ProofStrip. Health: OK / Degraded / Not connected / Demo / Stub. No invented MRR or fake uptime.
+- Owner Admin (`/admin`): Demo until analytics+Stripe live. Traffic/revenue empty copy. Users = real directory (John customer #1). Finance CHO BLOCK: verified startup / domains-infra = botbuyer.ai **$179.96** only. Customer GMV is empty — personal imported domain is not GMV. Savedfast $405 + xfer $11.68 are Pending/Imported — never booked as burn or GMV. Burn/runway placeholders. Deals ops = seeded table with Imported badges, not ProofStrip. Usage meter v0: Estimate until CHO promote — sum tokens_est / calls, no $/user, no Actual $. Health: OK / Degraded / Not connected / Demo / Stub. No invented MRR or fake uptime.
 
 ## Routes
 
@@ -41,9 +41,9 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | `/onboarding/intent` | Set intent — software-first John templates |
 | `/onboarding/spend` | Set spend |
 | `/onboarding/vault` | Fund your vault — multi-rail |
-| `/onboarding/go-live` | Recap → **Run BotBuy** creates Searching deal + deal_events |
+| `/onboarding/go-live` | Recap → **Run BotBuy** creates Searching deal + deal_events + usage Estimate stub |
 | `/home` | My deals (John’s personal history) |
-| `/deals` `/deals/[id]` | List + timeline / gates / status engine |
+| `/deals` `/deals/[id]` | List + timeline / gates / status engine / usage Demo counters |
 | `/agents` `/agents/[assetId]` | Your agents workspace · Demo · not live |
 | `/intent` `/vault` `/settings` | In-app |
 | `/admin` | Owner only — hidden from buyer nav and land. Persistent **Demo** badge. |

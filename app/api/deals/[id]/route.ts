@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDeal, hydrateStore } from "@/lib/store";
+import { getDeal, hydrateStore, listUsageEvents } from "@/lib/store";
 
 export async function GET(
   _request: Request,
@@ -11,5 +11,5 @@ export async function GET(
   if (!deal) {
     return NextResponse.json({ error: "Deal not found" }, { status: 404 });
   }
-  return NextResponse.json({ deal });
+  return NextResponse.json({ deal, usage: listUsageEvents(deal.id) });
 }

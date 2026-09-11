@@ -22,6 +22,50 @@ export type AgentEventStatus = "done" | "active" | "blocked" | "pending";
 
 export type MetricSource = "stub" | "imported_ledger" | "derived_seed" | "live";
 
+export const USAGE_PHASES = ["search", "buy", "close", "operate"] as const;
+export type UsagePhase = (typeof USAGE_PHASES)[number];
+
+export const USAGE_STATUSES = ["ok", "error", "aborted"] as const;
+export type UsageStatus = (typeof USAGE_STATUSES)[number];
+
+export const USAGE_COST_KIND = "estimate" as const;
+export type UsageCostKind = typeof USAGE_COST_KIND;
+
+export interface UsageTokensEst {
+  input: number | null;
+  output: number | null;
+  total: number | null;
+}
+
+/** Coarse token/usage meter v0. Rows stay Estimate until CHO promote. */
+export interface UsageEvent {
+  id: string;
+  dealId: string;
+  runId: string;
+  phase: UsagePhase;
+  stage: UsagePhase;
+  modelCalls: number;
+  toolCalls: number;
+  tokensEst: UsageTokensEst;
+  provider: string;
+  model: string;
+  startedAt: string;
+  endedAt: string;
+  status: UsageStatus;
+  costKind: UsageCostKind;
+  billed: false;
+  live: false;
+}
+
+export interface UsageDayRollup {
+  day: string;
+  runs: number;
+  modelCalls: number;
+  toolCalls: number;
+  tokensEst: UsageTokensEst;
+  costKind: UsageCostKind;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -236,6 +280,21 @@ export interface AdminMetrics {
     seedCashOutUsd: number;
     burnMonthlyUsd: number | null;
     runwayMonths: number | null;
+    note: string;
+  };
+  usage: {
+    live: false;
+    badge: string;
+    source: MetricSource;
+    costKind: UsageCostKind;
+    billed: false;
+    days: UsageDayRollup[];
+    totals: {
+      runs: number;
+      modelCalls: number;
+      toolCalls: number;
+      tokensEst: UsageTokensEst;
+    };
     note: string;
   };
 }
