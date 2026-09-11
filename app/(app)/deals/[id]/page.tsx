@@ -66,55 +66,37 @@ export default async function DealDetailPage({
           </Link>
           {" → Deal detail"}
         </p>
-        <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge className={DEMO_PILL_CLASS}>Demo</Badge>
-              <StatusPill status={deal.status} />
-              <DealBadges deal={deal} />
-            </div>
-            <h1 className="mt-4 text-3xl font-semibold tracking-tight">
-              {deal.title}
-            </h1>
-            <p className="mt-2 text-sm text-muted">
-              {deal.marketplace} · {deal.category}
-              {deal.parentDealId ? (
-                <>
-                  {" "}
-                  ·{" "}
-                  <Link
-                    href={`/deals/${deal.parentDealId}`}
-                    className="text-accent underline-offset-2 hover:underline"
-                  >
-                    Savedfast
-                  </Link>
-                </>
-              ) : null}
-            </p>
-            {isImported(deal) ? (
-              <p className="mt-2 text-sm text-muted">{HISTORY_MICRO}</p>
-            ) : null}
-          </div>
-          <DealAmount deal={deal} withStatus />
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          <Badge className={DEMO_PILL_CLASS}>Demo</Badge>
+          <StatusPill status={deal.status} />
+          <DealBadges deal={deal} />
         </div>
+        <h1 className="mt-5 text-3xl font-semibold tracking-tight">
+          {deal.title}
+        </h1>
+        {isImported(deal) ? (
+          <p className="mt-2 text-sm text-muted">{HISTORY_MICRO}</p>
+        ) : null}
       </div>
 
       <Card>
-        <CardContent className="grid gap-6 pt-5 md:grid-cols-2">
+        <CardContent className="grid gap-8 pt-6 md:grid-cols-2">
           <div>
             <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
               Spend
             </p>
             <p className="money mt-2 text-2xl font-medium tracking-tight">
               <DealAmount deal={deal} />
-              <span className="text-base text-muted">
+              <span className="text-base font-medium text-muted">
                 {" "}
                 / {formatUsd(SPEND_HARD_GATE_USD)}
               </span>
             </p>
-            <p className="mt-3 text-sm text-muted">{APPROVE_MICRO}</p>
-            <p className="mt-1 text-xs text-muted">Auto-approve OFF</p>
-            <div className="mt-5">
+            <p className="mt-4 text-sm text-muted">
+              Every deal needs your approval · auto-approve OFF
+            </p>
+            <p className="mt-1 text-sm text-muted">{APPROVE_MICRO}</p>
+            <div className="mt-6">
               <DealApproveActions dealId={deal.id} status={deal.status} />
             </div>
           </div>
@@ -123,7 +105,7 @@ export default async function DealDetailPage({
               Intent
             </p>
             <p className="mt-2 text-sm leading-relaxed text-foreground/80">
-              {deal.notes}
+              {deal.notes || `${deal.category} · ${deal.marketplace}`}
             </p>
           </div>
         </CardContent>

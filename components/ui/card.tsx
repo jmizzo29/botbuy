@@ -8,7 +8,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-[1.25rem] bg-surface",
+        "rounded-[var(--bb-radius)] bg-surface",
         SURFACE_RING_CLASS,
         className,
       )}

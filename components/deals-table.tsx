@@ -14,7 +14,7 @@ export function DealsTable({ deals }: { deals: Deal[] }) {
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[1.25rem] bg-surface",
+        "overflow-hidden rounded-[var(--bb-radius)] bg-surface",
         SURFACE_RING_CLASS,
       )}
     >

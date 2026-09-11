@@ -57,15 +57,17 @@ export function DealApproveActions({
         >
           {pending === APPROVE_STATUS ? "…" : APPROVE_LABEL}
         </Button>
-        <Button
-          type="button"
-          size={compact ? "sm" : "lg"}
-          variant="secondary"
-          disabled={pending !== null}
-          onClick={() => decide(REJECT_STATUS)}
-        >
-          {pending === REJECT_STATUS ? "…" : REJECT_LABEL}
-        </Button>
+        {compact ? null : (
+          <Button
+            type="button"
+            size="lg"
+            variant="secondary"
+            disabled={pending !== null}
+            onClick={() => decide(REJECT_STATUS)}
+          >
+            {pending === REJECT_STATUS ? "…" : REJECT_LABEL}
+          </Button>
+        )}
       </div>
       {compact ? null : (
         <p className="text-sm text-muted">{APPROVE_MICRO}</p>

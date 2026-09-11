@@ -21,9 +21,9 @@ export const PRIMARY_CONTRAST = {
   min: 4.5,
 } as const;
 
-/** Demo gold (--bb-demo #B8860B). Soft white wash — not alarm. */
+/** Demo gold (--bb-demo #B8860B) on --bb-demo-bg. Not alarm. */
 export const DEMO_PILL_CLASS =
-  "bg-white/80 text-demo ring-[var(--bb-line)]";
+  "bg-[var(--bb-demo-bg)] text-demo ring-[var(--bb-line)]";
 
 /** G Techlux hairline — --bb-line rgba(0,0,0,.07). */
 export const SURFACE_RING_CLASS = "ring-1 ring-[var(--bb-line)]";

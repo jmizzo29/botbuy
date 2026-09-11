@@ -14,10 +14,13 @@ export const PALETTE = {
   primaryLabel: "#042F2E",
   accent: "#5EEAD4",
   demo: "#B8860B",
+  demoBg: "rgba(232, 184, 74, 0.12)",
   line: "rgba(0,0,0,.07)",
   veil: "rgba(247,248,250,.78)",
-  danger: "#FB7185",
-  success: "#34D399",
+  danger: "#E11D48",
+  success: "#059669",
+  radius: "0.85rem",
+  radiusPill: "999px",
 } as const;
 
 /** Designer token handoff SoT — exact CSS custom properties. */
@@ -30,6 +33,7 @@ export const CSS_VARS = {
   primaryFg: "--bb-primary-fg",
   accent: "--bb-accent",
   demo: "--bb-demo",
+  demoBg: "--bb-demo-bg",
   line: "--bb-line",
   veil: "--bb-veil",
   danger: "--bb-danger",

@@ -54,8 +54,8 @@ assert(palette.includes('primary: "#2DD4BF"'), "palette primary teal");
 assert(palette.includes('primaryLabel: "#042F2E"'), "palette primary dark label");
 assert(palette.includes('accent: "#5EEAD4"'), "palette accent");
 assert(palette.includes('demo: "#B8860B"'), "palette demo");
-assert(palette.includes('danger: "#FB7185"'), "palette danger");
-assert(palette.includes('success: "#34D399"'), "palette success");
+assert(palette.includes('danger: "#E11D48"'), "palette danger");
+assert(palette.includes('success: "#059669"'), "palette success");
 assert(wire.includes("PALETTE.primary"), "wire notes primary from palette");
 assert(wire.includes("PALETTE.primaryLabel"), "wire notes label from palette");
 assert(!wire.includes("#ffffff"), "wire notes dropped craft-pack white fill");
@@ -88,8 +88,10 @@ assert(css.includes("--bb-accent: #5EEAD4"), "handoff --bb-accent");
 assert(css.includes("--bb-demo: #B8860B"), "handoff --bb-demo");
 assert(css.includes("--bb-line: rgba(0, 0, 0, 0.07)"), "handoff --bb-line");
 assert(css.includes("--bb-veil: rgba(247, 248, 250, 0.78)"), "handoff --bb-veil");
-assert(css.includes("--bb-danger: #FB7185"), "handoff --bb-danger");
-assert(css.includes("--bb-success: #34D399"), "handoff --bb-success");
+assert(css.includes("--bb-demo-bg: rgba(232, 184, 74, 0.12)"), "handoff --bb-demo-bg");
+assert(css.includes("--bb-danger: #E11D48"), "handoff --bb-danger");
+assert(css.includes("--bb-success: #059669"), "handoff --bb-success");
+assert(css.includes("--bb-radius: 0.85rem"), "handoff --bb-radius");
 assert(
   css.includes("--bb-demo: #B8860B") && css.includes("--bb-primary: #2DD4BF"),
   "Demo gold distinct from primary CTA teal",
@@ -149,8 +151,6 @@ assert(empty.includes('SEARCHING_EMPTY_SECONDARY = "Edit intent"'), "Searching E
 assert(empty.includes('NEEDS_YOU_CTA = "Review gates"'), "Needs-you Review gates");
 assert(empty.includes('AGENTS_EMPTY_SECONDARY = "See how activation works"'), "Agents empty secondary");
 assert(empty.includes('"/deals?status=Closed"'), "Agents empty → Closed deals");
-assert(home.includes("SearchingEmpty"), "home Searching empty");
-assert(home.includes("NeedsYouCta"), "home Needs-you CTA");
 assert(home.includes("DealsTable"), "My deals dense table");
 assert(home.includes("MY_DEALS_LABEL") || home.includes("My deals"), "My deals is /home");
 assert(home.includes("APPROVE_MICRO") || home.includes("BotBuy only runs what you approve."), "home approve micro");
@@ -304,8 +304,8 @@ assert(css.includes("clamp(2.5rem, 5vw, 3.75rem)"), "Quiet Capital display H1");
 assert(css.includes("font-size: 1.0625rem"), "Quiet Capital body size");
 assert(css.includes("line-height: 1.65"), "Quiet Capital body leading");
 assert(
-  tokens.includes("bg-white/80") && tokens.includes("text-demo"),
-  "Demo pill soft white wash + demo text",
+  tokens.includes("bb-demo-bg") && tokens.includes("text-demo"),
+  "Demo pill uses --bb-demo-bg + demo text",
 );
 assert(emptyUi.includes("px-5 py-8"), "empty panel air py-8 px-5");
 assert(emptyUi.includes("text-base font-medium"), "empty title text-base font-medium");

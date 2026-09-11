@@ -11,8 +11,13 @@ Soft-signal HOLD. Default shell is light. Not a marketing launch.
 | `--bb-primary` | `#2DD4BF` |
 | `--bb-primary-fg` | `#042F2E` |
 | `--bb-demo` | `#B8860B` |
+| `--bb-demo-bg` | `rgba(232, 184, 74, 0.12)` |
+| `--bb-danger` | `#E11D48` |
+| `--bb-success` | `#059669` |
 | `--bb-line` | `rgba(0,0,0,.07)` |
 | `--bb-veil` | `rgba(247,248,250,.78)` |
+| `--bb-radius` | `0.85rem` |
+| `--bb-radius-pill` | `999px` |
 
 Land uses `brand/techlux/land-bg-techlux-air.png` plus the left veil.
 Vault mark + wordmark stay (`brand/logo-vault/`). Never letter-B.
