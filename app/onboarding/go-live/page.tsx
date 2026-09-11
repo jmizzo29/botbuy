@@ -2,6 +2,7 @@ import { runFirstBuyAction } from "@/app/onboarding/go-live/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BRAND } from "@/lib/brand";
+import { GO_LIVE_PRIMARY_LABEL } from "@/lib/designer-wire-notes";
 import { getSpendLimits, listIntents } from "@/lib/store";
 import { formatUsd } from "@/lib/money";
 import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
@@ -40,13 +41,13 @@ export default function OnboardingGoLivePage() {
       {ready ? (
         <form action={runFirstBuyAction}>
           <Button type="submit" data-cta="go-live-run">
-            Run BotBuy
+            {GO_LIVE_PRIMARY_LABEL}
           </Button>
         </form>
       ) : (
         <div className="space-y-2">
           <Button disabled data-cta="go-live-run">
-            Run BotBuy
+            {GO_LIVE_PRIMARY_LABEL}
           </Button>
           <p className="text-xs text-zinc-500">
             Coming rails alone do not unlock Run. Add an Available payment
