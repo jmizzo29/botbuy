@@ -51,7 +51,7 @@ export const AGENT_EMPTY =
 export const AGENT_DEMO_BANNER = "Demo · agent runtime not live";
 
 export const AGENT_SPEND_MICRO =
-  "Agents never bypass your approval. Purchase gate $1,000 still applies to buys.";
+  "Agents never bypass your approval. Your spend limit still applies to buys.";
 
 export const AGENT_HOLD_NOTE =
   "HOLD. Agent runtime is not live. No present-tense claim that we run your business.";

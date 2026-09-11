@@ -49,7 +49,7 @@ export default function VaultPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
-            <Cap label="Hard gate" value={formatUsd(SPEND_HARD_GATE_USD)} />
+            <Cap label="Spend limit" value={formatUsd(SPEND_HARD_GATE_USD)} />
             <Cap label="Working cap" value={formatUsd(limits.perDealLimitUsd)} />
           </div>
           <p className="text-sm text-muted">

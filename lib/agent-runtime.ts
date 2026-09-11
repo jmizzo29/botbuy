@@ -9,7 +9,6 @@ import {
   markAgentOrgActivated,
   type AgentOrg,
 } from "@/lib/agent-org";
-import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
 import { getDeal, listDeals } from "@/lib/store";
 
 export function listAgentOrgs(): AgentOrg[] {
@@ -47,6 +46,6 @@ export function agentOrgAdmin() {
     orgCount: orgs.length,
     orgs,
     empty: AGENT_ADMIN_EMPTY,
-    note: `${AGENT_HOLD_NOTE} ${AGENT_SPEND_MICRO} Gate $${SPEND_HARD_GATE_USD.toLocaleString("en-US")}.`,
+    note: `${AGENT_HOLD_NOTE} ${AGENT_SPEND_MICRO}`,
   };
 }

@@ -30,7 +30,7 @@ export default function OnboardingGoLivePage() {
       <Card>
         <CardContent className="space-y-3 pt-5 text-sm">
           <Row label="Intent" value={intent?.summary ?? "Set in previous step"} />
-          <Row label="Hard gate" value={formatUsd(SPEND_HARD_GATE_USD)} />
+          <Row label="Spend limit" value={formatUsd(SPEND_HARD_GATE_USD)} />
           <Row label="Working cap" value={formatUsd(limits.perDealLimitUsd)} />
           <Row
             label="Approval"

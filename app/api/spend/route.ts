@@ -15,7 +15,7 @@ import {
 const workingCap = z
   .number()
   .nonnegative()
-  .refine(isWithinHardGate, `Spend-out hard gate is $${SPEND_HARD_GATE_USD}.`);
+  .refine(isWithinHardGate, `Spend limit ceiling is $${SPEND_HARD_GATE_USD}.`);
 
 const patchLimits = z
   .object({
