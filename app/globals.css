@@ -513,6 +513,14 @@ body {
   }
 
   .bb-land-stage-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    padding: 5rem 5.5rem;
+  }
+
+  .bb-land-copy {
     display: grid;
     grid-template-columns: minmax(0, 1.28fr) minmax(18rem, 0.92fr);
     grid-template-areas:
@@ -520,17 +528,14 @@ body {
       "support arc"
       "cta arc";
     align-items: center;
-    gap: 0 4rem;
-    padding: 5rem 5.5rem;
-  }
-
-  .bb-land-copy {
-    display: contents;
+    column-gap: 4rem;
+    width: 100%;
+    max-width: none;
+    text-align: left;
   }
 
   .bb-land-h1 {
     grid-area: h1;
-    align-self: end;
     text-align: left;
     font-size: clamp(2.75rem, 3.7vw, 3.55rem);
     letter-spacing: -0.042em;
