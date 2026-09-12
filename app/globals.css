@@ -391,31 +391,57 @@ body {
 .bb-land-cta {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  gap: 0.85rem 1.15rem;
+  gap: 10px;
   width: 100%;
   max-width: 22rem;
   margin-top: 1.15rem;
 }
 
+.bb-land-signup {
+  flex: 1;
+  height: 3rem;
+  min-height: 3rem;
+}
+
 .bb-land-signin {
+  flex: 1 1 auto;
   display: inline-flex;
-  min-height: 2.75rem;
   align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 3rem;
+  min-height: 3rem;
+  padding: 0 1.75rem;
   font-size: 0.875rem;
+  font-weight: 600;
   line-height: 1.2;
   color: rgba(255, 255, 255, 0.7);
-  background: none;
-  border: 0;
-  border-radius: 0;
-  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 9999px;
   box-shadow: none;
 }
 
 .bb-land-signin:hover {
   color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Phone / max-lg: keep copy + CTA pair on the center axis. Soft-signal HOLD. */
+@media (max-width: 1023px) {
+  .bb-land-copy {
+    align-items: center;
+    text-align: center;
+  }
+
+  .bb-land-cta {
+    justify-content: center;
+    max-width: 22rem;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -484,6 +510,11 @@ body {
     justify-content: flex-start;
     max-width: none;
     margin-top: 1.75rem;
+  }
+
+  .bb-land-signup,
+  .bb-land-signin {
+    flex: 0 1 auto;
   }
 }
 

@@ -592,10 +592,17 @@ assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product ta
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(land.includes("LAND_META_LINE"), "land lead one-liner");
 assert(!land.includes("LandInstallButton"), "land has no Install door");
+assert(!land.includes("Install"), "land page source has no Install string");
 assert(!land.includes("land-install"), "land fold has no Install CTA");
-assert(land.includes('data-cta="land-signin"'), "land fold pairs quiet Sign in with Sign up");
-assert(land.includes("bb-land-signin"), "land Sign in uses quiet fold class");
+assert(land.includes('data-cta="land-signin"'), "land fold pairs Sign in with Sign up");
+assert(land.includes("bb-land-signin"), "land Sign in uses fold class");
+assert(land.includes("bb-land-signup"), "land Sign up uses flex peer class");
 assert(land.includes("CLERK_SIGN_IN_URL") || land.includes("/signin"), "fold Sign in uses canonical /signin");
+assert(chrome.includes(") : land ? null : ("), "land nav has no signed-out Sign in duplicate");
+assert(
+  read("components/install-hint.tsx").includes("if (onLand) return null"),
+  "InstallHint is already null on land",
+);
 assert(
   land.includes("redirectSignedInFromLand") ||
     land.includes("redirect(MY_DEALS_HREF)"),
@@ -691,8 +698,20 @@ assert(css.includes("border-radius: 0"), "stage is square full-bleed");
 assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
 assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
 assert(css.includes(".bb-land-copy") && css.includes("text-align: center"), "phone land copy is centered");
+assert(css.includes("@media (max-width: 1023px)"), "phone center axis is locked at max-lg");
 assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "fold CTA is a Sign up + Sign in row");
-assert(css.includes(".bb-land-signin"), "Sign in quiet fold link is CSS-owned");
+assert(css.includes("gap: 10px"), "fold CTA pair uses 10px gap");
+assert(css.includes(".bb-land-signup") && css.includes("flex: 1;"), "Sign up flex:1 in the pair");
+assert(
+  css.includes(".bb-land-signin") && css.includes("flex: 1 1 auto"),
+  "Sign in is flex:1 1 auto next to Sign up",
+);
+assert(
+  css.includes("border: 1px solid rgba(255, 255, 255, 0.7)") &&
+    css.includes("border-radius: 9999px") &&
+    css.includes("background: transparent"),
+  "Sign in is a ghost/outline white ~70% pill",
+);
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(css.includes("padding: 5.25rem 1.25rem 0.35rem"), "phone tightens arc→H1");
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
