@@ -7,15 +7,11 @@ import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
 import {
   BRAND,
-  LAND_INSTALL_HELPER,
   LAND_META_LINE,
   LAND_PRODUCT_H1,
+  LAND_PRODUCT_SUPPORT,
 } from "@/lib/brand";
-import {
-  LAND_FINDABILITY,
-  MY_DEALS_HREF,
-  MY_DEALS_LABEL,
-} from "@/lib/cpo-techlux";
+import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
 
 export const metadata = {
@@ -46,6 +42,9 @@ export default async function LandPage() {
           <h1 className="mt-8 text-[2.75rem] font-semibold tracking-tight md:text-6xl">
             {LAND_PRODUCT_H1}
           </h1>
+          <p className="mt-3 max-w-lg text-xl font-medium tracking-tight text-muted md:text-2xl">
+            {LAND_PRODUCT_SUPPORT}
+          </p>
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-foreground/75">
             {LAND_META_LINE}
           </p>
@@ -65,19 +64,6 @@ export default async function LandPage() {
             )}
             <LandInstallButton />
           </div>
-          <p className="mt-6 text-sm text-muted">{BRAND.trustLine}</p>
-          <p className="mt-2 max-w-md text-sm text-muted">
-            {LAND_FINDABILITY.replace(MY_DEALS_LABEL, "").trim()}{" "}
-            <Link
-              href={MY_DEALS_HREF}
-              className="font-medium text-foreground underline-offset-2 hover:underline"
-            >
-              {MY_DEALS_LABEL}
-            </Link>
-          </p>
-          <p className="mt-2 max-w-md text-sm text-muted lg:hidden">
-            {LAND_INSTALL_HELPER}
-          </p>
         </section>
         <aside className="mt-16 lg:mt-0">
           <HowItWorksRail />
