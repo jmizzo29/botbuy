@@ -1,6 +1,6 @@
 # Designer — Land Install demote v1
 
-John LOCK · 2026-09-12 · Soft-signal HOLD  
+John / CEO HARD GO · 2026-09-12 · Soft-signal HOLD  
 IA SoT: `cpo-land-install-demote-v1.md`. CPO IA wins if craft and IA disagree.  
 Scope: land Product door fold CTAs only (`/` / `app/page.tsx` / brand CTA labels).
 
@@ -8,16 +8,29 @@ Scope: land Product door fold CTAs only (`/` / `app/page.tsx` / brand CTA labels
 
 **Sign up** = sole primary pill. Teal `--bb-primary` fill + `--bb-primary-fg` label. `rounded-full`. Default Button, no variant. `data-cta="land-signup"`.
 
-**Install** = quiet text link only. Muted text. No fill, no ring, no outline, no secondary/ghost peer button, not `size="lg"`. `data-cta="land-install"`. Still wires to existing A2HS / how-to (`useA2hs`, `publicLand`).
+**Sign in** = quiet text link only. Muted / white-on-navy text. No fill, no ring, no outline, no secondary/ghost peer button, not `size="lg"`. `data-cta="land-signin"`. Same paired CTA cluster as Sign up.
+
+**Install** is off land. No LandInstallButton. No Install link on `/`.
 
 Do not ship dual peer buttons or an equal-weight secondary Install.
 
+## Phone fold (max-lg)
+
+- Center `.bb-land-copy` (`text-align: center` + centered column)
+- Shared `max-width: 22rem` for H1 / support / meta / CTA
+- CTA `flex-direction: row` (Sign up + Sign in pair)
+- Tighten arc→H1 gap
+
+## Desktop
+
+Left copy + right arc unchanged. CTA still the Sign up + Sign in pair (row, start-aligned with copy). Overlay stays word links only (Private beta / About). No footer chrome.
+
 ## Keep
 
-- H1: `Find it. Decide. Buy anything.`
-- One-liner: `Set spend, intent, and a payment method. BotBuyer only moves when you approve.`
-- Trust: `Every deal needs your approval`
+- H1: `Your AI agent for buying.`
+- Support: `Acts for you. Spends only with your OK.`
+- One-liner: `BotBuyer finds it and handles the chase. You approve before it pays.`
+- Trust: `Every deal needs your approval` (not on the fold)
 - Quiet `Private beta` honesty (no Demo)
-- Techlux · Vault mark
-- No Demo · no $1k on land
+- No $1k on land
 - Soft-signal HOLD
