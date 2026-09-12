@@ -786,7 +786,7 @@ assert(wire.includes("Not a public launch"), "Quiet Capital docs stay HOLD");
 assert(wire.includes(".bb-vault-rail"), "wire notes record Designer vault-rail spec");
 assert(wire.includes("never letter-B"), "wire notes keep soft-spine — no letter-B");
 assert(lockup.includes("/brand/logo-soft-spine/botbuyer-logo-header-light.svg"), "BrandLockup uses soft-spine light header SVG");
-assert(lockup.includes("/brand/logo-soft-spine/botbuyer-logo-primary-dark-bg.svg"), "BrandLockup reverse lockup for navy land");
+assert(lockup.includes("/brand/logo-soft-spine/botbuyer-logo-header.svg"), "BrandLockup reverse lockup for navy land");
 assert(lockup.includes("onDark"), "BrandLockup can render reverse on dark");
 assert(lockup.includes("219") && lockup.includes("46"), "land reverse lockup intrinsic ~219×46");
 assert(
