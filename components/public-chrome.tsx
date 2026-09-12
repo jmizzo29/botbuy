@@ -42,9 +42,7 @@ export function PublicChrome({
         >
           {children}
         </main>
-        {land ? (
-          <SiteFooter land />
-        ) : (
+        {land ? null : (
           <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8">
             <div>
               <SiteFooter />

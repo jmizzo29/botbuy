@@ -325,7 +325,7 @@ assert(!signup.includes("DEMO_PILL_CLASS"), "signup has no Demo pill token");
 assert(!signIn.includes("DEMO_PILL_CLASS"), "sign-in has no Demo pill token");
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "non-land public chrome keeps POC footer meta");
 assert(!chrome.includes("signalHold") && !chrome.includes("BRAND.signalHold"), "land chrome has no visible Soft-signal HOLD");
-assert(chrome.includes("{land ? (") && chrome.includes("<SiteFooter land"), "land PublicChrome renders no footer chrome");
+assert(chrome.includes("{land ? null") && chrome.includes("<SiteFooter"), "land PublicChrome renders no SiteFooter or footer paragraph");
 assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
 assert(signIn.includes("<SignIn"), "sign-in uses Clerk SignIn");
