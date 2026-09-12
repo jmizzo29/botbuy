@@ -635,6 +635,12 @@ assert(
   "land B wires the dedicated reverse arc",
 );
 assert(
+  read("public/land/assets/06-arc-reverse.svg").includes('viewBox="0 0 280 72"') &&
+    read("public/land/assets/06-arc-reverse.svg").includes('font-size="12"') &&
+    !land.includes("invert"),
+  "land uses exact reverse arc body with no CSS invert",
+);
+assert(
   !read("land/full-bleed-hero/assets/06-arc-reverse.svg").includes("#2DD4BF") &&
     !read("public/land/assets/06-arc-reverse.svg").includes("#2DD4BF") &&
     !read("land/assets/06-arc-reverse.svg").includes("#2DD4BF"),
