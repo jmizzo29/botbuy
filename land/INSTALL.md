@@ -2,7 +2,8 @@
 
 John LOCKED **D1 bold-h1-first** on phone. Soft-signal HOLD.
 
-Craft SoT (assets + desktop split): `land/full-bleed-hero/INSTALL.md`.
+Craft SoT (phone fold): `land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md`.
+Assets + desktop split: `land/full-bleed-hero/INSTALL.md`.
 
 ## Assets
 

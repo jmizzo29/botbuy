@@ -747,11 +747,11 @@ assert(
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(land.includes('data-fold="d1-bold-h1-first"'), "land fold is D1 bold-h1-first");
 assert(
-  land.includes("bb-land-hairline") &&
-    css.includes(".bb-land-hairline") &&
+  land.includes("bb-land-rule") &&
+    css.includes(".bb-land-rule") &&
     css.includes("width: 28px") &&
     css.includes("height: 1.5px"),
-  "D1 teal hairline is 28×1.5",
+  "D1 teal hairline is .bb-land-rule 28×1.5",
 );
 assert(
   css.includes("font-size: 2.5rem") &&
@@ -760,15 +760,23 @@ assert(
   "D1 H1 is 40px / 600 / -0.045em / balance",
 );
 assert(
-  css.includes("max-width: 15rem") && css.includes("width: 15rem"),
-  "D1 arc is a 240px secondary rail",
+  css.includes("width: min(240px, 70%)") &&
+    css.includes("margin-block: 1rem 1.25rem"),
+  "D1 arc is a min(240px, 70%) secondary rail",
+);
+assert(
+  css.includes("order: 1") &&
+    css.includes("order: 2") &&
+    css.includes("order: 3") &&
+    css.includes("order: 4"),
+  "D1 phone CSS sketch orders copy → rule → arc → CTA",
 );
 assert(
   land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
-    land.indexOf("bb-land-support") < land.indexOf("bb-land-hairline") &&
-    land.indexOf("bb-land-hairline") < land.indexOf("bb-land-arc") &&
+    land.indexOf("bb-land-support") < land.indexOf("bb-land-rule") &&
+    land.indexOf("bb-land-rule") < land.indexOf("bb-land-arc") &&
     land.indexOf("bb-land-arc") < land.indexOf("bb-land-cta"),
-  "D1 fold order is H1 → support → hairline → arc → CTA",
+  "D1 fold order is H1 → support → rule → arc → CTA",
 );
 assert(
   css.includes("margin-block-start: 0") &&
@@ -777,9 +785,16 @@ assert(
   "phone D1 stack is centered under overlay pad",
 );
 assert(
-  read("land/INSTALL.md").includes("D1 bold-h1-first"),
-  "land INSTALL locks D1 bold-h1-first",
+  existsSync(join(root, "land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md")) &&
+    read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md").includes("READY-TO-SHIP") &&
+    read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md").includes("bb-land-rule"),
+  "D1 designer INSTALL is READY-TO-SHIP",
 );
+assert(
+  read("land/INSTALL.md").includes("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md"),
+  "land INSTALL points at D1 kit SoT",
+);
+assert(chrome.includes("{land ? null : <InstallHint />}"), "land chrome never mounts InstallHint");
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
 assert(
   read("land/assets/02-deals.svg").includes('aria-label="BotBuyer brings deals"'),
