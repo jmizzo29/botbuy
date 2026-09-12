@@ -134,7 +134,7 @@ assert(!goLive.includes(">Run BotBuyer<") && !goLive.includes(">Run<"), "go-live
 assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not ghost");
 
 const primaryBlocks = [
-  ["land CTA", land, "<Button asChild size=\"lg\""],
+  ["land CTA", land, "<Button asChild className=\"bb-land-signup\""],
   ["signup Clerk", signup, "data-cta=\"clerk-signup\""],
   ["go-live Run", goLive, "data-cta=\"go-live-run\""],
 ];
@@ -719,9 +719,16 @@ assert(css.includes("@media (max-width: 1023px)"), "phone center axis is locked 
 assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "fold CTA is a Sign up + Sign in row");
 assert(css.includes("gap: 10px"), "fold CTA pair uses 10px gap");
 assert(css.includes("align-items: stretch"), "fold CTA pair stretches to equal height");
-assert(css.includes("flex: 1 1 0"), "Sign up + Sign in share flex 1 1 0");
-assert(css.includes("min-height: 48px"), "fold CTAs share 48px min-height");
+assert(css.includes("flex: 1 1 0%"), "Sign up + Sign in share flex 1 1 0%");
+assert(
+  css.includes("min-width: calc((100% - 10px) / 2)") &&
+    css.includes("max-width: calc((100% - 10px) / 2)") &&
+    css.includes("width: calc((100% - 10px) / 2)"),
+  "fold CTAs share the same half-row width",
+);
+assert(css.includes("min-height: 48px") && css.includes("height: 48px"), "fold CTAs share 48px height");
 assert(css.includes("padding: 0.75rem 1rem"), "fold CTAs share 0.75rem 1rem padding");
+assert(!land.includes('size="lg"'), "land Sign up box is CSS-owned, not Button lg");
 assert(
   css.includes('.bb-land-cta [data-cta="land-signup"]') &&
     css.includes("background: #2DD4BF") &&
