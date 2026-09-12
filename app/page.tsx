@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HowItWorksRail } from "@/components/how-it-works";
 import { LandInstallButton } from "@/components/land-install-button";
 import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
@@ -26,49 +25,40 @@ export default async function LandPage() {
 
   return (
     <PublicChrome land>
-      <div className="lg:grid lg:min-h-[calc(100svh-11rem)] lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:items-center lg:gap-16 xl:gap-20">
-        <section
-          data-surface="land-door"
-          className="flex flex-col items-start text-left"
-        >
-          <h1 className="max-w-xl text-[2.75rem] font-semibold tracking-tight md:text-6xl">
-            {LAND_PRODUCT_H1}
-          </h1>
-          <span
-            aria-hidden="true"
-            className="mt-5 block h-0.5 w-12 rounded-full bg-primary"
-          />
-          <p className="mt-5 max-w-lg text-xl font-medium tracking-tight text-muted md:text-2xl">
-            {LAND_PRODUCT_SUPPORT}
-          </p>
-          <p className="mt-5 max-w-md text-[15px] leading-relaxed text-foreground/75">
-            {LAND_META_LINE}
-          </p>
-          <div className="mt-8 w-full max-w-sm">
+      <section data-surface="land-stage" className="bb-land-stage">
+        <div className="bb-land-stage-grid">
+          <div className="bb-land-copy">
+            <h1 className="max-w-xl text-[2.5rem] font-semibold tracking-tight text-white md:text-6xl">
+              {LAND_PRODUCT_H1}
+            </h1>
+            <p className="mt-5 max-w-lg text-xl font-medium tracking-tight text-white/80 md:text-2xl">
+              {LAND_PRODUCT_SUPPORT}
+            </p>
+            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-white/60">
+              {LAND_META_LINE}
+            </p>
+            <div className="mt-8 flex w-full flex-col items-center gap-3 lg:w-auto lg:flex-row lg:items-center lg:gap-x-5">
+              <Button asChild size="lg" className="w-full lg:w-auto">
+                <Link href="/signup" data-cta="land-signup">
+                  {BRAND.primaryCta}
+                </Link>
+              </Button>
+              <LandInstallButton tone="onDark" />
+            </div>
+          </div>
+          <div className="bb-land-arc">
             <Image
               src={LAND_ARC_SRC}
               alt={LAND_ARC_LABEL}
-              width={320}
+              width={280}
               height={72}
               unoptimized
               preload
-              className="h-auto w-full"
+              className="h-auto w-full max-w-[20rem]"
             />
           </div>
-          <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
-            <Button asChild size="lg">
-              <Link href="/signup" data-cta="land-signup">
-                {BRAND.primaryCta}
-              </Link>
-            </Button>
-            <LandInstallButton />
-          </div>
-          <p className="mt-5 text-xs text-muted">{BRAND.landHonesty}</p>
-        </section>
-        <aside className="mt-12 lg:mt-0">
-          <HowItWorksRail />
-        </aside>
-      </div>
+        </div>
+      </section>
     </PublicChrome>
   );
 }

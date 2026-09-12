@@ -21,6 +21,7 @@ export function PublicChrome({
         land ? "bb-land-shell text-foreground" : "min-h-dvh bg-background text-foreground",
       )}
     >
+      {land ? <div className="bb-land-air" aria-hidden="true" /> : null}
       <div className={land ? "bb-land-content" : undefined}>
         <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8">
           <Link
@@ -33,7 +34,15 @@ export function PublicChrome({
           <PublicNav land={land} />
         </header>
         <InstallHint />
-        <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8">{children}</main>
+        <main
+          className={
+            land
+              ? "bb-land-main mx-auto w-full max-w-6xl px-4 pb-8 md:px-8"
+              : "mx-auto w-full max-w-6xl px-4 pb-20 md:px-8"
+          }
+        >
+          {children}
+        </main>
         <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8">
           <div>
             <SiteFooter />
@@ -58,9 +67,17 @@ async function PublicNav({ land }: { land: boolean }) {
   return (
     <div className="flex items-center gap-3 text-sm">
       {land ? (
-        <Link href="/beta" className="text-xs text-muted hover:text-foreground">
-          {BRAND.landHonesty}
-        </Link>
+        <>
+          <Link href="/beta" className="text-xs text-muted hover:text-foreground">
+            {BRAND.landHonesty}
+          </Link>
+          <Link
+            href="/about"
+            className="hidden text-xs text-muted hover:text-foreground sm:inline"
+          >
+            About
+          </Link>
+        </>
       ) : null}
       {session ? (
         <Link

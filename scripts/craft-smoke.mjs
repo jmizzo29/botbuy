@@ -134,7 +134,7 @@ assert(!goLive.includes(">Run BotBuyer<") && !goLive.includes(">Run<"), "go-live
 assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not ghost");
 
 const primaryBlocks = [
-  ["land CTA", land, "<Button asChild size=\"lg\">"],
+  ["land CTA", land, "<Button asChild size=\"lg\""],
   ["signup Clerk", signup, "data-cta=\"clerk-signup\""],
   ["go-live Run", goLive, "data-cta=\"go-live-run\""],
 ];
@@ -411,6 +411,8 @@ assert(
   "land header quiet Private beta",
 );
 assert(chrome.includes('href="/beta"'), "land Private beta leans on /beta");
+assert(chrome.includes('href="/about"'), "land desktop nav includes About");
+assert(chrome.includes("bb-land-air"), "land chrome keeps optional Techlux air");
 assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
 assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuyer only moves when you approve."), "go-live approve micro");
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
@@ -554,7 +556,13 @@ assert(!brand.includes("Set spend, intent, and vault"), "old vault land line rem
 assert(!brand.includes("Vault it"), "Vault it removed from land brand copy");
 assert(!land.includes("Vault it"), "land has no Vault it");
 assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold");
-assert(land.includes("HowItWorksRail"), "land keeps How it works rail");
+assert(!land.includes("HowItWorksRail"), "land fold dropped elevate how-stack");
+assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy stage");
+assert(land.includes("bb-land-stage"), "land stage class is wired");
+assert(!land.includes("filter"), "land does not CSS-filter the arc");
+assert(!land.includes("invert"), "land does not CSS-invert the light arc");
+assert(!land.includes("BRAND.landHonesty"), "land fold has no under-CTA Private beta chip");
+assert(!land.includes("bg-primary"), "land fold has no orphan teal hairline");
 assert(!land.includes("ProofStrip"), "land dropped No public proof essay card");
 assert(land.includes("LAND_PRODUCT_H1"), "land H1 uses locked product line");
 assert(land.includes("LAND_PRODUCT_SUPPORT"), "land support sits under H1");
@@ -612,9 +620,35 @@ assert(
   existsSync(join(root, "land/assets/01-tell.svg")) &&
     existsSync(join(root, "land/assets/02-deals.svg")) &&
     existsSync(join(root, "land/assets/03-approve.svg")) &&
-    existsSync(join(root, "land/assets/06-arc.svg")),
+    existsSync(join(root, "land/assets/06-arc.svg")) &&
+    existsSync(join(root, "land/assets/06-arc-reverse.svg")),
   "land kit SVGs committed under land/assets",
 );
+assert(
+  existsSync(join(root, "land/full-bleed-hero/INSTALL.md")) &&
+    existsSync(join(root, "land/full-bleed-hero/assets/06-arc-reverse.svg")) &&
+    existsSync(join(root, "public/land/assets/06-arc-reverse.svg")),
+  "full-bleed-hero kit and public reverse arc committed",
+);
+assert(
+  brand.includes('LAND_ARC_SRC = "/land/assets/06-arc-reverse.svg"'),
+  "land B wires the dedicated reverse arc",
+);
+assert(
+  read("public/land/assets/06-arc-reverse.svg").includes('viewBox="0 0 280 72"') &&
+    read("public/land/assets/06-arc-reverse.svg").includes('font-size="12"') &&
+    !land.includes("invert"),
+  "land uses exact reverse arc body with no CSS invert",
+);
+assert(
+  !read("land/full-bleed-hero/assets/06-arc-reverse.svg").includes("#2DD4BF") &&
+    !read("public/land/assets/06-arc-reverse.svg").includes("#2DD4BF") &&
+    !read("land/assets/06-arc-reverse.svg").includes("#2DD4BF"),
+  "reverse arc has no orphan teal jewelry",
+);
+assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage gradient tokens");
+assert(css.includes("border-radius: 20px") && css.includes("border-radius: 28px"), "stage radius phone 20 desk 28");
+assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
 assert(
   read("land/assets/02-deals.svg").includes('aria-label="BotBuyer brings deals"'),
   "02-deals aria-label is BotBuyer",
