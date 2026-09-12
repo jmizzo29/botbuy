@@ -134,9 +134,23 @@ for (const [name, src, needle] of primaryBlocks) {
   assert(src.includes(needle), `${name} primary present`);
 }
 
-assert(brand.includes('trustLine: "Every deal needs your approval"'), "CPO trust line without Demo prefix");
+assert(brand.includes('trustLine: "Every deal needs your approval"'), "John/CEO land trust lock");
 assert(!brand.includes("Demo · every deal"), "old Demo trust prefix removed");
 assert(brand.includes('landHonesty: "Private beta"'), "land quiet Private beta honesty");
+assert(
+  existsSync(join(root, "designer-land-no-demo-lock-v1.md")),
+  "designer land no-Demo SoT committed",
+);
+const landNoDemoSot = read("designer-land-no-demo-lock-v1.md");
+assert(
+  landNoDemoSot.includes("`Every deal needs your approval`"),
+  "land no-Demo SoT names locked trust",
+);
+assert(
+  landNoDemoSot.includes("draft typo") && landNoDemoSot.includes("void"),
+  "land no-Demo SoT voids Do not show trust typo",
+);
+assert(land.includes("BRAND.trustLine"), "land fold shows trust despite SoT typo");
 assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
 assert(!brand.includes("gate for now"), "land brand has no gate for now");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(land), "land has no $1,000 gate");
@@ -527,7 +541,8 @@ assert(approveUi.includes("w-full sm:w-auto") || approveUi.includes("w-full"), "
 assert(approveUi.includes("min-h-11"), "Approve/Reject 44pt taps");
 assert(existsSync(join(root, "designer-ui-mocks-mobile-techlux.md")), "designer mobile Techlux visual SoT");
 const designerMocks = read("designer-ui-mocks-mobile-techlux.md");
-assert(designerMocks.includes("Demo · every deal needs your approval"), "designer SoT keeps land trust");
+assert(designerMocks.includes("Every deal needs your approval"), "designer SoT keeps land trust");
+assert(!designerMocks.includes("Demo · every deal needs your approval"), "designer SoT dropped Demo land trust");
 assert(designerMocks.includes("Approve sheet"), "designer SoT locks Approve sheet");
 assert(designerMocks.includes("Add to Home Screen"), "designer SoT locks A2HS");
 const approveSheet = read("components/approve-sheet.tsx");
