@@ -563,7 +563,7 @@ body {
   }
 }
 
-/* Land atmosphere — lean mesh-glow. Soft-signal HOLD. */
+/* Land atmosphere — A1 richer-mesh-deep LIVE. mesh-glow unused. Soft-signal HOLD. */
 .bb-land-stage {
   position: relative;
   background: #0B1F3A;
@@ -575,6 +575,19 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 0;
+}
+.bb-atm-richer-mesh-deep::before {
+  background:
+    radial-gradient(ellipse 62% 52% at 82% 18%, rgba(42,125,158,0.42), transparent 72%),
+    radial-gradient(ellipse 55% 48% at 12% 32%, rgba(26,78,125,0.36), transparent 72%),
+    radial-gradient(ellipse 58% 50% at 55% 52%, rgba(45,155,158,0.30), transparent 72%),
+    radial-gradient(ellipse 46% 40% at 92% 68%, rgba(20,60,105,0.32), transparent 72%),
+    radial-gradient(ellipse 36% 30% at 28% 8%, rgba(52,140,165,0.26), transparent 70%),
+    radial-gradient(ellipse 52% 44% at 8% 78%, rgba(18,52,92,0.30), transparent 72%),
+    radial-gradient(ellipse 34% 28% at 48% 28%, rgba(40,115,150,0.22), transparent 70%),
+    radial-gradient(ellipse 28% 22% at 74% 42%, rgba(45,212,191,0.14), transparent 70%),
+    radial-gradient(ellipse 24% 18% at 32% 55%, rgba(45,212,191,0.10), transparent 70%),
+    linear-gradient(165deg, #0B1F3A 0%, #163556 42%, #081222 100%);
 }
 .bb-atm-mesh-glow::before {
   background:
