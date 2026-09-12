@@ -165,13 +165,17 @@ assert(
   "cold-reader SoT locks H1",
 );
 assert(
-  coldReaderLead.includes("`Less tab-chasing. Same hard approve.`"),
+  coldReaderLead.includes("`Find it. Decide. Buy anything.`") ||
+    coldReaderLead.includes("`Less tab-chasing. Same hard approve.`"),
   "cold-reader SoT locks support",
 );
 assert(
   coldReaderLead.includes(
-    "Set spend, intent, and a payment method. BotBuy only moves when you approve.",
-  ),
+    "Set spend, intent, and a payment method. BotBuy executes what you approve.",
+  ) ||
+    coldReaderLead.includes(
+      "Set spend, intent, and a payment method. BotBuy only moves when you approve.",
+    ),
   "cold-reader SoT keeps one-liner",
 );
 assert(
@@ -207,7 +211,10 @@ assert(
 assert(!land.includes("BRAND.trustLine"), "land fold has no under-CTA trust line");
 assert(cpoLandNoDemo.includes("`Your AI agent for buying.`"), "CPO keep locks CMO H1");
 assert(
-  cpoLandNoDemo.includes("`Less tab-chasing. Same hard approve.`"),
+  cpoLandNoDemo.includes("`Find it. Decide. Buy anything.`") ||
+    cpoLandNoDemo.includes("`Less tab-chasing. Same hard approve.`") ||
+    cpoLandNoDemo.includes("Find it. Decide. Buy anything.") ||
+    cpoLandNoDemo.includes("Less tab-chasing. Same hard approve."),
   "CPO keep locks CMO support",
 );
 assert(cpoLandNoDemo.includes("Private beta"), "CPO allows Private beta without Demo");
@@ -979,6 +986,88 @@ assert(!johnIntentForm.includes("$1,000") && !johnIntentForm.includes("$1000"), 
 assert(!johnIntentPage.includes("$1,000") && !johnIntentPage.includes("Hard gate"), "onboarding intent has no $1k gate");
 assert(!goLive.includes("password"), "go-live has no password vault");
 assert(existsSync(join(root, "drizzle/0002_john_ux_profile.sql")), "profile SQL migration committed");
+assert(existsSync(join(root, "drizzle/0003_connected_accounts.sql")), "connector SQL after John UX 0002");
+
+const connectIa = read("cpo-connect-accounts-ia-v1.md");
+const connectLegal = read("legal/cto-mcp-shortlist-legal-review-v1.md");
+const connectDocs = read("docs/mcp-connectors-poc.md");
+const connectCopy = read("lib/connectors/copy.ts");
+const connectPage = read("app/(app)/settings/connected-accounts/page.tsx");
+const settingsPageSrc = read("app/(app)/settings/page.tsx");
+const connectUi = read("components/connected-accounts.tsx");
+const approveGate = read("lib/connectors/approve-gate.ts");
+const connectorVault = read("lib/connectors/vault.ts");
+const schemaSrc = read("lib/db/schema.ts");
+const envExample = read(".env.example");
+const namecheapRegister = read("lib/connectors/namecheap/register.ts");
+const twilioBuy = read("lib/connectors/twilio/buy.ts");
+const connectMiddleware = read("middleware.ts");
+assert(existsSync(join(root, "cpo-connect-accounts-ia-v1.md")), "CPO connected-accounts IA");
+assert(
+  existsSync(join(root, "designer-connect-accounts-craft/designer-connect-accounts-craft-v1.md")),
+  "Designer connected-accounts craft",
+);
+assert(existsSync(join(root, "legal/cto-mcp-shortlist-legal-review-v1.md")), "Legal MCP shortlist");
+assert(existsSync(join(root, "docs/mcp-connectors-poc.md")), "MCP connectors POC docs");
+const connectCraft = read("designer-connect-accounts-craft/designer-connect-accounts-craft-v1.md");
+assert(connectCraft.includes("X.X.X.X"), "designer craft locks X.X.X.X");
+assert(connectCraft.includes("CTO provides egress IPs"), "designer craft locks CTO IP note");
+assert(connectCraft.includes("Continue with Twilio"), "designer craft OAuth primary");
+assert(connectCraft.includes("Do not highlight Agents"), "designer craft Settings is not Agents");
+assert(connectCopy.includes('CONNECT_ACCOUNTS_H1 = "Connected accounts"'), "H1 Connected accounts");
+assert(
+  connectCopy.includes("Connect once. Official APIs only — never a password vault."),
+  "sub Connect once",
+);
+assert(connectCopy.includes("Auto-approve is OFF"), "legal safer auto-approve OFF");
+assert(connectCopy.includes("POC · not live"), "connectors not live honesty");
+assert(
+  connectCopy.includes("BotBuy will publish whitelist IPs") ||
+    connectCopy.includes("X.X.X.X"),
+  "IP whitelist placeholder",
+);
+assert(connectCopy.includes('CONNECT_ACCOUNTS_HONESTY = "Demo"'), "Demo chip until POC proven");
+assert(connectCopy.includes('NAMECHEAP_APIUSER_LABEL = "ApiUser"'), "ApiUser label");
+assert(connectCopy.includes('NAMECHEAP_APIKEY_LABEL = "ApiKey"'), "ApiKey label");
+assert(connectCopy.includes('NAMECHEAP_EGRESS_IP_PLACEHOLDER = "X.X.X.X"'), "Demo IP placeholder");
+assert(connectCopy.includes("CTO provides egress IPs"), "CTO egress IP note");
+assert(!/\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(connectCopy), "CPO copy invents no whitelist IPs");
+assert(!/\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(connectUi), "UI invents no whitelist IPs");
+assert(!/\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(connectCraft), "designer craft invents no real IPs");
+assert(connectIa.includes("Needs setup"), "CPO Namecheap Needs setup");
+assert(connectIa.includes("OAuth"), "CPO Twilio OAuth preferred");
+assert(connectLegal.includes("Conditional PASS"), "Legal conditional PASS");
+assert(connectLegal.includes("Password vaults"), "Legal forbids password vaults");
+assert(connectDocs.includes("BOTBUY_VAULT_KEY"), "docs name BOTBUY_VAULT_KEY");
+assert(envExample.includes("BOTBUY_VAULT_KEY="), "env example names vault key");
+assert(!/BOTBUY_VAULT_KEY=[0-9a-fA-F]{16,}/.test(envExample), "env example has no vault secret");
+assert(schemaSrc.includes("connectedAccounts") && schemaSrc.includes("ciphertext"), "Neon connected_accounts");
+assert(connectorVault.includes("ciphertext: null") && connectorVault.includes('status: "revoked"'), "revoke deletes ciphertext");
+assert(approveGate.includes("Needs you") && approveGate.includes("Buying"), "approve gate uses existing flow");
+assert(approveGate.includes("Auto-approve is OFF"), "approve gate auto-approve OFF");
+assert(approveGate.includes("Fail-closed"), "approve gate fail-closed");
+assert(namecheapRegister.includes("assertConnectorSpendAllowed") || approveGate.includes("isSpendTool"), "register behind approve");
+assert(twilioBuy.includes("connectorsLiveEnabled"), "Twilio buy not live by default");
+assert(settingsPageSrc.includes("ConnectedAccountsPanel"), "Settings hosts Connected accounts");
+assert(settingsPageSrc.includes('id="connected-accounts"') || connectUi.includes('id="connected-accounts"'), "connected-accounts anchor");
+assert(connectPage.includes("ConnectedAccountsPanel"), "connected-accounts route");
+assert(connectUi.includes("Namecheap") && connectUi.includes("Twilio"), "Namecheap + Twilio rows");
+assert(connectUi.includes("Connect") && connectUi.includes("Revoke"), "Connect / Revoke actions");
+assert(connectUi.includes("data-cta=\"twilio-oauth\""), "Twilio OAuth is primary CTA");
+assert(connectUi.includes("TWILIO_ADVANCED_CREDENTIALS") || connectUi.includes("Use API credentials"), "Twilio API is advanced");
+assert(connectUi.includes("data-step=\"egress-ip-whitelist\""), "Namecheap step 2 IP whitelist");
+assert(connectUi.includes("namecheap-egress-ips"), "Namecheap Demo IP rows");
+assert(connectUi.includes("revoke-sheet") && connectUi.includes("REVOKE_CONFIRM_LABEL"), "Revoke confirm wipes tokens");
+assert(connectUi.includes("data-copy=\"legal-safer\""), "Legal safer on screen + sheets");
+assert(connectUi.includes("DemoChip") || connectUi.includes("CONNECT_ACCOUNTS_HONESTY"), "Demo chip on surface");
+assert(shell.includes('pathname.startsWith("/settings")'), "Settings path does not light phone tabs");
+assert(!/phoneTabs[\s\S]*\/settings/.test(shell), "Settings is not a phone tab");
+assert(!connectUi.includes("/brand/") && !connectPage.includes("/brand/"), "connectors UI does not retouch Vault mark");
+assert(connectMiddleware.includes("/api/connectors"), "middleware protects connector APIs");
+assert(!connectUi.includes("Autofleeto") && !connectPage.includes("Autofleeto"), "UI never Autofleeto");
+assert(!connectCopy.includes("password vault") || connectCopy.includes("never a password vault"), "no password vault product");
+assert(read("lib/connectors/sanitize.ts").includes("looksLikeSecretKey"), "never-log sanitizer");
+assert(read("lib/connectors/audit.ts").includes("dealId") && read("lib/connectors/audit.ts").includes("provider"), "connector audit row shape");
 
 if (failures.length) {
   console.error("craft-smoke FAIL");

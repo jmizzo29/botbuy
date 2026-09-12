@@ -1,10 +1,18 @@
 import Link from "next/link";
+import { ConnectedAccountsPanel } from "@/components/connected-accounts";
 import { ProfileForm } from "@/components/profile-form";
 import { SettingsUsageSection } from "@/components/usage-meter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignOutButtonPrimary } from "@/components/auth-session";
 import { requireUser } from "@/lib/auth";
-import { SETTINGS_PROFILE_HREF, SETTINGS_USAGE_TITLE } from "@/lib/cpo-techlux";
+import { CONNECT_ACCOUNTS_HREF } from "@/lib/connectors/copy";
+import { isVaultKeyConfigured } from "@/lib/connectors/crypto";
+import { twilioOauthConfigured } from "@/lib/connectors/http";
+import { listPublicConnectorStatus } from "@/lib/connectors/vault";
+import {
+  SETTINGS_PROFILE_HREF,
+  SETTINGS_USAGE_TITLE,
+} from "@/lib/cpo-techlux";
 import { displayAccountEmail, PROFILE_TITLE } from "@/lib/john-ux";
 import {
   hydrateStore,
@@ -29,17 +37,34 @@ export default async function SettingsPage() {
   const usageEvents = listUsageEvents().filter((event) =>
     myDealIds.has(event.dealId),
   );
+  const connectors = await listPublicConnectorStatus(user.id, {
+    twilioOauthAvailable: twilioOauthConfigured(),
+  });
 
   return (
     <div className="space-y-8">
       <header className="hidden md:block">
         <h1 className="text-3xl font-semibold tracking-tight">Settings</h1>
         <p className="mt-2 text-sm text-muted">
-          Account, {SETTINGS_USAGE_TITLE.toLowerCase()}, and the audit trail. No
-          payment secrets here.
+          Account, connected accounts, {SETTINGS_USAGE_TITLE.toLowerCase()}, and
+          the audit trail. No payment secrets here.
         </p>
       </header>
       <p className="text-xs text-muted md:hidden">Settings</p>
+
+      <ConnectedAccountsPanel
+        providers={connectors}
+        vaultKeyConfigured={isVaultKeyConfigured()}
+        twilioOauthAvailable={twilioOauthConfigured()}
+      />
+      <p className="text-xs text-muted">
+        <Link
+          href={CONNECT_ACCOUNTS_HREF}
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Open Connected accounts
+        </Link>
+      </p>
 
       <Card id="profile">
         <CardHeader>
@@ -83,6 +108,10 @@ export default async function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-2 text-sm leading-relaxed text-muted">
           <p>Card PAN is never stored in BotBuy, logs, or analytics events.</p>
+          <p>
+            Connected-account API tokens are encrypted at rest. Revoke deletes
+            ciphertext. Tokens are never logged.
+          </p>
           <p>
             Vault is multi-rail. Card Available (Stripe/Link is one path). Bank,
             X Money / cash, and Bitcoin Coming. No rail is live.
