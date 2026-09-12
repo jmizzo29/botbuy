@@ -21,7 +21,8 @@ export const BRAND = {
   channelMicro:
     "Any software, any channel. Domains optional. Cars & real estate later.",
   primaryCta: "Sign up",
-  secondaryCta: "Install",
+  /** Quiet land text link — not a peer / secondary button. */
+  installLink: "Install",
   myDealsCta: "My deals",
   pocBanner: "POC · Demo · not live",
   trustLine: "Every deal needs your approval",

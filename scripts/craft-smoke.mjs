@@ -171,6 +171,18 @@ assert(
 );
 assert(land.includes("BRAND.trustLine"), "land fold shows trust despite SoT typo");
 assert(cpoLandNoDemo.includes("Private beta"), "CPO allows Private beta without Demo");
+assert(
+  cpoLandNoDemo.includes("Sign up sole primary") &&
+    cpoLandNoDemo.includes("Install quiet text link"),
+  "CPO land fold CTA is Sign up sole primary",
+);
+assert(!cpoLandNoDemo.includes("dual CTAs"), "CPO land no longer locks dual peer CTAs");
+assert(
+  landNoDemoSot.includes("Sign up sole primary") &&
+    landNoDemoSot.includes("Install quiet text link"),
+  "designer land fold CTA is Sign up sole primary",
+);
+assert(!landNoDemoSot.includes("dual CTAs"), "designer land no longer locks dual peer CTAs");
 assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
 assert(!brand.includes("gate for now"), "land brand has no gate for now");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(land), "land has no $1,000 gate");
@@ -356,7 +368,8 @@ assert(brand.includes("lead: LAND_META_LINE"), "land lead is locked one-liner");
 assert(!brand.includes("Buy software. You approve."), "software-only land tag removed from brand");
 assert(!brand.includes("productTag"), "land has no product-tag slot");
 assert(brand.includes('primaryCta: "Sign up"'), "land primary door is Sign up");
-assert(brand.includes('secondaryCta: "Install"'), "land peer door is Install");
+assert(brand.includes('installLink: "Install"'), "land Install is a quiet link label");
+assert(!brand.includes("secondaryCta"), "land has no peer secondary CTA");
 assert(!brand.includes("Start your first buy"), "land dropped Start your first buy");
 assert(!brand.includes("See how it works"), "land dropped equal-weight See how it works");
 assert(!brand.includes("Vault it."), "brand has no Vault it");
@@ -394,6 +407,16 @@ assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product ta
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(land.includes("LAND_META_LINE"), "land lead one-liner");
 assert(land.includes("LandInstallButton"), "land Install door is wired");
+assert(
+  (land.match(/<Button/g) || []).length === 2,
+  "land fold Buttons are signed-in/out primary only",
+);
+assert(!land.includes("variant="), "land fold Buttons have no secondary/ghost variant");
+assert(!landInstall.includes("<Button"), "land Install is not a Button");
+assert(!landInstall.includes('variant="secondary"'), "land Install is not a secondary button");
+assert(!landInstall.includes('size="lg"'), "land Install is not a large peer button");
+assert(landInstall.includes('data-cta="land-install"'), "land Install still wired");
+assert(landInstall.includes("text-muted"), "land Install is a quiet text link");
 assert(landInstall.includes("publicLand"), "land Install how-to is publicLand");
 assert(a2hsHowTo.includes("publicLand"), "A2HS land path can hide Demo badge");
 assert(a2hsHowTo.includes("LAND_A2HS_COPY"), "land A2HS copy omits Demo");

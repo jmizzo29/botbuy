@@ -49,7 +49,7 @@ export default async function LandPage() {
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-foreground/75">
             {LAND_META_LINE}
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 lg:justify-start">
             {signedIn ? (
               <Button asChild size="lg">
                 <Link href={MY_DEALS_HREF} data-cta="land-my-deals">
