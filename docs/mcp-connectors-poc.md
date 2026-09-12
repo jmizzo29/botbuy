@@ -9,7 +9,8 @@ Internal-first tool layer for **Namecheap** (domains) and **Twilio** (phone numb
 | Source | Lock |
 | --- | --- |
 | [legal/cto-mcp-shortlist-legal-review-v1.md](../legal/cto-mcp-shortlist-legal-review-v1.md) | Conditional PASS · official APIs only · no password vault / HTML login farms · encrypted tokens · revoke deletes ciphertext · never log tokens · no public “live” claim |
-| [cpo-connect-accounts-ia-v1.md](../cpo-connect-accounts-ia-v1.md) | H1 `Connected accounts` · sub `Connect once…` · Legal safer line · Namecheap **Needs setup** (production API eligibility + IP whitelist placeholder) · Twilio OAuth preferred, API key OK for POC with disclosure |
+| [cpo-connect-accounts-ia-v1.md](../cpo-connect-accounts-ia-v1.md) | H1 `Connected accounts` · sub `Connect once…` · Legal safer line · Namecheap **Needs setup** (eligibility + required egress IP step) · Twilio OAuth primary |
+| [designer-connect-accounts-craft/designer-connect-accounts-craft-v1.md](../designer-connect-accounts-craft/designer-connect-accounts-craft-v1.md) | Settings hub Techlux card · ApiUser/ApiKey → required IP whitelist · Demo `X.X.X.X` + `— CTO provides egress IPs —` · Twilio OAuth primary / API advanced · Revoke confirm wipes tokens · Demo chip · Legal safer on screen + sheets |
 
 Register / buy **must** pass the existing deal approve gate (`Needs you` → Approve → `Buying`). Fail-closed if that trail is missing. Search / quote are non-spend.
 
@@ -39,7 +40,7 @@ Optional (real HTTP). If absent, tools return typed stubs + `live: false`:
 - `NAMECHEAP_API_USER`
 - `NAMECHEAP_API_KEY`
 - `NAMECHEAP_USERNAME`
-- `NAMECHEAP_CLIENT_IP` — do not invent; Namecheap whitelist IPs are unpublished. UI copy: “BotBuy will publish whitelist IPs.”
+- `NAMECHEAP_CLIENT_IP` — do not invent. UI IP rows are Demo placeholders `X.X.X.X` with `— CTO provides egress IPs —` until CTO publishes real egress SoT.
 - `NAMECHEAP_API_SANDBOX` — `true` to hit Namecheap sandbox host
 - `TWILIO_ACCOUNT_SID`
 - `TWILIO_AUTH_TOKEN`
@@ -59,4 +60,4 @@ Revoke nulls `ciphertext` + `iv` and sets `status=revoked`.
 
 ## Honesty
 
-Connected ≠ live. Land and public chrome do not mention these connectors. In-app badge: **POC · not live**.
+Connected ≠ live. Land and public chrome do not mention these connectors. In-app chip: **Demo** until POC proven. Legal safer line stays on the section and on connect / revoke sheets. Settings is Account → Settings — not a bottom tab; do not highlight Agents.

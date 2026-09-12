@@ -40,10 +40,22 @@ function desktopActive(pathname: string, href: string) {
 }
 
 function mobileActive(pathname: string, href: string) {
+  // Settings / Intent / Vault are header-menu only. Never light a bottom tab
+  // (including Agents) on Account → Settings or Connected accounts.
+  if (
+    pathname.startsWith("/settings") ||
+    pathname.startsWith("/intent") ||
+    pathname.startsWith("/vault")
+  ) {
+    return false;
+  }
   if (href === MY_DEALS_HREF) {
     return pathname === MY_DEALS_HREF || pathname.startsWith("/deals");
   }
-  return pathname.startsWith(href);
+  if (href === "/agents") {
+    return pathname === "/agents" || pathname.startsWith("/agents/");
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export function AppShell({

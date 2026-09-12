@@ -33,9 +33,9 @@ Legal may proceed on an **official-API connector** path for Namecheap and Twilio
 
 ## Provider notes
 
-**Namecheap.** Production API eligibility is account-gated. IP whitelist is required. Until BotBuy publishes whitelist IPs, the UI stays **Needs setup**. Sandbox ≠ production.
+**Namecheap.** Production API eligibility is account-gated. IP whitelist is required. Until CTO publishes real egress SoT, the UI shows Demo placeholders `X.X.X.X` with `— CTO provides egress IPs —`. Do not invent real-looking IPs. Incomplete eligibility/IP → **Needs setup**. Sandbox ≠ production.
 
-**Twilio.** OAuth preferred when available. API key / auth token connect is acceptable for this POC with disclosure (encrypted, not live, not a public connector).
+**Twilio.** OAuth is the primary connect path. API key / auth token connect is acceptable as advanced / secondary for this POC with disclosure (encrypted, not live, not a public connector).
 
 ## Spend
 
