@@ -408,11 +408,15 @@ body {
 
 .bb-land-cta > a,
 .bb-land-cta > button,
-.bb-land-cta [data-cta] {
-  flex: 1 1 0;
-  min-width: 0;
+.bb-land-cta [data-cta],
+.bb-land-signup,
+.bb-land-signin {
+  flex: 1 1 0%;
+  width: calc((100% - 10px) / 2);
+  min-width: calc((100% - 10px) / 2);
+  max-width: calc((100% - 10px) / 2);
   min-height: 48px;
-  height: auto;
+  height: 48px;
   padding: 0.75rem 1rem;
   border-radius: 9999px;
   display: inline-flex;
@@ -434,16 +438,6 @@ body {
   background: transparent;
   color: rgba(255, 255, 255, 0.92);
   border: 1.5px solid rgba(255, 255, 255, 0.55);
-}
-
-.bb-land-signup,
-.bb-land-signin {
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 48px;
-  height: auto;
-  padding: 0.75rem 1rem;
-  box-sizing: border-box;
 }
 
 .bb-land-signin:hover {
