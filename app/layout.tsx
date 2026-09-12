@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkAppProvider } from "@/components/clerk-app-provider";
 import { PwaRegister } from "@/components/pwa-register";
-import { BRAND, LAND_META_LINE } from "@/lib/brand";
+import { BRAND, LAND_PRODUCT_SUPPORT } from "@/lib/brand";
 import { THEME_BG } from "@/lib/ui-tokens";
 import "./globals.css";
 
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     default: BRAND.name,
     template: `%s · ${BRAND.name}`,
   },
-  description: LAND_META_LINE,
+  description: LAND_PRODUCT_SUPPORT,
   applicationName: BRAND.name,
   metadataBase: new URL("https://botbuyer.ai"),
   appleWebApp: {
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: BRAND.name,
-    description: LAND_META_LINE,
+    description: LAND_PRODUCT_SUPPORT,
     url: "https://botbuyer.ai",
     siteName: BRAND.name,
     images: [
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: BRAND.name,
-    description: LAND_META_LINE,
+    description: LAND_PRODUCT_SUPPORT,
     images: ["https://botbuyer.ai/brand/logo-soft-spine/og/og-1200x630.png"],
   },
 };
