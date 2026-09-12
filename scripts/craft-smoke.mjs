@@ -501,7 +501,7 @@ assert(ledger.cfo?.verified_startup_spend_usd === 179.96, "CFO verified burn $17
 assert(ledger.cfo?.pending_verify_usd === 416.68, "CFO pending $416.68 Savedfast+xfer once");
 
 const LAND_META =
-  "Set spend, intent, and a payment method. BotBuy only moves when you approve.";
+  "Set spend, intent, and a payment method. BotBuyer only moves when you approve.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
 assert(brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying."'), "land H1 lock");
@@ -528,18 +528,15 @@ assert(layout.includes("LAND_META_LINE"), "layout meta uses locked one-liner");
 assert(manifest.includes("LAND_META_LINE"), "manifest uses locked one-liner");
 assert(!layout.includes("BotBuy does the rest."), "layout dropped old vault one-liner");
 assert(!manifest.includes("Vault it."), "manifest dropped Vault it");
-assert(brand.includes('title: "Set spend"'), "how-it-works step 1 title lock");
-assert(brand.includes('body: "Your limit. BotBuy stays inside it."'), "how-it-works step 1 body lock");
-assert(brand.includes('title: "Set intent"'), "how-it-works step 2 title lock");
-assert(brand.includes('body: "Any software, any channel."'), "how-it-works step 2 body lock");
-assert(brand.includes('title: "Add a payment method"'), "how-it-works step 3 title lock");
-assert(
-  brand.includes('body: "Pay at purchase. We don’t hold a balance."'),
-  "how-it-works step 3 body lock",
-);
+assert(brand.includes('title: "Tell it what to find"'), "how-it-works step 1 title lock");
+assert(brand.includes('graphic: "/land/assets/01-tell.svg"'), "how-it-works step 1 graphic");
+assert(brand.includes('title: "BotBuyer brings deals"'), "how-it-works step 2 title lock");
+assert(brand.includes('graphic: "/land/assets/02-deals.svg"'), "how-it-works step 2 graphic");
+assert(brand.includes('title: "You approve. Then it buys."'), "how-it-works step 3 title lock");
+assert(brand.includes('graphic: "/land/assets/03-approve.svg"'), "how-it-works step 3 graphic");
 assert(
   brand.includes(
-    "Set spend, intent, and a payment method. BotBuy only moves when you approve.",
+    "Set spend, intent, and a payment method. BotBuyer only moves when you approve.",
   ),
   "land/meta one-liner lock",
 );
@@ -548,16 +545,18 @@ assert(!brand.includes("Vault it"), "Vault it removed from land brand copy");
 assert(!land.includes("Vault it"), "land has no Vault it");
 assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold");
 assert(land.includes("HowItWorksRail"), "land keeps How it works rail");
-assert(land.includes("ProofStrip"), "land ProofStrip stays");
+assert(!land.includes("ProofStrip"), "land dropped No public proof essay card");
 assert(land.includes("LAND_PRODUCT_H1"), "land H1 uses locked product line");
 assert(land.includes("LAND_PRODUCT_SUPPORT"), "land support sits under H1");
 assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product tag");
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(land.includes("LAND_META_LINE"), "land lead one-liner");
 assert(land.includes("LandInstallButton"), "land Install door is wired");
+assert(land.includes("redirect(MY_DEALS_HREF)"), "signed-in redirects off land");
+assert(!land.includes("land-my-deals"), "My deals is never land primary");
 assert(
-  (land.match(/<Button/g) || []).length === 2,
-  "land fold Buttons are signed-in/out primary only",
+  (land.match(/<Button/g) || []).length === 1,
+  "land fold Button is Sign up only",
 );
 assert(!land.includes("variant="), "land fold Buttons have no secondary/ghost variant");
 assert(!landInstall.includes("<Button"), "land Install is not a Button");
@@ -582,7 +581,23 @@ assert(
   !land.includes("Add to Home Screen for the full app on your phone."),
   "land fold has no A2HS helper copy",
 );
-assert(land.includes("/brand/botbuy-mark.svg"), "land uses Vault mark");
+assert(!land.includes("/brand/botbuy-mark.svg"), "land has no Vault mark");
+assert(!land.includes("botbuy-logo"), "land has no Vault lockup");
+assert(brand.includes('name: "BotBuyer"'), "land brand name is BotBuyer");
+assert(chrome.includes("LAND_WORDMARK"), "land chrome uses BotBuyer text wordmark");
+assert(
+  existsSync(join(root, "land/assets/01-tell.svg")) &&
+    existsSync(join(root, "land/assets/02-deals.svg")) &&
+    existsSync(join(root, "land/assets/03-approve.svg")) &&
+    existsSync(join(root, "land/assets/06-arc.svg")),
+  "land kit SVGs committed under land/assets",
+);
+assert(
+  read("land/assets/02-deals.svg").includes('aria-label="BotBuyer brings deals"'),
+  "02-deals aria-label is BotBuyer",
+);
+assert(how.includes("step.graphic"), "how rail renders graphic panels");
+assert(!how.includes("step.body"), "how rail dropped prose bodies");
 assert(
   !/\bDemo\b/.test([land, chrome, proof, proofLib, how, landInstall].join("\n")),
   "no Demo in / rendered land copy",
