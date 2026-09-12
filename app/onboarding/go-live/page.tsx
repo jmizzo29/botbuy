@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BRAND } from "@/lib/brand";
 import { APPROVE_MICRO } from "@/lib/cpo-techlux";
 import { GO_LIVE_PRIMARY_LABEL } from "@/lib/designer-wire-notes";
+import { requireUser } from "@/lib/auth";
 import { getSpendLimits, listIntents } from "@/lib/store";
 import { formatUsd } from "@/lib/money";
 import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
@@ -13,9 +14,10 @@ export const metadata = {
   title: "Onboarding · Go live",
 };
 
-export default function OnboardingGoLivePage() {
-  const intent = listIntents()[0];
-  const limits = getSpendLimits();
+export default async function OnboardingGoLivePage() {
+  const user = await requireUser();
+  const intent = listIntents(user.id)[0];
+  const limits = getSpendLimits(user.id);
   const ready = isVaultReady();
 
   return (

@@ -12,6 +12,7 @@ import {
   Target,
 } from "lucide-react";
 import { AppMoreMenu } from "@/components/app-more-menu";
+import { SignOutControl } from "@/components/auth-session";
 import { InstallHint } from "@/components/install-hint";
 import { BrandLockup } from "@/components/brand-lockup";
 import { SiteFooter } from "@/components/site-footer";
@@ -102,7 +103,8 @@ export function AppShell({
         </p>
         <div className="rounded-[var(--bb-radius)] bg-black/[0.03] px-3 py-3 ring-1 ring-[var(--bb-line)]">
           <p className="text-sm font-medium">{user.name}</p>
-          <p className="text-xs text-muted">{user.company}</p>
+          <p className="text-xs text-muted">{user.company || user.email}</p>
+          <SignOutControl className="mt-2 block text-xs" />
         </div>
       </aside>
 

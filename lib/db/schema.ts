@@ -16,6 +16,7 @@ import {
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
+  clerkUserId: text("clerk_user_id").unique(),
   email: text("email").notNull().unique(),
   name: text("name").notNull(),
   company: text("company"),

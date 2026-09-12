@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { SettingsUsageSection } from "@/components/usage-meter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCurrentUser } from "@/lib/auth";
+import { SignOutButtonPrimary } from "@/components/auth-session";
+import { requireUser } from "@/lib/auth";
 import { SETTINGS_USAGE_TITLE } from "@/lib/cpo-techlux";
 import {
   hydrateStore,
@@ -20,8 +21,8 @@ export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
   await hydrateStore();
-  const user = getCurrentUser();
-  const logs = listAuditLogs().slice(0, 8);
+  const user = await requireUser();
+  const logs = listAuditLogs(user.id).slice(0, 8);
   const myDealIds = new Set(listDeals(user.id).map((deal) => deal.id));
   const usageEvents = listUsageEvents().filter((event) =>
     myDealIds.has(event.dealId),
@@ -77,9 +78,11 @@ export default async function SettingsPage() {
             X Money / cash, and Bitcoin Coming. No rail is live.
           </p>
           <p>
-            POC session is a seeded owner login. Replace with real auth before
-            any shared deploy.
+            Signed in with Clerk. Session cookies are HttpOnly. 2FA is phase-2.
           </p>
+          <div className="pt-2">
+            <SignOutButtonPrimary />
+          </div>
         </CardContent>
       </Card>
 

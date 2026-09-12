@@ -13,7 +13,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 3. Owner `/admin` Demo badges. Real deal counts OK. No invented live MRR/traffic/paid users. Finance verified-only $179.96; never $596.64 as burn. Coarse usage meter v0: per-deal Estimate stub + per-day Admin tokens_est / calls rollup. Demo · not live. Never Actual $.
 4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
 5. ProofStrip empty until verified live aggregates. Public copy: personal deals never count as public proof. No placeholders. No CHO-gated / `verified_at` caption on land.
-6. Land + onboarding: `/` `/signup` `/onboarding/intent|spend|vault|go-live` `/home`
+6. Land + onboarding: `/` `/signup` `/sign-in` `/onboarding/intent|spend|vault|go-live` `/home`
 7. After Closed, CTA **Activate agents on this asset** → sheet → `/agents` and `/agents/[assetId]`. Suite in every license. Demo · not live. HOLD. Agents never bypass $1,000 approval.
 
 No seven-figure claims in product UI. No paid Stripe/Issuing.
@@ -37,7 +37,8 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | Route | What |
 | --- | --- |
 | `/` | Land — G Techlux light · locked one-liner `Set spend, intent, and a payment method. BotBuy executes what you approve.` + `POC · Demo · not live` + trust line + techlux-air + veil + How it works 3-card rail + empty ProofStrip. Vault is logo only. Soft-signal HOLD |
-| `/signup` | Signup one-liner |
+| `/signup` | Clerk email sign-up → onboarding |
+| `/sign-in` | Clerk email sign-in → My deals |
 | `/onboarding/intent` | Set intent — software-first John templates |
 | `/onboarding/spend` | Set spend |
 | `/onboarding/vault` | Add a payment method — linked methods / pay-at-purchase |
@@ -62,6 +63,14 @@ Detail microcopy on imported rows: `Added from your history. BotBuy didn’t exe
 
 Every imported row persists `source: "imported"`, `agent_executed: false`, plus `price_verified`, `amount_verified`, and `amount_status` from JSON. `deal_botbuyer_ai` is CHO-cleared verified $179.96 (`price_verified=true`, `amount_status=verified`, `amount_verified=true`). That personal $ is **not** platform traction and stays out of the public ProofStrip. Savedfast and the transfer fee may be personal Closed with `imported_unverified` — never `price_verified`, never Customer GMV, never ProofStrip closed GMV.
 
+## Auth (Clerk + Neon)
+
+Identity is Clerk. `getCurrentUser()` resolves the session to a Neon `users` row (`clerk_user_id` unique). John’s imported ledger stays on seed id `john-mitchell` when his Clerk email matches `john.mitchell@buildstarlabs.com`. New buyers get their own row; auto-approve stays OFF.
+
+`bb_signup` is not identity. Missing Clerk keys: build still completes; app routes fail closed (no DEMO_USER).
+
+John must add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `DATABASE_URL` in Vercel. Optional: `CLERK_WEBHOOK_SECRET` + Clerk webhook → `/api/webhooks/clerk`. Apply `drizzle/0001_clerk_user_id.sql` or `npm run db:push`.
+
 ## Local
 
 ```bash
@@ -81,11 +90,13 @@ Open `/` (empty proof), `/home` (3 personal deals), `/deals/deal_savedfast` (per
 
 1. Import `jmizzo29/botbuy`. Next.js preset.
 2. Leave live flags false. No Stripe keys required.
-3. Confirm land ProofStrip is empty and `/home` shows John’s three deals with CHO-safe amounts.
-4. **Custom domain later:** attach **https://botbuyer.ai** only (and www). Do not use other brand hosts.
+3. Add Clerk keys + `DATABASE_URL` before production beta auth works.
+4. Confirm land ProofStrip is empty and `/home` shows John’s three deals with CHO-safe amounts.
+5. **Custom domain later:** attach **https://botbuyer.ai** only (and www). Do not use other brand hosts.
 
 ## Security
 
+- Clerk session is identity. `bb_signup` is not.
 - No PAN, CVV, or Issuing in the app or audit log.
 - Admin metrics stay stub-badged. Public proof ignores imported rows.
 - `POST /api/deals/[id]/status` returns 409 on illegal or unverified close.

@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { getAdminMetrics } from "@/lib/admin-metrics";
-import { isAdmin } from "@/lib/auth";
+import { requireApiAdmin } from "@/lib/api-auth";
 import { hydrateStore } from "@/lib/store";
 
 export async function GET() {
-  if (!isAdmin()) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  const gated = await requireApiAdmin();
+  if (gated.error) return gated.error;
   await hydrateStore();
   return NextResponse.json(getAdminMetrics());
 }

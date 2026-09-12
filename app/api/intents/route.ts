@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { requireApiUser } from "@/lib/api-auth";
 import { addIntent, listIntents } from "@/lib/store";
 
 const createIntent = z.object({
@@ -8,11 +9,15 @@ const createIntent = z.object({
   maxPriceUsd: z.number().positive().max(1000),
 });
 
-export function GET() {
-  return NextResponse.json({ intents: listIntents() });
+export async function GET() {
+  const gated = await requireApiUser();
+  if (gated.error) return gated.error;
+  return NextResponse.json({ intents: listIntents(gated.user.id) });
 }
 
 export async function POST(request: Request) {
+  const gated = await requireApiUser();
+  if (gated.error) return gated.error;
   const body = await request.json().catch(() => null);
   const parsed = createIntent.safeParse(body);
   if (!parsed.success) {
@@ -21,6 +26,6 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
-  const intent = addIntent(parsed.data);
+  const intent = addIntent(parsed.data, gated.user.id);
   return NextResponse.json({ intent }, { status: 201 });
 }

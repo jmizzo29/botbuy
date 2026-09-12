@@ -15,7 +15,12 @@ const button = read("components/ui/button.tsx");
 const tokens = read("lib/ui-tokens.ts");
 const css = read("app/globals.css");
 const land = read("app/page.tsx");
-const signup = read("app/signup/page.tsx");
+const signup = read("app/signup/[[...sign-up]]/page.tsx");
+const signIn = read("app/sign-in/[[...sign-in]]/page.tsx");
+const middleware = read("middleware.ts");
+const schema = read("lib/db/schema.ts");
+const authLib = read("lib/auth.ts");
+const sessionLib = read("lib/session.ts");
 const proof = read("components/proof-strip.tsx");
 const proofLib = read("lib/proof.ts");
 const dealUi = read("lib/deal-ui.ts");
@@ -127,7 +132,7 @@ assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not gh
 
 const primaryBlocks = [
   ["land CTA", land, "<Button asChild size=\"lg\">"],
-  ["signup Continue", signup, "<Button type=\"submit\""],
+  ["signup Clerk", signup, "data-cta=\"clerk-signup\""],
   ["go-live Run", goLive, "data-cta=\"go-live-run\""],
 ];
 for (const [name, src, needle] of primaryBlocks) {
@@ -268,8 +273,20 @@ assert(!land.includes("BRAND.pocBanner"), "land fold has no POC banner stack");
 assert(signup.includes("BRAND.pocBanner"), "signup Demo pill");
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "POC stays footer meta");
 assert(signup.includes("Sign up"), "signup eyebrow");
-assert(signup.includes("Continue"), "signup Continue label");
-assert(!signup.includes("variant="), "signup Continue stays primary");
+assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
+assert(signIn.includes("<SignIn"), "sign-in uses Clerk SignIn");
+assert(signup.includes("Sign in"), "signup offers Sign in");
+assert(!signup.includes("in-memory session"), "signup scrubbed in-memory copy");
+assert(!signup.includes("not a live account"), "signup scrubbed POC persist copy");
+assert(!signup.includes("persistSignupAction"), "signup is not in-memory persist");
+assert(middleware.includes("clerkMiddleware"), "middleware uses Clerk");
+assert(middleware.includes("/home"), "middleware protects /home");
+assert(schema.includes("clerkUserId"), "users.clerkUserId column");
+assert(schema.includes('autoApprove: boolean("auto_approve").notNull().default(false)'), "autoApprove default false");
+assert(authLib.includes("resolveOrCreateAppUser"), "Clerk session resolves Neon user");
+assert(!authLib.includes("return DEMO_USER"), "getCurrentUser is not DEMO_USER");
+assert(sessionLib.includes("getClerkUserId"), "session is Clerk, not bb_signup");
+assert(sessionLib.includes("bb_signup` is not auth") || sessionLib.includes("Not identity") || sessionLib.includes("is not auth"), "bb_signup is not identity");
 
 assert(
   proofLib.includes(
@@ -289,6 +306,8 @@ assert(!proof.includes("verified_at"), "public proof caption has no verified_at"
 
 assert(chrome.includes("hasPublicSession"), "nav gates My deals on session");
 assert(chrome.includes("MY_DEALS_LABEL") || chrome.includes("My deals"), "My deals still exists after session");
+assert(chrome.includes("/sign-in"), "public chrome offers Sign in");
+assert(shell.includes("SignOutControl"), "app chrome Sign out");
 
 assert(empty.includes("GO_LIVE_PRIMARY_LABEL"), "Searching empty uses Run BotBuy lock");
 assert(empty.includes('SEARCHING_EMPTY_SECONDARY = "Edit intent"'), "Searching Edit intent");

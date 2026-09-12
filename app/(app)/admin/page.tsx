@@ -22,7 +22,7 @@ export const metadata = {
 };
 
 export default async function AdminPage() {
-  if (!isAdmin()) notFound();
+  if (!(await isAdmin())) notFound();
   await hydrateStore();
 
   const deals = listDeals();

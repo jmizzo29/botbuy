@@ -1,6 +1,6 @@
 import { DealsTable } from "@/components/deals-table";
 import { Badge } from "@/components/ui/badge";
-import { getCurrentUser } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import {
   AUTO_APPROVE_OFF,
   MY_DEALS_LABEL,
@@ -17,7 +17,7 @@ export const metadata = {
 
 export default async function HomePage() {
   await hydrateStore();
-  const user = getCurrentUser();
+  const user = await requireUser();
   const deals = listDeals(user.id);
   const remaining = formatUsd(remainingAfterVerified(verifiedSpendUsd(user.id)));
   const vault = listVaultRefs(user.id)[0];
