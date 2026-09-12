@@ -21,6 +21,7 @@ export function LandInstallButton() {
       </Button>
       {howTo ? (
         <A2hsHowToSheet
+          publicLand
           onClose={() => setHowTo(false)}
           onDismiss={dismiss}
         />

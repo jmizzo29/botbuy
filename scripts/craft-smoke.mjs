@@ -107,11 +107,10 @@ assert(
 assert(!css.includes("--bb-bg: #050A0C"), "default bg is not black #050A0C");
 assert(!css.includes("background-color: var(--bb-demo)"), "Demo gold is not CTA fill");
 assert(
-  land.includes("DEMO_PILL_CLASS") ||
-    chrome.includes("DEMO_PILL_CLASS") ||
-    land.includes("bg-demo"),
-  "land Demo pill token",
+  !land.includes("DEMO_PILL_CLASS") && !land.includes("bg-demo"),
+  "land fold has no Demo pill token",
 );
+assert(!chrome.includes("DEMO_PILL_CLASS"), "land chrome has no Demo pill token");
 assert(shell.includes("bg-background"), "app shell uses palette bg");
 assert(chrome.includes("bg-background"), "land chrome uses palette bg");
 assert(demoBadge.includes("DEMO_PILL_CLASS"), "Demo badge uses demo token");
@@ -135,7 +134,43 @@ for (const [name, src, needle] of primaryBlocks) {
   assert(src.includes(needle), `${name} primary present`);
 }
 
-assert(brand.includes('trustLine: "Demo · every deal needs your approval"'), "CPO trust line without $1k");
+assert(brand.includes('trustLine: "Every deal needs your approval"'), "John/CEO land trust lock");
+assert(!brand.includes("Demo · every deal"), "old Demo trust prefix removed");
+assert(brand.includes('landHonesty: "Private beta"'), "land quiet Private beta honesty");
+assert(
+  existsSync(join(root, "cpo-land-no-demo-v1.md")),
+  "CPO land no-Demo SoT committed",
+);
+assert(
+  existsSync(join(root, "designer-land-no-demo-lock-v1.md")),
+  "designer land no-Demo SoT committed",
+);
+const cpoLandNoDemo = read("cpo-land-no-demo-v1.md");
+const landNoDemoSot = read("designer-land-no-demo-lock-v1.md");
+assert(
+  cpoLandNoDemo.includes("`Every deal needs your approval`"),
+  "CPO land no-Demo names locked trust",
+);
+assert(!cpoLandNoDemo.includes("Demo · every deal"), "CPO land no-Demo has no Demo trust prefix");
+assert(
+  landNoDemoSot.includes("`Every deal needs your approval`"),
+  "land no-Demo SoT names locked trust",
+);
+assert(
+  landNoDemoSot.includes("cpo-land-no-demo-v1.md"),
+  "designer land no-Demo points at CPO IA",
+);
+assert(
+  cpoLandNoDemo.includes("designer-land-no-demo-lock-v1.md"),
+  "CPO land no-Demo points at designer craft",
+);
+assert(
+  (cpoLandNoDemo.includes("draft typo") || landNoDemoSot.includes("draft typo")) &&
+    (cpoLandNoDemo.includes("void") || landNoDemoSot.includes("void")),
+  "land no-Demo SoT voids Do not show trust typo",
+);
+assert(land.includes("BRAND.trustLine"), "land fold shows trust despite SoT typo");
+assert(cpoLandNoDemo.includes("Private beta"), "CPO allows Private beta without Demo");
 assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
 assert(!brand.includes("gate for now"), "land brand has no gate for now");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(land), "land has no $1,000 gate");
@@ -161,8 +196,11 @@ assert(
 assert(proofLib.includes('PROOF_EMPTY_MICRO = "No placeholders."'), "ProofStrip micro");
 assert(proof.includes("PROOF_EMPTY_COPY"), "ProofStrip uses empty body");
 assert(proof.includes("PROOF_EMPTY_MICRO"), "ProofStrip uses micro");
-assert(proof.includes("LAND_PROOF_CAPTION") || proof.includes("CHO-gated"), "land proof is Demo/empty CHO-gated");
-assert(proofLib.includes("LAND_PROOF_CAPTION"), "proof lib keeps land CHO-gated caption");
+assert(proof.includes("LAND_PROOF_CAPTION"), "land proof uses empty caption");
+assert(proofLib.includes('LAND_PROOF_CAPTION = "No public proof yet"'), "land proof empty honesty");
+assert(!proof.includes("ProofBadge"), "land proof has no Demo / empty badge");
+assert(!proofLib.includes("Demo / empty"), "land proof caption has no Demo/empty wording");
+assert(!proof.includes("Demo"), "land proof strip has no Demo copy");
 assert(!proof.includes("verified_at"), "public proof caption has no verified_at");
 
 assert(chrome.includes("hasPublicSession"), "nav gates My deals on session");
@@ -210,7 +248,12 @@ assert(!vaultPage.includes("$1,000 gate"), "vault page has no $1,000 gate");
 assert(!vaultPage.includes("Fund your vault"), "vault page has no Fund your vault");
 assert(!vaultPage.toLowerCase().includes("balance"), "vault page has no balance");
 assert(vaultApi.includes("VAULT_H1"), "vault API uses VAULT_H1");
-assert(chrome.includes("DEMO_PILL_CLASS") && chrome.includes(">Demo<"), "land header Demo pill");
+assert(!chrome.includes(">Demo<"), "land header has no Demo badge");
+assert(
+  chrome.includes("BRAND.landHonesty") || chrome.includes("Private beta"),
+  "land header quiet Private beta",
+);
+assert(chrome.includes('href="/beta"'), "land Private beta leans on /beta");
 assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
 assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuy only runs what you approve."), "go-live approve micro");
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
@@ -351,11 +394,24 @@ assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product ta
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(land.includes("LAND_META_LINE"), "land lead one-liner");
 assert(land.includes("LandInstallButton"), "land Install door is wired");
+assert(landInstall.includes("publicLand"), "land Install how-to is publicLand");
+assert(a2hsHowTo.includes("publicLand"), "A2HS land path can hide Demo badge");
+assert(a2hsHowTo.includes("LAND_A2HS_COPY"), "land A2HS copy omits Demo");
+assert(
+  read("lib/cpo-techlux.ts").includes(
+    "Add BotBuy to your Home Screen. Not an App Store or Play listing.",
+  ),
+  "land A2HS honesty has no Demo prefix",
+);
 assert(!land.includes("Start your first buy"), "land fold has no Start your first buy");
 assert(!land.includes("See how it works"), "how-it-works is not a fold CTA");
 assert(!land.includes('href="#how"'), "how-it-works is secondary scroll only");
 assert(land.includes("LAND_INSTALL_HELPER") || land.includes("Add to Home Screen for the full app on your phone."), "land install helper");
 assert(land.includes("/brand/botbuy-mark.svg"), "land uses Vault mark");
+assert(
+  !/\bDemo\b/.test([land, chrome, proof, proofLib, how, landInstall].join("\n")),
+  "no Demo in / rendered land copy",
+);
 assert(css.includes("land-bg-techlux-air"), "techlux-air asset token stays");
 assert(css.includes(".bb-land-veil") && css.includes("var(--bb-veil)"), "land veil token");
 assert(
@@ -505,7 +561,8 @@ assert(approveUi.includes("w-full sm:w-auto") || approveUi.includes("w-full"), "
 assert(approveUi.includes("min-h-11"), "Approve/Reject 44pt taps");
 assert(existsSync(join(root, "designer-ui-mocks-mobile-techlux.md")), "designer mobile Techlux visual SoT");
 const designerMocks = read("designer-ui-mocks-mobile-techlux.md");
-assert(designerMocks.includes("Demo · every deal needs your approval"), "designer SoT keeps land trust");
+assert(designerMocks.includes("Every deal needs your approval"), "designer SoT keeps land trust");
+assert(!designerMocks.includes("Demo · every deal needs your approval"), "designer SoT dropped Demo land trust");
 assert(designerMocks.includes("Approve sheet"), "designer SoT locks Approve sheet");
 assert(designerMocks.includes("Add to Home Screen"), "designer SoT locks A2HS");
 const approveSheet = read("components/approve-sheet.tsx");

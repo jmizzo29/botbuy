@@ -24,7 +24,8 @@ export const BRAND = {
   secondaryCta: "Install",
   myDealsCta: "My deals",
   pocBanner: "POC · Demo · not live",
-  trustLine: "Demo · every deal needs your approval",
+  trustLine: "Every deal needs your approval",
+  landHonesty: "Private beta",
   footerHold: "POC on botbuyer.ai · not an announced launch",
   registration: "registered (Namecheap, 2026-09-11)",
 } as const;

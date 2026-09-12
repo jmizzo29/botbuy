@@ -2,11 +2,9 @@ import Link from "next/link";
 import { BrandLockup } from "@/components/brand-lockup";
 import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
-import { Badge } from "@/components/ui/badge";
 import { BRAND } from "@/lib/brand";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
-import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
 
 export function PublicChrome({
@@ -47,7 +45,11 @@ async function PublicNav({ land }: { land: boolean }) {
   const session = await hasPublicSession();
   return (
     <div className="flex items-center gap-3 text-sm">
-      {land ? <Badge className={DEMO_PILL_CLASS}>Demo</Badge> : null}
+      {land ? (
+        <Link href="/beta" className="text-xs text-muted hover:text-foreground">
+          {BRAND.landHonesty}
+        </Link>
+      ) : null}
       {session ? (
         <Link
           href={MY_DEALS_HREF}

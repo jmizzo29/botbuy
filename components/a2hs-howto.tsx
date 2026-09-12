@@ -11,6 +11,7 @@ import {
   A2HS_HOW,
   A2HS_STEPS,
   A2HS_TITLE,
+  LAND_A2HS_COPY,
 } from "@/lib/cpo-techlux";
 import { DEMO_PILL_CLASS, SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
@@ -18,9 +19,11 @@ import { cn } from "@/lib/utils";
 export function A2hsHowToSheet({
   onClose,
   onDismiss,
+  publicLand = false,
 }: {
   onClose: () => void;
   onDismiss: () => void;
+  publicLand?: boolean;
 }) {
   if (typeof document === "undefined") return null;
 
@@ -53,10 +56,14 @@ export function A2hsHowToSheet({
           {A2HS_TITLE}
         </p>
         <p className="mt-2 text-center text-sm text-muted">{A2HS_HOW}</p>
-        <div className="mt-3 flex justify-center gap-2">
-          <Badge className={DEMO_PILL_CLASS}>Demo</Badge>
-          <Badge className={DEMO_PILL_CLASS}>{BRAND.trustLine}</Badge>
-        </div>
+        {publicLand ? (
+          <p className="mt-3 text-center text-sm text-muted">{BRAND.trustLine}</p>
+        ) : (
+          <div className="mt-3 flex justify-center gap-2">
+            <Badge className={DEMO_PILL_CLASS}>Demo</Badge>
+            <Badge className={DEMO_PILL_CLASS}>{BRAND.trustLine}</Badge>
+          </div>
+        )}
         <ol className="mt-5 space-y-3">
           {A2HS_STEPS.map((step, index) => (
             <li key={step.title} className="flex gap-3 text-sm">
@@ -81,7 +88,9 @@ export function A2hsHowToSheet({
           {A2HS_GOT_IT}
         </Button>
         <p className="mt-3 text-center text-xs text-muted">{LAND_META_LINE}</p>
-        <p className="mt-1 text-center text-xs text-muted">{A2HS_COPY}</p>
+        <p className="mt-1 text-center text-xs text-muted">
+          {publicLand ? LAND_A2HS_COPY : A2HS_COPY}
+        </p>
       </div>
     </div>,
     document.body,
