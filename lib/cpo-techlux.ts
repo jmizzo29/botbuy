@@ -27,9 +27,12 @@ export const REJECT_STATUS = "Failed" as const;
 
 export const LAND_AIR_SRC = "/brand/techlux/land-bg-techlux-air.png" as const;
 
-/** Discreet A2HS — Demo-honest, not a store listing. */
+/** Discreet A2HS — Demo-honest, not a store listing. In-app keeps Demo. */
 export const A2HS_COPY =
   "Add BotBuy to your Home Screen. Demo · not an App Store or Play listing." as const;
+/** Land Install how-to — honest, no Demo badge wording. */
+export const LAND_A2HS_COPY =
+  "Add BotBuy to your Home Screen. Not an App Store or Play listing." as const;
 export const A2HS_IOS =
   "On iPhone: Share → Add to Home Screen. Demo · not an App Store app." as const;
 export const A2HS_TITLE = "Add BotBuy to Home Screen" as const;

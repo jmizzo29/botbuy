@@ -18,9 +18,9 @@ export const PROOF_EMPTY_COPY =
 
 export const PROOF_EMPTY_MICRO = "No placeholders.";
 
-/** Land A · Product door — Demo/empty CHO-gated. No fake traction. */
-export const LAND_PROOF_CAPTION = "Demo / empty · CHO-gated" as const;
-export const LAND_PROOF_MICRO = "Proof appears when CHO-verified." as const;
+/** Land A · Product door — empty honesty, no invented numbers. */
+export const LAND_PROOF_CAPTION = "No public proof yet" as const;
+export const LAND_PROOF_MICRO = "Proof appears when verified." as const;
 
 export function getPublicProof(): ProofStats {
   if (!CHO_PROOF.verified_at) {

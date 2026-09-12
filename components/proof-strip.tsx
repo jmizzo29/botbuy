@@ -1,4 +1,3 @@
-import { ProofBadge } from "@/components/demo-badge";
 import { formatUsd } from "@/lib/money";
 import {
   getPublicProof,
@@ -20,12 +19,12 @@ export function ProofStrip({ compact = false }: { compact?: boolean }) {
       <div className="flex flex-wrap items-center gap-2">
         <span
           aria-hidden="true"
-          className="h-2 w-2 rounded-full bg-[var(--bb-demo)]"
+          className="h-2 w-2 rounded-full bg-muted/50"
         />
         <p className="text-sm text-foreground/80">
           {empty ? LAND_PROOF_CAPTION : "Live platform aggregates"}
         </p>
-        {empty ? <ProofBadge /> : <span className="text-xs text-success">Live</span>}
+        {empty ? null : <span className="text-xs text-success">Live</span>}
       </div>
       {empty ? (
         compact ? null : (
