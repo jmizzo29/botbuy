@@ -250,7 +250,9 @@ body {
   z-index: 4;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
   width: 100%;
   padding: max(0.85rem, env(safe-area-inset-top, 0px)) 1.25rem 0.75rem;
   background: transparent;
@@ -267,7 +269,9 @@ body {
 .bb-land-nav {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .bb-land-link {
@@ -329,6 +333,7 @@ body {
   z-index: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
   flex: 1 1 auto;
   min-height: inherit;
 }
@@ -449,8 +454,14 @@ body {
 
 /* Phone / max-lg: mobile-density-v1 + equal CTA boxes. Soft-signal HOLD. */
 @media (max-width: 1023px) {
+  .bb-land-header,
+  .bb-land-nav {
+    justify-content: center;
+  }
+
   .bb-land-stage .bb-land-arc {
     align-items: flex-end;
+    justify-content: center;
     margin-block-end: 1.25rem;
     padding-bottom: 0;
   }
@@ -477,7 +488,14 @@ body {
 
 @media (min-width: 1024px) {
   .bb-land-header {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 0.9rem;
     padding: max(1.15rem, env(safe-area-inset-top, 0px)) 5.5rem 1rem;
+  }
+
+  .bb-land-nav {
+    justify-content: flex-end;
   }
 
   .bb-land-lockup {
