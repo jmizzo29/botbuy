@@ -8,7 +8,6 @@ import {
   BRAND,
   LAND_ARC_LABEL,
   LAND_ARC_SRC,
-  LAND_META_LINE,
   LAND_PRODUCT_H1,
   LAND_PRODUCT_SUPPORT,
   SIGN_IN_H1,
@@ -19,7 +18,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: BRAND.name,
-  description: BRAND.signupLine,
+  description: LAND_PRODUCT_SUPPORT,
 };
 
 export const viewport: Viewport = {
@@ -39,9 +38,6 @@ export default async function LandPage() {
             </h1>
             <p className="bb-land-support">
               {LAND_PRODUCT_SUPPORT}
-            </p>
-            <p className="bb-land-meta">
-              {LAND_META_LINE}
             </p>
             <div className="bb-land-cta">
               <Button asChild size="lg" className="bb-land-signup">
