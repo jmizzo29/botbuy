@@ -1,4 +1,4 @@
-# BotBuy site pages SoT
+# BotBuyer site pages SoT
 
 Publish greenlit (John). Soft-signal HOLD = marketing posts only.  
 Entity: **Build Star Labs · Florida**  

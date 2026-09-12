@@ -28,7 +28,7 @@ Route: `/onboarding/intent` (Clerk after-sign-up). In-app: `/intent`.
 
 | Slot | Copy |
 | --- | --- |
-| H1 | `What should BotBuy find?` |
+| H1 | `What should BotBuyer find?` |
 | Sub | `Pick a starter or describe it yourself.` |
 | CTA | `Start search` |
 | Textarea label | `Describe what you want` |
@@ -49,7 +49,7 @@ Agents do not chat. They provide deals into My deals.
 | --- | --- |
 | Empty title | `Nothing searching yet` |
 | Empty body | `Pick a starter or describe it yourself. Searching deals show up here.` |
-| Progress | `BotBuy is searching. Deals show up here.` |
+| Progress | `BotBuyer is searching. Deals show up here.` |
 | Agents honesty | `Agents provide deals in My deals. This tab is Demo — no live agent chat.` |
 
 - Intent saved → a Searching deal appears in the inbox.
@@ -81,7 +81,7 @@ Settings → **Your details**. Also `/settings/profile`.
 
 ## Eng acceptance
 
-1. `/onboarding/intent` H1 is `What should BotBuy find?` and sub is `Pick a starter or describe it yourself.`
+1. `/onboarding/intent` H1 is `What should BotBuyer find?` and sub is `Pick a starter or describe it yourself.`
 2. Four to six software-first template chips load from `JOHN_INTENT_TEMPLATES`.
 3. Textarea `Describe what you want` is always visible.
 4. Optional collapsed helpers: max price / must include / avoid.

@@ -6,7 +6,7 @@ import {
 import { SITE_OPERATOR } from "@/lib/site-pages";
 
 /** About captions follow Land E. Soft-signal HOLD. Navy O1 mark is /about only. */
-export const ABOUT_PRODUCT = "BotBuy" as const;
+export const ABOUT_PRODUCT = "BotBuyer" as const;
 
 export const ABOUT_ENTITY = `${SITE_OPERATOR} · Private beta` as const;
 
@@ -24,7 +24,7 @@ export const ABOUT_STEPS = [
   },
   {
     n: "02",
-    caption: "BotBuy brings deals",
+    caption: "BotBuyer brings deals",
     art: "/about/assets/03-decide.svg",
   },
   {

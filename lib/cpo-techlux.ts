@@ -9,7 +9,7 @@ export const LAND_FINDABILITY =
   "After you sign in, your deals live in My deals" as const;
 
 export const APPROVE_MICRO =
-  "BotBuy only runs what you approve." as const;
+  "BotBuyer only moves when you approve." as const;
 
 export const APPROVE_LABEL = "Approve" as const;
 export const REJECT_LABEL = "Reject" as const;
@@ -29,14 +29,14 @@ export const LAND_AIR_SRC = "/brand/techlux/land-bg-techlux-air.png" as const;
 
 /** Discreet A2HS — Demo-honest, not a store listing. In-app keeps Demo. */
 export const A2HS_COPY =
-  "Add BotBuy to your Home Screen. Demo · not an App Store or Play listing." as const;
+  "Add BotBuyer to your Home Screen. Demo · not an App Store or Play listing." as const;
 /** Land Install how-to — honest, no Demo badge wording. */
 export const LAND_A2HS_COPY =
-  "Add BotBuy to your Home Screen. Not an App Store or Play listing." as const;
+  "Add BotBuyer to your Home Screen. Not an App Store or Play listing." as const;
 export const A2HS_IOS =
   "On iPhone: Share → Add to Home Screen. Demo · not an App Store app." as const;
-export const A2HS_TITLE = "Add BotBuy to Home Screen" as const;
-export const A2HS_BAR_TITLE = "Install BotBuy" as const;
+export const A2HS_TITLE = "Add BotBuyer to Home Screen" as const;
+export const A2HS_BAR_TITLE = "Install BotBuyer" as const;
 export const A2HS_BAR_SUB = "Add to Home Screen" as const;
 export const A2HS_ACTION = "Install" as const;
 export const A2HS_DISMISS = "Not now" as const;

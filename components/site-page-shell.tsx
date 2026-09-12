@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { BRAND } from "@/lib/brand";
 import {
   EARLY_ACCESS_HONESTY,
   SITE_EMPTY,
@@ -29,7 +30,7 @@ export function SitePageShell({
       )}
     >
       <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
-        BotBuy
+        {BRAND.name}
       </p>
       <p className="mt-6 text-sm leading-relaxed text-muted">
         {EARLY_ACCESS_HONESTY}

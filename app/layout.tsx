@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkAppProvider } from "@/components/clerk-app-provider";
 import { PwaRegister } from "@/components/pwa-register";
-import { LAND_META_LINE } from "@/lib/brand";
+import { BRAND, LAND_META_LINE } from "@/lib/brand";
 import { THEME_BG } from "@/lib/ui-tokens";
 import "./globals.css";
 
@@ -18,19 +18,20 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "BotBuy",
-    template: "%s · BotBuy",
+    default: BRAND.name,
+    template: `%s · ${BRAND.name}`,
   },
   description: LAND_META_LINE,
-  applicationName: "BotBuy",
+  applicationName: BRAND.name,
   metadataBase: new URL("https://botbuyer.ai"),
   appleWebApp: {
     capable: true,
-    title: "BotBuy",
+    title: BRAND.name,
     statusBarStyle: "default",
   },
   other: {
     "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-title": BRAND.name,
   },
   icons: {
     icon: [
@@ -41,23 +42,23 @@ export const metadata: Metadata = {
     apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
   },
   openGraph: {
-    title: "BotBuy",
+    title: BRAND.name,
     description: LAND_META_LINE,
     url: "https://botbuyer.ai",
-    siteName: "BotBuy",
+    siteName: BRAND.name,
     images: [
       {
         url: "/brand/og-1200x630.png",
         width: 1200,
         height: 630,
-        alt: "BotBuy",
+        alt: BRAND.name,
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "BotBuy",
+    title: BRAND.name,
     description: LAND_META_LINE,
     images: ["https://botbuyer.ai/brand/og-1200x630.png"],
   },

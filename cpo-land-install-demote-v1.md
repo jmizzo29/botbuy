@@ -15,7 +15,7 @@ Scope: public land fold CTAs only. Header Sign up text, A2HS how-to, and in-app 
 ## Keep
 
 - H1: `Find it. Decide. Buy anything.`
-- One-liner: `Set spend, intent, and a payment method. BotBuy executes what you approve.`
+- One-liner: `Set spend, intent, and a payment method. BotBuyer only moves when you approve.`
 - Trust: `Every deal needs your approval`
 - Private beta honesty (no Demo)
 - Techlux · Vault mark

@@ -2,7 +2,7 @@ import { isNonLedgerDemoSeed } from "@/lib/demo-needs-you";
 import type { Deal } from "@/lib/types";
 
 export const HISTORY_MICRO =
-  "Added from your history. BotBuy didn’t execute this purchase.";
+  "Added from your history. BotBuyer didn’t execute this purchase.";
 
 /**
  * CPO/CTO ledger SoT for the price component (acceptance 07 §F).

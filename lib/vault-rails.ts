@@ -1,7 +1,7 @@
 /**
  * CPO vault SoT. Soft-signal HOLD — never claim rails live.
  * Vault (brand) = linked payment methods / spend-through / pay-at-purchase.
- * NOT custodial stored-value, omnibus float, or a BotBuy-held balance.
+ * NOT custodial stored-value, omnibus float, or a BotBuyer-held balance.
  * Available = can make vault-ready. Coming does not unlock Run.
  * Stripe/Link is one card path, not the only story.
  */
@@ -28,7 +28,7 @@ export const VAULT_FUND_IN_RAILS: VaultRail[] = [
     id: "bank",
     label: "Bank",
     detail:
-      "ACH and wire as linked methods when the rail is built. Not a BotBuy deposit balance.",
+      "ACH and wire as linked methods when the rail is built. Not a BotBuyer deposit balance.",
     badge: "Coming",
     live: false,
   },
@@ -56,7 +56,7 @@ export const VAULT_HOLD_NOTE =
 export const VAULT_H1 = "Add a payment method";
 
 export const VAULT_SUB =
-  "Link how BotBuy pays when you approve a deal. We don’t hold a balance.";
+  "Link how BotBuyer pays when you approve a deal. We don’t hold a balance.";
 
 export const VAULT_TRUST =
   "Pay at purchase from your linked method. Your spend limit still applies.";

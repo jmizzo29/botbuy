@@ -17,11 +17,11 @@ Captions: exact strings below (Land E + CPO caption-length). No Demo / $1k / met
    - **H1** `Your AI agent for buying.`
    - Teal hairline under H1
    - **Support** `Less tab-chasing. Same hard approve.`
-   - **One-liner** `Set spend, intent, and a payment method. BotBuy only moves when you approve.`
+   - **One-liner** `Set spend, intent, and a payment method. BotBuyer only moves when you approve.`
    - Arc graphic `assets/06-arc.svg` (Find → Decide → Buy)
 3. **How it works** (3 panels — caption + illustration only)
    1. `Tell it what to find` · `assets/02-find.svg`
-   2. `BotBuy brings deals` · `assets/03-decide.svg`
+   2. `BotBuyer brings deals` · `assets/03-decide.svg`
    3. `You approve. Then it buys.` · `assets/04-buy.svg`
 4. **Control** — `assets/05-control.svg` + `Every deal needs your approval.`
 5. **CTA** — sole primary: **Sign up** → `/signup` (teal fill / `#042F2E` label)

@@ -3,11 +3,11 @@
 > Site publish · Early access / POC · Soft-signal HOLD for marketing posts only  
 > Operator: Build Star Labs (Florida) · Effective: September 11, 2026
 
-**BotBuy is early access. Features labeled Demo or Coming are not live commitments.**
+**BotBuyer is early access. Features labeled Demo or Coming are not live commitments.**
 
 ## Early access
 
-BotBuy is in early access — real product, honest labels, limited scope.
+BotBuyer is in early access — real product, honest labels, limited scope.
 
 ### What you can expect
 
@@ -23,7 +23,7 @@ BotBuy is in early access — real product, honest labels, limited scope.
 
 ### How to join / use
 
-Use **Run BotBuy** on the home page to start. Access may be limited while we grow carefully.
+Use **Run BotBuyer** on the home page to start. Access may be limited while we grow carefully.
 
 Questions? [Contact](/contact)
 

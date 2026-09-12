@@ -3,15 +3,15 @@
 > Site publish · Early access / POC · Soft-signal HOLD for marketing posts only  
 > Operator: Build Star Labs (Florida) · Effective: September 11, 2026
 
-**BotBuy is early access. Features labeled Demo or Coming are not live commitments.**
+**BotBuyer is early access. Features labeled Demo or Coming are not live commitments.**
 
 ## Contact
 
-Reach us about BotBuy early access, privacy, or product questions.
+Reach us about BotBuyer early access, privacy, or product questions.
 
 ### Privacy / legal
 
-**legal@botbuyer.ai** — designated privacy/legal inbox for Build Star Labs / BotBuy.  
+**legal@botbuyer.ai** — designated privacy/legal inbox for Build Star Labs / BotBuyer.  
 *Mailbox provisioning may still be completing. If mail bounces or you get no reply within a reasonable time, try again later or use in-product support channels when available.*
 
 ### Product / early access

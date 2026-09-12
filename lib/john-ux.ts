@@ -4,7 +4,7 @@
  * Moat: cpo-moat-approve-gate-v1.md
  */
 
-export const INTENT_H1 = "What should BotBuy find?" as const;
+export const INTENT_H1 = "What should BotBuyer find?" as const;
 export const INTENT_SUB = "Pick a starter or describe it yourself." as const;
 export const INTENT_CTA = "Start search" as const;
 export const INTENT_TEXTAREA_LABEL = "Describe what you want" as const;
@@ -20,7 +20,7 @@ export const MY_DEALS_EMPTY_TITLE = "Nothing searching yet" as const;
 export const MY_DEALS_EMPTY_BODY =
   "Pick a starter or describe it yourself. Searching deals show up here." as const;
 export const MY_DEALS_PROGRESS =
-  "BotBuy is searching. Deals show up here." as const;
+  "BotBuyer is searching. Deals show up here." as const;
 export const MY_DEALS_QUIET_IDLE = "Nothing searching right now." as const;
 
 export const PROFILE_TITLE = "Your details" as const;

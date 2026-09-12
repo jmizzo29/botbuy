@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { INTENT_H1, INTENT_SUB, hasReachableEmail } from "@/lib/john-ux";
 
 export const metadata = {
-  title: "What should BotBuy find?",
+  title: INTENT_H1,
 };
 
 export default async function OnboardingIntentPage() {

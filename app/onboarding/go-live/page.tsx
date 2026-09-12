@@ -25,7 +25,7 @@ export default async function OnboardingGoLivePage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-semibold tracking-tight">BotBuy buys</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">BotBuyer buys</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           Recap. {BRAND.footerHold}. Run opens a Searching deal — agent runtime
           is not live.

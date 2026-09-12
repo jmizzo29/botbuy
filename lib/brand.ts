@@ -12,7 +12,7 @@ export const LAND_ARC_SRC = "/land/assets/06-arc.svg" as const;
 export const LAND_ARC_LABEL = "Find Decide Buy arc" as const;
 
 /** Signup live door — CPO `cpo-real-auth-signup-ia-v1.md`. Soft-signal HOLD. */
-export const SIGNUP_H1 = "Create your BotBuy account" as const;
+export const SIGNUP_H1 = "Create your BotBuyer account" as const;
 export const SIGNUP_SUB = LAND_META_LINE;
 export const SIGNUP_CTA = "Create account" as const;
 export const SIGNUP_FOOT = "No charge to create an account." as const;

@@ -37,7 +37,7 @@ export const AGENT_DETAIL_MICRO =
   "Your license is meant to include an agent org for this asset. One org per deal.";
 export const AGENT_OPEN_WORKSPACE = "Open agent workspace";
 export const AGENT_IMPORTED_MICRO =
-  "Imported · Board purchase — agents still attach; BotBuy didn’t execute this buy.";
+  "Imported · Board purchase — agents still attach; BotBuyer didn’t execute this buy.";
 
 export const AGENT_SHEET_H1 = "Activate agents on this asset";
 export const AGENT_ROSTER_PREVIEW = "CEO · CFO · CTO · CMO (Demo until live)";

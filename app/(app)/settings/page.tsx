@@ -107,7 +107,7 @@ export default async function SettingsPage() {
           <CardTitle>Security</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm leading-relaxed text-muted">
-          <p>Card PAN is never stored in BotBuy, logs, or analytics events.</p>
+          <p>Card PAN is never stored in BotBuyer, logs, or analytics events.</p>
           <p>
             Connected-account API tokens are encrypted at rest. Revoke deletes
             ciphertext. Tokens are never logged.
@@ -153,7 +153,7 @@ export default async function SettingsPage() {
           <CardTitle>Install</CardTitle>
         </CardHeader>
         <CardContent className="text-sm leading-relaxed text-muted">
-          Add BotBuy to your Home Screen from the browser prompt, or on iPhone
+          Add BotBuyer to your Home Screen from the browser prompt, or on iPhone
           use Share → Add to Home Screen. Demo · not an App Store or Play
           listing. Standalone theme is #F7F8FA.
         </CardContent>

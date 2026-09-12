@@ -23,7 +23,7 @@ Archive drafts (pre-publish): `privacy-policy-v1.md`, `terms-of-service-v1.md`
 - **Effective date:** September 11, 2026
 - **Contact:** legal@botbuyer.ai (mailbox provisioning may still be completing — Contact page notes fallback)
 - **Footer order:** Privacy · Terms · About · Beta · Contact
-- **Honesty line:** BotBuy is early access. Features labeled Demo or Coming are not live commitments.
+- **Honesty line:** BotBuyer is early access. Features labeled Demo or Coming are not live commitments.
 
 ## Legal PASS on CPO About / Beta / Contact
 
@@ -38,4 +38,4 @@ PASS with contact inbox honesty note (mailbox may still be provisioning). No fak
 5. Mailing address for Build Star Labs (forthcoming — not invented)
 6. Confirm `legal@botbuyer.ai` mailbox is monitored
 
-*BotBuy Legal · Soft-signal HOLD for marketing posts only*
+*BotBuyer Legal · Soft-signal HOLD for marketing posts only*

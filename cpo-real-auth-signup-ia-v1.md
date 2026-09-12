@@ -19,8 +19,8 @@ Locked:
 
 | Slot | Copy |
 | --- | --- |
-| H1 | `Create your BotBuy account` |
-| Sub | Spend, intent, and a payment method. BotBuy executes what you approve. |
+| H1 | `Create your BotBuyer account` |
+| Sub | Spend, intent, and a payment method. BotBuyer only moves when you approve. |
 | CTA | Continue / Create account |
 | Foot | No charge to create an account. |
 

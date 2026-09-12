@@ -19,8 +19,8 @@ In-app Demo labels stay off this lock.
 
 | Slot | Copy |
 | --- | --- |
-| Signup H1 | `Create your BotBuy account` |
-| Signup sub | `Set spend, intent, and a payment method. BotBuy executes what you approve.` |
+| Signup H1 | `Create your BotBuyer account` |
+| Signup sub | `Set spend, intent, and a payment method. BotBuyer only moves when you approve.` |
 | Signup CTA | Continue / Create account — teal pill |
 | Signup foot | `No charge to create an account.` |
 | Sign in H1 | `Sign in` |

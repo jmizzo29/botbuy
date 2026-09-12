@@ -1,26 +1,26 @@
-# BotBuy Privacy Policy
+# BotBuyer Privacy Policy
 
 > **Status:** Site publish (botbuyer.ai) · Early access / POC  
 > **Soft-signal HOLD:** marketing posts / launch claims only — not a block on this page  
 > **Operator:** Build Star Labs (Florida)  
-> **Domain:** https://botbuyer.ai (BotBuy PWA / site)  
+> **Domain:** https://botbuyer.ai (BotBuyer PWA / site)  
 > **Contact:** legal@botbuyer.ai — *designated privacy/legal inbox; mailbox provisioning may still be completing — if mail bounces, use the Contact page*  
 > **Effective date:** September 11, 2026  
-> **Note:** Product legal copy for BotBuy. Not legal advice to you as a user. Residual counsel review remains recommended for payments, KYC, and financial-services framing. We do not invent licenses, insurance, live payment rails, or escrow status.
+> **Note:** Product legal copy for BotBuyer. Not legal advice to you as a user. Residual counsel review remains recommended for payments, KYC, and financial-services framing. We do not invent licenses, insurance, live payment rails, or escrow status.
 
 ---
 
 ## Early access
 
-**BotBuy is early access. Features labeled Demo or Coming are not live commitments.**
+**BotBuyer is early access. Features labeled Demo or Coming are not live commitments.**
 
-This Policy describes how Build Star Labs (“BotBuy,” “we,” “us”) handles personal information when you use BotBuy at https://botbuyer.ai.
+This Policy describes how Build Star Labs (“BotBuyer,” “we,” “us”) handles personal information when you use BotBuyer at https://botbuyer.ai.
 
-**No custodial stored-value.** BotBuy’s product model does not hold custodial stored-value balances. The vault is for linking payment methods and paying at purchase via payment partners — not a BotBuy-held customer balance.
+**No custodial stored-value.** BotBuyer’s product model does not hold custodial stored-value balances. The vault is for linking payment methods and paying at purchase via payment partners — not a BotBuyer-held customer balance.
 
 ## 1. Who we are
 
-BotBuy is a product offered at **https://botbuyer.ai** (site and PWA).
+BotBuyer is a product offered at **https://botbuyer.ai** (site and PWA).
 
 **Operator:** Build Star Labs (Florida). Mailing address forthcoming.
 
@@ -32,18 +32,18 @@ For privacy questions, contact: **legal@botbuyer.ai** (if mail is not yet monito
 
 This Privacy Policy describes how we intend to handle personal information when you use:
 
-- the BotBuy website and PWA at https://botbuyer.ai;
-- related BotBuy services we make available in connection with that experience.
+- the BotBuyer website and PWA at https://botbuyer.ai;
+- related BotBuyer services we make available in connection with that experience.
 
-**Early access / POC status.** BotBuy is currently a **proof-of-concept / early-access** experience. Features, rails, and workflows may be incomplete, labeled Demo / Coming, or unavailable. This Policy applies to the services as offered; it does not imply GA or a full commercial launch.
+**Early access / POC status.** BotBuyer is currently a **proof-of-concept / early-access** experience. Features, rails, and workflows may be incomplete, labeled Demo / Coming, or unavailable. This Policy applies to the services as offered; it does not imply GA or a full commercial launch.
 
-This Policy does **not** cover third-party merchant sites, payment-processor privacy practices, or other services you reach outside BotBuy — those parties have their own policies.
+This Policy does **not** cover third-party merchant sites, payment-processor privacy practices, or other services you reach outside BotBuyer — those parties have their own policies.
 
 ---
 
 ## 3. Data we collect
 
-Depending on how you use BotBuy, we may collect:
+Depending on how you use BotBuyer, we may collect:
 
 ### 3.1 Account, email, and authentication
 - Account identifiers (e.g., email address)
@@ -58,12 +58,12 @@ Depending on how you use BotBuy, we may collect:
 ### 3.3 Spend limits and deal metadata
 - Spend limits / gates you configure (including the product spend gate, e.g., up to the configured cap such as **$1,000** where applied)
 - Deal metadata needed to search, present, approve, and close deals (e.g., merchant, amount, status, approval records)
-- Approval history: BotBuy is designed so **every deal needs designated account holder approval**; **auto-approve is OFF**
+- Approval history: BotBuyer is designed so **every deal needs designated account holder approval**; **auto-approve is OFF**
 
 ### 3.4 Vault / payment-method information (processor tokens — not full card numbers in our systems, if design holds)
 - Payment vault uses **provider references / tokens** via third-party processors
-- **Intended design:** no raw PAN/CVC stored in BotBuy application databases or logs
-- Vault means **linked payment methods / pay-at-purchase** via partners — not a BotBuy account balance, stored-value wallet, or custodial float we hold
+- **Intended design:** no raw PAN/CVC stored in BotBuyer application databases or logs
+- Vault means **linked payment methods / pay-at-purchase** via partners — not a BotBuyer account balance, stored-value wallet, or custodial float we hold
 - Multi-rail **vision** (cards, banks, X Money, BTC, etc.): many rails are **Coming / not live** — we do not claim live rails that are not available
 - We may receive limited payment-related metadata from processors (e.g., last4, brand, status) as needed to operate the vault UX
 
@@ -94,7 +94,7 @@ We use personal information to:
 
 - **Provide the service** — account, PWA/site access, vault UX, deal workflow
 - **Deal search / purchase / close workflow** — match intent, present deals, record approvals, support close steps with merchants/processors as needed
-- **Spend gating and approvals** — enforce spend limits; require account-holder approval before spend; keep auto-approve off unless expressly changed by product policy (current design: OFF). BotBuy is an executor of human-approved actions, not an autonomous spender.
+- **Spend gating and approvals** — enforce spend limits; require account-holder approval before spend; keep auto-approve off unless expressly changed by product policy (current design: OFF). BotBuyer is an executor of human-approved actions, not an autonomous spender.
 - **Security** — authenticate users; detect fraud/abuse; captcha/2FA and bank/deal gates as configured
 - **Support** — respond to requests and troubleshoot
 - **Product improvement** — We may use usage data to fix bugs and improve search quality, within this Policy.
@@ -107,7 +107,7 @@ We do **not** use this to claim marketing uses (e.g., selling personal info for 
 
 ## 5. Legal bases note (US-first)
 
-BotBuy is drafted **US-first**.
+BotBuyer is drafted **US-first**.
 
 - If you are in California and CCPA/CPRA applies, you may have rights described at a high level in Section 11 — **attorney must confirm applicability, notices, and response processes**.
 - If GDPR/UK GDPR applies to any processing, lawful bases (e.g., contract, legitimate interests, consent, legal obligation) and international-transfer mechanisms must be documented by counsel — **not invented here**.
@@ -127,9 +127,9 @@ We may share personal information with:
 | **Professional advisors / legal** | Compliance, disputes, lawful process |
 | **Authorities** | When required by law or to protect rights/safety |
 
-**Sale of personal information for ads:** It is **not** BotBuy’s product intent to sell personal information for advertising. We state that clearly as **intent**; counsel should confirm statutory “sale”/“share” definitions (including CPRA) against actual tooling (analytics, cookies, pixels) before publish.
+**Sale of personal information for ads:** It is **not** BotBuyer’s product intent to sell personal information for advertising. We state that clearly as **intent**; counsel should confirm statutory “sale”/“share” definitions (including CPRA) against actual tooling (analytics, cookies, pixels) before publish.
 
-We do **not** claim Escrow is operational. Escrow / complete-verification rules are **TBD — not live**. Do not treat any third party as BotBuy escrow unless expressly documented after counsel review.
+We do **not** claim Escrow is operational. Escrow / complete-verification rules are **TBD — not live**. Do not treat any third party as BotBuyer escrow unless expressly documented after counsel review.
 
 ---
 
@@ -157,7 +157,7 @@ Protecting real-money workflows is **paramount**. We intend to use measures **ap
 
 ## 9. Children’s privacy
 
-BotBuy is for users **18 years of age or older**. We do not knowingly collect personal information from children under 18. If you believe we have collected such information, contact **legal@botbuyer.ai** and we will take appropriate steps to delete it.
+BotBuyer is for users **18 years of age or older**. We do not knowingly collect personal information from children under 18. If you believe we have collected such information, contact **legal@botbuyer.ai** and we will take appropriate steps to delete it.
 
 ---
 

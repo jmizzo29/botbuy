@@ -79,7 +79,7 @@ export const DEMO_NEEDS_YOU_DEAL: Deal = {
       id: "ev_demo_needs_you_gate",
       stage: "gate",
       title: "Needs you",
-      detail: "BotBuy only runs what you approve.",
+      detail: "BotBuyer only moves when you approve.",
       at: "2026-09-11T16:12:00Z",
       status: "blocked",
     },

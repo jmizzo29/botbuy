@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { HowItWorksRail } from "@/components/how-it-works";
 import { LandInstallButton } from "@/components/land-install-button";
 import { PublicChrome } from "@/components/public-chrome";
@@ -13,20 +12,17 @@ import {
   LAND_PRODUCT_H1,
   LAND_PRODUCT_SUPPORT,
 } from "@/lib/brand";
-import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
-import { hasPublicSession } from "@/lib/session";
+import { redirectSignedInFromLand } from "@/lib/land-gate";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "BotBuyer",
+  title: BRAND.name,
   description: BRAND.signupLine,
 };
 
 export default async function LandPage() {
-  if (await hasPublicSession()) {
-    redirect(MY_DEALS_HREF);
-  }
+  await redirectSignedInFromLand();
 
   return (
     <PublicChrome land>
