@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SignUp } from "@clerk/nextjs";
+import { AuthDoor } from "@/components/auth-door";
 import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
@@ -26,15 +27,29 @@ export default async function SignupPage() {
 
   return (
     <PublicChrome>
-      <div className="mx-auto max-w-md pt-16 md:pt-24">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
-            Sign up
-          </p>
-          <h1 className="display mt-8">{SIGNUP_H1}</h1>
-          <p className="mt-4 text-sm leading-relaxed text-muted">{SIGNUP_SUB}</p>
-        </div>
-        <div className="mt-10" data-cta="clerk-signup">
+      <AuthDoor
+        eyebrow="Sign up"
+        title={SIGNUP_H1}
+        lead={SIGNUP_SUB}
+        foot={
+          <>
+            <p className="text-sm text-muted">
+              Already have an account?{" "}
+              <Link
+                href={CLERK_SIGN_IN_URL}
+                className="text-foreground underline-offset-2 hover:underline"
+              >
+                Sign in
+              </Link>
+            </p>
+            <p className="text-xs leading-relaxed text-muted">{SIGNUP_FOOT}</p>
+            <Link href="/" className="inline-block text-xs text-muted hover:text-foreground">
+              ← Land
+            </Link>
+          </>
+        }
+      >
+        <div data-cta="clerk-signup">
           {isClerkPublishableConfigured() ? (
             <SignUp
               appearance={CLERK_APPEARANCE}
@@ -57,20 +72,7 @@ export default async function SignupPage() {
             </div>
           )}
         </div>
-        <p className="mt-8 text-sm text-muted">
-          Already have an account?{" "}
-          <Link
-            href={CLERK_SIGN_IN_URL}
-            className="text-foreground underline-offset-2 hover:underline"
-          >
-            Sign in
-          </Link>
-        </p>
-        <p className="mt-6 text-xs leading-relaxed text-muted">{SIGNUP_FOOT}</p>
-        <Link href="/" className="mt-8 inline-block text-xs text-muted hover:text-foreground">
-          ← Land
-        </Link>
-      </div>
+      </AuthDoor>
     </PublicChrome>
   );
 }

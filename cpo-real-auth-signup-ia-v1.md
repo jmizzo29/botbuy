@@ -2,7 +2,7 @@
 
 John LOCK · CPO cutover · 2026-09-12. Soft-signal HOLD. CEO approved Clerk.
 
-When real auth ships, this file is the signup / sign-in / land-door SoT. IA here wins if craft and IA disagree.
+Craft SoT: `designer-real-auth-signup-craft-v1.md`. When real auth ships, this file is the signup / sign-in / land-door IA SoT. IA here wins if craft and IA disagree.
 
 ## Kill on the same ship
 

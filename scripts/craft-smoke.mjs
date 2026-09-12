@@ -18,6 +18,8 @@ const land = read("app/page.tsx");
 const signup = read("app/signup/[[...sign-up]]/page.tsx");
 const signIn = read("app/signin/[[...sign-in]]/page.tsx");
 const authSignupIa = read("cpo-real-auth-signup-ia-v1.md");
+const authSignupCraft = read("designer-real-auth-signup-craft-v1.md");
+const authDoor = read("components/auth-door.tsx");
 const middleware = read("middleware.ts");
 const schema = read("lib/db/schema.ts");
 const authLib = read("lib/auth.ts");
@@ -282,11 +284,35 @@ assert(
   "CPO real-auth signup IA committed",
 );
 assert(
+  existsSync(join(root, "designer-real-auth-signup-craft-v1.md")),
+  "Designer real-auth signup craft committed",
+);
+assert(
   authSignupIa.includes("`Create your BotBuy account`") &&
     authSignupIa.includes("No charge to create an account.") &&
     authSignupIa.includes("`/signin`"),
   "CPO real-auth signup IA names locked door",
 );
+assert(
+  authSignupIa.includes("designer-real-auth-signup-craft-v1.md"),
+  "CPO real-auth IA points at Designer craft",
+);
+assert(
+  authSignupCraft.includes("cpo-real-auth-signup-ia-v1.md"),
+  "Designer signup craft points at CPO IA",
+);
+assert(
+  authSignupCraft.includes("POC · Demo · not live") &&
+    authSignupCraft.includes("in-memory session"),
+  "Designer craft kills POC pill + persist copy",
+);
+assert(authDoor.includes('data-surface="auth-door"'), "auth door surface marker");
+assert(authDoor.includes("text-3xl"), "auth door Quiet Capital H1 not land display");
+assert(signup.includes("AuthDoor"), "signup uses Techlux auth door");
+assert(signIn.includes("AuthDoor"), "sign-in uses Techlux auth door");
+assert(!signup.includes("className=\"display\""), "signup H1 is not land display");
+assert(!signup.includes("DEMO_PILL_CLASS"), "signup has no Demo pill token");
+assert(!signIn.includes("DEMO_PILL_CLASS"), "sign-in has no Demo pill token");
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "POC stays footer meta");
 assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
