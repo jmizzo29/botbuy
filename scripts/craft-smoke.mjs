@@ -577,6 +577,7 @@ assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold
 assert(!land.includes("HowItWorksRail"), "land fold dropped elevate how-stack");
 assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy stage");
 assert(land.includes("bb-land-stage"), "land stage class is wired");
+assert(land.includes("bb-atm-mesh-glow"), "land mesh-glow atmosphere class");
 assert(land.includes("bb-land-h1") && land.includes("bb-land-support") && land.includes("bb-land-meta"), "land fold uses CSS type-scale classes");
 assert(chrome.includes("bb-land-main w-full"), "land main is unguttered full width");
 assert(!chrome.includes("bb-land-main mx-auto w-full max-w-6xl"), "land main is not a max-w-6xl inset frame");
@@ -591,6 +592,7 @@ assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product ta
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(land.includes("LAND_META_LINE"), "land lead one-liner");
 assert(!land.includes("LandInstallButton"), "land has no Install door");
+assert(!land.includes("land-install"), "land fold has no Install CTA");
 assert(land.includes('data-cta="land-signin"'), "land fold pairs quiet Sign in with Sign up");
 assert(land.includes("bb-land-signin"), "land Sign in uses quiet fold class");
 assert(land.includes("CLERK_SIGN_IN_URL") || land.includes("/signin"), "fold Sign in uses canonical /signin");
@@ -672,6 +674,10 @@ assert(
   "reverse arc has no orphan teal jewelry",
 );
 assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage gradient tokens");
+assert(css.includes(".bb-atm-mesh-glow::before"), "mesh-glow atmosphere CSS");
+assert(css.includes("rgba(45,144,160,0.28)"), "mesh-glow teal blob");
+assert(!css.includes("bb-atm-grain-veil"), "do not ship grain-veil");
+assert(!css.includes("bb-atm-eclipse-whisper"), "do not ship eclipse-whisper");
 assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
 assert(css.includes(".bb-land-header") && css.includes("background: transparent"), "land header is overlay, not a light strip");
 assert(css.includes(".bb-land-link") && css.includes("border-radius: 0"), "overlay nav is word links, not pills");

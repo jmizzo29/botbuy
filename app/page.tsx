@@ -31,7 +31,7 @@ export default async function LandPage() {
 
   return (
     <PublicChrome land>
-      <section data-surface="land-stage" className="bb-land-stage">
+      <section data-surface="land-stage" className="bb-land-stage bb-atm-mesh-glow">
         <div className="bb-land-stage-grid">
           <div className="bb-land-copy">
             <h1 className="bb-land-h1">
