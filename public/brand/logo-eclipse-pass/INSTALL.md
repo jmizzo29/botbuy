@@ -1,7 +1,7 @@
-# BotBuyer brand kit — eclipse-pass (LIVE)
+# BotBuyer brand kit — eclipse-pass (NOT LIVE)
 
 Date: 2026-09-12 · Soft-signal HOLD  
-Replaces Vault sitewide and O1 on `/about`. Do not invent new geometry.
+**Replaced by soft-spine** (`brand/logo-soft-spine/`). Kept as archive. Do not invent new geometry.
 
 Palette: navy `#0B1F3A` + teal jewelry `#2DD4BF`. CTA teal unchanged (`#2DD4BF` / `#042F2E`).  
 Wordmark text is exactly **BotBuyer**.

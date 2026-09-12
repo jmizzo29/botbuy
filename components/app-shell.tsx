@@ -83,7 +83,7 @@ export function AppShell({
   return (
     <div className="relative min-h-dvh bg-background text-foreground">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 border-r border-[var(--bb-line)] bg-surface px-4 py-6 md:flex md:flex-col">
-        <Link href={MY_DEALS_HREF} className="flex items-center px-2" aria-label="BotBuyer home">
+        <Link href={MY_DEALS_HREF} className="flex items-center px-2" aria-label="BotBuyer">
           <BrandLockup />
         </Link>
         <p className="mt-2 px-2 text-[11px] leading-relaxed text-muted">
@@ -122,7 +122,7 @@ export function AppShell({
 
       <div className="relative z-10 md:pl-60">
         <header className="sticky top-0 z-30 flex items-center justify-between overflow-visible border-b border-[var(--bb-line)] bg-surface/90 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
-          <Link href={MY_DEALS_HREF} className="flex min-h-11 items-center" aria-label="BotBuyer home">
+          <Link href={MY_DEALS_HREF} className="flex min-h-11 items-center" aria-label="BotBuyer">
             <BrandLockup />
           </Link>
           <AppMoreMenu />

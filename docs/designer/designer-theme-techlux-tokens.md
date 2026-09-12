@@ -20,6 +20,6 @@ Soft-signal HOLD. Default shell is light. Not a marketing launch.
 | `--bb-radius-pill` | `999px` |
 
 Land uses `brand/techlux/land-bg-techlux-air.png` plus the left veil.
-eclipse-pass mark + wordmark stay (`brand/logo-eclipse-pass/`). Never letter-B, never Vault, never O1.
+soft-spine mark + wordmark stay (`brand/logo-soft-spine/`). Never letter-B, never Vault, never O1, never eclipse-pass.
 Primary CTA stays teal jewelry. Demo is gold text + soft white wash.
 No black `#050A0C` as the default page background.

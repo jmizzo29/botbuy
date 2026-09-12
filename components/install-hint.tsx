@@ -39,8 +39,8 @@ export function InstallHint() {
             )}
           >
             <Image
-              src="/icons/icon-192.png"
-              alt=""
+              src="/brand/logo-soft-spine/app-icon/icon-192.png"
+              alt="BotBuyer"
               width={36}
               height={36}
               unoptimized

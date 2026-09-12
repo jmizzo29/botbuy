@@ -5,7 +5,7 @@ Captions: exact strings below (Land E + CPO caption-length). No Demo / $1k / met
 
 **Craft:** `/workspace/botbuy/about/designer-about-story-v1.md`  
 **Tokens:** `/workspace/botbuy/designer-theme-techlux-tokens.md`  
-**Mark:** `/workspace/botbuy/brand/logo-eclipse-pass/botbuyer-mark.svg` (eclipse-pass · navy `#0B1F3A` + teal `#2DD4BF`)
+**Mark:** `/workspace/botbuy/brand/logo-soft-spine/botbuyer-mark.svg` (soft-spine · navy `#0B1F3A` + teal `#2DD4BF`)
 
 ---
 
@@ -13,7 +13,7 @@ Captions: exact strings below (Land E + CPO caption-length). No Demo / $1k / met
 
 1. **Entity** — `Build Star Labs (Florida) · Private beta` (muted)
 2. **Hero**
-   - eclipse-pass mark (navy + teal jewelry)
+   - soft-spine mark (navy + teal jewelry)
    - **H1** `Your AI agent for buying.`
    - Teal hairline under H1
    - **Support** `Less tab-chasing. Same hard approve.`
@@ -44,4 +44,4 @@ Phone single column; desktop ≥1024 two-column (left hero+control+CTA · right 
 ---
 
 ## Acceptance
-Exact H1/support/one-liner/3 steps/control/entity/Sign up · graphics-first · eclipse-pass sitewide (NOT O1, NOT Vault) · Soft-signal HOLD
+Exact H1/support/one-liner/3 steps/control/entity/Sign up · graphics-first · soft-spine sitewide (NOT O1, NOT Vault, NOT eclipse-pass) · Soft-signal HOLD

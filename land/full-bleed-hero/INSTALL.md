@@ -7,7 +7,7 @@ Live direction for `/`. Replaces the light elevate two-column door.
 ## Chrome
 
 - **No separate header / banners.** Full viewport is navy. No light Techlux header bar, no air strip, no pill chrome in the top row.
-- Overlay on the stage: eclipse-pass reverse lockup `/brand/logo-eclipse-pass/botbuyer-logo-primary-dark-bg.svg` + **word links only** — **Private beta** / **About** (About on desktop nav; phone fold may omit). Sign in lives in the fold CTA cluster.
+- Overlay on the stage: soft-spine reverse lockup `/brand/logo-soft-spine/botbuyer-logo-primary-dark-bg.svg` + **word links only** — **Private beta** / **About** (About on desktop nav; phone fold may omit). Sign in lives in the fold CTA cluster.
 - Top-of-screen = text links (light-on-navy). Logo may be the reverse lockup image. **No button / pill** in the overlay nav.
 - Sign up = sole teal primary `#2DD4BF` / `#042F2E` → `/signup` (teal pill OK only there)
 - Sign in = quiet text link in the same fold CTA cluster

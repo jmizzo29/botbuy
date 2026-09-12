@@ -44,8 +44,8 @@ export function A2hsHowToSheet({
       >
         <div className="flex justify-center">
           <Image
-            src="/icons/icon-192.png"
-            alt=""
+            src="/brand/logo-soft-spine/app-icon/icon-192.png"
+            alt="BotBuyer"
             width={64}
             height={64}
             unoptimized
