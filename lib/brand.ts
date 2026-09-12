@@ -8,11 +8,18 @@ export const LAND_PRODUCT_SUPPORT = "Find it. Decide. Buy anything." as const;
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
 
+/** Signup live door — CPO `cpo-real-auth-signup-ia-v1.md`. Soft-signal HOLD. */
+export const SIGNUP_H1 = "Create your BotBuy account" as const;
+export const SIGNUP_SUB = LAND_META_LINE;
+export const SIGNUP_CTA = "Create account" as const;
+export const SIGNUP_FOOT = "No charge to create an account." as const;
+export const SIGN_IN_H1 = "Sign in" as const;
+
 export const BRAND = {
   name: "BotBuy",
   domain: "botbuyer.ai",
   origin: "https://botbuyer.ai",
-  /** Signup + meta — John LOCKED one-liner. Vault is logo/brand only. */
+  /** Land + signup sub — John LOCKED one-liner. Vault is logo/brand only. */
   signupLine: LAND_META_LINE,
   hero: LAND_PRODUCT_H1,
   support: LAND_PRODUCT_SUPPORT,

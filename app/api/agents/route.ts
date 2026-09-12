@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { requireApiUser } from "@/lib/api-auth";
 import {
   AGENT_DEMO_BANNER,
   AGENT_HOLD_NOTE,
@@ -11,7 +12,9 @@ const activateBody = z.object({
   assetId: z.string().min(1),
 });
 
-export function GET() {
+export async function GET() {
+  const gated = await requireApiUser();
+  if (gated.error) return gated.error;
   return NextResponse.json({
     live: false,
     banner: AGENT_DEMO_BANNER,
@@ -22,6 +25,8 @@ export function GET() {
 }
 
 export async function POST(request: Request) {
+  const gated = await requireApiUser();
+  if (gated.error) return gated.error;
   const body = await request.json().catch(() => null);
   const parsed = activateBody.safeParse(body);
   if (!parsed.success) {

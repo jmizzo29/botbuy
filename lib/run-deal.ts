@@ -1,4 +1,4 @@
-import { DEMO_USER } from "@/lib/auth";
+import { SEED_OWNER } from "@/lib/auth-owner";
 import { isPublicProofEligible, isVerifiedAmount } from "@/lib/deal-ui";
 import type { Deal, DealEvent, Intent } from "@/lib/types";
 
@@ -16,6 +16,7 @@ export function isEngineRunDealId(id: string) {
 
 export function buildRunSearchingDeal(input: {
   id?: string;
+  userId?: string;
   title: string;
   category: string;
   openedAt?: string;
@@ -25,7 +26,7 @@ export function buildRunSearchingDeal(input: {
   const id = input.id ?? RUN_SEARCHING_DEAL_ID;
   return {
     id,
-    userId: DEMO_USER.id,
+    userId: input.userId ?? SEED_OWNER.id,
     title: input.title.slice(0, 80) || "First BotBuy search",
     category: input.category || "software",
     marketplace: "any_channel",
@@ -67,9 +68,14 @@ export function buildRunSearchingDeal(input: {
   };
 }
 
-export function runDealFromIntent(intent: Intent | undefined, id = RUN_SEARCHING_DEAL_ID): Deal {
+export function runDealFromIntent(
+  intent: Intent | undefined,
+  id = RUN_SEARCHING_DEAL_ID,
+  userId?: string,
+): Deal {
   return buildRunSearchingDeal({
     id,
+    userId: userId ?? intent?.userId ?? SEED_OWNER.id,
     title: intent?.summary?.slice(0, 80) || "First BotBuy search",
     category: intent?.categories[0] ?? "software",
     intentSummary: intent?.summary ?? null,

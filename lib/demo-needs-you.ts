@@ -1,4 +1,4 @@
-import { DEMO_USER } from "@/lib/auth";
+import { SEED_OWNER } from "@/lib/auth-owner";
 import type { Deal, DealEvent } from "@/lib/types";
 
 /** Demo-only candidate so My deals can show Approve + Reject. Not ledger history. */
@@ -39,7 +39,7 @@ export function demoPendingListedUsd(
 
 export const DEMO_NEEDS_YOU_DEAL: Deal = {
   id: DEMO_NEEDS_YOU_ID,
-  userId: DEMO_USER.id,
+  userId: SEED_OWNER.id,
   title: "Invoice tools license",
   category: "software",
   marketplace: "any_channel",

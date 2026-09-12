@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireApiUser } from "@/lib/api-auth";
 import {
   VAULT_FUND_IN_RAILS,
   VAULT_H1,
@@ -9,7 +10,9 @@ import {
   vaultReadyCopy,
 } from "@/lib/vault-rails";
 
-export function GET() {
+export async function GET() {
+  const gated = await requireApiUser();
+  if (gated.error) return gated.error;
   const ready = isVaultReady();
   return NextResponse.json({
     live: false,

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireApiUser } from "@/lib/api-auth";
 import {
   AGENT_DEMO_BANNER,
   AGENT_HOLD_NOTE,
@@ -10,6 +11,8 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ assetId: string }> },
 ) {
+  const gated = await requireApiUser();
+  if (gated.error) return gated.error;
   const { assetId } = await params;
   const org = getAgentOrg(assetId);
   if (!org) {
@@ -31,7 +34,9 @@ export async function GET(
   });
 }
 
-export function POST() {
+export async function POST() {
+  const gated = await requireApiUser();
+  if (gated.error) return gated.error;
   return NextResponse.json(
     {
       error:

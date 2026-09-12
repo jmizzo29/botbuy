@@ -1,6 +1,7 @@
 import { IntentForm } from "@/components/intent-form";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { requireUser } from "@/lib/auth";
 import { formatUsd } from "@/lib/money";
 import { listIntents } from "@/lib/store";
 import { formatDate } from "@/lib/utils";
@@ -9,8 +10,9 @@ export const metadata = {
   title: "Intent",
 };
 
-export default function IntentPage() {
-  const intents = listIntents();
+export default async function IntentPage() {
+  const user = await requireUser();
+  const intents = listIntents(user.id);
 
   return (
     <div className="space-y-8">

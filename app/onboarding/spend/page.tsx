@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LimitsForm } from "@/components/limits-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { requireUser } from "@/lib/auth";
 import { getSpendLimits } from "@/lib/store";
 import { SPEND_POLICY_LABEL } from "@/lib/spend-policy";
 
@@ -9,8 +10,9 @@ export const metadata = {
   title: "Onboarding · Spend",
 };
 
-export default function OnboardingSpendPage() {
-  const limits = getSpendLimits();
+export default async function OnboardingSpendPage() {
+  const user = await requireUser();
+  const limits = getSpendLimits(user.id);
 
   return (
     <div className="space-y-6">

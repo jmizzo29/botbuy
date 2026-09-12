@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ClerkAppProvider } from "@/components/clerk-app-provider";
 import { PwaRegister } from "@/components/pwa-register";
 import { LAND_META_LINE } from "@/lib/brand";
 import { THEME_BG } from "@/lib/ui-tokens";
@@ -76,8 +77,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background text-foreground">
-        <PwaRegister />
-        {children}
+        <ClerkAppProvider>
+          <PwaRegister />
+          {children}
+        </ClerkAppProvider>
       </body>
     </html>
   );

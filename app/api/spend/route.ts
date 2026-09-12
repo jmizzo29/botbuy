@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { requireApiUser } from "@/lib/api-auth";
 import {
   SPEND_HARD_GATE_USD,
   SPEND_POLICY_LABEL,
@@ -27,19 +28,23 @@ const patchLimits = z
   })
   .strict();
 
-export function GET() {
+export async function GET() {
+  const gated = await requireApiUser();
+  if (gated.error) return gated.error;
   return NextResponse.json({
-    limits: getSpendLimits(),
+    limits: getSpendLimits(gated.user.id),
     hardGateUsd: SPEND_HARD_GATE_USD,
     policy: SPEND_POLICY_LABEL,
-    verifiedSpendUsd: verifiedSpendUsd(),
-    listedUnverifiedUsd: listedUnverifiedUsd(),
+    verifiedSpendUsd: verifiedSpendUsd(gated.user.id),
+    listedUnverifiedUsd: listedUnverifiedUsd(gated.user.id),
     autoApprove: false,
     failClosed: true,
   });
 }
 
 export async function PATCH(request: Request) {
+  const gated = await requireApiUser();
+  if (gated.error) return gated.error;
   const body: unknown = await request.json().catch(() => null);
   if (
     body &&
@@ -59,5 +64,7 @@ export async function PATCH(request: Request) {
       { status: 400 },
     );
   }
-  return NextResponse.json({ limits: updateSpendLimits(parsed.data) });
+  return NextResponse.json({
+    limits: updateSpendLimits(parsed.data, gated.user.id),
+  });
 }

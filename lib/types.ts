@@ -82,6 +82,7 @@ export interface User {
   email: string;
   company: string;
   role: UserRole;
+  clerkUserId?: string | null;
 }
 
 export interface Receipt {

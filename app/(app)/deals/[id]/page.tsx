@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivateAgents } from "@/components/activate-agents";
 import { SearchingEmpty } from "@/components/empty-ctas";
+import { requireUser } from "@/lib/auth";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { getAgentOrg } from "@/lib/agent-runtime";
@@ -39,7 +40,8 @@ export async function generateMetadata({
 }) {
   const { id } = await params;
   await hydrateStore();
-  const deal = getDeal(id);
+  const user = await requireUser();
+  const deal = getDeal(id, user.id, user.role === "admin");
   return { title: deal?.title ?? "Deal" };
 }
 
@@ -50,7 +52,8 @@ export default async function DealDetailPage({
 }) {
   const { id } = await params;
   await hydrateStore();
-  const deal = getDeal(id);
+  const user = await requireUser();
+  const deal = getDeal(id, user.id, user.role === "admin");
   if (!deal) notFound();
   if (deal.source === "engine") {
     ensureSearchingUsageStub(deal);

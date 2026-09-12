@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useId, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { SignOutControl } from "@/components/auth-session";
 import { PHONE_MORE_LINKS } from "@/lib/cpo-techlux";
 import { SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
@@ -55,6 +56,7 @@ export function AppMoreMenu() {
               </Link>
             );
           })}
+          <SignOutControl className="flex min-h-11 w-full items-center rounded-[calc(var(--bb-radius)-4px)] px-3 text-left text-sm" />
         </div>
       ) : null}
     </>

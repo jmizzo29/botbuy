@@ -1,6 +1,7 @@
 import { LimitsForm } from "@/components/limits-form";
 import { VaultRails } from "@/components/vault-rails";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { requireUser } from "@/lib/auth";
 import { formatUsd } from "@/lib/money";
 import { SPEND_HARD_GATE_USD, SPEND_POLICY_LABEL } from "@/lib/spend-policy";
 import {
@@ -15,11 +16,12 @@ export const metadata = {
   title: VAULT_H1,
 };
 
-export default function VaultPage() {
-  const limits = getSpendLimits();
-  const spent = verifiedSpendUsd();
-  const listed = listedUnverifiedUsd();
-  const card = listVaultRefs()[0];
+export default async function VaultPage() {
+  const user = await requireUser();
+  const limits = getSpendLimits(user.id);
+  const spent = verifiedSpendUsd(user.id);
+  const listed = listedUnverifiedUsd(user.id);
+  const card = listVaultRefs(user.id)[0];
 
   return (
     <div className="space-y-8">

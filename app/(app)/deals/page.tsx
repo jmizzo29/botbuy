@@ -1,5 +1,6 @@
 import { DealCard } from "@/components/deal-card";
 import { EmptyPanel } from "@/components/empty-ctas";
+import { requireUser } from "@/lib/auth";
 import { DEAL_STATUSES } from "@/lib/types";
 import { hydrateStore, listDeals } from "@/lib/store";
 
@@ -16,7 +17,8 @@ export default async function DealsPage({
 }) {
   const { status } = await searchParams;
   await hydrateStore();
-  const deals = listDeals();
+  const user = await requireUser();
+  const deals = listDeals(user.id);
   const filtered =
     status && DEAL_STATUSES.includes(status as (typeof DEAL_STATUSES)[number])
       ? deals.filter((deal) => deal.status === status)

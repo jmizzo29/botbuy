@@ -1,5 +1,7 @@
 import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
-import { DEMO_USER } from "@/lib/auth";
+import { SEED_OWNER } from "@/lib/auth-owner";
+import { listPersistedUsers } from "@/lib/db/users";
+import { listMemoryUsers, rememberDirectoryUser } from "@/lib/user-directory";
 import {
   DEMO_NEEDS_YOU_DEAL,
   DEMO_NEEDS_YOU_EVENTS,
@@ -147,6 +149,10 @@ export async function hydrateStore() {
   );
   ensureDemoNeedsYou();
   ensureEngineUsageStubs();
+  const persisted = await listPersistedUsers();
+  if (persisted) {
+    for (const user of persisted) rememberDirectoryUser(user);
+  }
 }
 
 export async function persistEngineStore() {
@@ -168,23 +174,31 @@ function rememberEngineDeal(deal: Deal, events: DealEvent[]) {
   ];
 }
 
-function openSearchingEngineDeal() {
-  return engineState().deals.find((deal) => deal.status === "Searching");
+function openSearchingEngineDeal(userId = SEED_OWNER.id) {
+  return engineState().deals.find(
+    (deal) => deal.status === "Searching" && deal.userId === userId,
+  );
 }
 
-function materializeRunDeal(id = RUN_SEARCHING_DEAL_ID): Deal {
+function materializeRunDeal(
+  id = RUN_SEARCHING_DEAL_ID,
+  userId = SEED_OWNER.id,
+): Deal {
   const existing =
-    engineState().deals.find((deal) => deal.id === id) ??
-    openSearchingEngineDeal() ??
-    engineState().deals.find((deal) => deal.id === RUN_SEARCHING_DEAL_ID);
+    engineState().deals.find(
+      (deal) => deal.id === id && deal.userId === userId,
+    ) ??
+    engineState().deals.find(
+      (deal) => deal.status === "Searching" && deal.userId === userId,
+    );
   if (existing) {
     assertRunDealSoftHold(existing);
     ensureSearchingUsageStub(existing);
     return existing;
   }
-  const deal = runDealFromIntent(listIntents()[0], id);
+  const deal = runDealFromIntent(listIntents(userId)[0], id, userId);
   assertRunDealSoftHold(deal);
-  rememberEngineDeal(deal, seedRunDealEvents(deal, getSignupSession()?.email));
+  rememberEngineDeal(deal, seedRunDealEvents(deal));
   ensureSearchingUsageStub(deal);
   return deal;
 }
@@ -192,7 +206,7 @@ function materializeRunDeal(id = RUN_SEARCHING_DEAL_ID): Deal {
 const intents: Intent[] = [
   {
     id: "intent_software",
-    userId: DEMO_USER.id,
+    userId: SEED_OWNER.id,
     summary: JOHN_INTENT_TEMPLATES[0].summary,
     categories: [...JOHN_INTENT_TEMPLATES[0].categories],
     maxPriceUsd: JOHN_INTENT_TEMPLATES[0].maxPriceUsd,
@@ -201,7 +215,7 @@ const intents: Intent[] = [
   },
   {
     id: "intent_software_domain",
-    userId: DEMO_USER.id,
+    userId: SEED_OWNER.id,
     summary: JOHN_INTENT_TEMPLATES[1].summary,
     categories: [...JOHN_INTENT_TEMPLATES[1].categories],
     maxPriceUsd: JOHN_INTENT_TEMPLATES[1].maxPriceUsd,
@@ -210,7 +224,7 @@ const intents: Intent[] = [
   },
   {
     id: "intent_product_domain",
-    userId: DEMO_USER.id,
+    userId: SEED_OWNER.id,
     summary: "Secure the BotBuy product domain (botbuyer.ai) on a multi-year term.",
     categories: ["domain"],
     maxPriceUsd: 250,
@@ -219,21 +233,27 @@ const intents: Intent[] = [
   },
 ];
 
-let spendLimits: SpendLimits = {
-  userId: DEMO_USER.id,
-  hardGateUsd: SPEND_HARD_GATE_USD,
-  dailyLimitUsd: SPEND_DEFAULTS.dailyLimitUsd,
-  weeklyLimitUsd: SPEND_DEFAULTS.weeklyLimitUsd,
-  monthlyLimitUsd: SPEND_DEFAULTS.monthlyLimitUsd,
-  perDealLimitUsd: SPEND_DEFAULTS.perDealLimitUsd,
-  autoApprove: false,
-  updatedAt: "2026-09-04T18:00:00Z",
-};
+function defaultSpendLimits(userId: string): SpendLimits {
+  return {
+    userId,
+    hardGateUsd: SPEND_HARD_GATE_USD,
+    dailyLimitUsd: SPEND_DEFAULTS.dailyLimitUsd,
+    weeklyLimitUsd: SPEND_DEFAULTS.weeklyLimitUsd,
+    monthlyLimitUsd: SPEND_DEFAULTS.monthlyLimitUsd,
+    perDealLimitUsd: SPEND_DEFAULTS.perDealLimitUsd,
+    autoApprove: false,
+    updatedAt: "2026-09-04T18:00:00Z",
+  };
+}
+
+const spendByUser = new Map<string, SpendLimits>([
+  [SEED_OWNER.id, defaultSpendLimits(SEED_OWNER.id)],
+]);
 
 const vaultRefs: VaultRef[] = [
   {
     id: "vault_bsl_primary",
-    userId: DEMO_USER.id,
+    userId: SEED_OWNER.id,
     provider: "vault_stub",
     vaultRef: "tok_vault_bsl_7f3a91c2",
     last4: "4242",
@@ -244,18 +264,10 @@ const vaultRefs: VaultRef[] = [
   },
 ];
 
-export interface SignupSession {
-  email: string;
-  createdAt: string;
-  poc: true;
-}
-
-let signupSession: SignupSession | null = null;
-
 const auditLogs: AuditLog[] = [
   {
     id: "aud_import_botbuyer",
-    userId: DEMO_USER.id,
+    userId: SEED_OWNER.id,
     action: "deal.imported",
     entityType: "deal",
     entityId: "deal_botbuyer_ai",
@@ -276,7 +288,7 @@ const auditLogs: AuditLog[] = [
   },
   {
     id: "aud_import_savedfast",
-    userId: DEMO_USER.id,
+    userId: SEED_OWNER.id,
     action: "deal.imported",
     entityType: "deal",
     entityId: "deal_savedfast",
@@ -295,7 +307,7 @@ const auditLogs: AuditLog[] = [
   },
   {
     id: "aud_import_xfer",
-    userId: DEMO_USER.id,
+    userId: SEED_OWNER.id,
     action: "deal.imported",
     entityType: "deal",
     entityId: "deal_namecheap_savedfast_xfer",
@@ -314,10 +326,10 @@ const auditLogs: AuditLog[] = [
   },
   {
     id: "aud_limits_seed",
-    userId: DEMO_USER.id,
+    userId: SEED_OWNER.id,
     action: "spend.limits_seeded",
     entityType: "spend_limits",
-    entityId: DEMO_USER.id,
+    entityId: SEED_OWNER.id,
     metadata: {
       hardGateUsd: SPEND_HARD_GATE_USD,
       autoApprove: false,
@@ -327,32 +339,12 @@ const auditLogs: AuditLog[] = [
   },
 ];
 
-export function persistSignup(email: string): SignupSession {
-  const trimmed = email.trim();
-  signupSession = {
-    email: trimmed,
-    createdAt: new Date().toISOString(),
-    poc: true,
-  };
-  auditLogs.unshift({
-    id: `aud_${crypto.randomUUID().slice(0, 8)}`,
-    userId: DEMO_USER.id,
-    action: "signup.persisted",
-    entityType: "signup",
-    entityId: DEMO_USER.id,
-    metadata: { email: trimmed, poc: true, theater: false },
-    createdAt: signupSession.createdAt,
-  });
-  return signupSession;
-}
-
-export function getSignupSession(): SignupSession | null {
-  return signupSession;
-}
-
-export async function createSearchingDealFromRun(): Promise<Deal> {
+export async function createSearchingDealFromRun(
+  userId = SEED_OWNER.id,
+  email?: string | null,
+): Promise<Deal> {
   await hydrateStore();
-  const reused = openSearchingEngineDeal();
+  const reused = openSearchingEngineDeal(userId);
   if (reused) {
     assertRunDealSoftHold(reused);
     ensureSearchingUsageStub(reused);
@@ -360,25 +352,26 @@ export async function createSearchingDealFromRun(): Promise<Deal> {
     return reused;
   }
 
-  const intent = listIntents()[0];
-  const signup = getSignupSession();
-  const id = engineState().deals.some((row) => row.id === RUN_SEARCHING_DEAL_ID)
-    ? `deal_run_${crypto.randomUUID().slice(0, 8)}`
-    : RUN_SEARCHING_DEAL_ID;
-  const deal = runDealFromIntent(intent, id);
+  const intent = listIntents(userId)[0];
+  const id =
+    userId === SEED_OWNER.id &&
+    !engineState().deals.some((row) => row.id === RUN_SEARCHING_DEAL_ID)
+      ? RUN_SEARCHING_DEAL_ID
+      : `deal_run_${crypto.randomUUID().slice(0, 8)}`;
+  const deal = runDealFromIntent(intent, id, userId);
   assertRunDealSoftHold(deal);
-  rememberEngineDeal(deal, seedRunDealEvents(deal, signup?.email));
+  rememberEngineDeal(deal, seedRunDealEvents(deal, email));
   ensureSearchingUsageStub(deal);
   auditLogs.unshift({
     id: `aud_${crypto.randomUUID().slice(0, 8)}`,
-    userId: DEMO_USER.id,
+    userId,
     action: "deal.opened_from_run",
     entityType: "deal",
     entityId: deal.id,
     metadata: {
       status: "Searching",
       intentId: intent?.id ?? null,
-      email: signup?.email ?? null,
+      email: email ?? null,
       reused: false,
     },
     createdAt: deal.openedAt,
@@ -388,30 +381,33 @@ export async function createSearchingDealFromRun(): Promise<Deal> {
 }
 
 export function listDirectoryUsers(): User[] {
-  return [DEMO_USER];
+  return listMemoryUsers();
 }
 
 export function listAllDeals(): Deal[] {
   return allDeals().slice();
 }
 
-export function listDeals(userId = DEMO_USER.id): Deal[] {
+export function listDeals(userId = SEED_OWNER.id): Deal[] {
   return allDeals()
     .filter((deal) => deal.userId === userId)
     .slice()
     .sort((a, b) => +new Date(b.openedAt) - +new Date(a.openedAt));
 }
 
-export function getDeal(id: string, userId = DEMO_USER.id): Deal | undefined {
-  const found = allDeals().find((deal) => deal.id === id && deal.userId === userId);
+export function getDeal(
+  id: string,
+  userId = SEED_OWNER.id,
+  asAdmin = false,
+): Deal | undefined {
+  const found = allDeals().find((deal) => {
+    if (deal.id !== id) return false;
+    return asAdmin || deal.userId === userId;
+  });
   if (found) return found;
   if (isEngineRunDealId(id)) {
-    const deal = materializeRunDeal(
-      engineState().deals.some((row) => row.id === RUN_SEARCHING_DEAL_ID)
-        ? RUN_SEARCHING_DEAL_ID
-        : id,
-    );
-    return deal.userId === userId ? deal : undefined;
+    const deal = materializeRunDeal(id, userId);
+    return asAdmin || deal.userId === userId ? deal : undefined;
   }
   return undefined;
 }
@@ -436,8 +432,13 @@ export function listDealEvents(dealId: string): DealEvent[] {
     .sort((a, b) => +new Date(a.at) - +new Date(b.at));
 }
 
-export function transitionDeal(id: string, to: DealStatus): Deal {
-  const deal = getDeal(id);
+export function transitionDeal(
+  id: string,
+  to: DealStatus,
+  userId = SEED_OWNER.id,
+  asAdmin = false,
+): Deal {
+  const deal = getDeal(id, userId, asAdmin);
   if (!deal) {
     throw new TransitionError("Deal not found");
   }
@@ -480,7 +481,7 @@ export function transitionDeal(id: string, to: DealStatus): Deal {
   return deal;
 }
 
-export function listIntents(userId = DEMO_USER.id): Intent[] {
+export function listIntents(userId = SEED_OWNER.id): Intent[] {
   return intents
     .filter((intent) => intent.userId === userId)
     .slice()
@@ -491,10 +492,11 @@ export function addIntent(
   input: Omit<Intent, "id" | "userId" | "createdAt" | "status"> & {
     status?: Intent["status"];
   },
+  userId = SEED_OWNER.id,
 ): Intent {
   const intent: Intent = {
     id: `intent_${crypto.randomUUID().slice(0, 8)}`,
-    userId: DEMO_USER.id,
+    userId,
     createdAt: new Date().toISOString(),
     status: input.status ?? "active",
     summary: input.summary,
@@ -504,7 +506,7 @@ export function addIntent(
   intents.unshift(intent);
   auditLogs.unshift({
     id: `aud_${crypto.randomUUID().slice(0, 8)}`,
-    userId: DEMO_USER.id,
+    userId,
     action: "intent.created",
     entityType: "intent",
     entityId: intent.id,
@@ -514,24 +516,28 @@ export function addIntent(
   return intent;
 }
 
-export function getSpendLimits(userId = DEMO_USER.id): SpendLimits {
-  return spendLimits.userId === userId
-    ? spendLimits
-    : { ...spendLimits, userId };
+export function getSpendLimits(userId = SEED_OWNER.id): SpendLimits {
+  const existing = spendByUser.get(userId);
+  if (existing) return existing;
+  const created = defaultSpendLimits(userId);
+  spendByUser.set(userId, created);
+  return created;
 }
 
 export function updateSpendLimits(
   patch: Partial<Omit<SpendLimits, "userId" | "autoApprove" | "hardGateUsd">>,
+  userId = SEED_OWNER.id,
 ): SpendLimits {
+  const current = getSpendLimits(userId);
   const working = clampSpendUsd(
     patch.perDealLimitUsd ??
       patch.dailyLimitUsd ??
       patch.monthlyLimitUsd ??
       patch.weeklyLimitUsd ??
-      spendLimits.perDealLimitUsd,
+      current.perDealLimitUsd,
   );
-  spendLimits = {
-    userId: DEMO_USER.id,
+  const next: SpendLimits = {
+    userId,
     hardGateUsd: SPEND_HARD_GATE_USD,
     dailyLimitUsd: working,
     weeklyLimitUsd: working,
@@ -540,27 +546,28 @@ export function updateSpendLimits(
     autoApprove: false,
     updatedAt: new Date().toISOString(),
   };
+  spendByUser.set(userId, next);
   auditLogs.unshift({
     id: `aud_${crypto.randomUUID().slice(0, 8)}`,
-    userId: DEMO_USER.id,
+    userId,
     action: "spend.limits_updated",
     entityType: "spend_limits",
-    entityId: DEMO_USER.id,
+    entityId: userId,
     metadata: {
       hardGateUsd: SPEND_HARD_GATE_USD,
       workingCapUsd: working,
       autoApprove: false,
     },
-    createdAt: spendLimits.updatedAt,
+    createdAt: next.updatedAt,
   });
-  return spendLimits;
+  return next;
 }
 
-export function listVaultRefs(userId = DEMO_USER.id): VaultRef[] {
+export function listVaultRefs(userId = SEED_OWNER.id): VaultRef[] {
   return vaultRefs.filter((ref) => ref.userId === userId);
 }
 
-export function listAuditLogs(userId = DEMO_USER.id): AuditLog[] {
+export function listAuditLogs(userId = SEED_OWNER.id): AuditLog[] {
   return auditLogs
     .filter((log) => log.userId === userId)
     .slice()
@@ -571,14 +578,14 @@ export function isVerifiedSpend(deal: Deal) {
   return isVerifiedAmount(deal);
 }
 
-export function verifiedSpendUsd(userId = DEMO_USER.id): number {
+export function verifiedSpendUsd(userId = SEED_OWNER.id): number {
   return listDeals(userId)
     .filter(countsTowardCfoMoney)
     .filter(isVerifiedSpend)
     .reduce((sum, deal) => sum + deal.priceUsd, 0);
 }
 
-export function listedUnverifiedUsd(userId = DEMO_USER.id): number {
+export function listedUnverifiedUsd(userId = SEED_OWNER.id): number {
   return listDeals(userId)
     .filter(countsTowardCfoMoney)
     .filter((deal) => !isVerifiedSpend(deal))
@@ -586,7 +593,7 @@ export function listedUnverifiedUsd(userId = DEMO_USER.id): number {
 }
 
 /** @deprecated unverified listed amounts are not spend */
-export function spendInFlight(userId = DEMO_USER.id): number {
+export function spendInFlight(userId = SEED_OWNER.id): number {
   return verifiedSpendUsd(userId);
 }
 
