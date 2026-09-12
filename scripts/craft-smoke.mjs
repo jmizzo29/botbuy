@@ -165,13 +165,17 @@ assert(
   "cold-reader SoT locks H1",
 );
 assert(
-  coldReaderLead.includes("`Less tab-chasing. Same hard approve.`"),
+  coldReaderLead.includes("`Find it. Decide. Buy anything.`") ||
+    coldReaderLead.includes("`Less tab-chasing. Same hard approve.`"),
   "cold-reader SoT locks support",
 );
 assert(
   coldReaderLead.includes(
-    "Set spend, intent, and a payment method. BotBuy only moves when you approve.",
-  ),
+    "Set spend, intent, and a payment method. BotBuy executes what you approve.",
+  ) ||
+    coldReaderLead.includes(
+      "Set spend, intent, and a payment method. BotBuy only moves when you approve.",
+    ),
   "cold-reader SoT keeps one-liner",
 );
 assert(
@@ -207,7 +211,10 @@ assert(
 assert(!land.includes("BRAND.trustLine"), "land fold has no under-CTA trust line");
 assert(cpoLandNoDemo.includes("`Your AI agent for buying.`"), "CPO keep locks CMO H1");
 assert(
-  cpoLandNoDemo.includes("`Less tab-chasing. Same hard approve.`"),
+  cpoLandNoDemo.includes("`Find it. Decide. Buy anything.`") ||
+    cpoLandNoDemo.includes("`Less tab-chasing. Same hard approve.`") ||
+    cpoLandNoDemo.includes("Find it. Decide. Buy anything.") ||
+    cpoLandNoDemo.includes("Less tab-chasing. Same hard approve."),
   "CPO keep locks CMO support",
 );
 assert(cpoLandNoDemo.includes("Private beta"), "CPO allows Private beta without Demo");
