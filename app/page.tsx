@@ -44,7 +44,7 @@ export default async function LandPage() {
               {LAND_META_LINE}
             </p>
             <div className="bb-land-cta">
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="bb-land-signup">
                 <Link href="/signup" data-cta="land-signup">
                   {BRAND.primaryCta}
                 </Link>
