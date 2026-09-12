@@ -36,7 +36,7 @@ Empty honesty only. No invented numbers. Omit Demo / empty wording.
 - H1 (CMO LOCKED ≤10s lead): `Your AI agent for buying.`
 - Support under H1: `Less tab-chasing. Same hard approve.`
 - One-liner: `Set spend, intent, and a payment method. BotBuyer only moves when you approve.`
-- Sign up sole primary · Sign in quiet text link
+- Sign up sole primary · Install quiet text link
 - Techlux · Vault mark
 - No $1k on land
 - Soft-signal marketing HOLD

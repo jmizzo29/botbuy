@@ -84,14 +84,16 @@ async function PublicNav({ land }: { land: boolean }) {
         <Link href={MY_DEALS_HREF} className={land ? link() : "text-muted hover:text-foreground"}>
           {MY_DEALS_LABEL}
         </Link>
-      ) : land ? null : (
+      ) : (
         <>
           <Link href={CLERK_SIGN_IN_URL} className={link()}>
             Sign in
           </Link>
-          <Link href={CLERK_SIGN_UP_URL} className="text-muted hover:text-foreground">
-            Sign up
-          </Link>
+          {land ? null : (
+            <Link href={CLERK_SIGN_UP_URL} className="text-muted hover:text-foreground">
+              Sign up
+            </Link>
+          )}
         </>
       )}
     </div>

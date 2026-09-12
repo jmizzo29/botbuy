@@ -1,9 +1,9 @@
 import type { Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { LandInstallButton } from "@/components/land-install-button";
 import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
-import { CLERK_SIGN_IN_URL } from "@/lib/auth-config";
 import {
   BRAND,
   LAND_ARC_LABEL,
@@ -11,7 +11,6 @@ import {
   LAND_META_LINE,
   LAND_PRODUCT_H1,
   LAND_PRODUCT_SUPPORT,
-  SIGN_IN_H1,
 } from "@/lib/brand";
 import { redirectSignedInFromLand } from "@/lib/land-gate";
 
@@ -44,18 +43,12 @@ export default async function LandPage() {
               {LAND_META_LINE}
             </p>
             <div className="bb-land-cta">
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="w-full lg:w-auto">
                 <Link href="/signup" data-cta="land-signup">
                   {BRAND.primaryCta}
                 </Link>
               </Button>
-              <Link
-                href={CLERK_SIGN_IN_URL}
-                data-cta="land-signin"
-                className="bb-land-signin"
-              >
-                {SIGN_IN_H1}
-              </Link>
+              <LandInstallButton tone="onDark" />
             </div>
           </div>
           <div className="bb-land-arc">

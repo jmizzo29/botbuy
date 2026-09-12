@@ -223,13 +223,13 @@ assert(
 assert(cpoLandNoDemo.includes("Private beta"), "CPO allows Private beta without Demo");
 assert(
   cpoLandNoDemo.includes("Sign up sole primary") &&
-    cpoLandNoDemo.includes("Sign in quiet text link"),
+    cpoLandNoDemo.includes("Install quiet text link"),
   "CPO land fold CTA is Sign up sole primary",
 );
 assert(!cpoLandNoDemo.includes("dual CTAs"), "CPO land no longer locks dual peer CTAs");
 assert(
   landNoDemoSot.includes("Sign up sole primary") &&
-    landNoDemoSot.includes("Sign in quiet text link"),
+    landNoDemoSot.includes("Install quiet text link"),
   "designer land fold CTA is Sign up sole primary",
 );
 assert(!landNoDemoSot.includes("dual CTAs"), "designer land no longer locks dual peer CTAs");
@@ -417,6 +417,7 @@ assert(chrome.includes('href="/about"'), "land desktop nav includes About");
 assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air band");
 assert(chrome.includes("bb-land-header"), "land header overlays the navy stage");
 assert(chrome.includes("bb-land-nav") && chrome.includes("bb-land-link"), "land overlay is word links");
+assert(chrome.includes("Sign in"), "land overlay includes Sign in word link");
 assert(chrome.includes("onDark={land}"), "land chrome uses reverse lockup on navy");
 assert(!chrome.includes("bb-land-footer"), "land has no footer chrome strip");
 assert(!chrome.includes("<Button"), "land overlay nav has no Button pills");
@@ -531,7 +532,7 @@ assert(!brand.includes("Buy software. You approve."), "software-only land tag re
 assert(!brand.includes("productTag"), "land has no product-tag slot");
 assert(brand.includes('name: "BotBuyer"'), "product name lock");
 assert(brand.includes('primaryCta: "Sign up"'), "land primary door is Sign up");
-assert(brand.includes('installLink: "Install"'), "in-app Install label stays off land fold");
+assert(brand.includes('installLink: "Install"'), "land Install is a quiet link label");
 assert(!brand.includes("secondaryCta"), "land has no peer secondary CTA");
 assert(!brand.includes("Start your first buy"), "land dropped Start your first buy");
 assert(!brand.includes("See how it works"), "land dropped equal-weight See how it works");
@@ -590,10 +591,7 @@ assert(land.includes("LAND_PRODUCT_SUPPORT"), "land support sits under H1");
 assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product tag");
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(land.includes("LAND_META_LINE"), "land lead one-liner");
-assert(!land.includes("LandInstallButton"), "land has no Install door");
-assert(land.includes('data-cta="land-signin"'), "land fold pairs quiet Sign in with Sign up");
-assert(land.includes("bb-land-signin"), "land Sign in uses quiet fold class");
-assert(land.includes("CLERK_SIGN_IN_URL") || land.includes("/signin"), "fold Sign in uses canonical /signin");
+assert(land.includes("LandInstallButton"), "land Install door is wired");
 assert(
   land.includes("redirectSignedInFromLand") ||
     land.includes("redirect(MY_DEALS_HREF)"),
@@ -685,8 +683,7 @@ assert(css.includes("border-radius: 0"), "stage is square full-bleed");
 assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
 assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
 assert(css.includes(".bb-land-copy") && css.includes("text-align: center"), "phone land copy is centered");
-assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "fold CTA is a Sign up + Sign in row");
-assert(css.includes(".bb-land-signin"), "Sign in quiet fold link is CSS-owned");
+assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "desktop fold CTA is a Sign up + Install row");
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(css.includes("padding: 5.25rem 1.25rem 0.35rem"), "phone tightens arc→H1");
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
