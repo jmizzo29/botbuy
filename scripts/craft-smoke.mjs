@@ -707,19 +707,29 @@ assert(css.includes(".bb-land-copy") && css.includes("text-align: center"), "pho
 assert(css.includes("@media (max-width: 1023px)"), "phone center axis is locked at max-lg");
 assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "fold CTA is a Sign up + Sign in row");
 assert(css.includes("gap: 10px"), "fold CTA pair uses 10px gap");
-assert(css.includes(".bb-land-signup") && css.includes("flex: 1;"), "Sign up flex:1 in the pair");
+assert(css.includes("align-items: stretch"), "fold CTA pair stretches to equal height");
+assert(css.includes("flex: 1 1 0"), "Sign up + Sign in share flex 1 1 0");
+assert(css.includes("min-height: 48px"), "fold CTAs share 48px min-height");
+assert(css.includes("padding: 0.75rem 1rem"), "fold CTAs share 0.75rem 1rem padding");
 assert(
-  css.includes(".bb-land-signin") && css.includes("flex: 1 1 auto"),
-  "Sign in is flex:1 1 auto next to Sign up",
+  css.includes('.bb-land-cta [data-cta="land-signup"]') &&
+    css.includes("background: #2DD4BF") &&
+    css.includes("color: #042F2E"),
+  "Sign up is filled primary teal",
 );
 assert(
-  css.includes("border: 1px solid rgba(255, 255, 255, 0.7)") &&
-    css.includes("border-radius: 9999px") &&
+  css.includes('.bb-land-cta [data-cta="land-signin"]') &&
+    css.includes("border: 1.5px solid rgba(255, 255, 255, 0.55)") &&
     css.includes("background: transparent"),
-  "Sign in is a ghost/outline white ~70% pill",
+  "Sign in is a ghost/outline pill",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
-assert(css.includes("padding: 5.25rem 1.25rem 0.35rem"), "phone tightens arc→H1");
+assert(css.includes("margin-block-end: 1.25rem"), "phone density arc→H1 is 1.25rem");
+assert(
+  css.includes("margin-block-start: 0") && css.includes("gap: 0.5rem"),
+  "phone copy gap is 0.5rem with no extra start margin",
+);
+assert(css.includes("padding: 5.25rem 1.25rem 0.35rem"), "phone arc keeps overlay top pad");
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
 assert(
   read("land/assets/02-deals.svg").includes('aria-label="BotBuyer brings deals"'),
