@@ -33,7 +33,15 @@ export function PublicChrome({
           <PublicNav land={land} />
         </header>
         <InstallHint />
-        <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8">{children}</main>
+        <main
+          className={
+            land
+              ? "bb-land-main mx-auto w-full max-w-6xl px-4 pb-8 md:px-8"
+              : "mx-auto w-full max-w-6xl px-4 pb-20 md:px-8"
+          }
+        >
+          {children}
+        </main>
         <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8">
           <div>
             <SiteFooter />

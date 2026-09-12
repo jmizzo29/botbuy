@@ -5,5 +5,5 @@ export const metadata = {
 };
 
 export default function HowPage() {
-  redirect("/#how");
+  redirect("/about");
 }

@@ -8,7 +8,7 @@ export const LAND_PRODUCT_SUPPORT = "Less tab-chasing. Same hard approve." as co
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
 export const LAND_WORDMARK = "BotBuyer" as const;
-export const LAND_ARC_SRC = "/land/assets/06-arc.svg" as const;
+export const LAND_ARC_SRC = "/land/assets/06-arc-reverse.svg" as const;
 export const LAND_ARC_LABEL = "Find Decide Buy arc" as const;
 
 /** Signup live door — CPO `cpo-real-auth-signup-ia-v1.md`. Soft-signal HOLD. */
