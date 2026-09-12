@@ -21,7 +21,7 @@ Commit exact SVG bodies. Serve copies from `public/land/assets/`.
 ## Product locks
 
 - Light Techlux chrome + optional air bg + eclipse-pass header (`/brand/logo-eclipse-pass/botbuyer-logo-header.svg`) + Private beta / About / Sign in
-- Navy stage card gradient `#0B1F3A` → `#163556` → `#0a182c` · radius phone~20 desk~28
+- Navy stage gradient `#0B1F3A` → `#163556` → `#0a182c` · square full-bleed under header (no inset card / no 20/28 radius)
 - Land E captions exact (BotBuyer one-liner)
 - Sign up = sole teal primary → `/signup`; Install = quiet muted text link
 - Signed-in: redirect off land (never My deals as land primary)

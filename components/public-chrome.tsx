@@ -37,7 +37,7 @@ export function PublicChrome({
         <main
           className={
             land
-              ? "bb-land-main mx-auto w-full max-w-6xl px-4 pb-8 md:px-8"
+              ? "bb-land-main w-full"
               : "mx-auto w-full max-w-6xl px-4 pb-20 md:px-8"
           }
         >
