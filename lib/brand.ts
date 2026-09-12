@@ -1,10 +1,10 @@
 /** Canonical product chrome. Never botbuy.ai or getbotbuy.com. */
 export const LAND_META_LINE =
-  "Set spend, intent, and a payment method. BotBuyer only moves when you approve.";
+  "BotBuyer finds it and handles the chase. You approve before it pays.";
 
 /** Land H1 / support — CMO LOCKED ≤10s lead. Soft-signal HOLD. */
 export const LAND_PRODUCT_H1 = "Your AI agent for buying." as const;
-export const LAND_PRODUCT_SUPPORT = "Less tab-chasing. Same hard approve." as const;
+export const LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK." as const;
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
 export const LAND_WORDMARK = "BotBuyer" as const;
