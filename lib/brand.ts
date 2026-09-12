@@ -2,7 +2,10 @@
 export const LAND_META_LINE =
   "BotBuyer finds it and handles the chase. You approve before it pays.";
 
-/** Land H1 / support — CMO LOCKED ≤10s lead. Soft-signal HOLD. */
+/** Public land fold — John GO coming-soon. Soft-signal HOLD. */
+export const LAND_COMING_SOON = "Coming soon" as const;
+
+/** Product H1 / support — used off-land (about). Soft-signal HOLD. */
 export const LAND_PRODUCT_H1 = "Your AI agent for buying." as const;
 export const LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK." as const;
 export const LAND_INSTALL_HELPER =

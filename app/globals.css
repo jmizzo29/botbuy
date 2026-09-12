@@ -338,6 +338,29 @@ body {
   min-height: inherit;
 }
 
+/* Coming-soon fold — centered Quiet Capital. Soft-signal HOLD. */
+.bb-land-coming {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  min-height: inherit;
+  padding: 5.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
+}
+
+.bb-land-coming-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4.2vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
 .bb-land-arc {
   order: 1;
   display: flex;
