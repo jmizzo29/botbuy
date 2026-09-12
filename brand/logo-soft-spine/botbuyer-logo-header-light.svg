@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" width="520" height="180">
+  <rect width="520" height="180" fill="#F7F8FA"/>
+  <g transform="translate(28,42) scale(1.35)"><g transform="translate(2,1) scale(0.90)">
+  <g fill="#0B1F3A" fill-rule="evenodd">
+    <path d="M30 8
+      C28.2 8 26.8 9.3 26.8 11 L26.8 53
+      C26.8 54.7 28.2 56 30 56 H34
+      C35.8 56 37.2 54.7 37.2 53 L37.2 11
+      C37.2 9.3 35.8 8 34 8 Z"/>
+    <!-- Right bowls -->
+    <path d="M37.2 10 H48.5
+      C56.2 10 61.5 14.8 61.5 21.5
+      C61.5 28 56.5 32.2 48.8 32.2 H37.2 Z
+      M37.2 16.5 h10.5
+      c4.5 0 7.2 2.2 7.2 5
+      0 2.8-2.7 5-7.2 5 H37.2 Z"/>
+    <path d="M37.2 35 H51
+      C60.5 35 66.8 40.5 66.8 48
+      C66.8 55.5 60.2 56 50.8 56 H37.2 Z
+      M37.2 41.5 h12.5
+      c5.8 0 9.5 2.8 9.5 6.5
+      0 3.7-3.7 6.5-9.5 6.5 H37.2 Z"/>
+    <!-- Left bowls -->
+    <path d="M26.8 10 H15.5
+      C7.8 10 2.5 14.8 2.5 21.5
+      C2.5 28 7.5 32.2 15.2 32.2 H26.8 Z
+      M26.8 16.5 h-10.5
+      c-4.5 0-7.2 2.2-7.2 5
+      0 2.8 2.7 5 7.2 5 H26.8 Z"/>
+    <path d="M26.8 35 H13
+      C3.5 35 -2.8 40.5 -2.8 48
+      C-2.8 55.5 3.8 56 13.2 56 H26.8 Z
+      M26.8 41.5 h-12.5
+      c-5.8 0-9.5 2.8-9.5 6.5
+      0 3.7 3.7 6.5 9.5 6.5 H26.8 Z"/>
+  </g>
+  <rect x="29.5" y="58" width="5" height="1.4" rx="0.55" fill="#2DD4BF"/></g></g>
+  <text x="140" y="108" font-family="Liberation Sans, Helvetica Neue, Arial, sans-serif"
+        font-size="56" font-weight="600" letter-spacing="-1.6" fill="#0A0A0A">BotBuyer</text>
+</svg>
