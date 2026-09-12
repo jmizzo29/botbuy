@@ -606,6 +606,11 @@ assert(
     (land.match(/description: LAND_COMING_SOON/g) || []).length >= 3,
   "coming soon quiets page/OG/twitter descriptions",
 );
+assert(
+  land.includes("/brand/logo-soft-spine/og/og-1200x630.png") &&
+    land.includes('card: "summary_large_image"'),
+  "coming soon keeps soft-spine OG/twitter image",
+);
 assert(!land.includes("LandInstallButton"), "land has no Install door");
 assert(!land.includes("Install"), "land page source has no Install string");
 assert(!land.includes("land-install"), "land fold has no Install CTA");

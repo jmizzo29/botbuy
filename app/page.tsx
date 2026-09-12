@@ -11,10 +11,20 @@ export const metadata = {
   openGraph: {
     title: BRAND.name,
     description: LAND_COMING_SOON,
+    images: [
+      {
+        url: "/brand/logo-soft-spine/og/og-1200x630.png",
+        width: 1200,
+        height: 630,
+        alt: BRAND.name,
+      },
+    ],
   },
   twitter: {
+    card: "summary_large_image",
     title: BRAND.name,
     description: LAND_COMING_SOON,
+    images: ["https://botbuyer.ai/brand/logo-soft-spine/og/og-1200x630.png"],
   },
 };
 
