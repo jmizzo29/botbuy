@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>BotBuy favicon — O1 B-journey</title>
+  <rect width="32" height="32" rx="7" fill="#0B1F3A"/>
+  <!-- Same LOCKED paths; thicker stroke so mark reads at 16px -->
+  <g transform="translate(3.5,3.5) scale(0.390625)">
+    <g fill="none" stroke="#F7F8FA" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 12 V52"/>
+      <path d="M16 12 H34 C42 12 48 17 48 24 C48 30 43 34 36 34"/>
+      <path d="M16 34 H34 C43 34 50 39 50 46 C50 50 47 52 42 52"/>
+      <path d="M28 24 C34 24 36 30 36 34 C36 40 40 46 48 48" stroke-width="3.0" opacity="0.55"/>
+      <circle cx="52" cy="50" r="4.2" fill="#F7F8FA" stroke="none"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BotBuy mark">
+  <title>BotBuy mark — O1 B-journey</title>
+  <!-- LOCKED geometry · deep navy #0B1F3A · transparent bg (no white rect) -->
+  <g fill="none" stroke="#0B1F3A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- B stem -->
+    <path d="M16 12 V52"/>
+    <!-- upper bowl (open, not closed circle-B) -->
+    <path d="M16 12 H34 C42 12 48 17 48 24 C48 30 43 34 36 34"/>
+    <!-- lower bowl opens into journey exit -->
+    <path d="M16 34 H34 C43 34 50 39 50 46 C50 50 47 52 42 52"/>
+    <!-- negative-space journey: path through bowls ending as forward -->
+    <path d="M28 24 C34 24 36 30 36 34 C36 40 40 46 48 48" stroke-width="2.4" opacity="0.55"/>
+    <!-- agent node at journey end (buy forward) -->
+    <circle cx="52" cy="50" r="3.6" fill="#0B1F3A" stroke="none"/>
+  </g>
+</svg>
