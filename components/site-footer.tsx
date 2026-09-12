@@ -5,10 +5,14 @@ import { cn } from "@/lib/utils";
 export function SiteFooter({
   className,
   onDark = false,
+  land = false,
 }: {
   className?: string;
   onDark?: boolean;
+  land?: boolean;
 }) {
+  if (land) return null;
+
   return (
     <nav
       aria-label="Legal and site pages"

@@ -323,7 +323,9 @@ assert(signIn.includes("AuthDoor"), "sign-in uses Techlux auth door");
 assert(!signup.includes("className=\"display\""), "signup H1 is not land display");
 assert(!signup.includes("DEMO_PILL_CLASS"), "signup has no Demo pill token");
 assert(!signIn.includes("DEMO_PILL_CLASS"), "sign-in has no Demo pill token");
-assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "POC stays footer meta");
+assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "non-land public chrome keeps POC footer meta");
+assert(!chrome.includes("signalHold") && !chrome.includes("BRAND.signalHold"), "land chrome has no visible Soft-signal HOLD");
+assert(chrome.includes("{land ? (") && chrome.includes("<SiteFooter land"), "land PublicChrome renders no footer chrome");
 assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
 assert(signIn.includes("<SignIn"), "sign-in uses Clerk SignIn");
@@ -416,7 +418,7 @@ assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air b
 assert(chrome.includes("bb-land-header"), "land header overlays the navy stage");
 assert(chrome.includes("bb-land-nav") && chrome.includes("bb-land-link"), "land overlay is word links");
 assert(chrome.includes("onDark={land}"), "land chrome uses reverse lockup on navy");
-assert(chrome.includes("bb-land-footer"), "land footer stays on navy, not a light strip");
+assert(!chrome.includes("bb-land-footer"), "land has no footer chrome strip");
 assert(!chrome.includes("<Button"), "land overlay nav has no Button pills");
 assert(!chrome.includes("rounded-full"), "land overlay nav has no pill radius");
 assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
@@ -670,7 +672,7 @@ assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a18
 assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
 assert(css.includes(".bb-land-header") && css.includes("background: transparent"), "land header is overlay, not a light strip");
 assert(css.includes(".bb-land-link") && css.includes("border-radius: 0"), "overlay nav is word links, not pills");
-assert(css.includes(".bb-land-footer") && css.includes("var(--bb-land-navy-deep)"), "land footer is deep navy, not Techlux light");
+assert(!chrome.includes("Privacy") && !chrome.includes("SITE_FOOTER_LINKS"), "land chrome does not hardcode footer legal links");
 assert(!css.includes("--bb-land-chrome"), "stage no longer subtracts a header chrome band");
 assert(
   css.includes("min-height: 100dvh") && css.includes("min-height: 100svh"),
@@ -943,8 +945,9 @@ assert(!legalMd.includes("terms-of-service-v1.md"), "loader never reads terms v1
 assert(!legalMd.includes("about-v1.md") && !legalMd.includes("beta-v1.md") && !legalMd.includes("contact-v1.md"), "loader prefers site-pages without -v1");
 assert(legalMd.includes("omitDisputeSection"), "terms omit dispute/venue section");
 assert(legalMd.includes("Cookie banner / CMP remains deferred"), "cookie banner deferred");
-assert(chrome.includes("SiteFooter"), "land chrome has site footer");
+assert(chrome.includes("SiteFooter"), "non-land public chrome keeps site footer");
 assert(shell.includes("SiteFooter"), "app shell has site footer");
+assert(siteFooter.includes("if (land) return null"), "SiteFooter land prop is empty");
 assert(!chrome.includes("Cookie") && !shell.includes("cookie banner"), "no cookie banner invent");
 assert(privacyPage.includes('loadLegalBlocks("privacy"'), "privacy renders publish blocks");
 assert(termsPage.includes('loadLegalBlocks("terms"'), "terms renders publish blocks");
