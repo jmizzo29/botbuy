@@ -27,7 +27,7 @@ export function buildRunSearchingDeal(input: {
   return {
     id,
     userId: input.userId ?? SEED_OWNER.id,
-    title: input.title.slice(0, 80) || "First BotBuy search",
+    title: input.title.slice(0, 80) || "First BotBuyer search",
     category: input.category || "software",
     marketplace: "any_channel",
     status: "Searching",
@@ -82,7 +82,7 @@ export function runDealFromIntent(
   const deal = buildRunSearchingDeal({
     id,
     userId: userId ?? intent?.userId ?? SEED_OWNER.id,
-    title: intent?.summary?.slice(0, 80) || "First BotBuy search",
+    title: intent?.summary?.slice(0, 80) || "First BotBuyer search",
     category: intent?.categories[0] ?? "software",
     intentSummary: intent?.summary ?? null,
   });

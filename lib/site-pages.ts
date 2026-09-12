@@ -1,7 +1,7 @@
 /** Locked CPO site-page chrome. Soft-signal HOLD = marketing posts only. */
 
 export const EARLY_ACCESS_HONESTY =
-  "BotBuy is early access. Features labeled Demo or Coming are not live commitments.";
+  "BotBuyer is early access. Features labeled Demo or Coming are not live commitments.";
 
 export const SITE_OPERATOR = "Build Star Labs (Florida)";
 
@@ -20,23 +20,23 @@ export const SITE_FOOTER_LINKS = [
 export const SITE_PAGE_CHROME = {
   privacy: {
     title: "Privacy Policy",
-    lead: "How we handle information when you use BotBuy.",
+    lead: "How we handle information when you use BotBuyer.",
   },
   terms: {
     title: "Terms of Service",
-    lead: "The rules for using BotBuy’s early-access experience.",
+    lead: "The rules for using BotBuyer’s early-access experience.",
   },
   about: {
-    title: "About BotBuy",
-    lead: "Spend-gated buying with approval built in — so you set the limit, and BotBuy does the search and close work.",
+    title: "About BotBuyer",
+    lead: "Spend-gated buying with approval built in — so you set the limit, and BotBuyer does the search and close work.",
   },
   beta: {
     title: "Early access (Beta)",
-    lead: "BotBuy is in early access — real product, honest labels, limited scope.",
+    lead: "BotBuyer is in early access — real product, honest labels, limited scope.",
   },
   contact: {
     title: "Contact",
-    lead: "Reach us about BotBuy early access, privacy, or product questions.",
+    lead: "Reach us about BotBuyer early access, privacy, or product questions.",
   },
 } as const;
 
@@ -44,7 +44,7 @@ export const SITE_EMPTY = {
   unavailableTitle: "This page isn’t ready yet",
   unavailableBody: "We’re finishing early-access copy. Try again shortly.",
   notFoundTitle: "Page not found",
-  notFoundBody: "That link doesn’t exist on BotBuy.",
+  notFoundBody: "That link doesn’t exist on BotBuyer.",
   backHome: "Back home",
   about: "We’re writing this page for early access.",
   beta: "Early access details will show here.",
@@ -52,7 +52,7 @@ export const SITE_EMPTY = {
 } as const;
 
 export const SITE_BETA_CTA = {
-  run: "Run BotBuy",
+  run: "Run BotBuyer",
   runHref: "/signup",
   questions: "Questions?",
   questionsHref: "/contact",

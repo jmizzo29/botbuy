@@ -28,7 +28,7 @@ export async function namecheapCommand(
       status: 0,
       body: "",
       reason:
-        "Namecheap Client IP is unset. BotBuy will publish whitelist IPs. Not live.",
+        "Namecheap Client IP is unset. BotBuyer will publish whitelist IPs. Not live.",
     };
   }
   const params = new URLSearchParams({

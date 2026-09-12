@@ -5,7 +5,7 @@ import { hasPublicSession } from "@/lib/session";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "BotBuy",
+  title: "BotBuyer",
 };
 
 /** Installed start: My deals if signed in, else land. */

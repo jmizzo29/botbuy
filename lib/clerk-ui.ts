@@ -1,4 +1,4 @@
-/** Techlux light — Clerk chrome on BotBuy tokens. Soft-signal HOLD. */
+/** Techlux light — Clerk chrome on BotBuyer tokens. Soft-signal HOLD. */
 export const CLERK_APPEARANCE = {
   variables: {
     colorPrimary: "#2DD4BF",

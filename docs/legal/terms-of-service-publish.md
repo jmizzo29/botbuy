@@ -1,19 +1,19 @@
-# BotBuy Terms of Service
+# BotBuyer Terms of Service
 
 > **Status:** Site publish (botbuyer.ai) · Early access / POC  
 > **Soft-signal HOLD:** marketing posts / launch claims only — not a block on this page  
 > **Operator:** Build Star Labs (Florida)  
 > **Governing law:** State of Florida, USA  
-> **Domain:** https://botbuyer.ai (BotBuy PWA / site)  
+> **Domain:** https://botbuyer.ai (BotBuyer PWA / site)  
 > **Contact:** legal@botbuyer.ai — *designated inbox; if mail bounces, use the Contact page*  
 > **Effective date:** September 11, 2026  
-> **Note:** Product legal copy for BotBuy. Not legal advice to you as a user. Residual counsel review remains recommended for payments, KYC, financial-services framing, and dispute resolution. We do not invent licenses, insurance, live payment rails, or escrow status.
+> **Note:** Product legal copy for BotBuyer. Not legal advice to you as a user. Residual counsel review remains recommended for payments, KYC, financial-services framing, and dispute resolution. We do not invent licenses, insurance, live payment rails, or escrow status.
 
 ---
 
 ## Early access
 
-**BotBuy is early access. Features labeled Demo or Coming are not live commitments.**
+**BotBuyer is early access. Features labeled Demo or Coming are not live commitments.**
 
 These Terms do **not** make public launch, GA, traction, Escrow-operational, or “all rails live” claims. Soft-signal HOLD continues to apply to marketing posts.
 
@@ -21,27 +21,27 @@ These Terms do **not** make public launch, GA, traction, Escrow-operational, or 
 
 ## 1. Agreement; acceptance; who can use
 
-By accessing or using BotBuy at https://botbuyer.ai (site, PWA, or related services we provide), you agree to these Terms of Service (“Terms”) and our Privacy Policy (when published).
+By accessing or using BotBuyer at https://botbuyer.ai (site, PWA, or related services we provide), you agree to these Terms of Service (“Terms”) and our Privacy Policy (when published).
 
-**Eligibility.** You must be at least **18 years old** and have legal capacity to enter a binding contract. If you use BotBuy on behalf of an organization, you represent you have authority to bind that organization.
+**Eligibility.** You must be at least **18 years old** and have legal capacity to enter a binding contract. If you use BotBuyer on behalf of an organization, you represent you have authority to bind that organization.
 
-If you do not agree, do not use BotBuy.
+If you do not agree, do not use BotBuyer.
 
-**Parties.** These Terms are between you and **Build Star Labs** (“BotBuy,” “we,” “us”), operating BotBuy at https://botbuyer.ai. Mailing address forthcoming.
+**Parties.** These Terms are between you and **Build Star Labs** (“BotBuyer,” “we,” “us”), operating BotBuyer at https://botbuyer.ai. Mailing address forthcoming.
 
 ---
 
 ## 2. Service description (POC / early access)
 
-BotBuy is a **spend-gated AI buy-agent** experience. In plain language, you may:
+BotBuyer is a **spend-gated AI buy-agent** experience. In plain language, you may:
 
 - set a **spend limit** and purchase **intent**;
-- link **payment methods** for pay-at-purchase (the product “vault” is a brand name for linked methods — not a BotBuy-held balance);
+- link **payment methods** for pay-at-purchase (the product “vault” is a brand name for linked methods — not a BotBuyer-held balance);
 - have the agent help **search**, present, and (after approval) support **purchase/close** workflows **within your limits**.
 
-**Executor of human-approved actions.** BotBuy is an **executor of human-approved actions**, not an autonomous spender. The designated account holder approves each deal before spend. **Auto-approve is OFF.** Fail-closed: BotBuy executes only what you approve.
+**Executor of human-approved actions.** BotBuyer is an **executor of human-approved actions**, not an autonomous spender. The designated account holder approves each deal before spend. **Auto-approve is OFF.** Fail-closed: BotBuyer executes only what you approve.
 
-**Approval design (current truth):** Every deal needs **designated account holder** approval (**your designated account holder**). **Auto-approve is OFF.** BotBuy is not designed to spend without that approval.
+**Approval design (current truth):** Every deal needs **designated account holder** approval (**your designated account holder**). **Auto-approve is OFF.** BotBuyer is not designed to spend without that approval.
 
 **Early access / POC / not GA.** Features may be incomplete, experimental, Demo-labeled, or unavailable. “Coming” rails and stubs are **not** live commitments. Category focus for current product commitments: **software across channels first**; domains may be an optional wedge; cars/real estate may open later and are not current service commitments.
 
@@ -64,8 +64,8 @@ We may require human gates such as captcha, 2FA, bank gates, and KYC **when requ
 ## 4. Spend limits and deal approval
 
 - A **hard spend gate** applies (product design includes a gate such as **$1,000**; exact configured limits may vary by account/settings).
-- **BotBuy does not spend without account-holder approval of the deal.** Auto-approve remains **OFF** under current design. Fail-closed.
-- By approving a deal, **you authorize** use of your selected payment method **only** within that approved deal and your applicable spend limit. This is spend-through / pay-at-purchase — not a draw from a BotBuy-held balance.
+- **BotBuyer does not spend without account-holder approval of the deal.** Auto-approve remains **OFF** under current design. Fail-closed.
+- By approving a deal, **you authorize** use of your selected payment method **only** within that approved deal and your applicable spend limit. This is spend-through / pay-at-purchase — not a draw from a BotBuyer-held balance.
 - Circumventing spend gates, approval flows, or security controls is prohibited (see Acceptable use).
 
 You remain responsible for reviewing deal terms, amounts, merchants, and any licenses/titles **before** you approve.
@@ -74,11 +74,11 @@ You remain responsible for reviewing deal terms, amounts, merchants, and any lic
 
 ## 5. Payment vault and processors
 
-**Multi-rail vision; many rails Coming / not live.** BotBuy may envision cards, banks, X Money, BTC, and similar. **Do not assume a rail is available** unless the product UI shows it as live. Coming / Demo rails are not promised availability.
+**Multi-rail vision; many rails Coming / not live.** BotBuyer may envision cards, banks, X Money, BTC, and similar. **Do not assume a rail is available** unless the product UI shows it as live. Coming / Demo rails are not promised availability.
 
 **Third-party processors.** Payments are handled via third-party processors (e.g., Stripe / Link **when used**). Processor terms and privacy policies apply to their processing.
 
-**No full PAN storage (intended design).** Payment vault uses **provider references/tokens**. BotBuy’s intended design is **not** to store raw PAN/CVC in application databases or logs.  
+**No full PAN storage (intended design).** Payment vault uses **provider references/tokens**. BotBuyer’s intended design is **not** to store raw PAN/CVC in application databases or logs.  
 
 **Your responsibilities.** You remain responsible for:
 
@@ -87,15 +87,15 @@ You remain responsible for reviewing deal terms, amounts, merchants, and any lic
 - chargebacks, disputes, and processor rules;
 - taxes where applicable.
 
-**Escrow / complete verification:** Rules are **TBD — not live**. These Terms **do not** claim Escrow is operational, and BotBuy does **not** claim to be your escrow agent by virtue of this draft.
+**Escrow / complete verification:** Rules are **TBD — not live**. These Terms **do not** claim Escrow is operational, and BotBuyer does **not** claim to be your escrow agent by virtue of this draft.
 
 ---
 
 ## No custodial balances (product lock)
 
-BotBuy does not hold customer stored-value balances or custodial wallet float. Vault is for linking payment methods and paying at purchase (spend-through) via payment partners — not a BotBuy account balance you preload and we hold.
+BotBuyer does not hold customer stored-value balances or custodial wallet float. Vault is for linking payment methods and paying at purchase (spend-through) via payment partners — not a BotBuyer account balance you preload and we hold.
 
-BotBuy is not a custodial stored-value wallet, omnibus float, or “BotBuy wallet balance.” These Terms do **not** claim money-transmitter or MSB status.
+BotBuyer is not a custodial stored-value wallet, omnibus float, or “BotBuyer wallet balance.” These Terms do **not** claim money-transmitter or MSB status.
 
 ---
 
@@ -113,9 +113,9 @@ CHO gates public claims; these Terms do not authorize fake traction or live pric
 
 ## 7. Deal outcomes; merchants; Demo vs agent-executed
 
-- **Merchants/sellers are third parties.** Unless BotBuy **expressly** states otherwise for a specific offering, **BotBuy is not the seller** of the goods, software, or services you buy.
+- **Merchants/sellers are third parties.** Unless BotBuyer **expressly** states otherwise for a specific offering, **BotBuyer is not the seller** of the goods, software, or services you buy.
 - **Titles, licenses, and delivery** come from the merchant/seller under their terms.
-- **Refunds and returns** are subject to merchant and/or processor rules; BotBuy does not guarantee merchant refunds.
+- **Refunds and returns** are subject to merchant and/or processor rules; BotBuyer does not guarantee merchant refunds.
 - Deals may be labeled **Demo**, **imported**, or **agent-executed**. Labels matter: Demo/imported materials are not the same as a live agent-executed purchase.
 
 You are responsible for legality of the purchase in your jurisdiction and for compliance with export, sanctions, and acceptable-use rules.
@@ -132,12 +132,12 @@ Buy+operate agents included post-close are **stubs / Demo · not live** unless a
 
 You agree not to:
 
-- use BotBuy for **unlawful purchases**, fraud, money laundering, sanctions evasion, or other illegal activity;
+- use BotBuyer for **unlawful purchases**, fraud, money laundering, sanctions evasion, or other illegal activity;
 - abuse the service, interfere with others, or attempt unauthorized access;
 - scrape or harvest data in violation of law or these Terms;
 - **circumvent spend gates**, approval requirements, KYC/captcha/2FA/bank gates, or security controls;
 - misrepresent identity, payment authority, or deal facts;
-- use BotBuy in a way that harms minors or violates others’ rights.
+- use BotBuyer in a way that harms minors or violates others’ rights.
 
 We may investigate and suspend or terminate access for violations.
 
@@ -145,22 +145,22 @@ We may investigate and suspend or terminate access for violations.
 
 ## 10. AI / agent limitations
 
-BotBuy provides **automated assistance**. Agents can be wrong, incomplete, outdated, or misaligned with your intent.
+BotBuyer provides **automated assistance**. Agents can be wrong, incomplete, outdated, or misaligned with your intent.
 
 - **Human approval is required before spend** under current design.
 - You must **review deal terms** (price, merchant, licenses, cancellation, refunds) before approving.
-- BotBuy is **not** financial, legal, tax, or investment advice.
+- BotBuyer is **not** financial, legal, tax, or investment advice.
 - Soft-signal HOLD / POC: reliability and coverage are not guaranteed at GA standards.
 
 ---
 
 ## 11. Disclaimers
 
-**AS IS / AS AVAILABLE.** To the maximum extent permitted by law, BotBuy and related materials are provided **without warranties** of any kind, express or implied, including merchantability, fitness for a particular purpose, title, and non-infringement.
+**AS IS / AS AVAILABLE.** To the maximum extent permitted by law, BotBuyer and related materials are provided **without warranties** of any kind, express or implied, including merchantability, fitness for a particular purpose, title, and non-infringement.
 
 We do **not** warrant that the service will be uninterrupted, error-free, secure, or that deals, search results, or agent outputs will meet your expectations or be accurate.
 
-**Not a bank; not escrow; not a money transmitter (unless licensed — do not claim).** BotBuy is a software experience facilitating spend-gated purchasing workflows via third parties. These Terms **do not** claim that BotBuy is a bank, escrow agent, money transmitter, or licensed MSB.  
+**Not a bank; not escrow; not a money transmitter (unless licensed — do not claim).** BotBuyer is a software experience facilitating spend-gated purchasing workflows via third parties. These Terms **do not** claim that BotBuyer is a bank, escrow agent, money transmitter, or licensed MSB.  
 
 Some jurisdictions disallow certain disclaimers; in those places, disclaimers apply to the fullest extent allowed.
 
@@ -172,16 +172,16 @@ Some jurisdictions disallow certain disclaimers; in those places, disclaimers ap
 
 To the maximum extent permitted by law:
 
-- BotBuy and its operators, officers, and affiliates will not be liable for indirect, incidental, special, consequential, exemplary, or punitive damages, or lost profits, data, or goodwill;
-- BotBuy’s aggregate liability arising out of or related to the service or these Terms will be limited to the amounts **you paid to BotBuy for the service in the twelve (12) months** before the claim (or **USD $100** if greater/lesser floor/ceiling is required by counsel — **placeholder for attorney**), except where liability cannot be limited (e.g., certain gross negligence/willful misconduct rules).
+- BotBuyer and its operators, officers, and affiliates will not be liable for indirect, incidental, special, consequential, exemplary, or punitive damages, or lost profits, data, or goodwill;
+- BotBuyer’s aggregate liability arising out of or related to the service or these Terms will be limited to the amounts **you paid to BotBuyer for the service in the twelve (12) months** before the claim (or **USD $100** if greater/lesser floor/ceiling is required by counsel — **placeholder for attorney**), except where liability cannot be limited (e.g., certain gross negligence/willful misconduct rules).
 
 ---
 
 ## 13. Indemnity (user)
 
-You will defend, indemnify, and hold harmless BotBuy and Build Star Labs, and their personnel, from and against claims, damages, losses, and expenses (including reasonable attorneys’ fees) arising out of or related to:
+You will defend, indemnify, and hold harmless BotBuyer and Build Star Labs, and their personnel, from and against claims, damages, losses, and expenses (including reasonable attorneys’ fees) arising out of or related to:
 
-- your use of BotBuy;
+- your use of BotBuyer;
 - deals you approve;
 - your violation of these Terms or law;
 - your dispute with a merchant, processor, or third party.
@@ -190,7 +190,7 @@ You will defend, indemnify, and hold harmless BotBuy and Build Star Labs, and th
 
 ## 14. Termination / suspension
 
-We may suspend or terminate access immediately for POC operational reasons, security risk, suspected fraud, acceptable-use violations, failed KYC/gates, or legal requirements. You may stop using BotBuy at any time.
+We may suspend or terminate access immediately for POC operational reasons, security risk, suspected fraud, acceptable-use violations, failed KYC/gates, or legal requirements. You may stop using BotBuyer at any time.
 
 Provisions that by nature should survive (disclaimers, liability limits, indemnity, governing law, etc.) survive termination.
 
@@ -216,7 +216,7 @@ Until counsel supplies dispute-resolution text, this clause is **omitted** from 
 
 **Contact.** legal@botbuyer.ai · https://botbuyer.ai  
 
-**Entire agreement.** These Terms (plus Privacy Policy and any in-product disclosures that expressly supplement them, including fee disclosures at checkout when offered) are the entire agreement regarding BotBuy and supersede prior conflicting understandings on the same subject. If a provision is unenforceable, the remainder stays in effect. No waiver is implied by failure to enforce.
+**Entire agreement.** These Terms (plus Privacy Policy and any in-product disclosures that expressly supplement them, including fee disclosures at checkout when offered) are the entire agreement regarding BotBuyer and supersede prior conflicting understandings on the same subject. If a provision is unenforceable, the remainder stays in effect. No waiver is implied by failure to enforce.
 
 **Order of precedence for product honesty.** Marketing or UI copy that conflicts with Demo / Coming labels or early-access limits does not override these Terms; CHO alignment required for public claims.
 

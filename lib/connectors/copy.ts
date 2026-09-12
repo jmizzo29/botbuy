@@ -23,7 +23,7 @@ export const CONNECTOR_STATUS_LABEL = {
 
 export const NAMECHEAP_NEEDS_SETUP_TITLE = "Needs setup" as const;
 export const NAMECHEAP_ELIGIBILITY_COPY =
-  "Production API eligibility. Namecheap production API access is not automatic. Your Namecheap account must be eligible for the production API before BotBuy can call it." as const;
+  "Production API eligibility. Namecheap production API access is not automatic. Your Namecheap account must be eligible for the production API before BotBuyer can call it." as const;
 export const NAMECHEAP_IP_WHITELIST_COPY =
   "IP whitelist. Namecheap only accepts API calls from allowlisted IPs. Add the Demo placeholder rows below in Namecheap until CTO publishes real egress IPs." as const;
 export const NAMECHEAP_APIUSER_LABEL = "ApiUser" as const;
@@ -46,11 +46,11 @@ export const TWILIO_API_KEY_DISCLOSURE =
 
 export const REVOKE_SHEET_TITLE = "Revoke this connection?" as const;
 export const REVOKE_SHEET_LEAD =
-  "This wipes stored tokens. BotBuy cannot call this provider until you connect again." as const;
+  "This wipes stored tokens. BotBuyer cannot call this provider until you connect again." as const;
 export const REVOKE_CONFIRM_LABEL = "Revoke and wipe tokens" as const;
 
 export const CONNECTOR_APPROVE_LOCK =
   "Register and buy stay behind the existing Approve sheet. Auto-approve is OFF. Fail-closed." as const;
 
 export const CONNECTOR_NO_PASSWORD =
-  "BotBuy never asks for a registrar or carrier password." as const;
+  "BotBuyer never asks for a registrar or carrier password." as const;

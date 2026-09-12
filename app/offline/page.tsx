@@ -19,7 +19,7 @@ export default function OfflinePage() {
           You&apos;re offline
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted">
-          Cached BotBuy pages still open. This is the Demo shell — not a live
+          Cached BotBuyer pages still open. This is the Demo shell — not a live
           purchase rail.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">

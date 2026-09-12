@@ -7,10 +7,10 @@ Prose dump on `/about`. Archive `docs/site-pages/about.md` stays; this page does
 
 ## IA
 1. **Entity** (muted): `Build Star Labs (Florida) · Private beta`
-2. **Hero:** navy O1 B-journey mark + H1 `Your AI agent for buying.` + teal hairline + support `Less tab-chasing. Same hard approve.` + one-liner `Set spend, intent, and a payment method. BotBuy only moves when you approve.` + arc Find → Decide → Buy (`assets/06-arc.svg`)
+2. **Hero:** navy O1 B-journey mark + H1 `Your AI agent for buying.` + teal hairline + support `Less tab-chasing. Same hard approve.` + one-liner `Set spend, intent, and a payment method. BotBuyer only moves when you approve.` + arc Find → Decide → Buy (`assets/06-arc.svg`)
 3. **How it works** — 3 panels, caption + illustration only
    - `Tell it what to find` · `assets/02-find.svg`
-   - `BotBuy brings deals` · `assets/03-decide.svg`
+   - `BotBuyer brings deals` · `assets/03-decide.svg`
    - `You approve. Then it buys.` · `assets/04-buy.svg`
 4. **Control:** `assets/05-control.svg` + `Every deal needs your approval.`
 5. **CTA:** sole primary Sign up → `/signup` (teal `#2DD4BF` / label `#042F2E`)

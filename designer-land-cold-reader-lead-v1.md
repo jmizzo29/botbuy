@@ -9,7 +9,7 @@ Scope: public land fold (`/` / land chrome) only.
 
 1. **H1 (lead):** `Your AI agent for buying.`
 2. **Support (under H1, muted):** `Less tab-chasing. Same hard approve.`
-3. **One-liner KEEP:** `Set spend, intent, and a payment method. BotBuy only moves when you approve.`
+3. **One-liner KEEP:** `Set spend, intent, and a payment method. BotBuyer only moves when you approve.`
 4. Sign up sole primary · Install quiet text link
 
 Constants: `LAND_PRODUCT_H1` · `LAND_PRODUCT_SUPPORT` · `LAND_META_LINE`.

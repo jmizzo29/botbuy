@@ -31,7 +31,7 @@
         ],
         "amount_usd": 179.96
       },
-      "notes": "Primary BotBuy product domain. Board-approved purchase. Amount VERIFIED against Namecheap receipt order 213804743 / txn 259700262.",
+      "notes": "Primary BotBuyer product domain. Board-approved purchase. Amount VERIFIED against Namecheap receipt order 213804743 / txn 259700262.",
       "source": "imported",
       "agent_executed": false,
       "price_verified": true,

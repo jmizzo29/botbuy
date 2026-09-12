@@ -226,7 +226,7 @@ const intents: Intent[] = [
   {
     id: "intent_product_domain",
     userId: SEED_OWNER.id,
-    summary: "Secure the BotBuy product domain (botbuyer.ai) on a multi-year term.",
+    summary: "Secure the BotBuyer product domain (botbuyer.ai) on a multi-year term.",
     categories: ["domain"],
     maxPriceUsd: 250,
     status: "fulfilled",

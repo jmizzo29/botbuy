@@ -1,4 +1,4 @@
-# BotBuy brand kit — Vault mark + wordmark (LOCKED)
+# BotBuyer brand kit — Vault mark + wordmark (LOCKED)
 Date: 2026-09-11 · Soft-signal HOLD  
 Source pick: `designer-logo-mocks-full/01-vault-mark-wordmark.png`  
 Palette: Electric Teal · Vibe: Quiet Capital · Bg: Vault cards locked
@@ -8,7 +8,7 @@ Palette: Electric Teal · Vibe: Quiet Capital · Bg: Vault cards locked
 |------|-----|
 | `botbuy-logo-primary.svg` | Transparent primary lockup (dark UI) |
 | `botbuy-logo-primary-dark-bg.svg` | Same on `#050A0C` |
-| `botbuy-logo-header.svg` | Compact header (mark + BotBuy, no domain) |
+| `botbuy-logo-header.svg` | Compact header (mark + BotBuyer, no domain) |
 | `botbuy-logo-reverse-teal.svg` | Teal-field reverse |
 | `botbuy-mark.svg` | Mark only |
 | `botbuy-app-icon.svg` | App icon master |
@@ -29,8 +29,8 @@ Mark geometry: rounded rect + left vertical bar + filled circle (vault door) —
 ### 1) Header / nav
 Prefer SVG:
 ```html
-<a href="/" aria-label="BotBuy home">
-  <img src="/brand/botbuy-logo-header.svg" alt="BotBuy" width="160" height="36" />
+<a href="/" aria-label="BotBuyer home">
+  <img src="/brand/botbuy-logo-header.svg" alt="BotBuyer" width="160" height="36" />
 </a>
 ```
 Dark shell only — primary SVG assumes light/teal mark on dark. For rare light surfaces use reverse or invert carefully (prefer keep dark chrome).
@@ -38,8 +38,8 @@ Dark shell only — primary SVG assumes light/teal mark on dark. For rare light 
 ### 2) PWA manifest (`manifest.webmanifest` / `site.webmanifest`)
 ```json
 {
-  "name": "BotBuy",
-  "short_name": "BotBuy",
+  "name": "BotBuyer",
+  "short_name": "BotBuyer",
   "icons": [
     { "src": "/brand/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/brand/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },

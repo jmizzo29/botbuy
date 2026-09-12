@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { BRAND } from "@/lib/brand";
 import { SITE_EMPTY } from "@/lib/site-pages";
 
 export default function NotFound() {
@@ -7,7 +8,7 @@ export default function NotFound() {
     <div className="grid min-h-dvh place-items-center bg-background px-6 text-foreground">
       <div className="text-center">
         <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
-          BotBuy
+          {BRAND.name}
         </p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">
           {SITE_EMPTY.notFoundTitle}

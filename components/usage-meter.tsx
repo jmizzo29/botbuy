@@ -317,7 +317,7 @@ export function AdminUsageRollup({
           </div>
         ) : (
           <p className="text-sm text-muted">
-            No usage events yet. Run BotBuy opens a Searching estimate stub.
+            No usage events yet. Run BotBuyer opens a Searching estimate stub.
           </p>
         )}
         {byUser ? (

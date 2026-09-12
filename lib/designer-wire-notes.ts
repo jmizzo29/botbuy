@@ -4,7 +4,7 @@
  * Demo gold is --bb-demo (#B8860B) — never the CTA fill.
  * G Techlux light (John LOCKED 2026-09-11) is the default shell.
  * Never black #050A0C as the default page background.
- * Go-live primary label is exactly "Run BotBuy" (never bare "Run").
+ * Go-live primary label is exactly "Run BotBuyer" (never bare "Run").
  * Quiet Capital type rhythm stays. .bb-vault-rail / .bb-vault-card stay decorative CSS only.
  * Header/PWA use the Vault mark + wordmark from the brand kit — never letter-B.
  * Not a public launch.
@@ -12,7 +12,7 @@
 
 import { PALETTE } from "@/lib/palette";
 
-export const GO_LIVE_PRIMARY_LABEL = "Run BotBuy" as const;
+export const GO_LIVE_PRIMARY_LABEL = "Run BotBuyer" as const;
 
 export const DESIGNER_PRIMARY_BG = PALETTE.primary;
 export const DESIGNER_PRIMARY_FG = PALETTE.primaryLabel;

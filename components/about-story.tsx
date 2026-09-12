@@ -26,7 +26,7 @@ export function AboutStory() {
         <p className="text-sm text-muted">{ABOUT_ENTITY}</p>
         <Image
           src={ABOUT_MARK_SRC}
-          alt="BotBuy mark"
+          alt="BotBuyer mark"
           width={88}
           height={88}
           unoptimized

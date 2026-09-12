@@ -26,7 +26,7 @@ export function PublicChrome({
           <Link
             href="/"
             className="flex items-center"
-            aria-label={`${land ? LAND_WORDMARK : "BotBuy"} home`}
+            aria-label={`${land ? LAND_WORDMARK : BRAND.name} home`}
           >
             {land ? (
               <span className="text-[15px] font-semibold tracking-tight">

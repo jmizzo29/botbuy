@@ -10,8 +10,8 @@ import { THEME_BG } from "@/lib/ui-tokens";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "BotBuy",
-    short_name: "BotBuy",
+    name: "BotBuyer",
+    short_name: "BotBuyer",
     description: LAND_META_LINE,
     start_url: INSTALLED_START_HREF,
     scope: "/",

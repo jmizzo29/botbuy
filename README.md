@@ -1,6 +1,6 @@
-# BotBuy
+# BotBuyer
 
-**https://botbuyer.ai** — Set spend, intent, and a payment method. BotBuy executes what you approve.
+**https://botbuyer.ai** — Set spend, intent, and a payment method. BotBuyer only moves when you approve.
 
 Canonical chrome is **botbuyer.ai only**. Never botbuy.ai or getbotbuy.com. POC on botbuyer.ai · not an announced launch.
 
@@ -36,13 +36,13 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 
 | Route | What |
 | --- | --- |
-| `/` | Land — G Techlux light · locked one-liner `Set spend, intent, and a payment method. BotBuy executes what you approve.` + `POC · Demo · not live` + trust line + techlux-air + veil + How it works 3-card rail + empty ProofStrip. Vault is logo only. Soft-signal HOLD |
+| `/` | Land — G Techlux light · locked one-liner `Set spend, intent, and a payment method. BotBuyer only moves when you approve.` + `POC · Demo · not live` + trust line + techlux-air + veil + How it works 3-card rail + empty ProofStrip. Vault is logo only. Soft-signal HOLD |
 | `/signup` | Clerk email sign-up → onboarding |
 | `/signin` | Clerk email sign-in → My deals (`/login` and `/sign-in` redirect here) |
-| `/onboarding/intent` | What should BotBuy find? — select or describe → **Start search** |
+| `/onboarding/intent` | What should BotBuyer find? — select or describe → **Start search** |
 | `/onboarding/spend` | Set spend (optional; not required to start a search) |
 | `/onboarding/vault` | Add a payment method — linked methods / pay-at-purchase |
-| `/onboarding/go-live` | Recap → **Run BotBuy** creates Searching deal + deal_events + usage Estimate stub |
+| `/onboarding/go-live` | Recap → **Run BotBuyer** creates Searching deal + deal_events + usage Estimate stub |
 | `/home` | My deals inbox — Searching / Found / Needs you · Approve/Reject |
 | `/deals` `/deals/[id]` | List + timeline / gates / status engine / usage Demo counters |
 | `/agents` `/agents/[assetId]` | Your agents workspace · Demo · not live · no agent chat |
@@ -61,7 +61,7 @@ Seeded from [`data/john-deal-ledger.json`](data/john-deal-ledger.json) on bootst
 | `deal_savedfast` | Closed (personal) | **Imported · amount unverified** | Imported · agent_executed=false · escrow seller-proceeds-processing · $405 not booked |
 | `deal_namecheap_savedfast_xfer` | Closed (personal) | **Imported · amount unverified** | Imported · parent → Savedfast · $11.68 not booked |
 
-Detail microcopy on imported rows: `Added from your history. BotBuy didn’t execute this purchase.`
+Detail microcopy on imported rows: `Added from your history. BotBuyer didn’t execute this purchase.`
 
 Every imported row persists `source: "imported"`, `agent_executed: false`, plus `price_verified`, `amount_verified`, and `amount_status` from JSON. `deal_botbuyer_ai` is CHO-cleared verified $179.96 (`price_verified=true`, `amount_status=verified`, `amount_verified=true`). That personal $ is **not** platform traction and stays out of the public ProofStrip. Savedfast and the transfer fee may be personal Closed with `imported_unverified` — never `price_verified`, never Customer GMV, never ProofStrip closed GMV.
 

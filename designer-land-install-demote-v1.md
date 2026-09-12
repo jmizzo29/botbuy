@@ -15,7 +15,7 @@ Do not ship dual peer buttons or an equal-weight secondary Install.
 ## Keep
 
 - H1: `Find it. Decide. Buy anything.`
-- One-liner: `Set spend, intent, and a payment method. BotBuy executes what you approve.`
+- One-liner: `Set spend, intent, and a payment method. BotBuyer only moves when you approve.`
 - Trust: `Every deal needs your approval`
 - Quiet `Private beta` honesty (no Demo)
 - Techlux · Vault mark

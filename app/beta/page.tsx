@@ -32,7 +32,7 @@ export default function BetaPage() {
             <MarkdownProse blocks={blocks} />
             {hasOperator ? null : (
               <p className="mt-8 text-sm leading-relaxed">
-                <strong>Operator:</strong> Build Star Labs (Florida). BotBuy is
+                <strong>Operator:</strong> Build Star Labs (Florida). BotBuyer is
                 offered on botbuyer.ai.
               </p>
             )}

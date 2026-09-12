@@ -59,7 +59,7 @@ const manifest = read("app/manifest.ts");
 const lockup = read("components/brand-lockup.tsx");
 const ledger = JSON.parse(read("data/john-deal-ledger.json"));
 
-assert(wire.includes('GO_LIVE_PRIMARY_LABEL = "Run BotBuy"'), "wire notes label lock");
+assert(wire.includes('GO_LIVE_PRIMARY_LABEL = "Run BotBuyer"'), "wire notes label lock");
 assert(palette.includes('PALETTE_ID = "g-techlux"'), "palette id g-techlux");
 assert(palette.includes('PALETTE_SIGNAL = "HOLD"'), "soft-signal HOLD");
 assert(palette.includes('bg: "#F7F8FA"'), "palette bg");
@@ -127,10 +127,10 @@ assert(goLive.includes('data-cta="go-live-run"'), "go-live Run marked");
 assert(goLive.includes("GO_LIVE_PRIMARY_LABEL"), "go-live uses wire-notes label");
 assert(
   (goLive.replace(/\n/g, " ").match(/\{GO_LIVE_PRIMARY_LABEL\}/g) || []).length === 2,
-  "go-live submit + disabled labels are Run BotBuy",
+  "go-live submit + disabled labels are Run BotBuyer",
 );
 assert(!/>\s*Run\s*</.test(goLive), "go-live no bare Run label");
-assert(!goLive.includes(">Run BotBuy<") && !goLive.includes(">Run<"), "go-live no hardcoded Run");
+assert(!goLive.includes(">Run BotBuyer<") && !goLive.includes(">Run<"), "go-live no hardcoded Run");
 assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not ghost");
 
 const primaryBlocks = [
@@ -175,6 +175,9 @@ assert(
   ) ||
     coldReaderLead.includes(
       "Set spend, intent, and a payment method. BotBuy only moves when you approve.",
+    ) ||
+    coldReaderLead.includes(
+      "Set spend, intent, and a payment method. BotBuyer only moves when you approve.",
     ),
   "cold-reader SoT keeps one-liner",
 );
@@ -282,7 +285,7 @@ assert(!land.includes("BRAND.trustLine"), "land renders no trust line under CTAs
 assert(!land.includes("BRAND.pocBanner"), "land fold has no POC banner stack");
 assert(!signup.includes("BRAND.pocBanner"), "signup has no POC Demo pill");
 assert(!signup.includes("POC · Demo · not live"), "signup scrubbed Demo pill copy");
-assert(signup.includes("SIGNUP_H1") && brand.includes('SIGNUP_H1 = "Create your BotBuy account"'), "signup H1 lock");
+assert(signup.includes("SIGNUP_H1") && brand.includes('SIGNUP_H1 = "Create your BotBuyer account"'), "signup H1 lock");
 assert(signup.includes("SIGNUP_SUB"), "signup sub is spend/intent/payment");
 assert(signup.includes("SIGNUP_CTA") || signup.includes("Create account"), "signup CTA Create account");
 assert(signup.includes("SIGNUP_FOOT") && brand.includes("No charge to create an account."), "signup no-charge foot");
@@ -295,7 +298,7 @@ assert(
   "Designer real-auth signup craft committed",
 );
 assert(
-  authSignupIa.includes("`Create your BotBuy account`") &&
+  authSignupIa.includes("`Create your BotBuyer account`") &&
     authSignupIa.includes("No charge to create an account.") &&
     authSignupIa.includes("`/signin`"),
   "CPO real-auth signup IA names locked door",
@@ -370,7 +373,7 @@ assert(home.includes("MY_DEALS_LABEL") || home.includes("My deals"), "My deals i
 assert(
   approveUi.includes("APPROVE_MICRO") ||
     home.includes("APPROVE_MICRO") ||
-    home.includes("BotBuy only runs what you approve."),
+    home.includes("BotBuyer only moves when you approve."),
   "home approve micro",
 );
 assert(home.includes("no invented GMV"), "My deals invents no GMV");
@@ -409,7 +412,7 @@ assert(
 );
 assert(chrome.includes('href="/beta"'), "land Private beta leans on /beta");
 assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
-assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuy only runs what you approve."), "go-live approve micro");
+assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuyer only moves when you approve."), "go-live approve micro");
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
 assert(existsSync(join(root, "public/brand/botbuy-logo-header-light.svg")), "light Vault lockup committed");
 assert(agents.includes("AgentsEmptySecondary"), "agents empty secondary");
@@ -514,6 +517,7 @@ assert(brand.includes("support: LAND_PRODUCT_SUPPORT"), "land support constant i
 assert(brand.includes("lead: LAND_META_LINE"), "land lead is locked one-liner");
 assert(!brand.includes("Buy software. You approve."), "software-only land tag removed from brand");
 assert(!brand.includes("productTag"), "land has no product-tag slot");
+assert(brand.includes('name: "BotBuyer"'), "product name lock");
 assert(brand.includes('primaryCta: "Sign up"'), "land primary door is Sign up");
 assert(brand.includes('installLink: "Install"'), "land Install is a quiet link label");
 assert(!brand.includes("secondaryCta"), "land has no peer secondary CTA");
@@ -525,7 +529,11 @@ assert(!land.includes("Vault it"), "land page source has no Vault it");
 assert(!/\band vault\b/.test(land), "land page source has no and vault");
 assert(!signup.includes("and vault") && !signup.includes("Vault it"), "signup has no vault-as-balance line");
 assert(layout.includes("LAND_META_LINE"), "layout meta uses locked one-liner");
+assert(layout.includes("apple-mobile-web-app-title"), "apple-mobile-web-app-title set");
+assert(layout.includes("applicationName: BRAND.name"), "applicationName uses BRAND.name");
 assert(manifest.includes("LAND_META_LINE"), "manifest uses locked one-liner");
+assert(manifest.includes('name: "BotBuyer"'), "manifest name BotBuyer");
+assert(manifest.includes('short_name: "BotBuyer"'), "manifest short_name BotBuyer");
 assert(!layout.includes("BotBuy does the rest."), "layout dropped old vault one-liner");
 assert(!manifest.includes("Vault it."), "manifest dropped Vault it");
 assert(brand.includes('title: "Tell it what to find"'), "how-it-works step 1 title lock");
@@ -552,9 +560,20 @@ assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product ta
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(land.includes("LAND_META_LINE"), "land lead one-liner");
 assert(land.includes("LandInstallButton"), "land Install door is wired");
-assert(land.includes("redirect(MY_DEALS_HREF)"), "signed-in redirects off land");
+assert(
+  land.includes("redirectSignedInFromLand") ||
+    land.includes("redirect(MY_DEALS_HREF)"),
+  "signed-in redirects off land",
+);
+assert(
+  existsSync(join(root, "lib/land-gate.ts")) &&
+    read("lib/land-gate.ts").includes("redirect(MY_DEALS_HREF)"),
+  "land-gate helper redirects signed-in visitors to My deals",
+);
 assert(land.includes('dynamic = "force-dynamic"'), "land session redirect is request-time");
 assert(!land.includes("land-my-deals"), "My deals is never land primary");
+assert(!land.includes("BRAND.myDealsCta"), "land fold has no My deals CTA");
+assert(land.includes('data-cta="land-signup"'), "signed-out land primary is Sign up");
 assert(
   (land.match(/<Button/g) || []).length === 1,
   "land fold Button is Sign up only",
@@ -570,7 +589,7 @@ assert(a2hsHowTo.includes("publicLand"), "A2HS land path can hide Demo badge");
 assert(a2hsHowTo.includes("LAND_A2HS_COPY"), "land A2HS copy omits Demo");
 assert(
   read("lib/cpo-techlux.ts").includes(
-    "Add BotBuy to your Home Screen. Not an App Store or Play listing.",
+    "Add BotBuyer to your Home Screen. Not an App Store or Play listing.",
   ),
   "land A2HS honesty has no Demo prefix",
 );
@@ -661,7 +680,7 @@ assert(wire.includes("Not a public launch"), "Quiet Capital docs stay HOLD");
 assert(wire.includes(".bb-vault-rail"), "wire notes record Designer vault-rail spec");
 assert(wire.includes("never letter-B"), "wire notes keep Vault mark — no letter-B");
 assert(lockup.includes("/brand/botbuy-logo-header-light.svg"), "BrandLockup uses light Vault lockup SVG");
-assert(lockup.includes('alt="BotBuy"'), "BrandLockup accessible alt");
+assert(lockup.includes('alt="BotBuyer"'), "BrandLockup accessible alt");
 assert(shell.includes("BrandLockup"), "app shell Vault header lockup");
 assert(chrome.includes("BrandLockup"), "public chrome Vault header lockup");
 assert(!/>\s*B\s*</.test(shell), "app shell no letter-B tile");
@@ -834,7 +853,7 @@ assert(
 );
 assert(
   sitePages.includes(
-    "BotBuy is early access. Features labeled Demo or Coming are not live commitments.",
+    "BotBuyer is early access. Features labeled Demo or Coming are not live commitments.",
   ),
   "early-access honesty lock",
 );
@@ -861,7 +880,7 @@ assert(privacyPage.includes('loadLegalBlocks("privacy"'), "privacy renders publi
 assert(termsPage.includes('loadLegalBlocks("terms"'), "terms renders publish blocks");
 assert(betaPage.includes('loadLegalBlocks("beta"'), "beta renders site-pages SoT");
 assert(contactPage.includes('loadLegalBlocks("contact"'), "contact renders site-pages SoT");
-assert(betaPage.includes("SITE_BETA_CTA.run"), "beta Run BotBuy CTA");
+assert(betaPage.includes("SITE_BETA_CTA.run"), "beta Run BotBuyer CTA");
 assert(privacySoT.includes("Build Star Labs (Florida)"), "privacy publish entity");
 assert(privacySoT.includes("September 11, 2026"), "privacy publish effective date");
 assert(termsSoT.includes("State of Florida"), "terms publish Florida governing law");
@@ -876,15 +895,15 @@ assert(aboutPage.includes("AboutStory"), "about renders graphical story");
 assert(!aboutPage.includes("loadLegalBlocks"), "about no longer dumps site-pages prose");
 assert(!aboutPage.includes("MarkdownProse"), "about has no markdown dump");
 assert(!aboutPage.includes("SitePageShell"), "about is not the legal/site shell");
-assert(aboutPage.includes("ABOUT_PRODUCT"), "about title uses BotBuy");
+assert(aboutPage.includes("ABOUT_PRODUCT"), "about title uses BotBuyer");
 assert(aboutPage.includes("openGraph"), "about OG uses page description");
 assert(aboutPage.includes("/brand/og-1200x630.png"), "about OG image stays Vault");
-assert(aboutLib.includes('ABOUT_PRODUCT = "BotBuy"'), "about product lock is BotBuy");
+assert(aboutLib.includes('ABOUT_PRODUCT = "BotBuyer"'), "about product lock is BotBuyer");
 assert(aboutLib.includes("LAND_PRODUCT_H1"), "about H1 imports Land E");
 assert(aboutLib.includes("LAND_PRODUCT_SUPPORT"), "about support imports Land E");
 assert(aboutLib.includes("ABOUT_META_LINE = LAND_META_LINE"), "about one-liner is Land E");
 assert(aboutLib.includes('caption: "Tell it what to find"'), "about step 1 caption lock");
-assert(aboutLib.includes('caption: "BotBuy brings deals"'), "about step 2 caption lock");
+assert(aboutLib.includes('caption: "BotBuyer brings deals"'), "about step 2 caption lock");
 assert(aboutLib.includes('caption: "You approve. Then it buys."'), "about step 3 caption lock");
 assert(
   aboutLib.includes('ABOUT_CONTROL = "Every deal needs your approval."'),
@@ -920,8 +939,8 @@ assert(read("about/assets/mark-o1-b-journey.svg").includes("#0B1F3A"), "about ma
 assert(read("brand/logo-o1-b-journey/botbuy-mark.svg").includes("#0B1F3A"), "o1 alias is navy");
 assert(aboutInstall.includes("NOT sitewide logo"), "about INSTALL holds sitewide O1");
 assert(aboutInstall.includes("#0B1F3A"), "about INSTALL names navy mark");
-assert(aboutInstall.includes("BotBuy brings deals"), "about INSTALL step 2 is BotBuy");
-assert(aboutSot.includes("BotBuy brings deals"), "about SoT step 2 is BotBuy");
+assert(aboutInstall.includes("BotBuyer brings deals"), "about INSTALL step 2 is BotBuyer");
+assert(aboutSot.includes("BotBuyer brings deals"), "about SoT step 2 is BotBuyer");
 assert(aboutSot.includes("Vault stays sitewide chrome"), "about SoT holds Vault chrome");
 assert(lockup.includes("/brand/botbuy-logo-header-light.svg"), "Vault lockup unchanged by about story");
 assert(layout.includes("/favicon.ico") && layout.includes("/brand/og-1200x630.png"), "favicon/OG stay Vault");
@@ -930,7 +949,7 @@ assert(!lockup.includes("mark-o1-b-journey"), "BrandLockup stays Vault");
 assert(!manifest.includes("mark-o1-b-journey"), "PWA icons stay Vault");
 assert(!lockup.includes("logo-o1-b-journey"), "BrandLockup does not use O1 alias");
 const BETA_OPERATOR =
-  "**Operator:** Build Star Labs (Florida). BotBuy is offered on botbuyer.ai.";
+  "**Operator:** Build Star Labs (Florida). BotBuyer is offered on botbuyer.ai.";
 function stripLeadingMeta(markdown) {
   const lines = markdown.replace(/\r\n/g, "\n").split("\n");
   let i = 0;
@@ -946,7 +965,7 @@ assert(betaBody.includes(BETA_OPERATOR), "beta Operator survives meta strip");
 assert(betaBody.includes("Build Star Labs") && betaBody.includes("Florida"), "beta Operator is body text");
 assert(!/^## Lead/m.test(betaSoT), "beta no Lead paste-meta heading");
 assert(!betaSoT.includes("Muted:"), "beta no Muted paste-meta");
-assert(betaSoT.includes("Use **Run BotBuy** on the home page") || betaSoT.includes("Use Run BotBuy on the home page"), "beta how-to copy");
+assert(betaSoT.includes("Use **Run BotBuyer** on the home page") || betaSoT.includes("Use Run BotBuyer on the home page"), "beta how-to copy");
 assert(termsSoT.includes("## No custodial balances (product lock)"), "terms no-custody heading");
 assert(termsSoT.includes("executor of human-approved actions"), "terms human-approved executor");
 assert(privacySoT.includes("does not hold custodial stored-value"), "privacy no-custody");
@@ -986,7 +1005,7 @@ assert(css.includes("--bb-bg: #F7F8FA"), "default shell is G Techlux light");
 assert(!css.includes("--bb-bg: #050A0C"), "black is not the default bg");
 assert(css.includes(".bb-prose"), "legal prose styles");
 assert(!siteFooter.includes("Namecheap"), "footer row has no Namecheap");
-assert(!siteFooter.includes("Run BotBuy"), "footer does not compete with Run BotBuy");
+assert(!siteFooter.includes("Run BotBuyer"), "footer does not compete with Run BotBuyer");
 
 const johnUx = read("lib/john-ux.ts");
 const johnIntentPage = read("app/onboarding/intent/page.tsx");
@@ -1008,21 +1027,21 @@ const johnUsersSchema = schema;
 assert(existsSync(join(root, "cpo-john-ux-intent-agents-profile-v1.md")), "CPO John UX SoT committed");
 assert(existsSync(join(root, "cpo-moat-approve-gate-v1.md")), "CPO moat approve-gate SoT committed");
 assert(existsSync(join(root, "cpo-john-intent-templates.md")), "CPO John intent templates SoT committed");
-assert(johnUxSot.includes("`What should BotBuy find?`"), "John UX SoT locks intent H1");
+assert(johnUxSot.includes("`What should BotBuyer find?`"), "John UX SoT locks intent H1");
 assert(johnUxSot.includes("`Start search`"), "John UX SoT locks Start search");
 assert(johnUxSot.includes("`Nothing searching yet`"), "John UX SoT locks empty title");
 assert(johnUxSot.includes("Add your email so we can reach you when a deal needs approval."), "John UX SoT locks email soft gate");
 assert(moatSot.includes("Auto-approve OFF"), "moat SoT keeps auto-approve OFF");
 assert(moatSot.includes("Busywork out"), "moat SoT drops busywork");
 assert(moatSot.includes("approve-each-spend KEEP") || moatSot.includes("Approve-each-spend KEEP"), "moat SoT keeps approve gate");
-assert(johnUx.includes('INTENT_H1 = "What should BotBuy find?"'), "intent H1 lock");
+assert(johnUx.includes('INTENT_H1 = "What should BotBuyer find?"'), "intent H1 lock");
 assert(johnUx.includes('INTENT_SUB = "Pick a starter or describe it yourself."'), "intent sub lock");
 assert(johnUx.includes('INTENT_CTA = "Start search"'), "intent CTA lock");
 assert(johnUx.includes('INTENT_TEXTAREA_LABEL = "Describe what you want"'), "describe label lock");
 assert(johnUx.includes('INTENT_HELPERS_LABEL = "Optional details"'), "optional details lock");
 assert(johnUx.includes("Max price") && johnUx.includes("Must include") && johnUx.includes("Avoid"), "helper labels lock");
 assert(johnUx.includes('MY_DEALS_EMPTY_TITLE = "Nothing searching yet"'), "My deals empty title");
-assert(johnUx.includes("BotBuy is searching. Deals show up here."), "My deals progress lock");
+assert(johnUx.includes("BotBuyer is searching. Deals show up here."), "My deals progress lock");
 assert(johnUx.includes("Add your email so we can reach you when a deal needs approval."), "email soft gate lock");
 assert(johnUx.includes('PROFILE_TITLE = "Your details"'), "Your details title lock");
 assert(johnIntentPage.includes("INTENT_H1") && johnIntentPage.includes("INTENT_SUB"), "onboarding intent uses locked H1/sub");
@@ -1046,7 +1065,7 @@ assert(johnTemplatesSot.includes("Software-first"), "templates SoT software-firs
 assert(johnHome.includes("MY_DEALS_EMPTY_TITLE") || johnHome.includes("Nothing searching yet"), "My deals empty title wired");
 assert(johnHome.includes("IntentForm"), "My deals empty has chips + describe");
 assert(johnHome.includes("MY_DEALS_PROGRESS"), "My deals progress line");
-assert(johnHome.includes("APPROVE_MICRO") || johnHome.includes("BotBuy only runs what you approve."), "My deals approve micro");
+assert(johnHome.includes("APPROVE_MICRO") || johnHome.includes("BotBuyer only moves when you approve."), "My deals approve micro");
 assert(johnHome.includes("AUTO_APPROVE_OFF"), "My deals auto-approve OFF");
 assert(johnAgents.includes("AGENTS_INBOX_NOTE"), "agents inbox honesty");
 assert(johnUx.includes("no live agent chat"), "agents no fake chatter");
@@ -1099,7 +1118,7 @@ assert(
 assert(connectCopy.includes("Auto-approve is OFF"), "legal safer auto-approve OFF");
 assert(connectCopy.includes("POC · not live"), "connectors not live honesty");
 assert(
-  connectCopy.includes("BotBuy will publish whitelist IPs") ||
+  connectCopy.includes("BotBuyer will publish whitelist IPs") ||
     connectCopy.includes("X.X.X.X"),
   "IP whitelist placeholder",
 );
@@ -1155,7 +1174,7 @@ if (failures.length) {
 console.log("craft-smoke PASS");
 console.log(" - g-techlux light #F7F8FA · teal #2DD4BF / #042F2E ≥4.5:1");
 console.log(" - land/meta one-liner payment method lock · no Vault it");
-console.log(" - go-live Run BotBuy present");
+console.log(" - go-live Run BotBuyer present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
 console.log(" - Admin Finance/Deals above stubs");
 console.log(" - GMV=0 · verified $179.96");
