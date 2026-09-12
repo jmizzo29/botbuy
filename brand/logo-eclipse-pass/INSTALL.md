@@ -34,7 +34,7 @@ Serve a copy of this tree at `public/brand/logo-eclipse-pass/`.
 <img src="/brand/logo-eclipse-pass/botbuyer-logo-header.svg" alt="BotBuyer" width="148" height="32" />
 ```
 
-Prefer mark + wordmark lockup in the header (land + app + about chrome). Text-only **BotBuyer** only where a lockup cannot render.
+Prefer mark + wordmark lockup in the header (app + about chrome). Land overlay uses the reverse lockup (`botbuyer-logo-primary-dark-bg.svg`) on the navy stage — light-on-navy, not a light header strip. Text-only **BotBuyer** only where a lockup cannot render.
 
 ### 2) PWA manifest
 

@@ -412,7 +412,13 @@ assert(
 );
 assert(chrome.includes('href="/beta"'), "land Private beta leans on /beta");
 assert(chrome.includes('href="/about"'), "land desktop nav includes About");
-assert(chrome.includes("bb-land-air"), "land chrome keeps optional Techlux air");
+assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air band");
+assert(chrome.includes("bb-land-header"), "land header overlays the navy stage");
+assert(chrome.includes("bb-land-nav") && chrome.includes("bb-land-link"), "land overlay is word links");
+assert(chrome.includes("onDark={land}"), "land chrome uses reverse lockup on navy");
+assert(chrome.includes("bb-land-footer"), "land footer stays on navy, not a light strip");
+assert(!chrome.includes("<Button"), "land overlay nav has no Button pills");
+assert(!chrome.includes("rounded-full"), "land overlay nav has no pill radius");
 assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
 assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuyer only moves when you approve."), "go-live approve micro");
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
@@ -584,6 +590,7 @@ assert(
   "land-gate helper redirects signed-in visitors to My deals",
 );
 assert(land.includes('dynamic = "force-dynamic"'), "land session redirect is request-time");
+assert(land.includes('themeColor: "#0B1F3A"'), "land status/theme color is navy");
 assert(!land.includes("land-my-deals"), "My deals is never land primary");
 assert(!land.includes("BRAND.myDealsCta"), "land fold has no My deals CTA");
 assert(land.includes('data-cta="land-signup"'), "signed-out land primary is Sign up");
@@ -651,6 +658,14 @@ assert(
 );
 assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage gradient tokens");
 assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
+assert(css.includes(".bb-land-header") && css.includes("background: transparent"), "land header is overlay, not a light strip");
+assert(css.includes(".bb-land-link") && css.includes("border-radius: 0"), "overlay nav is word links, not pills");
+assert(css.includes(".bb-land-footer") && css.includes("var(--bb-land-navy-deep)"), "land footer is deep navy, not Techlux light");
+assert(!css.includes("--bb-land-chrome"), "stage no longer subtracts a header chrome band");
+assert(
+  css.includes("min-height: 100dvh") && css.includes("min-height: 100svh"),
+  "navy stage fills the viewport",
+);
 assert(css.includes("border-radius: 0"), "stage is square full-bleed");
 assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
 assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
@@ -723,6 +738,8 @@ assert(wire.includes("Not a public launch"), "Quiet Capital docs stay HOLD");
 assert(wire.includes(".bb-vault-rail"), "wire notes record Designer vault-rail spec");
 assert(wire.includes("never letter-B"), "wire notes keep eclipse-pass — no letter-B");
 assert(lockup.includes("/brand/logo-eclipse-pass/botbuyer-logo-header.svg"), "BrandLockup uses eclipse-pass header SVG");
+assert(lockup.includes("/brand/logo-eclipse-pass/botbuyer-logo-primary-dark-bg.svg"), "BrandLockup reverse lockup for navy land");
+assert(lockup.includes("onDark"), "BrandLockup can render reverse on dark");
 assert(lockup.includes('alt="BotBuyer"'), "BrandLockup accessible alt");
 assert(shell.includes("BrandLockup"), "app shell eclipse-pass header lockup");
 assert(chrome.includes("BrandLockup"), "public chrome eclipse-pass header lockup");

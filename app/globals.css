@@ -202,10 +202,15 @@ body {
 }
 
 .bb-land-shell {
+  --bb-land-navy: #0b1f3a;
+  --bb-land-navy-mid: #163556;
+  --bb-land-navy-deep: #0a182c;
   position: relative;
   isolation: isolate;
   min-height: 100dvh;
-  background: var(--bb-bg);
+  min-height: 100svh;
+  background: var(--bb-land-navy);
+  color: #ffffff;
 }
 
 .bb-land-air {
@@ -236,7 +241,49 @@ body {
   z-index: 2;
 }
 
-/* Land B · edge-to-edge navy under header. Soft-signal HOLD. */
+/* Land B · full-bleed navy + overlay word-link nav. Soft-signal HOLD. */
+.bb-land-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: max(0.85rem, env(safe-area-inset-top, 0px)) 1.25rem 0.75rem;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.bb-land-lockup {
+  height: 2.25rem;
+  width: auto;
+}
+
+.bb-land-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.bb-land-link {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.72);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.bb-land-link:hover {
+  color: #ffffff;
+}
+
 .bb-land-main {
   max-width: none;
   width: 100%;
@@ -245,16 +292,12 @@ body {
 }
 
 .bb-land-stage {
-  --bb-land-navy: #0b1f3a;
-  --bb-land-navy-mid: #163556;
-  --bb-land-navy-deep: #0a182c;
-  --bb-land-chrome: 4.75rem;
   position: relative;
   isolation: isolate;
   display: flex;
   width: 100%;
-  min-height: calc(100dvh - var(--bb-land-chrome));
-  min-height: calc(100svh - var(--bb-land-chrome));
+  min-height: 100dvh;
+  min-height: 100svh;
   overflow: hidden;
   border-radius: 0;
   color: #ffffff;
@@ -264,6 +307,20 @@ body {
     var(--bb-land-navy-mid) 48%,
     var(--bb-land-navy-deep) 100%
   );
+}
+
+.bb-land-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.35rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  background: var(--bb-land-navy-deep);
+  color: rgba(255, 255, 255, 0.42);
+  border: 0;
+  box-shadow: none;
 }
 
 .bb-land-stage-grid {
@@ -325,9 +382,21 @@ body {
 }
 
 @media (min-width: 1024px) {
+  .bb-land-header {
+    padding: max(1.15rem, env(safe-area-inset-top, 0px)) 5.5rem 1rem;
+  }
+
+  .bb-land-lockup {
+    height: 2.5rem;
+  }
+
+  .bb-land-footer {
+    padding-left: 5.5rem;
+    padding-right: 5.5rem;
+  }
+
   .bb-land-stage {
-    --bb-land-chrome: 5rem;
-    min-height: calc(100svh - var(--bb-land-chrome));
+    min-height: 100svh;
   }
 
   .bb-land-stage-grid {

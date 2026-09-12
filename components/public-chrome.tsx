@@ -18,18 +18,17 @@ export function PublicChrome({
   return (
     <div
       className={cn(
-        land ? "bb-land-shell text-foreground" : "min-h-dvh bg-background text-foreground",
+        land ? "bb-land-shell" : "min-h-dvh bg-background text-foreground",
       )}
     >
-      {land ? <div className="bb-land-air" aria-hidden="true" /> : null}
       <div className={land ? "bb-land-content" : undefined}>
-        <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8">
+        <header className={land ? "bb-land-header" : "mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8"}>
           <Link
             href="/"
             className="flex items-center"
             aria-label={`${land ? LAND_WORDMARK : BRAND.name} home`}
           >
-            <BrandLockup priority />
+            <BrandLockup priority onDark={land} />
           </Link>
           <PublicNav land={land} />
         </header>
@@ -43,16 +42,28 @@ export function PublicChrome({
         >
           {children}
         </main>
-        <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8">
+        <footer
+          className={
+            land
+              ? "bb-land-footer"
+              : "mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8"
+          }
+        >
           <div>
-            <SiteFooter />
-            <p className="mt-4 text-[10px] leading-relaxed text-muted/80">
+            <SiteFooter onDark={land} />
+            <p
+              className={
+                land
+                  ? "mt-4 text-[10px] leading-relaxed text-white/40"
+                  : "mt-4 text-[10px] leading-relaxed text-muted/80"
+              }
+            >
               {BRAND.origin} · {BRAND.registration} · {BRAND.footerHold} · No paid
               Stripe
             </p>
           </div>
           {land ? (
-            <p className="text-[10px] uppercase tracking-[0.16em] text-muted/70">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-white/35">
               {BRAND.signalHold}
             </p>
           ) : null}
@@ -62,36 +73,35 @@ export function PublicChrome({
   );
 }
 
+function landLinkClass(extra?: string) {
+  return cn("bb-land-link", extra);
+}
+
 async function PublicNav({ land }: { land: boolean }) {
   const session = await hasPublicSession();
+  const link = land
+    ? landLinkClass
+    : (extra?: string) => cn("text-xs text-muted hover:text-foreground", extra);
+
   return (
-    <div className="flex items-center gap-3 text-sm">
+    <div className={land ? "bb-land-nav" : "flex items-center gap-3 text-sm"}>
       {land ? (
         <>
-          <Link href="/beta" className="text-xs text-muted hover:text-foreground">
+          <Link href="/beta" className={link()}>
             {BRAND.landHonesty}
           </Link>
-          <Link
-            href="/about"
-            className="hidden text-xs text-muted hover:text-foreground sm:inline"
-          >
+          <Link href="/about" className={link("hidden sm:inline")}>
             About
           </Link>
         </>
       ) : null}
       {session ? (
-        <Link
-          href={MY_DEALS_HREF}
-          className="text-muted hover:text-foreground"
-        >
+        <Link href={MY_DEALS_HREF} className={land ? link() : "text-muted hover:text-foreground"}>
           {MY_DEALS_LABEL}
         </Link>
       ) : (
         <>
-          <Link
-            href={CLERK_SIGN_IN_URL}
-            className="text-xs text-muted hover:text-foreground"
-          >
+          <Link href={CLERK_SIGN_IN_URL} className={link()}>
             Sign in
           </Link>
           {land ? null : (
