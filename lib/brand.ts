@@ -33,7 +33,7 @@ export const BRAND = {
   channelMicro:
     "Any software, any channel. Domains optional. Cars & real estate later.",
   primaryCta: "Sign up",
-  /** Quiet land text link — not a peer / secondary button. */
+  /** In-app / A2HS label — not a land fold CTA. */
   installLink: "Install",
   myDealsCta: "My deals",
   pocBanner: "POC · Demo · not live",

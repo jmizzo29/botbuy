@@ -28,7 +28,7 @@ Signup `POC · Demo · not live` and in-app Demo labels stay off this lock.
 - H1 (CMO LOCKED ≤10s lead): `Your AI agent for buying.`
 - Support under H1: `Find it. Decide. Buy anything.`
 - One-liner: `Set spend, intent, and a payment method. BotBuyer only moves when you approve.`
-- Sign up sole primary · Install quiet text link
+- Sign up sole primary · Sign in quiet text link
 - Techlux · Vault mark
 - No $1k on land
 - Empty proof honesty without invented numbers

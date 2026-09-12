@@ -35,7 +35,8 @@ After sign-in → `/home` if the buyer already has a session path, else onboardi
 ## Land `/`
 
 - **Sign up** primary (fold)
-- Quiet **Sign in** if signed out (header text, not a second primary)
+- Quiet **Sign in** in the same fold CTA cluster (not a second primary)
+- Overlay: Private beta / About word links only
 - **My deals** if signed in
 
 H1 / trust / no Demo on land unchanged.

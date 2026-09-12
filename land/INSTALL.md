@@ -20,10 +20,10 @@ Commit exact SVG bodies. Serve copies from `public/land/assets/`.
 
 ## Product locks
 
-- No light header / banners. Full-bleed navy + overlay reverse lockup (`/brand/logo-eclipse-pass/botbuyer-logo-primary-dark-bg.svg`) + word links only (Private beta / About / Sign in). No pill chrome in the top row.
+- No light header / banners. Full-bleed navy + overlay reverse lockup (`/brand/logo-eclipse-pass/botbuyer-logo-primary-dark-bg.svg`) + word links only (Private beta / About). No pill chrome in the top row. Sign in lives in the fold CTA cluster.
 - Navy stage gradient `#0B1F3A` → `#163556` → `#0a182c` · square full-bleed viewport (no inset card / no 20/28 radius)
 - Land E captions exact (BotBuyer one-liner)
-- Sign up = sole teal primary → `/signup`; Install = quiet muted text link
+- Sign up = sole teal primary → `/signup`; Sign in = quiet text link in the same fold cluster. No Install on land.
 - Signed-in: redirect off land (never My deals as land primary)
 - Soft-signal HOLD — no Demo / $1k / under-CTA trio / under-CTA Private beta chip
 - No CSS invert on the light arc · no orphan teal trailing jewelry · no Vault/O1
@@ -37,8 +37,8 @@ Commit exact SVG bodies. Serve copies from `public/land/assets/`.
 
 ## Layout (B)
 
-- Phone: inverted arc upper stage; captions + full-width Sign up + Install in bottom gradient cap
-- Desktop: copy left + inverted arc right; Sign up + Install row
+- Phone: inverted arc upper stage; centered 22rem copy + Sign up / Sign in row in bottom gradient cap
+- Desktop: copy left + inverted arc right; Sign up + Sign in pair
 - Drop the light elevate how-stack from the fold
 
 Strings live in `lib/brand.ts`.
