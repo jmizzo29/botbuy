@@ -580,7 +580,8 @@ assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold
 assert(!land.includes("HowItWorksRail"), "land fold dropped elevate how-stack");
 assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy stage");
 assert(land.includes("bb-land-stage"), "land stage class is wired");
-assert(land.includes("bb-atm-mesh-glow"), "land mesh-glow atmosphere class");
+assert(land.includes("bb-atm-richer-mesh-deep"), "land A1 richer-mesh-deep atmosphere class");
+assert(!land.includes("bb-atm-mesh-glow"), "land no longer wires unused mesh-glow");
 assert(land.includes("bb-land-h1") && land.includes("bb-land-support"), "land fold uses CSS type-scale classes");
 assert(!land.includes("bb-land-meta"), "land fold dropped meta one-liner");
 assert(chrome.includes("bb-land-main w-full"), "land main is unguttered full width");
@@ -686,8 +687,10 @@ assert(
   "reverse arc has no orphan teal jewelry",
 );
 assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage gradient tokens");
-assert(css.includes(".bb-atm-mesh-glow::before"), "mesh-glow atmosphere CSS");
-assert(css.includes("rgba(45,144,160,0.28)"), "mesh-glow teal blob");
+assert(css.includes(".bb-atm-richer-mesh-deep::before"), "A1 richer-mesh-deep atmosphere CSS");
+assert(css.includes("rgba(42,125,158,0.42)"), "A1 richer-mesh-deep teal blob");
+assert(css.includes(".bb-land-stage::before") && css.includes("z-index: 0"), "stage ::before stays behind content");
+assert(css.includes(".bb-land-stage-grid") && css.includes("z-index: 1"), "stage content stays above atmosphere");
 assert(!css.includes("bb-atm-grain-veil"), "do not ship grain-veil");
 assert(!css.includes("bb-atm-eclipse-whisper"), "do not ship eclipse-whisper");
 assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
