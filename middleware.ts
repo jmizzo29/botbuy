@@ -1,5 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
 import { isClerkConfigured } from "@/lib/auth-config";
 
 /**
@@ -7,8 +7,9 @@ import { isClerkConfigured } from "@/lib/auth-config";
  * Clerk 7 `clerkMiddleware` is the request gate. Authorization also lives
  * next to data via `requireUser()` / `requireApiUser()`.
  *
- * Missing Clerk keys: pass through so CI/`next build` can complete.
- * Protected routes then fail closed in layouts and APIs (no DEMO_USER).
+ * Missing Clerk keys: do not invoke clerkMiddleware (it throws). Pass
+ * through so CI/`next build`/`next start` complete. Protected routes then
+ * fail closed in layouts and APIs (no DEMO_USER).
  */
 const isProtectedRoute = createRouteMatcher([
   "/home(.*)",
@@ -30,14 +31,16 @@ const isProtectedRoute = createRouteMatcher([
   "/api/verification(.*)",
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
   if (!isClerkConfigured()) {
     return NextResponse.next();
   }
-  if (isProtectedRoute(req)) {
-    await auth.protect();
-  }
-});
+  return clerkMiddleware(async (auth, request) => {
+    if (isProtectedRoute(request)) {
+      await auth.protect();
+    }
+  })(req, event);
+}
 
 export const config = {
   matcher: [

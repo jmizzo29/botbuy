@@ -280,6 +280,7 @@ assert(!signup.includes("in-memory session"), "signup scrubbed in-memory copy");
 assert(!signup.includes("not a live account"), "signup scrubbed POC persist copy");
 assert(!signup.includes("persistSignupAction"), "signup is not in-memory persist");
 assert(middleware.includes("clerkMiddleware"), "middleware uses Clerk");
+assert(middleware.includes("isClerkConfigured"), "middleware skips Clerk when keys missing");
 assert(middleware.includes("/home"), "middleware protects /home");
 assert(schema.includes("clerkUserId"), "users.clerkUserId column");
 assert(schema.includes('autoApprove: boolean("auto_approve").notNull().default(false)'), "autoApprove default false");
