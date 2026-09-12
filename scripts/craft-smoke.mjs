@@ -165,12 +165,12 @@ assert(
   "cold-reader SoT locks H1",
 );
 assert(
-  coldReaderLead.includes("`Find it. Decide. Buy anything.`"),
+  coldReaderLead.includes("`Less tab-chasing. Same hard approve.`"),
   "cold-reader SoT locks support",
 );
 assert(
   coldReaderLead.includes(
-    "Set spend, intent, and a payment method. BotBuy executes what you approve.",
+    "Set spend, intent, and a payment method. BotBuy only moves when you approve.",
   ),
   "cold-reader SoT keeps one-liner",
 );
@@ -207,7 +207,7 @@ assert(
 assert(!land.includes("BRAND.trustLine"), "land fold has no under-CTA trust line");
 assert(cpoLandNoDemo.includes("`Your AI agent for buying.`"), "CPO keep locks CMO H1");
 assert(
-  cpoLandNoDemo.includes("`Find it. Decide. Buy anything.`"),
+  cpoLandNoDemo.includes("`Less tab-chasing. Same hard approve.`"),
   "CPO keep locks CMO support",
 );
 assert(cpoLandNoDemo.includes("Private beta"), "CPO allows Private beta without Demo");
@@ -494,12 +494,12 @@ assert(ledger.cfo?.verified_startup_spend_usd === 179.96, "CFO verified burn $17
 assert(ledger.cfo?.pending_verify_usd === 416.68, "CFO pending $416.68 Savedfast+xfer once");
 
 const LAND_META =
-  "Set spend, intent, and a payment method. BotBuy executes what you approve.";
+  "Set spend, intent, and a payment method. BotBuy only moves when you approve.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
 assert(brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying."'), "land H1 lock");
 assert(
-  brand.includes('LAND_PRODUCT_SUPPORT = "Find it. Decide. Buy anything."'),
+  brand.includes('LAND_PRODUCT_SUPPORT = "Less tab-chasing. Same hard approve."'),
   "land support lock",
 );
 assert(brand.includes("hero: LAND_PRODUCT_H1"), "land hero is locked H1");
@@ -532,7 +532,7 @@ assert(
 );
 assert(
   brand.includes(
-    "Set spend, intent, and a payment method. BotBuy executes what you approve.",
+    "Set spend, intent, and a payment method. BotBuy only moves when you approve.",
   ),
   "land/meta one-liner lock",
 );
