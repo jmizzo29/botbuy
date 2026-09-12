@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const HEADER_SRC = "/brand/logo-soft-spine/botbuyer-logo-header-light.svg";
-const REVERSE_SRC = "/brand/logo-soft-spine/botbuyer-logo-primary-dark-bg.svg";
+const REVERSE_SRC = "/brand/logo-soft-spine/botbuyer-logo-header.svg";
 
 /** Locked soft-spine mark + BotBuyer wordmark. Reverse on navy land overlay. Soft-signal HOLD. */
 export function BrandLockup({
