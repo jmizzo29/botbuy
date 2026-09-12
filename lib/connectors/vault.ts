@@ -282,8 +282,8 @@ export function toPublicStatus(
     extras?.needsSetup ??
     (provider === "namecheap" && status !== "connected"
       ? namecheapNeedsSetupReasons({
-          productionEligible: status === "connected",
-          ipWhitelistAck: status === "connected",
+          productionEligible: false,
+          ipWhitelistAck: false,
         })
       : []);
   return {

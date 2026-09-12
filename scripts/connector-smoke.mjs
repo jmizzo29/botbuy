@@ -39,6 +39,78 @@ const register = readFileSync(join(root, "lib/connectors/runtime.ts"), "utf8");
 assert(register.includes("assertConnectorSpendAllowed"), "runtime uses approve gate");
 assert(register.includes("recordConnectorAudit"), "runtime writes audit");
 
+function evaluateSpendGate({ tool, autoApproveAllowed, autoApprove, deal, events }) {
+  if (tool === "search" || tool === "quote") return { ok: true };
+  if (autoApproveAllowed || autoApprove) return { ok: false, reason: "auto-approve" };
+  if (!deal) return { ok: false, reason: "deal" };
+  if (deal.status !== "Buying") return { ok: false, reason: "status" };
+  if (!events.some((event) => event.from === "Needs you" && event.to === "Buying")) {
+    return { ok: false, reason: "trail" };
+  }
+  return { ok: true };
+}
+
+assert(
+  evaluateSpendGate({
+    tool: "search",
+    autoApproveAllowed: false,
+    autoApprove: false,
+    deal: null,
+    events: [],
+  }).ok,
+  "search is non-spend",
+);
+assert(
+  !evaluateSpendGate({
+    tool: "register",
+    autoApproveAllowed: false,
+    autoApprove: false,
+    deal: null,
+    events: [],
+  }).ok,
+  "register without deal fails closed",
+);
+assert(
+  !evaluateSpendGate({
+    tool: "buy",
+    autoApproveAllowed: true,
+    autoApprove: false,
+    deal: { status: "Buying" },
+    events: [{ from: "Needs you", to: "Buying" }],
+  }).ok,
+  "buy with auto-approve allowed fails closed",
+);
+assert(
+  !evaluateSpendGate({
+    tool: "register",
+    autoApproveAllowed: false,
+    autoApprove: false,
+    deal: { status: "Needs you" },
+    events: [],
+  }).ok,
+  "register on Needs you fails closed",
+);
+assert(
+  !evaluateSpendGate({
+    tool: "register",
+    autoApproveAllowed: false,
+    autoApprove: false,
+    deal: { status: "Buying" },
+    events: [],
+  }).ok,
+  "Buying without Needs you trail fails closed",
+);
+assert(
+  evaluateSpendGate({
+    tool: "register",
+    autoApproveAllowed: false,
+    autoApprove: false,
+    deal: { status: "Buying" },
+    events: [{ from: "Needs you", to: "Buying" }],
+  }).ok,
+  "register after Approve sheet trail passes",
+);
+
 if (failures.length) {
   console.error("connector-smoke FAIL");
   for (const item of failures) console.error(" -", item);
@@ -47,3 +119,4 @@ if (failures.length) {
 console.log("connector-smoke PASS");
 console.log(" - AES-256-GCM roundtrip");
 console.log(" - approve gate Needs you → Buying · auto-approve OFF");
+console.log(" - register/buy fail closed without deal, auto-approve, or approve trail");
