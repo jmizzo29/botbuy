@@ -138,19 +138,39 @@ assert(brand.includes('trustLine: "Every deal needs your approval"'), "John/CEO 
 assert(!brand.includes("Demo · every deal"), "old Demo trust prefix removed");
 assert(brand.includes('landHonesty: "Private beta"'), "land quiet Private beta honesty");
 assert(
+  existsSync(join(root, "cpo-land-no-demo-v1.md")),
+  "CPO land no-Demo SoT committed",
+);
+assert(
   existsSync(join(root, "designer-land-no-demo-lock-v1.md")),
   "designer land no-Demo SoT committed",
 );
+const cpoLandNoDemo = read("cpo-land-no-demo-v1.md");
 const landNoDemoSot = read("designer-land-no-demo-lock-v1.md");
+assert(
+  cpoLandNoDemo.includes("`Every deal needs your approval`"),
+  "CPO land no-Demo names locked trust",
+);
+assert(!cpoLandNoDemo.includes("Demo · every deal"), "CPO land no-Demo has no Demo trust prefix");
 assert(
   landNoDemoSot.includes("`Every deal needs your approval`"),
   "land no-Demo SoT names locked trust",
 );
 assert(
-  landNoDemoSot.includes("draft typo") && landNoDemoSot.includes("void"),
+  landNoDemoSot.includes("cpo-land-no-demo-v1.md"),
+  "designer land no-Demo points at CPO IA",
+);
+assert(
+  cpoLandNoDemo.includes("designer-land-no-demo-lock-v1.md"),
+  "CPO land no-Demo points at designer craft",
+);
+assert(
+  (cpoLandNoDemo.includes("draft typo") || landNoDemoSot.includes("draft typo")) &&
+    (cpoLandNoDemo.includes("void") || landNoDemoSot.includes("void")),
   "land no-Demo SoT voids Do not show trust typo",
 );
 assert(land.includes("BRAND.trustLine"), "land fold shows trust despite SoT typo");
+assert(cpoLandNoDemo.includes("Private beta"), "CPO allows Private beta without Demo");
 assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
 assert(!brand.includes("gate for now"), "land brand has no gate for now");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(land), "land has no $1,000 gate");
