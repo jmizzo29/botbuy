@@ -7,8 +7,6 @@ import {
   AGENTS_EMPTY_SECONDARY_HREF,
   NEEDS_YOU_CTA,
   SEARCHING_EMPTY_BODY,
-  SEARCHING_EMPTY_PRIMARY,
-  SEARCHING_EMPTY_PRIMARY_HREF,
   SEARCHING_EMPTY_SECONDARY,
   SEARCHING_EMPTY_SECONDARY_HREF,
   SEARCHING_EMPTY_TITLE,
@@ -61,9 +59,6 @@ export function SearchingEmpty({
       title={SEARCHING_EMPTY_TITLE}
       body={SEARCHING_EMPTY_BODY}
     >
-      <Button asChild size={compact ? "sm" : "lg"}>
-        <Link href={SEARCHING_EMPTY_PRIMARY_HREF}>{SEARCHING_EMPTY_PRIMARY}</Link>
-      </Button>
       <Button asChild size={compact ? "sm" : "lg"} variant="secondary">
         <Link href={SEARCHING_EMPTY_SECONDARY_HREF}>
           {SEARCHING_EMPTY_SECONDARY}

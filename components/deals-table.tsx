@@ -2,8 +2,8 @@ import Link from "next/link";
 import { DealApproveActions } from "@/components/deal-approve-actions";
 import { DealsPhoneList } from "@/components/deals-phone-list";
 import { DealAmount } from "@/components/money";
-import { Badge } from "@/components/ui/badge";
-import { DEMO_PILL_CLASS, SURFACE_RING_CLASS } from "@/lib/ui-tokens";
+import { StatusPill } from "@/components/status-pill";
+import { SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn, formatRelative } from "@/lib/utils";
 import type { Deal } from "@/lib/types";
 
@@ -51,9 +51,7 @@ export function DealsTable({
                   </Link>
                 </td>
                 <td className="px-5 py-3.5">
-                  <Badge className={DEMO_PILL_CLASS}>
-                    {deal.status} · Demo
-                  </Badge>
+                  <StatusPill status={deal.status} />
                 </td>
                 <td className="px-5 py-3.5">
                   <DealAmount deal={deal} />

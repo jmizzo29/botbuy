@@ -83,6 +83,8 @@ export interface User {
   company: string;
   role: UserRole;
   clerkUserId?: string | null;
+  notificationEmail?: string | null;
+  phone?: string | null;
 }
 
 export interface Receipt {
@@ -195,6 +197,9 @@ export interface Intent {
   maxPriceUsd: number;
   status: "active" | "paused" | "fulfilled";
   createdAt: string;
+  templateId?: string | null;
+  mustInclude?: string | null;
+  avoid?: string | null;
 }
 
 export interface SpendLimits {

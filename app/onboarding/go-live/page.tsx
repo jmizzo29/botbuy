@@ -5,6 +5,7 @@ import { BRAND } from "@/lib/brand";
 import { APPROVE_MICRO } from "@/lib/cpo-techlux";
 import { GO_LIVE_PRIMARY_LABEL } from "@/lib/designer-wire-notes";
 import { requireUser } from "@/lib/auth";
+import { EMAIL_SOFT_GATE, hasReachableEmail } from "@/lib/john-ux";
 import { getSpendLimits, listIntents } from "@/lib/store";
 import { formatUsd } from "@/lib/money";
 import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
@@ -19,6 +20,7 @@ export default async function OnboardingGoLivePage() {
   const intent = listIntents(user.id)[0];
   const limits = getSpendLimits(user.id);
   const ready = isVaultReady();
+  const reachable = hasReachableEmail(user);
 
   return (
     <div className="space-y-6">
@@ -46,6 +48,9 @@ export default async function OnboardingGoLivePage() {
           <Button type="submit" size="lg" data-cta="go-live-run">
             {GO_LIVE_PRIMARY_LABEL}
           </Button>
+          {!reachable ? (
+            <p className="text-sm text-muted">{EMAIL_SOFT_GATE}</p>
+          ) : null}
           <p className="text-sm text-muted">{APPROVE_MICRO}</p>
         </form>
       ) : (
@@ -57,6 +62,9 @@ export default async function OnboardingGoLivePage() {
             Coming rails alone do not unlock Run. Add an Available payment
             method.
           </p>
+          {!reachable ? (
+            <p className="text-sm text-muted">{EMAIL_SOFT_GATE}</p>
+          ) : null}
           <p className="text-sm text-muted">{APPROVE_MICRO}</p>
         </div>
       )}

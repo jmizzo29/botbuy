@@ -56,6 +56,8 @@ export const AGENT_SPEND_MICRO =
 export const AGENT_HOLD_NOTE =
   "HOLD. Agent runtime is not live. No present-tense claim that we run your business.";
 
+export { AGENTS_INBOX_NOTE } from "@/lib/john-ux";
+
 export const AGENT_ADMIN_EMPTY = "No agent orgs yet.";
 
 export function activateSheetBody(assetTitle: string) {

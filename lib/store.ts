@@ -209,16 +209,17 @@ const intents: Intent[] = [
     userId: SEED_OWNER.id,
     summary: JOHN_INTENT_TEMPLATES[0].summary,
     categories: [...JOHN_INTENT_TEMPLATES[0].categories],
-    maxPriceUsd: JOHN_INTENT_TEMPLATES[0].maxPriceUsd,
+    maxPriceUsd: SPEND_HARD_GATE_USD,
     status: "active",
     createdAt: "2026-09-04T18:00:00Z",
   },
   {
     id: "intent_software_domain",
     userId: SEED_OWNER.id,
-    summary: JOHN_INTENT_TEMPLATES[1].summary,
-    categories: [...JOHN_INTENT_TEMPLATES[1].categories],
-    maxPriceUsd: JOHN_INTENT_TEMPLATES[1].maxPriceUsd,
+    summary: JOHN_INTENT_TEMPLATES.find((item) => item.id === "software_domain")
+      ?.summary ?? JOHN_INTENT_TEMPLATES[0].summary,
+    categories: ["software", "domain"],
+    maxPriceUsd: SPEND_HARD_GATE_USD,
     status: "active",
     createdAt: "2026-09-05T12:00:00Z",
   },
@@ -380,6 +381,49 @@ export async function createSearchingDealFromRun(
   return deal;
 }
 
+export async function createSearchingDealFromIntent(
+  intent: Intent,
+  userId = SEED_OWNER.id,
+  email?: string | null,
+): Promise<Deal> {
+  await hydrateStore();
+  const title = intent.summary.slice(0, 80);
+  const existing = engineState().deals.find(
+    (deal) =>
+      deal.userId === userId &&
+      deal.status === "Searching" &&
+      deal.title === title,
+  );
+  if (existing) {
+    assertRunDealSoftHold(existing);
+    ensureSearchingUsageStub(existing);
+    await persistEngineStore();
+    return existing;
+  }
+
+  const id = `deal_run_${crypto.randomUUID().slice(0, 8)}`;
+  const deal = runDealFromIntent(intent, id, userId);
+  assertRunDealSoftHold(deal);
+  rememberEngineDeal(deal, seedRunDealEvents(deal, email));
+  ensureSearchingUsageStub(deal);
+  auditLogs.unshift({
+    id: `aud_${crypto.randomUUID().slice(0, 8)}`,
+    userId,
+    action: "deal.opened_from_intent",
+    entityType: "deal",
+    entityId: deal.id,
+    metadata: {
+      status: "Searching",
+      intentId: intent.id,
+      email: email ?? null,
+      templateId: intent.templateId ?? null,
+    },
+    createdAt: deal.openedAt,
+  });
+  await persistEngineStore();
+  return deal;
+}
+
 export function listDirectoryUsers(): User[] {
   return listMemoryUsers();
 }
@@ -502,6 +546,9 @@ export function addIntent(
     summary: input.summary,
     categories: input.categories,
     maxPriceUsd: clampSpendUsd(input.maxPriceUsd),
+    templateId: input.templateId ?? null,
+    mustInclude: input.mustInclude ?? null,
+    avoid: input.avoid ?? null,
   };
   intents.unshift(intent);
   auditLogs.unshift({

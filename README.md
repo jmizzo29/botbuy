@@ -39,14 +39,15 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | `/` | Land — G Techlux light · locked one-liner `Set spend, intent, and a payment method. BotBuy executes what you approve.` + `POC · Demo · not live` + trust line + techlux-air + veil + How it works 3-card rail + empty ProofStrip. Vault is logo only. Soft-signal HOLD |
 | `/signup` | Clerk email sign-up → onboarding |
 | `/signin` | Clerk email sign-in → My deals (`/login` and `/sign-in` redirect here) |
-| `/onboarding/intent` | Set intent — software-first John templates |
-| `/onboarding/spend` | Set spend |
+| `/onboarding/intent` | What should BotBuy find? — select or describe → **Start search** |
+| `/onboarding/spend` | Set spend (optional; not required to start a search) |
 | `/onboarding/vault` | Add a payment method — linked methods / pay-at-purchase |
 | `/onboarding/go-live` | Recap → **Run BotBuy** creates Searching deal + deal_events + usage Estimate stub |
-| `/home` | My deals (John’s personal history) |
+| `/home` | My deals inbox — Searching / Found / Needs you · Approve/Reject |
 | `/deals` `/deals/[id]` | List + timeline / gates / status engine / usage Demo counters |
-| `/agents` `/agents/[assetId]` | Your agents workspace · Demo · not live |
-| `/intent` `/vault` `/settings` | In-app |
+| `/agents` `/agents/[assetId]` | Your agents workspace · Demo · not live · no agent chat |
+| `/intent` | In-app intent capture (same Start search) |
+| `/vault` `/settings` `/settings/profile` | Vault · Settings · Your details |
 | `/admin` | Owner only — hidden from buyer nav and land. Persistent **Demo** badge. |
 
 ## Ledger (customer #1)

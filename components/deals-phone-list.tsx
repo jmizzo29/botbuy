@@ -4,12 +4,12 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { DealApproveActions } from "@/components/deal-approve-actions";
 import { DealAmount } from "@/components/money";
-import { Badge } from "@/components/ui/badge";
-import { DEMO_PILL_CLASS, SURFACE_RING_CLASS } from "@/lib/ui-tokens";
+import { StatusPill } from "@/components/status-pill";
+import { SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn, formatRelative } from "@/lib/utils";
 import type { Deal } from "@/lib/types";
 
-const FILTERS = ["All", "Needs you", "Searching", "Closed"] as const;
+const FILTERS = ["All", "Needs you", "Searching", "Found", "Closed"] as const;
 type Filter = (typeof FILTERS)[number];
 
 function updatedAt(deal: Deal) {
@@ -133,7 +133,7 @@ function DealRow({
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           {featured ? null : (
-            <Badge className={DEMO_PILL_CLASS}>{deal.status} · Demo</Badge>
+            <StatusPill status={deal.status} />
           )}
           <span className="text-xs text-muted">{formatRelative(updatedAt(deal))}</span>
         </div>

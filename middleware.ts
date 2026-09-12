@@ -23,6 +23,7 @@ const isProtectedRoute = createRouteMatcher([
   "/intent(.*)",
   "/api/deals(.*)",
   "/api/intents(.*)",
+  "/api/profile(.*)",
   "/api/spend(.*)",
   "/api/vault(.*)",
   "/api/agents(.*)",
