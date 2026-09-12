@@ -8,6 +8,14 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: BRAND.name,
   description: LAND_COMING_SOON,
+  openGraph: {
+    title: BRAND.name,
+    description: LAND_COMING_SOON,
+  },
+  twitter: {
+    title: BRAND.name,
+    description: LAND_COMING_SOON,
+  },
 };
 
 export const viewport: Viewport = {
