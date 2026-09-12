@@ -6,8 +6,8 @@ Live direction for `/`. Replaces the light elevate two-column door.
 
 ## Chrome
 
-- Light Techlux page (`#F7F8FA`)
-- Header: eclipse-pass lockup `/brand/logo-eclipse-pass/botbuyer-logo-header.svg` + **Private beta** / **Sign in**
+- Light Techlux page (`#F7F8FA`) + optional Techlux air bg
+- Header: eclipse-pass lockup `/brand/logo-eclipse-pass/botbuyer-logo-header.svg` + **Private beta** / **About** / **Sign in** (About on desktop nav; phone fold may omit)
 - No Demo · no public $1k · no under-CTA trio · no under-CTA Private beta chip
 - Sign up = sole teal primary `#2DD4BF` / `#042F2E` → `/signup`
 - Install = quiet muted text link

@@ -411,6 +411,8 @@ assert(
   "land header quiet Private beta",
 );
 assert(chrome.includes('href="/beta"'), "land Private beta leans on /beta");
+assert(chrome.includes('href="/about"'), "land desktop nav includes About");
+assert(chrome.includes("bb-land-air"), "land chrome keeps optional Techlux air");
 assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
 assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuyer only moves when you approve."), "go-live approve micro");
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
