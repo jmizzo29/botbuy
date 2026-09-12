@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" role="img" aria-label="Every deal needs your approval.">
+  <title>Every deal needs your approval.</title>
+  <rect x="8" y="18" width="304" height="104" rx="28" fill="#FFFFFF"/>
+  <rect x="62" y="68" width="40" height="32" rx="8" fill="none" stroke="#0A0A0A" stroke-width="2.6"/>
+  <path d="M70 68V58a12 12 0 0 1 24 0v10" fill="none" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"/>
+  <rect x="154" y="52" width="112" height="40" rx="20" fill="#2DD4BF"/>
+  <text x="210" y="77" text-anchor="middle" fill="#042F2E" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">Approve</text>
+</svg>

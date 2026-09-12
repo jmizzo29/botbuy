@@ -836,7 +836,6 @@ assert(shell.includes("SiteFooter"), "app shell has site footer");
 assert(!chrome.includes("Cookie") && !shell.includes("cookie banner"), "no cookie banner invent");
 assert(privacyPage.includes('loadLegalBlocks("privacy"'), "privacy renders publish blocks");
 assert(termsPage.includes('loadLegalBlocks("terms"'), "terms renders publish blocks");
-assert(aboutPage.includes('loadLegalBlocks("about"'), "about renders site-pages SoT");
 assert(betaPage.includes('loadLegalBlocks("beta"'), "beta renders site-pages SoT");
 assert(contactPage.includes('loadLegalBlocks("contact"'), "contact renders site-pages SoT");
 assert(betaPage.includes("SITE_BETA_CTA.run"), "beta Run BotBuy CTA");
@@ -845,6 +844,70 @@ assert(privacySoT.includes("September 11, 2026"), "privacy publish effective dat
 assert(termsSoT.includes("State of Florida"), "terms publish Florida governing law");
 assert(termsSoT.includes("omitted until attorney supplies text"), "terms dispute omitted in SoT");
 assert(aboutSoT.includes("Operator:** Build Star Labs (Florida)"), "about operator");
+
+const aboutStory = read("components/about-story.tsx");
+const aboutLib = read("lib/about-story.ts");
+const aboutInstall = read("about/INSTALL.md");
+const aboutSot = read("about/designer-about-story-v1.md");
+assert(aboutPage.includes("AboutStory"), "about renders graphical story");
+assert(!aboutPage.includes("loadLegalBlocks"), "about no longer dumps site-pages prose");
+assert(!aboutPage.includes("MarkdownProse"), "about has no markdown dump");
+assert(!aboutPage.includes("SitePageShell"), "about is not the legal/site shell");
+assert(aboutPage.includes("ABOUT_PRODUCT"), "about title uses BotBuyer");
+assert(aboutLib.includes('ABOUT_PRODUCT = "BotBuyer"'), "about product lock is BotBuyer");
+assert(aboutLib.includes("LAND_PRODUCT_H1"), "about H1 imports Land E");
+assert(aboutLib.includes("LAND_PRODUCT_SUPPORT"), "about support imports Land E");
+assert(
+  aboutLib.includes(
+    "Set spend, intent, and a payment method. BotBuyer only moves when you approve.",
+  ),
+  "about one-liner is BotBuyer",
+);
+assert(
+  !aboutLib.includes("BotBuy only moves when you approve."),
+  "about one-liner is not land BotBuy",
+);
+assert(aboutLib.includes('caption: "Tell it what to find"'), "about step 1 caption lock");
+assert(aboutLib.includes('caption: "BotBuyer brings deals"'), "about step 2 caption lock");
+assert(aboutLib.includes('caption: "You approve. Then it buys."'), "about step 3 caption lock");
+assert(
+  aboutLib.includes('ABOUT_CONTROL = "Every deal needs your approval."'),
+  "about control caption lock",
+);
+assert(
+  aboutLib.includes('ABOUT_ENTITY = `${SITE_OPERATOR} · Private beta`'),
+  "about entity lock",
+);
+assert(aboutLib.includes('ABOUT_MARK_SRC = "/about/assets/mark-o1-b-journey.svg"'), "about hero is O1-B journey");
+assert(aboutStory.includes("ABOUT_MARK_SRC"), "about story renders journey mark");
+assert(aboutStory.includes("ABOUT_STEPS"), "about story renders 3 panels");
+assert(aboutStory.includes("ABOUT_CONTROL"), "about story renders control caption");
+assert(aboutStory.includes('href={ABOUT_SIGNUP_HREF}'), "about CTA is /signup");
+assert(aboutStory.includes('data-cta="about-signup"'), "about Sign up marked");
+assert((aboutStory.match(/<Button/g) || []).length === 2, "about Sign up is sole primary (phone+desktop)");
+assert(!aboutStory.includes("variant="), "about CTA has no secondary/ghost variant");
+assert(!aboutStory.includes("Demo"), "about story has no Demo");
+assert(!aboutStory.includes("$1k") && !aboutStory.includes("$1,000"), "about story has no $1k");
+assert(!aboutStory.includes("What we don’t do") && !aboutStory.includes("What we don't do"), "about has no don’t-do essay");
+assert(!aboutLib.includes("metrics"), "about lib invents no metrics");
+assert(existsSync(join(root, "about/assets/mark-o1-b-journey.svg")), "about mark kit committed");
+assert(existsSync(join(root, "about/assets/01-hook.svg")), "about 01-hook committed");
+assert(existsSync(join(root, "about/assets/02-find.svg")), "about 02-find committed");
+assert(existsSync(join(root, "about/assets/03-decide.svg")), "about 03-decide committed");
+assert(existsSync(join(root, "about/assets/04-buy.svg")), "about 04-buy committed");
+assert(existsSync(join(root, "about/assets/05-control.svg")), "about 05-control committed");
+assert(existsSync(join(root, "about/assets/06-arc.svg")), "about 06-arc committed");
+assert(existsSync(join(root, "public/about/assets/mark-o1-b-journey.svg")), "about mark is served");
+assert(existsSync(join(root, "brand/about-story/mark-o1-b-journey.svg")), "about-story brand alias committed");
+assert(aboutInstall.includes("replace Vault"), "about INSTALL holds sitewide O1");
+assert(aboutInstall.includes("mark-o1-b-journey.svg"), "about INSTALL names hero mark");
+assert(aboutSot.includes("BotBuyer brings deals"), "about SoT step 2 is BotBuyer");
+assert(aboutSot.includes("Vault stays sitewide chrome"), "about SoT holds Vault chrome");
+assert(lockup.includes("/brand/botbuy-logo-header-light.svg"), "Vault lockup unchanged by about story");
+assert(layout.includes("/favicon.ico") && layout.includes("/brand/og-1200x630.png"), "favicon/OG stay Vault");
+assert(!chrome.includes("mark-o1-b-journey"), "public chrome does not install O1 mark");
+assert(!lockup.includes("mark-o1-b-journey"), "BrandLockup stays Vault");
+assert(!manifest.includes("mark-o1-b-journey"), "PWA icons stay Vault");
 const BETA_OPERATOR =
   "**Operator:** Build Star Labs (Florida). BotBuy is offered on botbuyer.ai.";
 function stripLeadingMeta(markdown) {

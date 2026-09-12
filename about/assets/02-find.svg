@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 96" role="img" aria-label="Tell it what to find">
+  <title>Tell it what to find</title>
+  <rect x="16" y="26" width="288" height="44" rx="22" fill="#F7F8FA" stroke="#0A0A0A" stroke-width="2"/>
+  <line x1="40" y1="48" x2="228" y2="48" stroke="#D4D4D4" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="272" cy="48" r="8" fill="#2DD4BF"/>
+</svg>
