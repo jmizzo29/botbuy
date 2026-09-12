@@ -183,6 +183,46 @@ assert(
   "designer land fold CTA is Sign up sole primary",
 );
 assert(!landNoDemoSot.includes("dual CTAs"), "designer land no longer locks dual peer CTAs");
+assert(
+  existsSync(join(root, "cpo-land-install-demote-v1.md")),
+  "CPO land Install demote SoT committed",
+);
+assert(
+  existsSync(join(root, "designer-land-install-demote-v1.md")),
+  "designer land Install demote SoT committed",
+);
+const cpoInstallDemote = read("cpo-land-install-demote-v1.md");
+const designerInstallDemote = read("designer-land-install-demote-v1.md");
+assert(
+  cpoInstallDemote.includes("sole primary") &&
+    cpoInstallDemote.includes("quiet text link only"),
+  "CPO Install demote locks Sign up sole primary",
+);
+assert(
+  designerInstallDemote.includes("sole primary pill") &&
+    designerInstallDemote.includes("quiet text link only"),
+  "designer Install demote locks Sign up primary pill",
+);
+assert(
+  designerInstallDemote.includes("rounded-full") &&
+    designerInstallDemote.includes("--bb-primary"),
+  "designer Install demote names teal pill chrome",
+);
+assert(
+  cpoInstallDemote.includes("designer-land-install-demote-v1.md"),
+  "CPO Install demote points at designer craft",
+);
+assert(
+  designerInstallDemote.includes("cpo-land-install-demote-v1.md"),
+  "designer Install demote points at CPO IA",
+);
+assert(!cpoInstallDemote.includes("dual CTAs"), "CPO Install demote has no dual peer CTAs");
+assert(!designerInstallDemote.includes("dual CTAs"), "designer Install demote has no dual peer CTAs");
+assert(
+  cpoLandNoDemo.includes("cpo-land-install-demote-v1.md") &&
+    landNoDemoSot.includes("designer-land-install-demote-v1.md"),
+  "no-Demo locks point at Install demote SoT",
+);
 assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
 assert(!brand.includes("gate for now"), "land brand has no gate for now");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(land), "land has no $1,000 gate");
@@ -480,6 +520,7 @@ assert(emptyUi.includes("px-5 py-8"), "empty panel air py-8 px-5");
 assert(emptyUi.includes("text-base font-medium"), "empty title text-base font-medium");
 assert(emptyUi.includes("text-sm leading-relaxed text-muted"), "empty body muted");
 assert(emptyUi.includes("mt-5 flex flex-wrap gap-3"), "empty CTA row mt-5 gap-3");
+assert(button.includes("rounded-full"), "primary chrome is a pill");
 assert(button.includes("px-7"), "primary lg px-7");
 assert(button.includes("shadow-none"), "primary no glow/shadow");
 assert(!button.includes("drop-shadow"), "no drop-shadow glow");
