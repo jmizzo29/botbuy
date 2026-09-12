@@ -4,13 +4,15 @@ John / CEO lock · 2026-09-12 · Soft-signal HOLD
 IA SoT: `cpo-land-no-demo-v1.md`. CPO IA wins if craft and IA disagree.  
 Scope: public land fold (`/` / land chrome / proof strip) only.
 
-## Trust (locked)
+## Trust (locked sentence, not on the fold)
 
-MUST show exact:
+Exact brand sentence:
 
 `Every deal needs your approval`
 
-John / CEO wins. A draft typo that read `Do not show: Every deal needs your approval` is void — do not hide the trust line.
+No `Demo ·` prefix. A draft typo that read `Do not show: Every deal needs your approval` is void for in-app / brand copy.
+
+**Do not render** this line under land CTAs. John removed the under-CTA trio (trust · findability My deals · A2HS helper). See `designer-land-cold-reader-lead-v1.md`.
 
 ## Do not show on the land fold
 
@@ -23,10 +25,12 @@ Signup `POC · Demo · not live` and in-app Demo labels stay off this lock.
 
 ## Keep
 
-- H1: `Find it. Decide. Buy anything.`
+- H1 (CMO LOCKED ≤10s lead): `Your AI agent for buying.`
+- Support under H1: `Find it. Decide. Buy anything.`
 - One-liner: `Set spend, intent, and a payment method. BotBuy executes what you approve.`
 - Sign up sole primary · Install quiet text link
 - Techlux · Vault mark
 - No $1k on land
 - Empty proof honesty without invented numbers
 - Quiet `Private beta` honesty (no Demo word) if needed
+- Lead SoT: `designer-land-cold-reader-lead-v1.md`

@@ -145,8 +145,35 @@ assert(
   existsSync(join(root, "designer-land-no-demo-lock-v1.md")),
   "designer land no-Demo SoT committed",
 );
+assert(
+  existsSync(join(root, "designer-land-cold-reader-lead-v1.md")),
+  "designer cold-reader lead SoT committed",
+);
 const cpoLandNoDemo = read("cpo-land-no-demo-v1.md");
 const landNoDemoSot = read("designer-land-no-demo-lock-v1.md");
+const coldReaderLead = read("designer-land-cold-reader-lead-v1.md");
+assert(
+  coldReaderLead.includes("`Your AI agent for buying.`"),
+  "cold-reader SoT locks H1",
+);
+assert(
+  coldReaderLead.includes("`Find it. Decide. Buy anything.`"),
+  "cold-reader SoT locks support",
+);
+assert(
+  coldReaderLead.includes(
+    "Set spend, intent, and a payment method. BotBuy executes what you approve.",
+  ),
+  "cold-reader SoT keeps one-liner",
+);
+assert(
+  coldReaderLead.includes("Do not put those three lines back under CTAs"),
+  "cold-reader SoT forbids under-CTA trio",
+);
+assert(
+  /ignore older cmo file ctas/i.test(coldReaderLead),
+  "cold-reader SoT ignores old CMO file CTAs",
+);
 assert(
   cpoLandNoDemo.includes("`Every deal needs your approval`"),
   "CPO land no-Demo names locked trust",
@@ -169,7 +196,12 @@ assert(
     (cpoLandNoDemo.includes("void") || landNoDemoSot.includes("void")),
   "land no-Demo SoT voids Do not show trust typo",
 );
-assert(land.includes("BRAND.trustLine"), "land fold shows trust despite SoT typo");
+assert(!land.includes("BRAND.trustLine"), "land fold has no under-CTA trust line");
+assert(cpoLandNoDemo.includes("`Your AI agent for buying.`"), "CPO keep locks CMO H1");
+assert(
+  cpoLandNoDemo.includes("`Find it. Decide. Buy anything.`"),
+  "CPO keep locks CMO support",
+);
 assert(cpoLandNoDemo.includes("Private beta"), "CPO allows Private beta without Demo");
 assert(
   cpoLandNoDemo.includes("Sign up sole primary") &&
@@ -191,7 +223,7 @@ assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(chrome), "public chrome has n
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(layout), "layout meta has no $1,000 gate");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(manifest), "manifest marketing has no $1,000 gate");
 assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock");
-assert(land.includes("BRAND.trustLine"), "land renders trust line under CTAs");
+assert(!land.includes("BRAND.trustLine"), "land renders no trust line under CTAs");
 assert(!land.includes("BRAND.pocBanner"), "land fold has no POC banner stack");
 assert(signup.includes("BRAND.pocBanner"), "signup Demo pill");
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "POC stays footer meta");
@@ -362,8 +394,13 @@ const LAND_META =
   "Set spend, intent, and a payment method. BotBuy executes what you approve.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
-assert(brand.includes('LAND_PRODUCT_H1 = "Find it. Decide. Buy anything."'), "land H1 lock");
+assert(brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying."'), "land H1 lock");
+assert(
+  brand.includes('LAND_PRODUCT_SUPPORT = "Find it. Decide. Buy anything."'),
+  "land support lock",
+);
 assert(brand.includes("hero: LAND_PRODUCT_H1"), "land hero is locked H1");
+assert(brand.includes("support: LAND_PRODUCT_SUPPORT"), "land support constant is wired");
 assert(brand.includes("lead: LAND_META_LINE"), "land lead is locked one-liner");
 assert(!brand.includes("Buy software. You approve."), "software-only land tag removed from brand");
 assert(!brand.includes("productTag"), "land has no product-tag slot");
@@ -403,6 +440,7 @@ assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold
 assert(land.includes("HowItWorksRail"), "land keeps How it works rail");
 assert(land.includes("ProofStrip"), "land ProofStrip stays");
 assert(land.includes("LAND_PRODUCT_H1"), "land H1 uses locked product line");
+assert(land.includes("LAND_PRODUCT_SUPPORT"), "land support sits under H1");
 assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product tag");
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(land.includes("LAND_META_LINE"), "land lead one-liner");
@@ -429,7 +467,11 @@ assert(
 assert(!land.includes("Start your first buy"), "land fold has no Start your first buy");
 assert(!land.includes("See how it works"), "how-it-works is not a fold CTA");
 assert(!land.includes('href="#how"'), "how-it-works is secondary scroll only");
-assert(land.includes("LAND_INSTALL_HELPER") || land.includes("Add to Home Screen for the full app on your phone."), "land install helper");
+assert(!land.includes("LAND_INSTALL_HELPER"), "land fold has no A2HS helper under CTAs");
+assert(
+  !land.includes("Add to Home Screen for the full app on your phone."),
+  "land fold has no A2HS helper copy",
+);
 assert(land.includes("/brand/botbuy-mark.svg"), "land uses Vault mark");
 assert(
   !/\bDemo\b/.test([land, chrome, proof, proofLib, how, landInstall].join("\n")),
@@ -437,10 +479,10 @@ assert(
 );
 assert(css.includes("land-bg-techlux-air"), "techlux-air asset token stays");
 assert(css.includes(".bb-land-veil") && css.includes("var(--bb-veil)"), "land veil token");
+assert(!land.includes("LAND_FINDABILITY"), "land fold has no My deals findability under CTAs");
 assert(
-  land.includes("LAND_FINDABILITY") ||
-    land.includes("After you sign in, your deals live in"),
-  "land My deals findability",
+  !land.includes("After you sign in, your deals live in"),
+  "land fold has no findability copy",
 );
 assert(!shell.includes("VaultCardsBackdrop"), "app shell is clean light chrome");
 assert(vaultBg.includes('data-bg="vault-cards"'), "vault cards decorative marker");
