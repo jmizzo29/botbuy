@@ -244,7 +244,7 @@ body {
   position: relative;
   isolation: isolate;
   display: flex;
-  min-height: calc(100svh - 7.25rem);
+  min-height: calc(100dvh - 5.75rem);
   overflow: hidden;
   border-radius: 20px;
   color: #ffffff;

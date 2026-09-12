@@ -134,7 +134,7 @@ assert(!goLive.includes(">Run BotBuyer<") && !goLive.includes(">Run<"), "go-live
 assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not ghost");
 
 const primaryBlocks = [
-  ["land CTA", land, "<Button asChild size=\"lg\">"],
+  ["land CTA", land, "<Button asChild size=\"lg\""],
   ["signup Clerk", signup, "data-cta=\"clerk-signup\""],
   ["go-live Run", goLive, "data-cta=\"go-live-run\""],
 ];
