@@ -28,16 +28,16 @@ export default async function LandPage() {
       <section data-surface="land-stage" className="bb-land-stage">
         <div className="bb-land-stage-grid">
           <div className="bb-land-copy">
-            <h1 className="max-w-xl text-[2.5rem] font-semibold tracking-tight text-white md:text-6xl">
+            <h1 className="bb-land-h1">
               {LAND_PRODUCT_H1}
             </h1>
-            <p className="mt-5 max-w-lg text-xl font-medium tracking-tight text-white/80 md:text-2xl">
+            <p className="bb-land-support">
               {LAND_PRODUCT_SUPPORT}
             </p>
-            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-white/60">
+            <p className="bb-land-meta">
               {LAND_META_LINE}
             </p>
-            <div className="mt-8 flex w-full flex-col items-center gap-3 lg:w-auto lg:flex-row lg:items-center lg:gap-x-5">
+            <div className="bb-land-cta flex w-full flex-col items-center gap-3 lg:w-auto lg:flex-row lg:items-center lg:gap-x-5">
               <Button asChild size="lg" className="w-full lg:w-auto">
                 <Link href="/signup" data-cta="land-signup">
                   {BRAND.primaryCta}

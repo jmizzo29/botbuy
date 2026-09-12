@@ -15,10 +15,11 @@ Live direction for `/`. Replaces the light elevate two-column door.
 
 ## Navy stage
 
-Full-bleed navy **card** (not a light two-column hero).
+Edge-to-edge navy **full-bleed** under the header (or under status). Not an inset card. No frame-inside-frame.
 
 - Gradient: `#0B1F3A` → `#163556` → `#0a182c`
-- Radius: phone ~20px · desktop ~28px
+- Square / no radius — fills the viewport under chrome
+- Kill side / top / bottom gutters around the stage
 - Captions over the dark field (phone: bottom gradient cap)
 
 ## Arc
@@ -42,8 +43,8 @@ White-stroke Find / Decide / Buy on navy. Same 06-arc node geometry. **No traili
 
 ## Layout
 
-- **Phone:** inverted arc centered in the upper stage; captions + **full-width Sign up** + Install in the bottom gradient cap (white / muted on navy)
-- **Desktop:** stage split — copy left + inverted arc right; Sign up + Install in a row
+- **Phone:** inverted arc in the upper field with air above; captions + **full-width Sign up** + Install in the bottom gradient cap (white / muted on navy). H1 stays ~1 line on 390.
+- **Desktop:** copy left + inverted arc right **inside** the full-bleed navy (not a narrow centered stage). Single-line H1 heft. Sign up + Install in a row
 
 Do not ship the light elevate how-stack on the fold. Do not invent new mark geometry. Soft-signal HOLD.
 

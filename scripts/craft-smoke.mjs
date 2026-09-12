@@ -559,6 +559,9 @@ assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold
 assert(!land.includes("HowItWorksRail"), "land fold dropped elevate how-stack");
 assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy stage");
 assert(land.includes("bb-land-stage"), "land stage class is wired");
+assert(land.includes("bb-land-h1") && land.includes("bb-land-support") && land.includes("bb-land-meta"), "land fold uses CSS type-scale classes");
+assert(chrome.includes("bb-land-main w-full"), "land main is unguttered full width");
+assert(!chrome.includes("bb-land-main mx-auto w-full max-w-6xl"), "land main is not a max-w-6xl inset frame");
 assert(!land.includes("filter"), "land does not CSS-filter the arc");
 assert(!land.includes("invert"), "land does not CSS-invert the light arc");
 assert(!land.includes("BRAND.landHonesty"), "land fold has no under-CTA Private beta chip");
@@ -647,7 +650,10 @@ assert(
   "reverse arc has no orphan teal jewelry",
 );
 assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage gradient tokens");
-assert(css.includes("border-radius: 20px") && css.includes("border-radius: 28px"), "stage radius phone 20 desk 28");
+assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
+assert(css.includes("border-radius: 0"), "stage is square full-bleed");
+assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
+assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
 assert(
   read("land/assets/02-deals.svg").includes('aria-label="BotBuyer brings deals"'),
