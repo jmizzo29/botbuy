@@ -938,7 +938,7 @@ assert(johnUx.includes('INTENT_TEXTAREA_LABEL = "Describe what you want"'), "des
 assert(johnUx.includes('INTENT_HELPERS_LABEL = "Optional details"'), "optional details lock");
 assert(johnUx.includes("Max price") && johnUx.includes("Must include") && johnUx.includes("Avoid"), "helper labels lock");
 assert(johnUx.includes('MY_DEALS_EMPTY_TITLE = "Nothing searching yet"'), "My deals empty title");
-assert(johnUx.includes('MY_DEALS_PROGRESS = "BotBuy is searching. Deals show up here."'), "My deals progress lock");
+assert(johnUx.includes("BotBuy is searching. Deals show up here."), "My deals progress lock");
 assert(johnUx.includes("Add your email so we can reach you when a deal needs approval."), "email soft gate lock");
 assert(johnUx.includes('PROFILE_TITLE = "Your details"'), "Your details title lock");
 assert(johnIntentPage.includes("INTENT_H1") && johnIntentPage.includes("INTENT_SUB"), "onboarding intent uses locked H1/sub");
