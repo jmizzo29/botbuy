@@ -937,6 +937,30 @@ assert(existsSync(join(root, "brand/about-story/mark-o1-b-journey.svg")), "about
 assert(existsSync(join(root, "brand/logo-o1-b-journey/botbuy-mark.svg")), "logo-o1-b-journey alias committed");
 assert(read("about/assets/mark-o1-b-journey.svg").includes("#0B1F3A"), "about mark is navy");
 assert(read("brand/logo-o1-b-journey/botbuy-mark.svg").includes("#0B1F3A"), "o1 alias is navy");
+assert(
+  read("about/assets/mark-o1-b-journey.svg").includes('aria-label="BotBuyer mark"') &&
+    read("about/assets/mark-o1-b-journey.svg").includes("<title>BotBuyer mark — O1 B-journey</title>"),
+  "about mark title is BotBuyer",
+);
+assert(
+  read("public/about/assets/mark-o1-b-journey.svg").includes('aria-label="BotBuyer mark"'),
+  "served about mark title is BotBuyer",
+);
+assert(
+  read("brand/about-story/mark-o1-b-journey.svg").includes('aria-label="BotBuyer mark"'),
+  "about-story alias title is BotBuyer",
+);
+assert(
+  read("brand/logo-o1-b-journey/botbuy-mark.svg").includes('aria-label="BotBuyer mark"'),
+  "o1 alias title is BotBuyer",
+);
+assert(
+  !read("about/assets/mark-o1-b-journey.svg").includes("BotBuy mark") &&
+    !read("public/about/assets/mark-o1-b-journey.svg").includes("BotBuy mark") &&
+    !read("brand/about-story/mark-o1-b-journey.svg").includes("BotBuy mark") &&
+    !read("brand/logo-o1-b-journey/botbuy-mark.svg").includes("BotBuy mark"),
+  "O1 copies have no bare BotBuy mark title",
+);
 assert(aboutInstall.includes("NOT sitewide logo"), "about INSTALL holds sitewide O1");
 assert(aboutInstall.includes("#0B1F3A"), "about INSTALL names navy mark");
 assert(aboutInstall.includes("BotBuyer brings deals"), "about INSTALL step 2 is BotBuyer");
