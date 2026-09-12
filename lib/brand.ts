@@ -2,20 +2,29 @@
 export const LAND_META_LINE =
   "Set spend, intent, and a payment method. BotBuy executes what you approve.";
 
+/** Short product H1 / brand frame — A · Product door. Soft-signal HOLD. */
+export const LAND_PRODUCT_H1 = "BotBuy" as const;
+export const LAND_PRODUCT_TAG = "Buy software. You approve." as const;
+export const LAND_INSTALL_HELPER =
+  "Add to Home Screen for the full app on your phone." as const;
+
 export const BRAND = {
   name: "BotBuy",
   domain: "botbuyer.ai",
   origin: "https://botbuyer.ai",
-  /** Land H1 + meta — John LOCKED one-liner. Vault is logo/brand only. */
+  /** Signup + meta — John LOCKED one-liner. Vault is logo/brand only. */
   signupLine: LAND_META_LINE,
-  hero: LAND_META_LINE,
+  hero: LAND_PRODUCT_H1,
+  productTag: LAND_PRODUCT_TAG,
+  lead: LAND_META_LINE,
   heroSub:
     "The automated agent that searches, purchases, and closes — within your limit.",
   easeMicro: "Three inputs, zero babysitting.",
   channelMicro:
     "Any software, any channel. Domains optional. Cars & real estate later.",
-  primaryCta: "Start your first buy",
-  secondaryCta: "See how it works",
+  primaryCta: "Sign up",
+  secondaryCta: "Install",
+  myDealsCta: "My deals",
   pocBanner: "POC · Demo · not live",
   trustLine: "Demo · every deal needs your approval",
   footerHold: "POC on botbuyer.ai · not an announced launch",
@@ -27,16 +36,16 @@ export const HOW_IT_WORKS = {
   heading: "How it works",
   steps: [
     {
-      title: "Set spend.",
+      title: "Set spend",
       body: "Your limit. BotBuy stays inside it.",
     },
     {
-      title: "Set intent.",
+      title: "Set intent",
       body: "Any software, any channel.",
     },
     {
-      title: "Add a payment method.",
-      body: "Link how we pay at purchase. We don’t hold a balance.",
+      title: "Add a payment method",
+      body: "Pay at purchase. We don’t hold a balance.",
     },
   ],
 } as const;
