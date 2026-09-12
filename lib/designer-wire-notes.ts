@@ -6,7 +6,7 @@
  * Never black #050A0C as the default page background.
  * Go-live primary label is exactly "Run BotBuyer" (never bare "Run").
  * Quiet Capital type rhythm stays. .bb-vault-rail / .bb-vault-card stay decorative CSS only.
- * Header/PWA use the Vault mark + wordmark from the brand kit — never letter-B.
+ * Header/PWA use the eclipse-pass mark + wordmark from the brand kit — never letter-B, never Vault, never O1.
  * Not a public launch.
  */
 

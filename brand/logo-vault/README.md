@@ -1,4 +1,6 @@
-# BotBuyer brand kit — Vault mark + wordmark (LOCKED)
+# BotBuyer brand kit — Vault mark + wordmark (ARCHIVED)
+
+**Not live.** Replaced 2026-09-12 by eclipse-pass (`brand/logo-eclipse-pass/`).
 Date: 2026-09-11 · Soft-signal HOLD  
 Source pick: `designer-logo-mocks-full/01-vault-mark-wordmark.png`  
 Palette: Electric Teal · Vibe: Quiet Capital · Bg: Vault cards locked

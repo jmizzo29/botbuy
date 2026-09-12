@@ -1,4 +1,4 @@
-const CACHE = "botbuy-v4";
+const CACHE = "botbuy-v5";
 const OFFLINE = "/offline";
 const PRECACHE = [
   "/",

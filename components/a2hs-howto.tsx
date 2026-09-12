@@ -49,7 +49,7 @@ export function A2hsHowToSheet({
             width={64}
             height={64}
             unoptimized
-            className="h-16 w-16 rounded-2xl bg-foreground"
+            className="h-16 w-16 rounded-2xl bg-[#0B1F3A]"
           />
         </div>
         <p className="mt-4 text-center text-xl font-semibold tracking-tight">

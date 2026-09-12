@@ -5,7 +5,7 @@ import {
 } from "@/lib/brand";
 import { SITE_OPERATOR } from "@/lib/site-pages";
 
-/** About captions follow Land E. Soft-signal HOLD. Navy O1 mark is /about only. */
+/** About captions follow Land E. Soft-signal HOLD. eclipse-pass mark is live sitewide. */
 export const ABOUT_PRODUCT = "BotBuyer" as const;
 
 export const ABOUT_ENTITY = `${SITE_OPERATOR} · Private beta` as const;
@@ -36,7 +36,7 @@ export const ABOUT_STEPS = [
 
 export const ABOUT_CONTROL = "Every deal needs your approval." as const;
 
-export const ABOUT_MARK_SRC = "/about/assets/mark-o1-b-journey.svg" as const;
+export const ABOUT_MARK_SRC = "/brand/logo-eclipse-pass/botbuyer-mark.svg" as const;
 export const ABOUT_ARC_SRC = "/about/assets/06-arc.svg" as const;
 export const ABOUT_CONTROL_SRC = "/about/assets/05-control.svg" as const;
 
