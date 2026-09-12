@@ -16,6 +16,8 @@ import {
 import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "BotBuyer",
   description: BRAND.signupLine,
@@ -53,7 +55,7 @@ export default async function LandPage() {
               width={320}
               height={72}
               unoptimized
-              priority
+              preload
               className="h-auto w-full"
             />
           </div>

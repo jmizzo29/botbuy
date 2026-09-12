@@ -553,6 +553,7 @@ assert(!land.includes("Buy software. You approve."), "land dropped software-only
 assert(land.includes("LAND_META_LINE"), "land lead one-liner");
 assert(land.includes("LandInstallButton"), "land Install door is wired");
 assert(land.includes("redirect(MY_DEALS_HREF)"), "signed-in redirects off land");
+assert(land.includes('dynamic = "force-dynamic"'), "land session redirect is request-time");
 assert(!land.includes("land-my-deals"), "My deals is never land primary");
 assert(
   (land.match(/<Button/g) || []).length === 1,
