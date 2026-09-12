@@ -134,7 +134,6 @@ assert(!goLive.includes(">Run BotBuyer<") && !goLive.includes(">Run<"), "go-live
 assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not ghost");
 
 const primaryBlocks = [
-  ["land CTA", land, "<Button asChild className=\"bb-land-signup\""],
   ["signup Clerk", signup, "data-cta=\"clerk-signup\""],
   ["go-live Run", goLive, "data-cta=\"go-live-run\""],
 ];
@@ -521,6 +520,7 @@ const LAND_META =
   "BotBuyer finds it and handles the chase. You approve before it pays.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
+assert(brand.includes('LAND_COMING_SOON = "Coming soon"'), "public land coming-soon lock");
 assert(brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying."'), "land H1 lock");
 assert(
   brand.includes('LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK."'),
@@ -582,28 +582,32 @@ assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy st
 assert(land.includes("bb-land-stage"), "land stage class is wired");
 assert(land.includes("bb-atm-richer-mesh-deep"), "land A1 richer-mesh-deep atmosphere class");
 assert(!land.includes("bb-atm-mesh-glow"), "land no longer wires unused mesh-glow");
-assert(land.includes("bb-land-h1") && land.includes("bb-land-support"), "land fold uses CSS type-scale classes");
+assert(land.includes("bb-land-coming") && land.includes("bb-land-coming-title"), "land fold uses coming-soon classes");
+assert(!land.includes("bb-land-h1") && !land.includes("bb-land-support"), "coming soon dropped product type-scale classes");
 assert(!land.includes("bb-land-meta"), "land fold dropped meta one-liner");
 assert(chrome.includes("bb-land-main w-full"), "land main is unguttered full width");
 assert(!chrome.includes("bb-land-main mx-auto w-full max-w-6xl"), "land main is not a max-w-6xl inset frame");
 assert(!land.includes("filter"), "land does not CSS-filter the arc");
 assert(!land.includes("invert"), "land does not CSS-invert the light arc");
 assert(!land.includes("BRAND.landHonesty"), "land fold has no under-CTA Private beta chip");
+assert(!land.includes("Private beta"), "coming soon has no Private beta");
 assert(!land.includes("bg-primary"), "land fold has no orphan teal hairline");
 assert(!land.includes("ProofStrip"), "land dropped No public proof essay card");
-assert(land.includes("LAND_PRODUCT_H1"), "land H1 uses locked product line");
-assert(land.includes("LAND_PRODUCT_SUPPORT"), "land support sits under H1");
+assert(land.includes("LAND_COMING_SOON"), "land H1 is Coming soon");
+assert(!land.includes("LAND_PRODUCT_H1"), "coming soon dropped product H1");
+assert(!land.includes("LAND_PRODUCT_SUPPORT"), "coming soon dropped product support");
 assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product tag");
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(!land.includes("LAND_META_LINE"), "land fold dropped meta one-liner constant");
-assert(land.includes("description: LAND_PRODUCT_SUPPORT"), "land page meta uses support line");
+assert(land.includes("description: LAND_COMING_SOON"), "land page meta is Coming soon");
 assert(!land.includes("LandInstallButton"), "land has no Install door");
 assert(!land.includes("Install"), "land page source has no Install string");
 assert(!land.includes("land-install"), "land fold has no Install CTA");
-assert(land.includes('data-cta="land-signin"'), "land fold pairs Sign in with Sign up");
-assert(land.includes("bb-land-signin"), "land Sign in uses fold class");
-assert(land.includes("bb-land-signup"), "land Sign up uses flex peer class");
-assert(land.includes("CLERK_SIGN_IN_URL") || land.includes("/signin"), "fold Sign in uses canonical /signin");
+assert(!land.includes('data-cta="land-signin"'), "coming soon has no Sign in CTA");
+assert(!land.includes('data-cta="land-signup"'), "coming soon has no Sign up CTA");
+assert(!land.includes("bb-land-signin") && !land.includes("bb-land-signup"), "coming soon has no CTA classes");
+assert(!land.includes("CLERK_SIGN_IN_URL") && !land.includes("/signin"), "coming soon has no Sign in door");
+assert(!land.includes("Sign up") && !land.includes("Sign in"), "coming soon has no launch doors");
 assert(chrome.includes(") : land ? null : ("), "land nav has no signed-out Sign in duplicate");
 assert(
   read("components/install-hint.tsx").includes("if (onLand) return null"),
@@ -623,10 +627,10 @@ assert(land.includes('dynamic = "force-dynamic"'), "land session redirect is req
 assert(land.includes('themeColor: "#0B1F3A"'), "land status/theme color is navy");
 assert(!land.includes("land-my-deals"), "My deals is never land primary");
 assert(!land.includes("BRAND.myDealsCta"), "land fold has no My deals CTA");
-assert(land.includes('data-cta="land-signup"'), "signed-out land primary is Sign up");
+assert(!land.includes('data-cta="land-signup"'), "coming soon is not a Sign up fold");
 assert(
-  (land.match(/<Button/g) || []).length === 1,
-  "land fold Button is Sign up only",
+  (land.match(/<Button/g) || []).length === 0,
+  "coming soon land has no Button",
 );
 assert(!land.includes("variant="), "land fold Buttons have no secondary/ghost variant");
 assert(!landInstall.includes("<Button"), "land Install is not a Button");
@@ -704,6 +708,13 @@ assert(
 );
 assert(css.includes("border-radius: 0"), "stage is square full-bleed");
 assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
+assert(css.includes(".bb-land-coming") && css.includes(".bb-land-coming-title"), "coming soon type is CSS-owned");
+assert(
+  css.includes(".bb-land-coming") &&
+    css.includes("justify-content: center") &&
+    css.includes("text-align: center"),
+  "coming soon is centered Quiet Capital",
+);
 assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
 assert(css.includes(".bb-land-copy") && css.includes("text-align: center"), "phone land copy is centered");
 assert(
@@ -1374,6 +1385,7 @@ if (failures.length) {
 
 console.log("craft-smoke PASS");
 console.log(" - g-techlux light #F7F8FA · teal #2DD4BF / #042F2E ≥4.5:1");
+console.log(" - land coming soon · navy richer-mesh · no launch doors");
 console.log(" - land/meta one-liner payment method lock · no Vault it");
 console.log(" - go-live Run BotBuyer present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
