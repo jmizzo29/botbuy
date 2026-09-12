@@ -1,7 +1,7 @@
 # BotBuy Designer — Site pages craft (Quiet Capital)
 Date: 2026-09-11 · Soft-signal HOLD (marketing posts only)  
 IA/copy SoT: `/workspace/botbuy/legal/cpo-site-pages-publish-ia-v1.md`  
-Palette: Electric Teal locked · Logo: Vault mark kit live
+Palette: Electric Teal locked · Logo: eclipse-pass kit live
 
 ## Scope
 Craft-only on `/privacy` `/terms` `/about` `/beta` `/contact` + footer row.  

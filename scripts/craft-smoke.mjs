@@ -414,7 +414,9 @@ assert(chrome.includes('href="/beta"'), "land Private beta leans on /beta");
 assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
 assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuyer only moves when you approve."), "go-live approve micro");
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
-assert(existsSync(join(root, "public/brand/botbuy-logo-header-light.svg")), "light Vault lockup committed");
+assert(existsSync(join(root, "public/brand/logo-eclipse-pass/botbuyer-logo-header.svg")), "eclipse-pass header lockup committed");
+assert(existsSync(join(root, "brand/logo-eclipse-pass/INSTALL.md")), "eclipse-pass INSTALL committed");
+assert(existsSync(join(root, "brand/logo-eclipse-pass/botbuyer-mark.svg")), "eclipse-pass mark kit committed");
 assert(agents.includes("AgentsEmptySecondary"), "agents empty secondary");
 
 const financeIdx = admin.indexOf("<CardTitle>Finance</CardTitle>");
@@ -601,10 +603,11 @@ assert(
   !land.includes("Add to Home Screen for the full app on your phone."),
   "land fold has no A2HS helper copy",
 );
-assert(!land.includes("/brand/botbuy-mark.svg"), "land has no Vault mark");
-assert(!land.includes("botbuy-logo"), "land has no Vault lockup");
+assert(!land.includes("/brand/botbuy-mark.svg"), "land page source has no inline mark path");
+assert(!land.includes("botbuy-logo"), "land page source has no inline Vault lockup");
 assert(brand.includes('name: "BotBuyer"'), "land brand name is BotBuyer");
-assert(chrome.includes("LAND_WORDMARK"), "land chrome uses BotBuyer text wordmark");
+assert(chrome.includes("LAND_WORDMARK"), "land chrome keeps BotBuyer wordmark label");
+assert(chrome.includes("BrandLockup"), "land chrome uses eclipse-pass BrandLockup");
 assert(
   existsSync(join(root, "land/assets/01-tell.svg")) &&
     existsSync(join(root, "land/assets/02-deals.svg")) &&
@@ -678,11 +681,11 @@ assert(!css.includes("box-shadow:") || css.includes("inset 0 0 0 1px var(--line)
 assert(wire.includes("Quiet Capital"), "wire notes record Quiet Capital HOLD craft");
 assert(wire.includes("Not a public launch"), "Quiet Capital docs stay HOLD");
 assert(wire.includes(".bb-vault-rail"), "wire notes record Designer vault-rail spec");
-assert(wire.includes("never letter-B"), "wire notes keep Vault mark — no letter-B");
-assert(lockup.includes("/brand/botbuy-logo-header-light.svg"), "BrandLockup uses light Vault lockup SVG");
+assert(wire.includes("never letter-B"), "wire notes keep eclipse-pass — no letter-B");
+assert(lockup.includes("/brand/logo-eclipse-pass/botbuyer-logo-header.svg"), "BrandLockup uses eclipse-pass header SVG");
 assert(lockup.includes('alt="BotBuyer"'), "BrandLockup accessible alt");
-assert(shell.includes("BrandLockup"), "app shell Vault header lockup");
-assert(chrome.includes("BrandLockup"), "public chrome Vault header lockup");
+assert(shell.includes("BrandLockup"), "app shell eclipse-pass header lockup");
+assert(chrome.includes("BrandLockup"), "public chrome eclipse-pass header lockup");
 assert(!/>\s*B\s*</.test(shell), "app shell no letter-B tile");
 assert(!/>\s*B\s*</.test(chrome), "public chrome no letter-B tile");
 assert(layout.includes("/favicon.ico"), "layout links favicon.ico");
@@ -692,7 +695,7 @@ assert(layout.includes("appleWebApp") && layout.includes("capable: true"), "layo
 assert(layout.includes("statusBarStyle: \"default\""), "layout Apple status bar for light shell");
 assert(layout.includes("apple-mobile-web-app-capable"), "layout Apple capable meta");
 assert(layout.includes("/brand/og-1200x630.png"), "layout Open Graph image");
-assert(layout.includes("https://botbuyer.ai/brand/og-1200x630.png"), "twitter image Vault OG");
+assert(layout.includes("https://botbuyer.ai/brand/og-1200x630.png"), "twitter image eclipse-pass OG");
 assert(manifest.includes("/icons/icon-192.png"), "manifest icon-192");
 assert(manifest.includes("/icons/icon-512.png"), "manifest icon-512");
 assert(manifest.includes("/icons/icon-512-maskable.png"), "manifest maskable icon");
@@ -704,7 +707,7 @@ assert(
 );
 assert(manifest.includes("id:"), "manifest id");
 const sw = read("public/sw.js");
-assert(sw.includes('CACHE = "botbuy-v4"'), "SW cache bumped to botbuy-v4");
+assert(sw.includes('CACHE = "botbuy-v5"'), "SW cache bumped to botbuy-v5");
 assert(sw.includes('pathname.startsWith("/_next/")'), "SW does not intercept Next chunks");
 assert(sw.includes('"/home"') && sw.includes('"/start"') && sw.includes('"/offline"'), "SW precaches app shell routes");
 assert(sw.includes("skipWaiting") && sw.includes("clients.claim"), "SW install/activate claim");
@@ -897,7 +900,7 @@ assert(!aboutPage.includes("MarkdownProse"), "about has no markdown dump");
 assert(!aboutPage.includes("SitePageShell"), "about is not the legal/site shell");
 assert(aboutPage.includes("ABOUT_PRODUCT"), "about title uses BotBuyer");
 assert(aboutPage.includes("openGraph"), "about OG uses page description");
-assert(aboutPage.includes("/brand/og-1200x630.png"), "about OG image stays Vault");
+assert(aboutPage.includes("/brand/og-1200x630.png"), "about OG image is eclipse-pass");
 assert(aboutLib.includes('ABOUT_PRODUCT = "BotBuyer"'), "about product lock is BotBuyer");
 assert(aboutLib.includes("LAND_PRODUCT_H1"), "about H1 imports Land E");
 assert(aboutLib.includes("LAND_PRODUCT_SUPPORT"), "about support imports Land E");
@@ -913,7 +916,7 @@ assert(
   aboutLib.includes('ABOUT_ENTITY = `${SITE_OPERATOR} · Private beta`'),
   "about entity lock",
 );
-assert(aboutLib.includes('ABOUT_MARK_SRC = "/about/assets/mark-o1-b-journey.svg"'), "about hero is O1-B journey");
+assert(aboutLib.includes('ABOUT_MARK_SRC = "/brand/logo-eclipse-pass/botbuyer-mark.svg"'), "about hero is eclipse-pass");
 assert(aboutStory.includes("ABOUT_MARK_SRC"), "about story renders journey mark");
 assert(aboutStory.includes("ABOUT_STEPS"), "about story renders 3 panels");
 assert(aboutStory.includes("ABOUT_CONTROL"), "about story renders control caption");
@@ -961,17 +964,34 @@ assert(
     !read("brand/logo-o1-b-journey/botbuy-mark.svg").includes("BotBuy mark"),
   "O1 copies have no bare BotBuy mark title",
 );
-assert(aboutInstall.includes("NOT sitewide logo"), "about INSTALL holds sitewide O1");
+assert(aboutInstall.includes("NOT O1") && aboutInstall.includes("NOT Vault"), "about INSTALL holds eclipse-pass sitewide");
 assert(aboutInstall.includes("#0B1F3A"), "about INSTALL names navy mark");
 assert(aboutInstall.includes("BotBuyer brings deals"), "about INSTALL step 2 is BotBuyer");
 assert(aboutSot.includes("BotBuyer brings deals"), "about SoT step 2 is BotBuyer");
-assert(aboutSot.includes("Vault stays sitewide chrome"), "about SoT holds Vault chrome");
-assert(lockup.includes("/brand/botbuy-logo-header-light.svg"), "Vault lockup unchanged by about story");
-assert(layout.includes("/favicon.ico") && layout.includes("/brand/og-1200x630.png"), "favicon/OG stay Vault");
+assert(aboutSot.includes("eclipse-pass is sitewide chrome"), "about SoT holds eclipse-pass chrome");
+assert(lockup.includes("/brand/logo-eclipse-pass/botbuyer-logo-header.svg"), "eclipse-pass lockup stays after about story");
+assert(layout.includes("/favicon.ico") && layout.includes("/brand/og-1200x630.png"), "favicon/OG stay wired");
 assert(!chrome.includes("mark-o1-b-journey"), "public chrome does not install O1 mark");
-assert(!lockup.includes("mark-o1-b-journey"), "BrandLockup stays Vault");
-assert(!manifest.includes("mark-o1-b-journey"), "PWA icons stay Vault");
+assert(!lockup.includes("mark-o1-b-journey"), "BrandLockup is not O1");
+assert(!manifest.includes("mark-o1-b-journey"), "PWA icons are not O1");
 assert(!lockup.includes("logo-o1-b-journey"), "BrandLockup does not use O1 alias");
+assert(!lockup.includes("logo-vault"), "BrandLockup does not use Vault kit");
+assert(
+  read("brand/logo-eclipse-pass/botbuyer-mark.svg").includes('cx="26"') &&
+    read("brand/logo-eclipse-pass/botbuyer-mark.svg").includes("#2DD4BF") &&
+    read("brand/logo-eclipse-pass/botbuyer-mark.svg").includes("#0B1F3A") &&
+    read("brand/logo-eclipse-pass/botbuyer-mark.svg").includes("eclipse-pass"),
+  "eclipse-pass mark geometry + colors locked",
+);
+assert(
+  !read("brand/logo-eclipse-pass/botbuyer-mark.svg").includes("<rect") &&
+    !read("public/brand/logo-eclipse-pass/botbuyer-mark.svg").includes("O1 B-journey"),
+  "eclipse-pass mark is not Vault rect or O1",
+);
+assert(existsSync(join(root, "public/icons/icon-192.png")), "PWA icon-192 committed");
+assert(existsSync(join(root, "public/icons/icon-512.png")), "PWA icon-512 committed");
+assert(existsSync(join(root, "public/brand/og-1200x630.png")), "OG raster committed");
+assert(existsSync(join(root, "public/favicon.svg")), "favicon.svg committed");
 const BETA_OPERATOR =
   "**Operator:** Build Star Labs (Florida). BotBuyer is offered on botbuyer.ai.";
 function stripLeadingMeta(markdown) {
@@ -1182,7 +1202,7 @@ assert(connectUi.includes("data-copy=\"legal-safer\""), "Legal safer on screen +
 assert(connectUi.includes("DemoChip") || connectUi.includes("CONNECT_ACCOUNTS_HONESTY"), "Demo chip on surface");
 assert(shell.includes('pathname.startsWith("/settings")'), "Settings path does not light phone tabs");
 assert(!/phoneTabs[\s\S]*\/settings/.test(shell), "Settings is not a phone tab");
-assert(!connectUi.includes("/brand/") && !connectPage.includes("/brand/"), "connectors UI does not retouch Vault mark");
+assert(!connectUi.includes("/brand/") && !connectPage.includes("/brand/"), "connectors UI does not retouch eclipse-pass mark");
 assert(connectMiddleware.includes("/api/connectors"), "middleware protects connector APIs");
 assert(!connectUi.includes("Autofleeto") && !connectPage.includes("Autofleeto"), "UI never Autofleeto");
 assert(!connectCopy.includes("password vault") || connectCopy.includes("never a password vault"), "no password vault product");
@@ -1206,6 +1226,6 @@ console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #B8860B");
 console.log(" - Quiet Capital type · Product door A · clean #F7F8FA");
-console.log(" - Vault mark+wordmark header · favicon/PWA/OG wired");
+console.log(" - eclipse-pass mark+wordmark header · favicon/PWA/OG wired");
 console.log(" - site pages /privacy /terms /about /beta /contact · footer lock");
-console.log(" - /about graphical story · Land E captions · navy O1 about-only · Vault chrome HOLD");
+console.log(" - /about graphical story · Land E captions · eclipse-pass sitewide · Soft HOLD");

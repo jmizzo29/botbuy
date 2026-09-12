@@ -28,13 +28,7 @@ export function PublicChrome({
             className="flex items-center"
             aria-label={`${land ? LAND_WORDMARK : BRAND.name} home`}
           >
-            {land ? (
-              <span className="text-[15px] font-semibold tracking-tight">
-                {LAND_WORDMARK}
-              </span>
-            ) : (
-              <BrandLockup priority />
-            )}
+            <BrandLockup priority />
           </Link>
           <PublicNav land={land} />
         </header>

@@ -17,7 +17,7 @@ Commit exact SVG bodies. Serve copies from `public/land/assets/`.
 
 ## Product locks
 
-- Wordmark text **BotBuyer** only on land — NO O1 mark, NO Vault teal SVG mark on land header/hero
+- Header uses eclipse-pass mark + **BotBuyer** lockup (`botbuyer-logo-header.svg`) — NO O1, NO Vault
 - Land E captions exact (BotBuyer one-liner)
 - Sign up = sole teal primary → `/signup`; Install = quiet muted text link
 - Signed-in: redirect off land (never My deals as land primary)

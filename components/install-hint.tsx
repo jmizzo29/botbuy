@@ -44,7 +44,7 @@ export function InstallHint() {
               width={36}
               height={36}
               unoptimized
-              className="h-9 w-9 rounded-[0.7rem] bg-foreground"
+              className="h-9 w-9 rounded-[0.7rem] bg-[#0B1F3A]"
             />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium tracking-tight">
