@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" role="img" aria-label="BotBuyer brings deals">
+  <rect width="320" height="140" rx="16" fill="#FFFFFF"/>
+  <rect x="0.5" y="0.5" width="319" height="139" rx="15.5" fill="none" stroke="rgba(0,0,0,0.07)"/>
+  <rect x="48" y="28" width="200" height="32" rx="8" fill="#F7F8FA" stroke="rgba(0,0,0,0.06)"/>
+  <rect x="58" y="38" width="70" height="7" rx="3.5" fill="#0B1F3A" opacity="0.14"/>
+  <rect x="48" y="54" width="224" height="52" rx="10" fill="#FFFFFF" stroke="rgba(0,0,0,0.08)"/>
+  <rect x="64" y="68" width="96" height="8" rx="4" fill="#0B1F3A" opacity="0.2"/>
+  <rect x="64" y="84" width="56" height="6" rx="3" fill="#737373" opacity="0.35"/>
+  <rect x="196" y="70" width="58" height="22" rx="11" fill="rgba(45,212,191,0.14)"/>
+  <circle cx="210" cy="81" r="3" fill="#2DD4BF"/>
+  <rect x="218" y="78" width="26" height="6" rx="3" fill="#0B1F3A" opacity="0.35"/>
+  <rect x="56" y="108" width="208" height="10" rx="5" fill="#F7F8FA" opacity="0.9"/>
+</svg>

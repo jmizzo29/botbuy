@@ -1,12 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { HowItWorksRail } from "@/components/how-it-works";
 import { LandInstallButton } from "@/components/land-install-button";
-import { ProofStrip } from "@/components/proof-strip";
 import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
 import {
   BRAND,
+  LAND_ARC_LABEL,
+  LAND_ARC_SRC,
   LAND_META_LINE,
   LAND_PRODUCT_H1,
   LAND_PRODUCT_SUPPORT,
@@ -14,62 +16,61 @@ import {
 import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
-  title: "BotBuy",
+  title: "BotBuyer",
   description: BRAND.signupLine,
 };
 
 export default async function LandPage() {
-  const signedIn = await hasPublicSession();
+  if (await hasPublicSession()) {
+    redirect(MY_DEALS_HREF);
+  }
 
   return (
     <PublicChrome land>
-      <div className="lg:grid lg:min-h-[calc(100svh-11rem)] lg:grid-cols-[minmax(0,1fr)_22.5rem] lg:items-center lg:gap-20 xl:grid-cols-[minmax(0,1fr)_24rem]">
+      <div className="lg:grid lg:min-h-[calc(100svh-11rem)] lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:items-center lg:gap-16 xl:gap-20">
         <section
           data-surface="land-door"
-          className="flex min-h-[calc(100svh-8.5rem)] flex-col items-center justify-center text-center lg:min-h-0 lg:items-start lg:text-left"
+          className="flex flex-col items-start text-left"
         >
-          <div className="flex h-[7.25rem] w-[7.25rem] items-center justify-center rounded-[2rem] bg-surface shadow-[0_10px_28px_rgba(0,0,0,0.04)]">
-            <Image
-              src="/brand/botbuy-mark.svg"
-              alt=""
-              width={72}
-              height={72}
-              unoptimized
-              priority
-            />
-          </div>
-          <h1 className="mt-8 text-[2.75rem] font-semibold tracking-tight md:text-6xl">
+          <h1 className="max-w-xl text-[2.75rem] font-semibold tracking-tight md:text-6xl">
             {LAND_PRODUCT_H1}
           </h1>
-          <p className="mt-3 max-w-lg text-xl font-medium tracking-tight text-muted md:text-2xl">
+          <span
+            aria-hidden="true"
+            className="mt-5 block h-0.5 w-12 rounded-full bg-primary"
+          />
+          <p className="mt-5 max-w-lg text-xl font-medium tracking-tight text-muted md:text-2xl">
             {LAND_PRODUCT_SUPPORT}
           </p>
-          <p className="mt-6 max-w-md text-[15px] leading-relaxed text-foreground/75">
+          <p className="mt-5 max-w-md text-[15px] leading-relaxed text-foreground/75">
             {LAND_META_LINE}
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 lg:justify-start">
-            {signedIn ? (
-              <Button asChild size="lg">
-                <Link href={MY_DEALS_HREF} data-cta="land-my-deals">
-                  {BRAND.myDealsCta}
-                </Link>
-              </Button>
-            ) : (
-              <Button asChild size="lg">
-                <Link href="/signup" data-cta="land-signup">
-                  {BRAND.primaryCta}
-                </Link>
-              </Button>
-            )}
+          <div className="mt-8 w-full max-w-sm">
+            <Image
+              src={LAND_ARC_SRC}
+              alt={LAND_ARC_LABEL}
+              width={320}
+              height={72}
+              unoptimized
+              preload
+              className="h-auto w-full"
+            />
+          </div>
+          <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Button asChild size="lg">
+              <Link href="/signup" data-cta="land-signup">
+                {BRAND.primaryCta}
+              </Link>
+            </Button>
             <LandInstallButton />
           </div>
+          <p className="mt-5 text-xs text-muted">{BRAND.landHonesty}</p>
         </section>
-        <aside className="mt-16 lg:mt-0">
+        <aside className="mt-12 lg:mt-0">
           <HowItWorksRail />
-          <div className="mt-4">
-            <ProofStrip />
-          </div>
         </aside>
       </div>
     </PublicChrome>

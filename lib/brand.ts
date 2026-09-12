@@ -1,12 +1,15 @@
 /** Canonical product chrome. Never botbuy.ai or getbotbuy.com. */
 export const LAND_META_LINE =
-  "Set spend, intent, and a payment method. BotBuy only moves when you approve.";
+  "Set spend, intent, and a payment method. BotBuyer only moves when you approve.";
 
 /** Land H1 / support — CMO LOCKED ≤10s lead. Soft-signal HOLD. */
 export const LAND_PRODUCT_H1 = "Your AI agent for buying." as const;
 export const LAND_PRODUCT_SUPPORT = "Less tab-chasing. Same hard approve." as const;
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
+export const LAND_WORDMARK = "BotBuyer" as const;
+export const LAND_ARC_SRC = "/land/assets/06-arc.svg" as const;
+export const LAND_ARC_LABEL = "Find Decide Buy arc" as const;
 
 /** Signup live door — CPO `cpo-real-auth-signup-ia-v1.md`. Soft-signal HOLD. */
 export const SIGNUP_H1 = "Create your BotBuy account" as const;
@@ -16,7 +19,7 @@ export const SIGNUP_FOOT = "No charge to create an account." as const;
 export const SIGN_IN_H1 = "Sign in" as const;
 
 export const BRAND = {
-  name: "BotBuy",
+  name: "BotBuyer",
   domain: "botbuyer.ai",
   origin: "https://botbuyer.ai",
   /** Land + signup sub — John LOCKED one-liner. Vault is logo/brand only. */
@@ -38,23 +41,24 @@ export const BRAND = {
   landHonesty: "Private beta",
   footerHold: "POC on botbuyer.ai · not an announced launch",
   registration: "registered (Namecheap, 2026-09-11)",
+  signalHold: "Soft-signal HOLD",
 } as const;
 
-/** Locked land How-it-works steps. Vault stays logo/brand only on land. */
+/** Locked land How-it-works steps. Graphic panels — no prose essay cards. */
 export const HOW_IT_WORKS = {
   heading: "How it works",
   steps: [
     {
-      title: "Set spend",
-      body: "Your limit. BotBuy stays inside it.",
+      title: "Tell it what to find",
+      graphic: "/land/assets/01-tell.svg",
     },
     {
-      title: "Set intent",
-      body: "Any software, any channel.",
+      title: "BotBuyer brings deals",
+      graphic: "/land/assets/02-deals.svg",
     },
     {
-      title: "Add a payment method",
-      body: "Pay at purchase. We don’t hold a balance.",
+      title: "You approve. Then it buys.",
+      graphic: "/land/assets/03-approve.svg",
     },
   ],
 } as const;

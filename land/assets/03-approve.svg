@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" role="img" aria-label="You approve. Then it buys.">
+  <rect width="320" height="140" rx="16" fill="#FFFFFF"/>
+  <rect x="0.5" y="0.5" width="319" height="139" rx="15.5" fill="none" stroke="rgba(0,0,0,0.07)"/>
+  <rect x="36" y="36" width="160" height="68" rx="12" fill="#F7F8FA" stroke="rgba(0,0,0,0.07)"/>
+  <rect x="52" y="52" width="80" height="8" rx="4" fill="#0B1F3A" opacity="0.18"/>
+  <rect x="52" y="68" width="48" height="6" rx="3" fill="#737373" opacity="0.3"/>
+  <circle cx="60" cy="88" r="5" fill="#0B1F3A" opacity="0.2"/>
+  <circle cx="76" cy="88" r="5" fill="#0B1F3A" opacity="0.12"/>
+  <path d="M208 70 H228" stroke="#0B1F3A" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <path d="M222 64 L230 70 L222 76" fill="none" stroke="#0B1F3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+  <rect x="240" y="54" width="52" height="32" rx="16" fill="#2DD4BF"/>
+  <path d="M254 70 L260 76 L274 62" fill="none" stroke="#042F2E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="266" cy="108" r="10" fill="none" stroke="#0B1F3A" stroke-width="1.8" opacity="0.35"/>
+  <path d="M261 108 L265 112 L273 102" fill="none" stroke="#0B1F3A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+</svg>

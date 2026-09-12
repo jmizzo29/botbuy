@@ -3,7 +3,7 @@ import { BrandLockup } from "@/components/brand-lockup";
 import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
 import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from "@/lib/auth-config";
-import { BRAND } from "@/lib/brand";
+import { BRAND, LAND_WORDMARK } from "@/lib/brand";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
@@ -23,19 +23,36 @@ export function PublicChrome({
     >
       <div className={land ? "bb-land-content" : undefined}>
         <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8">
-          <Link href="/" className="flex items-center" aria-label="BotBuy home">
-            <BrandLockup priority />
+          <Link
+            href="/"
+            className="flex items-center"
+            aria-label={`${land ? LAND_WORDMARK : "BotBuy"} home`}
+          >
+            {land ? (
+              <span className="text-[15px] font-semibold tracking-tight">
+                {LAND_WORDMARK}
+              </span>
+            ) : (
+              <BrandLockup priority />
+            )}
           </Link>
           <PublicNav land={land} />
         </header>
         <InstallHint />
         <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8">{children}</main>
-        <footer className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-8">
-          <SiteFooter />
-          <p className="mt-4 text-[10px] leading-relaxed text-muted/80">
-            {BRAND.origin} · {BRAND.registration} · {BRAND.footerHold} · No paid
-            Stripe
-          </p>
+        <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8">
+          <div>
+            <SiteFooter />
+            <p className="mt-4 text-[10px] leading-relaxed text-muted/80">
+              {BRAND.origin} · {BRAND.registration} · {BRAND.footerHold} · No paid
+              Stripe
+            </p>
+          </div>
+          {land ? (
+            <p className="text-[10px] uppercase tracking-[0.16em] text-muted/70">
+              {BRAND.signalHold}
+            </p>
+          ) : null}
         </footer>
       </div>
     </div>
