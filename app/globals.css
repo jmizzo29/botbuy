@@ -325,6 +325,8 @@ body {
 }
 
 .bb-land-stage-grid {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -489,6 +491,29 @@ body {
   .bb-land-h1 {
     white-space: nowrap;
   }
+}
+
+/* Land atmosphere — lean mesh-glow. Soft-signal HOLD. */
+.bb-land-stage {
+  position: relative;
+  background: #0B1F3A;
+  overflow: hidden;
+}
+.bb-land-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.bb-atm-mesh-glow::before {
+  background:
+    radial-gradient(ellipse 55% 45% at 78% 22%, rgba(45,144,160,0.28), transparent 70%),
+    radial-gradient(ellipse 48% 40% at 18% 38%, rgba(30,90,130,0.22), transparent 70%),
+    radial-gradient(ellipse 52% 42% at 55% 58%, rgba(45,160,155,0.16), transparent 70%),
+    radial-gradient(ellipse 38% 32% at 88% 72%, rgba(25,70,110,0.20), transparent 70%),
+    radial-gradient(ellipse 22% 18% at 72% 48%, rgba(45,212,191,0.09), transparent 70%),
+    linear-gradient(165deg, #0B1F3A 0%, #132a4a 45%, #0a182c 100%);
 }
 
 .hairline {
