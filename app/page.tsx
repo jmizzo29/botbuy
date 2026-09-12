@@ -43,7 +43,7 @@ export default async function LandPage() {
             <p className="bb-land-support">
               {LAND_PRODUCT_SUPPORT}
             </p>
-            <div className="bb-land-hairline" aria-hidden="true" />
+            <div className="bb-land-rule" aria-hidden="true" />
             <div className="bb-land-arc">
               <Image
                 src={LAND_ARC_SRC}

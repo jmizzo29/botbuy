@@ -32,7 +32,7 @@ export function PublicChrome({
           </Link>
           <PublicNav land={land} />
         </header>
-        <InstallHint />
+        {land ? null : <InstallHint />}
         <main
           className={
             land
