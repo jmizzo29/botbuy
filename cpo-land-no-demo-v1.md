@@ -33,7 +33,7 @@ Empty honesty only. No invented numbers. Omit Demo / empty wording.
 
 - H1: `Find it. Decide. Buy anything.`
 - One-liner: `Set spend, intent, and a payment method. BotBuy executes what you approve.`
-- Sign up + Install dual CTAs
+- Sign up sole primary · Install quiet text link
 - Techlux · Vault mark
 - No $1k on land
 - Soft-signal marketing HOLD
