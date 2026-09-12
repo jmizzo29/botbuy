@@ -71,14 +71,9 @@ async function PublicNav({ land }: { land: boolean }) {
   return (
     <div className={land ? "bb-land-nav" : "flex items-center gap-3 text-sm"}>
       {land ? (
-        <>
-          <Link href="/beta" className={link()}>
-            {BRAND.landHonesty}
-          </Link>
-          <Link href="/about" className={link("hidden sm:inline")}>
-            About
-          </Link>
-        </>
+        <Link href="/about" className={link()}>
+          About
+        </Link>
       ) : null}
       {session ? (
         <Link href={MY_DEALS_HREF} className={land ? link() : "text-muted hover:text-foreground"}>

@@ -408,12 +408,11 @@ assert(!vaultPage.includes("Fund your vault"), "vault page has no Fund your vaul
 assert(!vaultPage.toLowerCase().includes("balance"), "vault page has no balance");
 assert(vaultApi.includes("VAULT_H1"), "vault API uses VAULT_H1");
 assert(!chrome.includes(">Demo<"), "land header has no Demo badge");
-assert(
-  chrome.includes("BRAND.landHonesty") || chrome.includes("Private beta"),
-  "land header quiet Private beta",
-);
-assert(chrome.includes('href="/beta"'), "land Private beta leans on /beta");
-assert(chrome.includes('href="/about"'), "land desktop nav includes About");
+assert(!chrome.includes("BRAND.landHonesty"), "land chrome has no Private beta honesty link");
+assert(!chrome.includes("Private beta"), "land chrome has no Private beta string");
+assert(!chrome.includes('href="/beta"'), "land chrome has no /beta top link");
+assert(chrome.includes('href="/about"'), "land overlay includes About word link");
+assert(!chrome.includes("hidden sm:inline"), "About stays visible on phone and desktop");
 assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air band");
 assert(chrome.includes("bb-land-header"), "land header overlays the navy stage");
 assert(chrome.includes("bb-land-nav") && chrome.includes("bb-land-link"), "land overlay is word links");
@@ -704,6 +703,18 @@ assert(css.includes("border-radius: 0"), "stage is square full-bleed");
 assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
 assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
 assert(css.includes(".bb-land-copy") && css.includes("text-align: center"), "phone land copy is centered");
+assert(
+  css.includes(".bb-land-header") &&
+    css.includes("justify-content: center") &&
+    css.includes("flex-wrap: wrap"),
+  "phone overlay centers lockup + About on one axis",
+);
+assert(
+  css.includes("text-align: left") &&
+    css.includes("grid-template-columns: minmax(0, 1.28fr) minmax(18rem, 0.92fr)") &&
+    css.includes("justify-content: space-between"),
+  "desktop keeps left-copy / right-arc split and overlay spread",
+);
 assert(css.includes("@media (max-width: 1023px)"), "phone center axis is locked at max-lg");
 assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "fold CTA is a Sign up + Sign in row");
 assert(css.includes("gap: 10px"), "fold CTA pair uses 10px gap");
