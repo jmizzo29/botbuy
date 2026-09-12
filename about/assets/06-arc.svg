@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 48" role="img" aria-label="Find Decide Buy">
   <title>Find Decide Buy</title>
-  <line x1="28" y1="24" x2="248" y2="24" stroke="#0A0A0A" stroke-width="2"/>
-  <circle cx="28" cy="24" r="11" fill="#F7F8FA" stroke="#0A0A0A" stroke-width="2"/>
-  <circle cx="28" cy="24" r="3.2" fill="#0A0A0A"/>
-  <circle cx="138" cy="24" r="12" fill="#0A0A0A"/>
-  <path d="M132.2 24.2l4.2 4.2 8.6-9" fill="none" stroke="#F7F8FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="248" cy="24" r="12" fill="#0A0A0A"/>
-  <path d="M242.2 24.2l4.2 4.2 8.6-9" fill="none" stroke="#F7F8FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="286" cy="24" r="4" fill="#2DD4BF"/>
+  <line x1="53" y1="24" x2="267" y2="24" stroke="#0A0A0A" stroke-width="2"/>
+  <circle cx="53" cy="24" r="11" fill="#F7F8FA" stroke="#0A0A0A" stroke-width="2"/>
+  <circle cx="53" cy="24" r="3.2" fill="#0A0A0A"/>
+  <circle cx="160" cy="24" r="12" fill="#0A0A0A"/>
+  <path d="M154.2 24.2l4.2 4.2 8.6-9" fill="none" stroke="#F7F8FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="267" cy="24" r="12" fill="#0A0A0A"/>
+  <path d="M261.2 24.2l4.2 4.2 8.6-9" fill="none" stroke="#F7F8FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="298" cy="24" r="4" fill="#2DD4BF"/>
 </svg>

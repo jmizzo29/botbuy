@@ -40,7 +40,7 @@ export function AboutStory() {
         </h1>
         <div
           aria-hidden="true"
-          className="mt-5 h-0.5 w-12 rounded-full bg-primary"
+          className="mt-5 h-[2px] w-14 rounded-full bg-[#2DD4BF]"
         />
         <p className="mt-5 max-w-lg text-xl font-semibold tracking-tight">
           {ABOUT_SUPPORT}
