@@ -752,6 +752,13 @@ assert(wire.includes("never letter-B"), "wire notes keep eclipse-pass — no let
 assert(lockup.includes("/brand/logo-eclipse-pass/botbuyer-logo-header.svg"), "BrandLockup uses eclipse-pass header SVG");
 assert(lockup.includes("/brand/logo-eclipse-pass/botbuyer-logo-primary-dark-bg.svg"), "BrandLockup reverse lockup for navy land");
 assert(lockup.includes("onDark"), "BrandLockup can render reverse on dark");
+assert(lockup.includes("189") && lockup.includes("72"), "land reverse lockup intrinsic ~189×72");
+assert(
+  css.includes(".bb-land-lockup") &&
+    css.includes("height: 2.75rem") &&
+    css.includes("height: 3rem"),
+  "land overlay lockup reads ~44–48px on navy",
+);
 assert(lockup.includes('alt="BotBuyer"'), "BrandLockup accessible alt");
 assert(shell.includes("BrandLockup"), "app shell eclipse-pass header lockup");
 assert(chrome.includes("BrandLockup"), "public chrome eclipse-pass header lockup");

@@ -259,7 +259,8 @@ body {
 }
 
 .bb-land-lockup {
-  height: 2.25rem;
+  /* Overlay wordmark ~44px phone / ~48px desk. Same eclipse-pass reverse. Soft-signal HOLD. */
+  height: 2.75rem;
   width: auto;
 }
 
@@ -387,7 +388,7 @@ body {
   }
 
   .bb-land-lockup {
-    height: 2.5rem;
+    height: 3rem;
   }
 
   .bb-land-footer {
