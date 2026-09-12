@@ -50,7 +50,7 @@ export default async function LandPage() {
             <Image
               src={LAND_ARC_SRC}
               alt={LAND_ARC_LABEL}
-              width={272}
+              width={280}
               height={72}
               unoptimized
               preload
