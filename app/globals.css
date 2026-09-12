@@ -392,37 +392,53 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   gap: 10px;
   width: 100%;
   max-width: 22rem;
-  margin-top: 1.15rem;
+  margin-inline: auto;
+  margin-block-start: 1.25rem;
 }
 
-.bb-land-signup {
-  flex: 1;
-  height: 3rem;
-  min-height: 3rem;
-}
-
-.bb-land-signin {
-  flex: 1 1 auto;
+.bb-land-cta > a,
+.bb-land-cta > button,
+.bb-land-cta [data-cta] {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 48px;
+  height: auto;
+  padding: 0.75rem 1rem;
+  border-radius: 9999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  height: 3rem;
-  min-height: 3rem;
-  padding: 0 1.75rem;
-  font-size: 0.875rem;
   font-weight: 600;
+  font-size: 0.9375rem;
   line-height: 1.2;
-  color: rgba(255, 255, 255, 0.7);
+}
+
+.bb-land-cta [data-cta="land-signup"] {
+  background: #2DD4BF;
+  color: #042F2E;
+  border: 1.5px solid #2DD4BF;
+}
+
+.bb-land-cta [data-cta="land-signin"] {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 9999px;
-  box-shadow: none;
+  color: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+}
+
+.bb-land-signup,
+.bb-land-signin {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 48px;
+  height: auto;
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
 }
 
 .bb-land-signin:hover {
@@ -431,16 +447,31 @@ body {
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* Phone / max-lg: keep copy + CTA pair on the center axis. Soft-signal HOLD. */
+/* Phone / max-lg: mobile-density-v1 + equal CTA boxes. Soft-signal HOLD. */
 @media (max-width: 1023px) {
+  .bb-land-stage .bb-land-arc {
+    align-items: flex-end;
+    margin-block-end: 1.25rem;
+    padding-bottom: 0;
+  }
+
   .bb-land-copy {
     align-items: center;
     text-align: center;
+    margin-block-start: 0;
+    gap: 0.5rem;
+    padding-top: 0;
+  }
+
+  .bb-land-support {
+    margin-top: 0;
   }
 
   .bb-land-cta {
     justify-content: center;
     max-width: 22rem;
+    margin-inline: auto;
+    margin-block-start: 1.25rem;
   }
 }
 
@@ -508,13 +539,9 @@ body {
 
   .bb-land-cta {
     justify-content: flex-start;
-    max-width: none;
+    max-width: 22rem;
+    margin-inline: 0;
     margin-top: 1.75rem;
-  }
-
-  .bb-land-signup,
-  .bb-land-signin {
-    flex: 0 1 auto;
   }
 }
 
