@@ -708,9 +708,9 @@ assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.in
 assert(css.includes(".bb-land-copy") && css.includes("text-align: center"), "phone land copy is centered");
 assert(
   css.includes(".bb-land-header") &&
-    css.includes("justify-content: center") &&
+    css.includes("justify-content: space-between") &&
     css.includes("flex-wrap: wrap"),
-  "phone overlay centers lockup + About on one axis",
+  "phone overlay is lockup + About on the chrome row",
 );
 assert(
   css.includes("text-align: left") &&
@@ -745,12 +745,41 @@ assert(
   "Sign in is a ghost/outline pill",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
-assert(css.includes("margin-block-end: 1.25rem"), "phone density arc→H1 is 1.25rem");
+assert(land.includes('data-fold="d1-bold-h1-first"'), "land fold is D1 bold-h1-first");
 assert(
-  css.includes("margin-block-start: 0") && css.includes("gap: 0.5rem"),
-  "phone copy gap is 0.5rem with no extra start margin",
+  land.includes("bb-land-hairline") &&
+    css.includes(".bb-land-hairline") &&
+    css.includes("width: 28px") &&
+    css.includes("height: 1.5px"),
+  "D1 teal hairline is 28×1.5",
 );
-assert(css.includes("padding: 5.25rem 1.25rem 0.35rem"), "phone arc keeps overlay top pad");
+assert(
+  css.includes("font-size: 2.5rem") &&
+    css.includes("letter-spacing: -0.045em") &&
+    css.includes("text-wrap: balance"),
+  "D1 H1 is 40px / 600 / -0.045em / balance",
+);
+assert(
+  css.includes("max-width: 15rem") && css.includes("width: 15rem"),
+  "D1 arc is a 240px secondary rail",
+);
+assert(
+  land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
+    land.indexOf("bb-land-support") < land.indexOf("bb-land-hairline") &&
+    land.indexOf("bb-land-hairline") < land.indexOf("bb-land-arc") &&
+    land.indexOf("bb-land-arc") < land.indexOf("bb-land-cta"),
+  "D1 fold order is H1 → support → hairline → arc → CTA",
+);
+assert(
+  css.includes("margin-block-start: 0") &&
+    css.includes("justify-content: center") &&
+    css.includes("padding: 5.25rem 1.25rem"),
+  "phone D1 stack is centered under overlay pad",
+);
+assert(
+  read("land/INSTALL.md").includes("D1 bold-h1-first"),
+  "land INSTALL locks D1 bold-h1-first",
+);
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
 assert(
   read("land/assets/02-deals.svg").includes('aria-label="BotBuyer brings deals"'),

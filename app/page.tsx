@@ -30,7 +30,11 @@ export default async function LandPage() {
 
   return (
     <PublicChrome land>
-      <section data-surface="land-stage" className="bb-land-stage bb-atm-richer-mesh-deep">
+      <section
+        data-surface="land-stage"
+        data-fold="d1-bold-h1-first"
+        className="bb-land-stage bb-atm-richer-mesh-deep"
+      >
         <div className="bb-land-stage-grid">
           <div className="bb-land-copy">
             <h1 className="bb-land-h1">
@@ -39,6 +43,18 @@ export default async function LandPage() {
             <p className="bb-land-support">
               {LAND_PRODUCT_SUPPORT}
             </p>
+            <div className="bb-land-hairline" aria-hidden="true" />
+            <div className="bb-land-arc">
+              <Image
+                src={LAND_ARC_SRC}
+                alt={LAND_ARC_LABEL}
+                width={280}
+                height={72}
+                unoptimized
+                preload
+                className="h-auto w-full"
+              />
+            </div>
             <div className="bb-land-cta">
               <Button asChild className="bb-land-signup">
                 <Link href="/signup" data-cta="land-signup">
@@ -53,17 +69,6 @@ export default async function LandPage() {
                 {SIGN_IN_H1}
               </Link>
             </div>
-          </div>
-          <div className="bb-land-arc">
-            <Image
-              src={LAND_ARC_SRC}
-              alt={LAND_ARC_LABEL}
-              width={280}
-              height={72}
-              unoptimized
-              preload
-              className="h-auto w-full max-w-[20rem]"
-            />
           </div>
         </div>
       </section>
