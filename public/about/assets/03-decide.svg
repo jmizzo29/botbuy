@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 112" role="img" aria-label="BotBuyer brings deals">
-  <title>BotBuyer brings deals</title>
-  <rect x="16" y="28" width="196" height="56" rx="16" fill="#F7F8FA"/>
-  <rect x="36" y="44" width="104" height="8" rx="4" fill="#D4D4D4"/>
-  <rect x="36" y="60" width="64" height="8" rx="4" fill="#E5E5E5"/>
-  <circle cx="244" cy="56" r="18" fill="#2DD4BF"/>
-  <path d="M236 56.5l6.2 6.2 12.4-13" fill="none" stroke="#042F2E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M280 46l18 20M298 46l-18 20" fill="none" stroke="#A3A3A3" stroke-width="2.6" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 160" role="img" aria-label="Decide — deals land for approval">
+  <rect width="280" height="160" rx="16" fill="#FFFFFF"/>
+  <rect x="0.5" y="0.5" width="279" height="159" rx="15.5" fill="none" stroke="rgba(0,0,0,0.07)"/>
+  <rect x="52" y="42" width="176" height="28" rx="8" fill="#F7F8FA" stroke="rgba(0,0,0,0.07)"/>
+  <rect x="52" y="78" width="176" height="40" rx="8" fill="#FFFFFF" stroke="rgba(0,0,0,0.07)"/>
+  <rect x="64" y="88" width="72" height="8" rx="4" fill="#0B1F3A" opacity="0.18"/>
+  <rect x="64" y="102" width="48" height="6" rx="3" fill="#737373" opacity="0.35"/>
+  <rect x="168" y="90" width="48" height="20" rx="10" fill="#2DD4BF"/>
+  <path d="M180 100 L186 106 L198 94" fill="none" stroke="#042F2E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="228" cy="100" r="10" fill="none" stroke="rgba(0,0,0,0.12)" stroke-width="1.5"/>
+  <path d="M224 96 L232 104 M232 96 L224 104" stroke="#737373" stroke-width="1.5" stroke-linecap="round"/>
 </svg>

@@ -1,20 +1,20 @@
-import { LAND_PRODUCT_H1, LAND_PRODUCT_SUPPORT } from "@/lib/brand";
+import {
+  LAND_META_LINE,
+  LAND_PRODUCT_H1,
+  LAND_PRODUCT_SUPPORT,
+} from "@/lib/brand";
 import { SITE_OPERATOR } from "@/lib/site-pages";
 
-/** John HARD LOCK — /about captions say BotBuyer. Soft-signal HOLD. */
-export const ABOUT_PRODUCT = "BotBuyer" as const;
+/** About captions follow Land E. Soft-signal HOLD. Navy O1 mark is /about only. */
+export const ABOUT_PRODUCT = "BotBuy" as const;
 
 export const ABOUT_ENTITY = `${SITE_OPERATOR} · Private beta` as const;
 
 export const ABOUT_H1 = LAND_PRODUCT_H1;
 export const ABOUT_SUPPORT = LAND_PRODUCT_SUPPORT;
-
-export const ABOUT_META_LINE =
-  "Set spend, intent, and a payment method. BotBuyer only moves when you approve." as const;
+export const ABOUT_META_LINE = LAND_META_LINE;
 
 export const ABOUT_HOW_HEADING = "How it works" as const;
-
-export const ABOUT_ARC = ["Find", "Decide", "Buy"] as const;
 
 export const ABOUT_STEPS = [
   {
@@ -24,7 +24,7 @@ export const ABOUT_STEPS = [
   },
   {
     n: "02",
-    caption: "BotBuyer brings deals",
+    caption: "BotBuy brings deals",
     art: "/about/assets/03-decide.svg",
   },
   {
