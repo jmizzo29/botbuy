@@ -355,6 +355,10 @@ assert(!brand.includes("Vault it"), "Vault it removed from land brand copy");
 assert(!land.includes("Vault it"), "land has no Vault it");
 assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold");
 assert(land.includes("HowItWorksRail"), "land keeps How it works rail");
+assert(
+  !land.includes("min-h-[calc(100svh-8.5rem)]"),
+  "land door does not force a full-viewport phone fold",
+);
 assert(land.includes("ProofStrip"), "land ProofStrip stays");
 assert(land.includes("LAND_PRODUCT_H1"), "land H1 uses locked product line");
 assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product tag");
