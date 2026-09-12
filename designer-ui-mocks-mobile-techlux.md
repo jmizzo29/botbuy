@@ -6,7 +6,7 @@ Attached mocks: `01-home-bottom-nav` · `02-my-deals-phone` · `03-approve-sheet
 
 Craft-only. CPO IA in `cpo-phone-first-full-app-ia-v1.md` and `cpo-usage-ia-phone-v1.md` wins if a mock and IA disagree. Demo / Coming stay honest. No fake live Stripe / purchase rails.
 
-Land trust stays exact: `Demo · every deal needs your approval`. No `$1,000` / `$1000` / `1,000 gate` on public land.
+Land trust stays exact: `Every deal needs your approval`. No `$1,000` / `$1000` / `1,000 gate` on public land.
 
 ## Frame
 

@@ -135,7 +135,8 @@ for (const [name, src, needle] of primaryBlocks) {
   assert(src.includes(needle), `${name} primary present`);
 }
 
-assert(brand.includes('trustLine: "Demo · every deal needs your approval"'), "CPO trust line without $1k");
+assert(brand.includes('trustLine: "Every deal needs your approval"'), "CPO land trust line without Demo");
+assert(!brand.includes("Demo · every deal needs your approval"), "old Demo land trust removed");
 assert(!brand.includes("$1,000 gate"), "land trust line has no $1,000 gate");
 assert(!brand.includes("gate for now"), "land brand has no gate for now");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(land), "land has no $1,000 gate");
@@ -505,7 +506,8 @@ assert(approveUi.includes("w-full sm:w-auto") || approveUi.includes("w-full"), "
 assert(approveUi.includes("min-h-11"), "Approve/Reject 44pt taps");
 assert(existsSync(join(root, "designer-ui-mocks-mobile-techlux.md")), "designer mobile Techlux visual SoT");
 const designerMocks = read("designer-ui-mocks-mobile-techlux.md");
-assert(designerMocks.includes("Demo · every deal needs your approval"), "designer SoT keeps land trust");
+assert(designerMocks.includes("Every deal needs your approval"), "designer SoT keeps land trust");
+assert(!designerMocks.includes("Demo · every deal needs your approval"), "designer SoT dropped Demo land trust");
 assert(designerMocks.includes("Approve sheet"), "designer SoT locks Approve sheet");
 assert(designerMocks.includes("Add to Home Screen"), "designer SoT locks A2HS");
 const approveSheet = read("components/approve-sheet.tsx");
