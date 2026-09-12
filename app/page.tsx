@@ -46,9 +46,10 @@ export default async function LandPage() {
           <h1 className="mt-8 text-[2.75rem] font-semibold tracking-tight md:text-6xl">
             {LAND_PRODUCT_H1}
           </h1>
-          <p className="mt-6 max-w-md text-[15px] leading-relaxed text-foreground/75">
+          <p className="mt-4 max-w-md text-[15px] leading-relaxed text-foreground/75">
             {LAND_META_LINE}
           </p>
+          <p className="mt-3 text-sm text-muted">{BRAND.trustLine}</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
             {signedIn ? (
               <Button asChild size="lg">
@@ -65,7 +66,6 @@ export default async function LandPage() {
             )}
             <LandInstallButton />
           </div>
-          <p className="mt-6 text-sm text-muted">{BRAND.trustLine}</p>
           <p className="mt-2 max-w-md text-sm text-muted">
             {LAND_FINDABILITY.replace(MY_DEALS_LABEL, "").trim()}{" "}
             <Link

@@ -144,7 +144,17 @@ assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(chrome), "public chrome has n
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(layout), "layout meta has no $1,000 gate");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(manifest), "manifest marketing has no $1,000 gate");
 assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock");
-assert(land.includes("BRAND.trustLine"), "land renders trust line under CTAs");
+assert(land.includes("BRAND.trustLine"), "land renders Demo trust line");
+{
+  const door = land.slice(land.indexOf('data-surface="land-door"'));
+  const h1At = door.indexOf("{LAND_PRODUCT_H1}");
+  const leadAt = door.indexOf("{LAND_META_LINE}");
+  const trustAt = door.indexOf("{BRAND.trustLine}");
+  const ctaAt = door.indexOf("LandInstallButton");
+  assert(h1At >= 0 && leadAt > h1At, "locked one-liner sits under land H1");
+  assert(trustAt > leadAt, "Demo trust sits under locked one-liner");
+  assert(ctaAt > trustAt, "Sign up/Install sit after H1 approve cluster");
+}
 assert(!land.includes("BRAND.pocBanner"), "land fold has no POC banner stack");
 assert(signup.includes("BRAND.pocBanner"), "signup Demo pill");
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "POC stays footer meta");
