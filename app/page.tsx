@@ -10,7 +10,6 @@ import {
   LAND_INSTALL_HELPER,
   LAND_META_LINE,
   LAND_PRODUCT_H1,
-  LAND_PRODUCT_TAG,
 } from "@/lib/brand";
 import {
   LAND_FINDABILITY,
@@ -47,7 +46,6 @@ export default async function LandPage() {
           <h1 className="mt-8 text-[2.75rem] font-semibold tracking-tight md:text-6xl">
             {LAND_PRODUCT_H1}
           </h1>
-          <p className="mt-3 text-lg text-foreground/80">{LAND_PRODUCT_TAG}</p>
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-foreground/75">
             {LAND_META_LINE}
           </p>

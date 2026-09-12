@@ -2,9 +2,8 @@
 export const LAND_META_LINE =
   "Set spend, intent, and a payment method. BotBuy executes what you approve.";
 
-/** Short product H1 / brand frame — A · Product door. Soft-signal HOLD. */
-export const LAND_PRODUCT_H1 = "BotBuy" as const;
-export const LAND_PRODUCT_TAG = "Buy software. You approve." as const;
+/** Land H1 — A · Product door. John LOCK. Soft-signal HOLD. */
+export const LAND_PRODUCT_H1 = "Find it. Decide. Buy anything." as const;
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
 
@@ -15,7 +14,6 @@ export const BRAND = {
   /** Signup + meta — John LOCKED one-liner. Vault is logo/brand only. */
   signupLine: LAND_META_LINE,
   hero: LAND_PRODUCT_H1,
-  productTag: LAND_PRODUCT_TAG,
   lead: LAND_META_LINE,
   heroSub:
     "The automated agent that searches, purchases, and closes — within your limit.",
