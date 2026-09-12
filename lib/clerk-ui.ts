@@ -13,6 +13,8 @@ export const CLERK_APPEARANCE = {
   elements: {
     card: "shadow-none ring-1 ring-[rgba(0,0,0,0.07)]",
     footer: "bg-transparent",
+    headerTitle: "hidden",
+    headerSubtitle: "hidden",
     formButtonPrimary:
       "bg-[#2DD4BF] text-[#042F2E] hover:bg-[#2DD4BF]/90 shadow-none",
   },

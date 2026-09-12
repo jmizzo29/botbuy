@@ -8,6 +8,7 @@ import {
   CLERK_SIGN_UP_URL,
   isClerkPublishableConfigured,
 } from "@/lib/auth-config";
+import { SIGN_IN_H1 } from "@/lib/brand";
 import { CLERK_APPEARANCE } from "@/lib/clerk-ui";
 
 export const dynamic = "force-dynamic";
@@ -25,9 +26,9 @@ export default async function SignInPage() {
     <PublicChrome>
       <div className="mx-auto max-w-md pt-16 md:pt-24">
         <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
-          Sign in
+          {SIGN_IN_H1}
         </p>
-        <h1 className="display mt-8">Welcome back</h1>
+        <h1 className="display mt-8">{SIGN_IN_H1}</h1>
         <div className="mt-10">
           {isClerkPublishableConfigured() ? (
             <SignIn

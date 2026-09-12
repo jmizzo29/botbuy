@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SignUp } from "@clerk/nextjs";
 import { PublicChrome } from "@/components/public-chrome";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import {
   CLERK_AFTER_SIGN_IN_URL,
@@ -10,9 +10,8 @@ import {
   CLERK_SIGN_IN_URL,
   isClerkPublishableConfigured,
 } from "@/lib/auth-config";
-import { BRAND } from "@/lib/brand";
+import { SIGNUP_CTA, SIGNUP_FOOT, SIGNUP_H1, SIGNUP_SUB } from "@/lib/brand";
 import { CLERK_APPEARANCE } from "@/lib/clerk-ui";
-import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 export const dynamic = "force-dynamic";
 
@@ -32,10 +31,8 @@ export default async function SignupPage() {
           <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
             Sign up
           </p>
-          <Badge className={`mt-6 ${DEMO_PILL_CLASS}`}>
-            {BRAND.pocBanner}
-          </Badge>
-          <h1 className="display mt-8">{BRAND.signupLine}</h1>
+          <h1 className="display mt-8">{SIGNUP_H1}</h1>
+          <p className="mt-4 text-sm leading-relaxed text-muted">{SIGNUP_SUB}</p>
         </div>
         <div className="mt-10" data-cta="clerk-signup">
           {isClerkPublishableConfigured() ? (
@@ -45,14 +42,19 @@ export default async function SignupPage() {
               signInUrl={CLERK_SIGN_IN_URL}
             />
           ) : (
-            <p className="text-sm leading-relaxed text-muted">
-              Clerk keys are not configured. Add{" "}
-              <code className="text-foreground">
-                NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-              </code>{" "}
-              and <code className="text-foreground">CLERK_SECRET_KEY</code> in
-              Vercel before production beta sign-up works.
-            </p>
+            <div className="grid gap-4">
+              <p className="text-sm leading-relaxed text-muted">
+                Clerk keys are not configured. Add{" "}
+                <code className="text-foreground">
+                  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+                </code>{" "}
+                and <code className="text-foreground">CLERK_SECRET_KEY</code> in
+                Vercel before production beta sign-up works.
+              </p>
+              <Button type="button" size="lg" className="w-full" disabled>
+                {SIGNUP_CTA}
+              </Button>
+            </div>
           )}
         </div>
         <p className="mt-8 text-sm text-muted">
@@ -64,10 +66,7 @@ export default async function SignupPage() {
             Sign in
           </Link>
         </p>
-        <p className="mt-6 text-xs leading-relaxed text-muted">
-          Email sign-up creates a live Clerk account. 2FA is phase-2. No paid
-          Stripe. {BRAND.origin} is not an announced launch.
-        </p>
+        <p className="mt-6 text-xs leading-relaxed text-muted">{SIGNUP_FOOT}</p>
         <Link href="/" className="mt-8 inline-block text-xs text-muted hover:text-foreground">
           ← Land
         </Link>

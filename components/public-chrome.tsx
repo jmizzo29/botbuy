@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BrandLockup } from "@/components/brand-lockup";
 import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
+import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from "@/lib/auth-config";
 import { BRAND } from "@/lib/brand";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
@@ -59,12 +60,17 @@ async function PublicNav({ land }: { land: boolean }) {
         </Link>
       ) : (
         <>
-          <Link href="/sign-in" className="text-muted hover:text-foreground">
+          <Link
+            href={CLERK_SIGN_IN_URL}
+            className="text-xs text-muted hover:text-foreground"
+          >
             Sign in
           </Link>
-          <Link href="/signup" className="text-muted hover:text-foreground">
-            Sign up
-          </Link>
+          {land ? null : (
+            <Link href={CLERK_SIGN_UP_URL} className="text-muted hover:text-foreground">
+              Sign up
+            </Link>
+          )}
         </>
       )}
     </div>

@@ -4,7 +4,7 @@ John LOCK · CPO + Designer aligned · 2026-09-12. Soft-signal HOLD.
 
 Craft SoT: `designer-land-no-demo-lock-v1.md`. CTA SoT: `cpo-land-install-demote-v1.md` + `designer-land-install-demote-v1.md`. IA in this file wins if craft and IA disagree. A Designer draft typo that read `Do not show: Every deal needs your approval` is void.
 
-Scope: public land fold (`/` / land chrome / proof strip) only. Signup `POC · Demo · not live` and in-app Demo labels stay.
+Scope: public land fold (`/` / land chrome / proof strip) only. In-app Demo labels stay. Signup door is `cpo-real-auth-signup-ia-v1.md` — no `POC · Demo · not live` pill on `/signup`.
 
 ## Trust (locked sentence, not on the fold)
 

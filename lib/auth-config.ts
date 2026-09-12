@@ -11,7 +11,7 @@ export function isClerkConfigured() {
   );
 }
 
-export const CLERK_SIGN_IN_URL = "/sign-in";
+export const CLERK_SIGN_IN_URL = "/signin";
 export const CLERK_SIGN_UP_URL = "/signup";
 export const CLERK_AFTER_SIGN_IN_URL = "/home";
 export const CLERK_AFTER_SIGN_UP_URL = "/onboarding/intent";

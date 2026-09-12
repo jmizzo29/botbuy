@@ -16,7 +16,8 @@ const tokens = read("lib/ui-tokens.ts");
 const css = read("app/globals.css");
 const land = read("app/page.tsx");
 const signup = read("app/signup/[[...sign-up]]/page.tsx");
-const signIn = read("app/sign-in/[[...sign-in]]/page.tsx");
+const signIn = read("app/signin/[[...sign-in]]/page.tsx");
+const authSignupIa = read("cpo-real-auth-signup-ia-v1.md");
 const middleware = read("middleware.ts");
 const schema = read("lib/db/schema.ts");
 const authLib = read("lib/auth.ts");
@@ -267,14 +268,30 @@ assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(signup), "signup has no $1,00
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(chrome), "public chrome has no $1,000 gate");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(layout), "layout meta has no $1,000 gate");
 assert(!/\$1,000|\$1000|1,000 gate|1000 gate/.test(manifest), "manifest marketing has no $1,000 gate");
-assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock");
+assert(brand.includes('pocBanner: "POC · Demo · not live"'), "POC pill lock stays for in-app/offline");
 assert(!land.includes("BRAND.trustLine"), "land renders no trust line under CTAs");
 assert(!land.includes("BRAND.pocBanner"), "land fold has no POC banner stack");
-assert(signup.includes("BRAND.pocBanner"), "signup Demo pill");
+assert(!signup.includes("BRAND.pocBanner"), "signup has no POC Demo pill");
+assert(!signup.includes("POC · Demo · not live"), "signup scrubbed Demo pill copy");
+assert(signup.includes("SIGNUP_H1") && brand.includes('SIGNUP_H1 = "Create your BotBuy account"'), "signup H1 lock");
+assert(signup.includes("SIGNUP_SUB"), "signup sub is spend/intent/payment");
+assert(signup.includes("SIGNUP_CTA") || signup.includes("Create account"), "signup CTA Create account");
+assert(signup.includes("SIGNUP_FOOT") && brand.includes("No charge to create an account."), "signup no-charge foot");
+assert(
+  existsSync(join(root, "cpo-real-auth-signup-ia-v1.md")),
+  "CPO real-auth signup IA committed",
+);
+assert(
+  authSignupIa.includes("`Create your BotBuy account`") &&
+    authSignupIa.includes("No charge to create an account.") &&
+    authSignupIa.includes("`/signin`"),
+  "CPO real-auth signup IA names locked door",
+);
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "POC stays footer meta");
 assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
 assert(signIn.includes("<SignIn"), "sign-in uses Clerk SignIn");
+assert(signIn.includes("SIGN_IN_H1"), "sign-in H1 is Sign in");
 assert(signup.includes("Sign in"), "signup offers Sign in");
 assert(!signup.includes("in-memory session"), "signup scrubbed in-memory copy");
 assert(!signup.includes("not a live account"), "signup scrubbed POC persist copy");
@@ -307,7 +324,7 @@ assert(!proof.includes("verified_at"), "public proof caption has no verified_at"
 
 assert(chrome.includes("hasPublicSession"), "nav gates My deals on session");
 assert(chrome.includes("MY_DEALS_LABEL") || chrome.includes("My deals"), "My deals still exists after session");
-assert(chrome.includes("/sign-in"), "public chrome offers Sign in");
+assert(chrome.includes("CLERK_SIGN_IN_URL") || chrome.includes("/signin"), "public chrome offers Sign in");
 assert(shell.includes("SignOutControl"), "app chrome Sign out");
 
 assert(empty.includes("GO_LIVE_PRIMARY_LABEL"), "Searching empty uses Run BotBuy lock");

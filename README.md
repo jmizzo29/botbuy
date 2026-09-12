@@ -13,7 +13,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 3. Owner `/admin` Demo badges. Real deal counts OK. No invented live MRR/traffic/paid users. Finance verified-only $179.96; never $596.64 as burn. Coarse usage meter v0: per-deal Estimate stub + per-day Admin tokens_est / calls rollup. Demo · not live. Never Actual $.
 4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
 5. ProofStrip empty until verified live aggregates. Public copy: personal deals never count as public proof. No placeholders. No CHO-gated / `verified_at` caption on land.
-6. Land + onboarding: `/` `/signup` `/sign-in` `/onboarding/intent|spend|vault|go-live` `/home`
+6. Land + onboarding: `/` `/signup` `/signin` `/onboarding/intent|spend|vault|go-live` `/home`
 7. After Closed, CTA **Activate agents on this asset** → sheet → `/agents` and `/agents/[assetId]`. Suite in every license. Demo · not live. HOLD. Agents never bypass $1,000 approval.
 
 No seven-figure claims in product UI. No paid Stripe/Issuing.
@@ -38,7 +38,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | --- | --- |
 | `/` | Land — G Techlux light · locked one-liner `Set spend, intent, and a payment method. BotBuy executes what you approve.` + `POC · Demo · not live` + trust line + techlux-air + veil + How it works 3-card rail + empty ProofStrip. Vault is logo only. Soft-signal HOLD |
 | `/signup` | Clerk email sign-up → onboarding |
-| `/sign-in` | Clerk email sign-in → My deals |
+| `/signin` | Clerk email sign-in → My deals (`/login` and `/sign-in` redirect here) |
 | `/onboarding/intent` | Set intent — software-first John templates |
 | `/onboarding/spend` | Set spend |
 | `/onboarding/vault` | Add a payment method — linked methods / pay-at-purchase |
