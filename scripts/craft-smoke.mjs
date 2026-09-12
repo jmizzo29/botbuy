@@ -514,12 +514,12 @@ assert(ledger.cfo?.verified_startup_spend_usd === 179.96, "CFO verified burn $17
 assert(ledger.cfo?.pending_verify_usd === 416.68, "CFO pending $416.68 Savedfast+xfer once");
 
 const LAND_META =
-  "Set spend, intent, and a payment method. BotBuyer only moves when you approve.";
+  "BotBuyer finds it and handles the chase. You approve before it pays.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
 assert(brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying."'), "land H1 lock");
 assert(
-  brand.includes('LAND_PRODUCT_SUPPORT = "Less tab-chasing. Same hard approve."'),
+  brand.includes('LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK."'),
   "land support lock",
 );
 assert(brand.includes("hero: LAND_PRODUCT_H1"), "land hero is locked H1");
@@ -554,9 +554,19 @@ assert(brand.includes('title: "You approve. Then it buys."'), "how-it-works step
 assert(brand.includes('graphic: "/land/assets/03-approve.svg"'), "how-it-works step 3 graphic");
 assert(
   brand.includes(
-    "Set spend, intent, and a payment method. BotBuyer only moves when you approve.",
+    "BotBuyer finds it and handles the chase. You approve before it pays.",
   ),
   "land/meta one-liner lock",
+);
+assert(
+  !brand.includes("Less tab-chasing. Same hard approve."),
+  "old land support retired",
+);
+assert(
+  !brand.includes(
+    "Set spend, intent, and a payment method. BotBuyer only moves when you approve.",
+  ),
+  "old land one-liner retired",
 );
 assert(!brand.includes("Set spend, intent, and vault"), "old vault land line removed");
 assert(!brand.includes("Vault it"), "Vault it removed from land brand copy");

@@ -1,6 +1,6 @@
 # BotBuyer
 
-**https://botbuyer.ai** — Set spend, intent, and a payment method. BotBuyer only moves when you approve.
+**https://botbuyer.ai** — BotBuyer finds it and handles the chase. You approve before it pays.
 
 Canonical chrome is **botbuyer.ai only**. Never botbuy.ai or getbotbuy.com. POC on botbuyer.ai · not an announced launch.
 
@@ -36,7 +36,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 
 | Route | What |
 | --- | --- |
-| `/` | Land — G Techlux light · locked one-liner `Set spend, intent, and a payment method. BotBuyer only moves when you approve.` + `POC · Demo · not live` + trust line + techlux-air + veil + How it works 3-card rail + empty ProofStrip. Vault is logo only. Soft-signal HOLD |
+| `/` | Land — G Techlux light · locked one-liner `BotBuyer finds it and handles the chase. You approve before it pays.` + `POC · Demo · not live` + trust line + techlux-air + veil + How it works 3-card rail + empty ProofStrip. Vault is logo only. Soft-signal HOLD |
 | `/signup` | Clerk email sign-up → onboarding |
 | `/signin` | Clerk email sign-in → My deals (`/login` and `/sign-in` redirect here) |
 | `/onboarding/intent` | What should BotBuyer find? — select or describe → **Start search** |
