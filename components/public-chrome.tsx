@@ -42,32 +42,17 @@ export function PublicChrome({
         >
           {children}
         </main>
-        <footer
-          className={
-            land
-              ? "bb-land-footer"
-              : "mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8"
-          }
-        >
-          <div>
-            <SiteFooter onDark={land} />
-            <p
-              className={
-                land
-                  ? "mt-4 text-[10px] leading-relaxed text-white/40"
-                  : "mt-4 text-[10px] leading-relaxed text-muted/80"
-              }
-            >
-              {BRAND.origin} · {BRAND.registration} · {BRAND.footerHold} · No paid
-              Stripe
-            </p>
-          </div>
-          {land ? (
-            <p className="text-[10px] uppercase tracking-[0.16em] text-white/35">
-              {BRAND.signalHold}
-            </p>
-          ) : null}
-        </footer>
+        {land ? null : (
+          <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8">
+            <div>
+              <SiteFooter />
+              <p className="mt-4 text-[10px] leading-relaxed text-muted/80">
+                {BRAND.origin} · {BRAND.registration} · {BRAND.footerHold} · No paid
+                Stripe
+              </p>
+            </div>
+          </footer>
+        )}
       </div>
     </div>
   );
