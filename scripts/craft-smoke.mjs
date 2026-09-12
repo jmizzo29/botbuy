@@ -600,6 +600,12 @@ assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product ta
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(!land.includes("LAND_META_LINE"), "land fold dropped meta one-liner constant");
 assert(land.includes("description: LAND_COMING_SOON"), "land page meta is Coming soon");
+assert(
+  land.includes("openGraph:") &&
+    land.includes("twitter:") &&
+    (land.match(/description: LAND_COMING_SOON/g) || []).length >= 3,
+  "coming soon quiets page/OG/twitter descriptions",
+);
 assert(!land.includes("LandInstallButton"), "land has no Install door");
 assert(!land.includes("Install"), "land page source has no Install string");
 assert(!land.includes("land-install"), "land fold has no Install CTA");
