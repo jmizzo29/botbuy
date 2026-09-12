@@ -1,19 +1,25 @@
 import Image from "next/image";
 
-/** Locked eclipse-pass mark + BotBuyer wordmark. Light Techlux header. */
+const HEADER_SRC = "/brand/logo-eclipse-pass/botbuyer-logo-header.svg";
+const REVERSE_SRC = "/brand/logo-eclipse-pass/botbuyer-logo-primary-dark-bg.svg";
+
+/** Locked eclipse-pass mark + BotBuyer wordmark. Reverse on navy land overlay. */
 export function BrandLockup({
   priority = false,
+  onDark = false,
 }: {
   priority?: boolean;
+  onDark?: boolean;
 }) {
   return (
     <Image
-      src="/brand/logo-eclipse-pass/botbuyer-logo-header.svg"
+      src={onDark ? REVERSE_SRC : HEADER_SRC}
       alt="BotBuyer"
-      width={148}
-      height={32}
+      width={onDark ? 147 : 148}
+      height={onDark ? 56 : 32}
       unoptimized
       priority={priority}
+      className={onDark ? "bb-land-lockup" : undefined}
     />
   );
 }

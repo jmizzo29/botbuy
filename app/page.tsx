@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { LandInstallButton } from "@/components/land-install-button";
@@ -18,6 +19,10 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: BRAND.name,
   description: BRAND.signupLine,
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0B1F3A",
 };
 
 export default async function LandPage() {

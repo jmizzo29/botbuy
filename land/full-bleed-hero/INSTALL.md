@@ -6,19 +6,20 @@ Live direction for `/`. Replaces the light elevate two-column door.
 
 ## Chrome
 
-- Light Techlux page (`#F7F8FA`) + optional Techlux air bg
-- Header: eclipse-pass lockup `/brand/logo-eclipse-pass/botbuyer-logo-header.svg` + **Private beta** / **About** / **Sign in** (About on desktop nav; phone fold may omit)
-- No Demo · no public $1k · no under-CTA trio · no under-CTA Private beta chip
-- Sign up = sole teal primary `#2DD4BF` / `#042F2E` → `/signup`
+- **No separate header / banners.** Full viewport is navy. No light Techlux header bar, no air strip, no pill chrome in the top row.
+- Overlay on the stage: eclipse-pass reverse lockup `/brand/logo-eclipse-pass/botbuyer-logo-primary-dark-bg.svg` + **word links only** — **Private beta** / **About** / **Sign in** (About on desktop nav; phone fold may omit)
+- Top-of-screen = text links (light-on-navy). Logo may be the reverse lockup image. **No button / pill** in the overlay nav.
+- Sign up = sole teal primary `#2DD4BF` / `#042F2E` → `/signup` (teal pill OK only there)
 - Install = quiet muted text link
 - Signed-in: redirect off land (never My deals as land primary)
+- Footer legal links sit below the fold on deep navy — not a light chrome band
 
 ## Navy stage
 
-Edge-to-edge navy **full-bleed** under the header (or under status). Not an inset card. No frame-inside-frame.
+Edge-to-edge navy **full-bleed**. Fills the viewport under status / safe areas. Overlay nav sits on the stage. Not an inset card. No frame-inside-frame.
 
 - Gradient: `#0B1F3A` → `#163556` → `#0a182c`
-- Square / no radius — fills the viewport under chrome
+- Square / no radius — fills the viewport
 - Kill side / top / bottom gutters around the stage
 - Captions over the dark field (phone: bottom gradient cap)
 
