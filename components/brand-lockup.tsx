@@ -1,9 +1,9 @@
 import Image from "next/image";
 
-const HEADER_SRC = "/brand/logo-eclipse-pass/botbuyer-logo-header.svg";
-const REVERSE_SRC = "/brand/logo-eclipse-pass/botbuyer-logo-primary-dark-bg.svg";
+const HEADER_SRC = "/brand/logo-soft-spine/botbuyer-logo-header-light.svg";
+const REVERSE_SRC = "/brand/logo-soft-spine/botbuyer-logo-primary-dark-bg.svg";
 
-/** Locked eclipse-pass mark + BotBuyer wordmark. Reverse on navy land overlay — size bump only. Soft-signal HOLD. */
+/** Locked soft-spine mark + BotBuyer wordmark. Reverse on navy land overlay. Soft-signal HOLD. */
 export function BrandLockup({
   priority = false,
   onDark = false,
@@ -15,8 +15,8 @@ export function BrandLockup({
     <Image
       src={onDark ? REVERSE_SRC : HEADER_SRC}
       alt="BotBuyer"
-      width={onDark ? 189 : 148}
-      height={onDark ? 72 : 32}
+      width={onDark ? 219 : 152}
+      height={onDark ? 46 : 32}
       unoptimized
       priority={priority}
       className={onDark ? "bb-land-lockup" : undefined}

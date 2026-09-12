@@ -20,7 +20,7 @@ Commit exact SVG bodies. Serve copies from `public/land/assets/`.
 
 ## Product locks
 
-- No light header / banners. Full-bleed navy + overlay reverse lockup (`/brand/logo-eclipse-pass/botbuyer-logo-primary-dark-bg.svg`) + word links only (Private beta / About). No pill chrome in the top row. Sign in lives in the fold CTA cluster.
+- No light header / banners. Full-bleed navy + overlay reverse lockup (`/brand/logo-soft-spine/botbuyer-logo-primary-dark-bg.svg`) + word links only (Private beta / About). No pill chrome in the top row. Sign in lives in the fold CTA cluster.
 - Navy stage gradient `#0B1F3A` → `#163556` → `#0a182c` · square full-bleed viewport (no inset card / no 20/28 radius)
 - Land E captions exact (BotBuyer one-liner)
 - Sign up = sole teal primary → `/signup`; Sign in = quiet text link in the same fold cluster. No Install on land.

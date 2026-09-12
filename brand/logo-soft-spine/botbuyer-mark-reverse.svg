@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BotBuyer mark">
-  <title>BotBuyer — Soft Spine</title><g transform="translate(2,1) scale(0.90)">
-  <g fill="#0B1F3A" fill-rule="evenodd">
+  <title>BotBuyer — Soft Spine reverse</title><g transform="translate(2,1) scale(0.90)">
+  <g fill="#FFFFFF" fill-rule="evenodd">
     <path d="M30 8
       C28.2 8 26.8 9.3 26.8 11 L26.8 53
       C26.8 54.7 28.2 56 30 56 H34

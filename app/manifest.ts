@@ -18,24 +18,24 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     display_override: ["standalone", "browser"],
     background_color: THEME_BG,
-    theme_color: THEME_BG,
+    theme_color: "#0B1F3A",
     lang: "en",
     prefer_related_applications: false,
     icons: [
       {
-        src: "/icons/icon-192.png",
+        src: "/brand/logo-soft-spine/app-icon/icon-192.png",
         sizes: "192x192",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/icon-512.png",
+        src: "/brand/logo-soft-spine/app-icon/icon-512.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/icon-512-maskable.png",
+        src: "/brand/logo-soft-spine/app-icon/app-icon-maskable-512.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",

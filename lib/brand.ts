@@ -22,7 +22,7 @@ export const BRAND = {
   name: "BotBuyer",
   domain: "botbuyer.ai",
   origin: "https://botbuyer.ai",
-  /** Land + signup sub — John LOCKED one-liner. eclipse-pass is the live logo. */
+  /** Land + signup sub — John LOCKED one-liner. soft-spine is the live logo. */
   signupLine: LAND_META_LINE,
   hero: LAND_PRODUCT_H1,
   support: LAND_PRODUCT_SUPPORT,

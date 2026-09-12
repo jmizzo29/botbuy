@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BotBuyer mark">
-  <title>BotBuyer — Soft Spine</title><g transform="translate(2,1) scale(0.90)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="12 44 400 84" width="400" height="84" role="img" aria-label="BotBuyer">
+  <title>BotBuyer</title>
+  <g transform="translate(28,42) scale(1.35)"><g transform="translate(2,1) scale(0.90)">
   <g fill="#0B1F3A" fill-rule="evenodd">
     <path d="M30 8
       C28.2 8 26.8 9.3 26.8 11 L26.8 53
@@ -34,5 +35,7 @@
       c-5.8 0-9.5 2.8-9.5 6.5
       0 3.7 3.7 6.5 9.5 6.5 H26.8 Z"/>
   </g>
-  <rect x="29.5" y="58" width="5" height="1.4" rx="0.55" fill="#2DD4BF"/></g>
+  <rect x="29.5" y="58" width="5" height="1.4" rx="0.55" fill="#2DD4BF"/></g></g>
+  <text x="140" y="108" font-family="Liberation Sans, Helvetica Neue, Arial, sans-serif"
+        font-size="56" font-weight="600" letter-spacing="-1.6" fill="#0A0A0A">BotBuyer</text>
 </svg>

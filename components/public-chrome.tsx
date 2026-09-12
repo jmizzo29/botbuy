@@ -3,7 +3,7 @@ import { BrandLockup } from "@/components/brand-lockup";
 import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
 import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from "@/lib/auth-config";
-import { BRAND, LAND_WORDMARK } from "@/lib/brand";
+import { BRAND } from "@/lib/brand";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ export function PublicChrome({
           <Link
             href="/"
             className="flex items-center"
-            aria-label={`${land ? LAND_WORDMARK : BRAND.name} home`}
+            aria-label="BotBuyer"
           >
             <BrandLockup priority onDark={land} />
           </Link>

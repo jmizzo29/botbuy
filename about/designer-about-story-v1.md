@@ -1,13 +1,13 @@
 # Designer — `/about` graphical story v1
 
-Soft-signal HOLD · Land E + CPO caption-length · eclipse-pass mark (sitewide, not O1)
+Soft-signal HOLD · Land E + CPO caption-length · soft-spine mark (sitewide, not O1)
 
 ## Replace
 Prose dump on `/about`. Archive `docs/site-pages/about.md` stays; this page does not render it.
 
 ## IA
 1. **Entity** (muted): `Build Star Labs (Florida) · Private beta`
-2. **Hero:** eclipse-pass mark + H1 `Your AI agent for buying.` + teal hairline + support `Less tab-chasing. Same hard approve.` + one-liner `Set spend, intent, and a payment method. BotBuyer only moves when you approve.` + arc Find → Decide → Buy (`assets/06-arc.svg`)
+2. **Hero:** soft-spine mark + H1 `Your AI agent for buying.` + teal hairline + support `Less tab-chasing. Same hard approve.` + one-liner `Set spend, intent, and a payment method. BotBuyer only moves when you approve.` + arc Find → Decide → Buy (`assets/06-arc.svg`)
 3. **How it works** — 3 panels, caption + illustration only
    - `Tell it what to find` · `assets/02-find.svg`
    - `BotBuyer brings deals` · `assets/03-decide.svg`
@@ -24,7 +24,7 @@ bg `#F7F8FA` · text `#0A0A0A` · muted `#737373` · primary `#2DD4BF`
 Mark stroke navy `#0B1F3A` — do not recolor to teal.
 
 ## Logo HOLD
-eclipse-pass is sitewide chrome (header / favicon / PWA / OG / about hero). Not O1. Not Vault.
+soft-spine is sitewide chrome (header / favicon / PWA / OG / about hero). Not O1. Not Vault. Not eclipse-pass.
 
 ## Do not
 Demo · $1k · metrics · fake traction · “What we don’t do” essay · O1 or Vault marks

@@ -35,11 +35,23 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/brand/logo-soft-spine/favicon/favicon.ico", sizes: "any" },
+      {
+        url: "/brand/logo-soft-spine/favicon/favicon.svg",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/brand/logo-soft-spine/app-icon/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
     ],
-    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
+    apple: [
+      {
+        url: "/brand/logo-soft-spine/favicon/apple-touch-icon.png",
+        sizes: "180x180",
+      },
+    ],
   },
   openGraph: {
     title: BRAND.name,
@@ -48,7 +60,7 @@ export const metadata: Metadata = {
     siteName: BRAND.name,
     images: [
       {
-        url: "/brand/og-1200x630.png",
+        url: "/brand/logo-soft-spine/og/og-1200x630.png",
         width: 1200,
         height: 630,
         alt: BRAND.name,
@@ -60,7 +72,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: BRAND.name,
     description: LAND_META_LINE,
-    images: ["https://botbuyer.ai/brand/og-1200x630.png"],
+    images: ["https://botbuyer.ai/brand/logo-soft-spine/og/og-1200x630.png"],
   },
 };
 
