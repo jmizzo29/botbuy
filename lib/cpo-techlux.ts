@@ -66,3 +66,5 @@ export const SETTINGS_USAGE_HREF = "/settings#usage" as const;
 export const SETTINGS_USAGE_TITLE = "Usage" as const;
 export const SETTINGS_PROFILE_HREF = "/settings/profile" as const;
 export const SETTINGS_PROFILE_TITLE = "Your details" as const;
+export const SETTINGS_CONNECTED_HREF = "/settings/connected-accounts" as const;
+export const SETTINGS_CONNECTED_TITLE = "Connected accounts" as const;

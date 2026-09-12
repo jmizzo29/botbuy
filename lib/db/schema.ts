@@ -6,6 +6,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -201,6 +202,36 @@ export const usageEvents = pgTable("usage_events", {
   billed: boolean("billed").notNull().default(false),
   live: boolean("live").notNull().default(false),
 });
+
+/**
+ * Encrypted connector token vault. Server-only.
+ * ciphertext + iv are AES-256-GCM. Never log them. Revoke nulls both.
+ */
+export const connectedAccounts = pgTable(
+  "connected_accounts",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id").notNull(),
+    clerkUserId: text("clerk_user_id"),
+    provider: text("provider").notNull(),
+    ciphertext: text("ciphertext"),
+    iv: text("iv"),
+    status: text("status").notNull().default("disconnected"),
+    hint: text("hint"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("connected_accounts_user_provider_uidx").on(
+      table.userId,
+      table.provider,
+    ),
+  ],
+);
 
 export const proofSnapshots = pgTable("proof_snapshots", {
   id: text("id").primaryKey(),

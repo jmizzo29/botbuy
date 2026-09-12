@@ -48,6 +48,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | `/agents` `/agents/[assetId]` | Your agents workspace · Demo · not live · no agent chat |
 | `/intent` | In-app intent capture (same Start search) |
 | `/vault` `/settings` `/settings/profile` | Vault · Settings · Your details |
+| `/settings/connected-accounts` | Namecheap + Twilio connector vault · POC · not live. Auto-approve OFF |
 | `/admin` | Owner only — hidden from buyer nav and land. Persistent **Demo** badge. |
 
 ## Ledger (customer #1)
@@ -99,6 +100,7 @@ Open `/` (empty proof), `/home` (3 personal deals), `/deals/deal_savedfast` (per
 
 - Clerk session is identity. `bb_signup` is not.
 - No PAN, CVV, or Issuing in the app or audit log.
+- Connector tokens (Namecheap / Twilio) are encrypted with `BOTBUY_VAULT_KEY`. Never logged. Revoke deletes ciphertext. Register/buy require the existing Approve sheet. Auto-approve OFF.
 - Admin metrics stay stub-badged. Public proof ignores imported rows.
 - `POST /api/deals/[id]/status` returns 409 on illegal or unverified close.
 

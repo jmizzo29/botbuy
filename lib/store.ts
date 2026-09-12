@@ -614,6 +614,25 @@ export function listVaultRefs(userId = SEED_OWNER.id): VaultRef[] {
   return vaultRefs.filter((ref) => ref.userId === userId);
 }
 
+export function recordAuditLog(
+  entry: Omit<AuditLog, "id" | "createdAt"> & {
+    id?: string;
+    createdAt?: string;
+  },
+): AuditLog {
+  const row: AuditLog = {
+    id: entry.id ?? `aud_${crypto.randomUUID().slice(0, 8)}`,
+    userId: entry.userId,
+    action: entry.action,
+    entityType: entry.entityType,
+    entityId: entry.entityId,
+    metadata: entry.metadata ?? {},
+    createdAt: entry.createdAt ?? new Date().toISOString(),
+  };
+  auditLogs.unshift(row);
+  return row;
+}
+
 export function listAuditLogs(userId = SEED_OWNER.id): AuditLog[] {
   return auditLogs
     .filter((log) => log.userId === userId)
