@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 120" role="img" aria-label="Control — every deal needs approval">
+  <rect width="280" height="120" rx="16" fill="#FFFFFF"/>
+  <rect x="0.5" y="0.5" width="279" height="119" rx="15.5" fill="none" stroke="rgba(0,0,0,0.07)"/>
+  <rect x="78" y="32" width="52" height="56" rx="10" fill="#F7F8FA" stroke="rgba(0,0,0,0.07)"/>
+  <path d="M94 32 V24 C94 16 102 12 110 12 C118 12 126 16 126 24 V32" fill="none" stroke="#0B1F3A" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="110" cy="56" r="6" fill="#0B1F3A"/>
+  <line x1="110" y1="62" x2="110" y2="72" stroke="#0B1F3A" stroke-width="2.4" stroke-linecap="round"/>
+  <rect x="152" y="44" width="72" height="32" rx="16" fill="#2DD4BF"/>
+  <text x="188" y="64" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#042F2E">Approve</text>
+</svg>

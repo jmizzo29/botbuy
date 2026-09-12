@@ -8,8 +8,8 @@ Scope: public land fold (`/` / land chrome) only.
 ## Hierarchy (CMO LOCKED)
 
 1. **H1 (lead):** `Your AI agent for buying.`
-2. **Support (under H1, muted):** `Find it. Decide. Buy anything.`
-3. **One-liner KEEP:** `Set spend, intent, and a payment method. BotBuy executes what you approve.`
+2. **Support (under H1, muted):** `Less tab-chasing. Same hard approve.`
+3. **One-liner KEEP:** `Set spend, intent, and a payment method. BotBuy only moves when you approve.`
 4. Sign up sole primary · Install quiet text link
 
 Constants: `LAND_PRODUCT_H1` · `LAND_PRODUCT_SUPPORT` · `LAND_META_LINE`.

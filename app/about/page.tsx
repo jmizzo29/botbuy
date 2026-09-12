@@ -1,31 +1,33 @@
-import { MarkdownProse } from "@/components/markdown-prose";
+import { AboutStory } from "@/components/about-story";
 import { PublicChrome } from "@/components/public-chrome";
-import { SitePageShell, SiteUnavailable } from "@/components/site-page-shell";
-import { loadLegalBlocks } from "@/lib/legal-markdown";
-import { SITE_EMPTY, SITE_PAGE_CHROME } from "@/lib/site-pages";
+import { ABOUT_META_LINE, ABOUT_PRODUCT } from "@/lib/about-story";
 
 export const metadata = {
-  title: SITE_PAGE_CHROME.about.title,
-  description: SITE_PAGE_CHROME.about.lead,
+  title: `About ${ABOUT_PRODUCT}`,
+  description: ABOUT_META_LINE,
+  openGraph: {
+    title: `About ${ABOUT_PRODUCT}`,
+    description: ABOUT_META_LINE,
+    images: [
+      {
+        url: "/brand/og-1200x630.png",
+        width: 1200,
+        height: 630,
+        alt: "BotBuy",
+      },
+    ],
+  },
+  twitter: {
+    title: `About ${ABOUT_PRODUCT}`,
+    description: ABOUT_META_LINE,
+    images: ["https://botbuyer.ai/brand/og-1200x630.png"],
+  },
 };
 
 export default function AboutPage() {
-  const blocks = loadLegalBlocks("about", SITE_PAGE_CHROME.about);
   return (
     <PublicChrome>
-      <SitePageShell
-        title={SITE_PAGE_CHROME.about.title}
-        lead={SITE_PAGE_CHROME.about.lead}
-      >
-        {blocks ? (
-          <MarkdownProse blocks={blocks} />
-        ) : (
-          <SiteUnavailable
-            title={SITE_PAGE_CHROME.about.title}
-            body={SITE_EMPTY.about}
-          />
-        )}
-      </SitePageShell>
+      <AboutStory />
     </PublicChrome>
   );
 }

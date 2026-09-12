@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 160" role="img" aria-label="Find — tell it what to find">
+  <rect width="280" height="160" rx="16" fill="#FFFFFF"/>
+  <rect x="0.5" y="0.5" width="279" height="159" rx="15.5" fill="none" stroke="rgba(0,0,0,0.07)"/>
+  <rect x="48" y="58" width="140" height="36" rx="18" fill="#F7F8FA" stroke="rgba(0,0,0,0.07)"/>
+  <circle cx="70" cy="76" r="8" fill="none" stroke="#0B1F3A" stroke-width="2.2"/>
+  <path d="M76 82 L82 88" stroke="#0B1F3A" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="94" y1="76" x2="168" y2="76" stroke="#0B1F3A" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+  <circle cx="214" cy="76" r="18" fill="none" stroke="#0B1F3A" stroke-width="2.2"/>
+  <circle cx="214" cy="76" r="5" fill="#0B1F3A"/>
+  <path d="M188 76 H196" stroke="#0B1F3A" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <circle cx="236" cy="58" r="3" fill="#2DD4BF"/>
+</svg>

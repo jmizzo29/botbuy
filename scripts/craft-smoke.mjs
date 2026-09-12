@@ -859,7 +859,6 @@ assert(shell.includes("SiteFooter"), "app shell has site footer");
 assert(!chrome.includes("Cookie") && !shell.includes("cookie banner"), "no cookie banner invent");
 assert(privacyPage.includes('loadLegalBlocks("privacy"'), "privacy renders publish blocks");
 assert(termsPage.includes('loadLegalBlocks("terms"'), "terms renders publish blocks");
-assert(aboutPage.includes('loadLegalBlocks("about"'), "about renders site-pages SoT");
 assert(betaPage.includes('loadLegalBlocks("beta"'), "beta renders site-pages SoT");
 assert(contactPage.includes('loadLegalBlocks("contact"'), "contact renders site-pages SoT");
 assert(betaPage.includes("SITE_BETA_CTA.run"), "beta Run BotBuy CTA");
@@ -868,6 +867,68 @@ assert(privacySoT.includes("September 11, 2026"), "privacy publish effective dat
 assert(termsSoT.includes("State of Florida"), "terms publish Florida governing law");
 assert(termsSoT.includes("omitted until attorney supplies text"), "terms dispute omitted in SoT");
 assert(aboutSoT.includes("Operator:** Build Star Labs (Florida)"), "about operator");
+
+const aboutStory = read("components/about-story.tsx");
+const aboutLib = read("lib/about-story.ts");
+const aboutInstall = read("about/INSTALL.md");
+const aboutSot = read("about/designer-about-story-v1.md");
+assert(aboutPage.includes("AboutStory"), "about renders graphical story");
+assert(!aboutPage.includes("loadLegalBlocks"), "about no longer dumps site-pages prose");
+assert(!aboutPage.includes("MarkdownProse"), "about has no markdown dump");
+assert(!aboutPage.includes("SitePageShell"), "about is not the legal/site shell");
+assert(aboutPage.includes("ABOUT_PRODUCT"), "about title uses BotBuy");
+assert(aboutPage.includes("openGraph"), "about OG uses page description");
+assert(aboutPage.includes("/brand/og-1200x630.png"), "about OG image stays Vault");
+assert(aboutLib.includes('ABOUT_PRODUCT = "BotBuy"'), "about product lock is BotBuy");
+assert(aboutLib.includes("LAND_PRODUCT_H1"), "about H1 imports Land E");
+assert(aboutLib.includes("LAND_PRODUCT_SUPPORT"), "about support imports Land E");
+assert(aboutLib.includes("ABOUT_META_LINE = LAND_META_LINE"), "about one-liner is Land E");
+assert(aboutLib.includes('caption: "Tell it what to find"'), "about step 1 caption lock");
+assert(aboutLib.includes('caption: "BotBuy brings deals"'), "about step 2 caption lock");
+assert(aboutLib.includes('caption: "You approve. Then it buys."'), "about step 3 caption lock");
+assert(
+  aboutLib.includes('ABOUT_CONTROL = "Every deal needs your approval."'),
+  "about control caption lock",
+);
+assert(
+  aboutLib.includes('ABOUT_ENTITY = `${SITE_OPERATOR} · Private beta`'),
+  "about entity lock",
+);
+assert(aboutLib.includes('ABOUT_MARK_SRC = "/about/assets/mark-o1-b-journey.svg"'), "about hero is O1-B journey");
+assert(aboutStory.includes("ABOUT_MARK_SRC"), "about story renders journey mark");
+assert(aboutStory.includes("ABOUT_STEPS"), "about story renders 3 panels");
+assert(aboutStory.includes("ABOUT_CONTROL"), "about story renders control caption");
+assert(aboutStory.includes('href={ABOUT_SIGNUP_HREF}'), "about CTA is /signup");
+assert(aboutStory.includes('data-cta="about-signup"'), "about Sign up marked");
+assert((aboutStory.match(/<Button/g) || []).length === 1, "about Sign up is sole primary");
+assert(!aboutStory.includes("variant="), "about CTA has no secondary/ghost variant");
+assert(!aboutStory.includes("Demo"), "about story has no Demo");
+assert(!aboutStory.includes("$1k") && !aboutStory.includes("$1,000"), "about story has no $1k");
+assert(!aboutStory.includes("What we don’t do") && !aboutStory.includes("What we don't do"), "about has no don’t-do essay");
+assert(!aboutLib.includes("metrics"), "about lib invents no metrics");
+assert(existsSync(join(root, "about/assets/mark-o1-b-journey.svg")), "about mark kit committed");
+assert(existsSync(join(root, "about/assets/01-hook.svg")), "about 01-hook committed");
+assert(existsSync(join(root, "about/assets/02-find.svg")), "about 02-find committed");
+assert(existsSync(join(root, "about/assets/03-decide.svg")), "about 03-decide committed");
+assert(existsSync(join(root, "about/assets/04-buy.svg")), "about 04-buy committed");
+assert(existsSync(join(root, "about/assets/05-control.svg")), "about 05-control committed");
+assert(existsSync(join(root, "about/assets/06-arc.svg")), "about 06-arc committed");
+assert(existsSync(join(root, "public/about/assets/mark-o1-b-journey.svg")), "about mark is served");
+assert(existsSync(join(root, "brand/about-story/mark-o1-b-journey.svg")), "about-story brand alias committed");
+assert(existsSync(join(root, "brand/logo-o1-b-journey/botbuy-mark.svg")), "logo-o1-b-journey alias committed");
+assert(read("about/assets/mark-o1-b-journey.svg").includes("#0B1F3A"), "about mark is navy");
+assert(read("brand/logo-o1-b-journey/botbuy-mark.svg").includes("#0B1F3A"), "o1 alias is navy");
+assert(aboutInstall.includes("NOT sitewide logo"), "about INSTALL holds sitewide O1");
+assert(aboutInstall.includes("#0B1F3A"), "about INSTALL names navy mark");
+assert(aboutInstall.includes("BotBuy brings deals"), "about INSTALL step 2 is BotBuy");
+assert(aboutSot.includes("BotBuy brings deals"), "about SoT step 2 is BotBuy");
+assert(aboutSot.includes("Vault stays sitewide chrome"), "about SoT holds Vault chrome");
+assert(lockup.includes("/brand/botbuy-logo-header-light.svg"), "Vault lockup unchanged by about story");
+assert(layout.includes("/favicon.ico") && layout.includes("/brand/og-1200x630.png"), "favicon/OG stay Vault");
+assert(!chrome.includes("mark-o1-b-journey"), "public chrome does not install O1 mark");
+assert(!lockup.includes("mark-o1-b-journey"), "BrandLockup stays Vault");
+assert(!manifest.includes("mark-o1-b-journey"), "PWA icons stay Vault");
+assert(!lockup.includes("logo-o1-b-journey"), "BrandLockup does not use O1 alias");
 const BETA_OPERATOR =
   "**Operator:** Build Star Labs (Florida). BotBuy is offered on botbuyer.ai.";
 function stripLeadingMeta(markdown) {
@@ -1104,3 +1165,4 @@ console.log(" - soft-signal HOLD · Demo pill #B8860B");
 console.log(" - Quiet Capital type · Product door A · clean #F7F8FA");
 console.log(" - Vault mark+wordmark header · favicon/PWA/OG wired");
 console.log(" - site pages /privacy /terms /about /beta /contact · footer lock");
+console.log(" - /about graphical story · Land E captions · navy O1 about-only · Vault chrome HOLD");
