@@ -37,8 +37,8 @@ export const getCurrentUser = cache(async (): Promise<User | null> => {
     if (!clerkUser) return null;
     const email =
       clerkUser.primaryEmailAddress?.emailAddress ??
-      clerkUser.emailAddresses[0]?.emailAddress;
-    if (!email) return null;
+      clerkUser.emailAddresses[0]?.emailAddress ??
+      "";
     return resolveOrCreateAppUser({
       clerkUserId: clerkUser.id,
       email,

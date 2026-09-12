@@ -20,6 +20,8 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   name: text("name").notNull(),
   company: text("company"),
+  notificationEmail: text("notification_email"),
+  phone: text("phone"),
   role: text("role").notNull().default("customer"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
@@ -74,6 +76,9 @@ export const intents = pgTable("intents", {
   categories: jsonb("categories").$type<string[]>().notNull().default([]),
   maxPriceUsd: numeric("max_price_usd", { precision: 12, scale: 2 }).notNull(),
   status: text("status").notNull().default("active"),
+  templateId: text("template_id"),
+  mustInclude: text("must_include"),
+  avoid: text("avoid"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

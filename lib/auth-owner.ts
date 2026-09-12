@@ -11,4 +11,6 @@ export const SEED_OWNER: User = {
   company: "Build Star Labs",
   role: "admin",
   clerkUserId: null,
+  notificationEmail: "john.mitchell@buildstarlabs.com",
+  phone: "",
 };

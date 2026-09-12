@@ -2,7 +2,15 @@ import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { spendLimits, users } from "@/lib/db/schema";
 import { SEED_OWNER } from "@/lib/auth-owner";
-import { rememberDirectoryUser } from "@/lib/user-directory";
+import {
+  displayAccountEmail,
+  isPendingClerkEmail,
+} from "@/lib/john-ux";
+import {
+  findDirectoryUser,
+  getDirectoryUser,
+  rememberDirectoryUser,
+} from "@/lib/user-directory";
 import { SPEND_DEFAULTS, SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
 import type { User, UserRole } from "@/lib/types";
 
@@ -16,6 +24,12 @@ function ownerEmail(email: string) {
   return email.trim().toLowerCase() === SEED_OWNER.email.toLowerCase();
 }
 
+function persistableEmail(email: string, clerkUserId: string) {
+  const trimmed = email.trim().toLowerCase();
+  if (trimmed) return trimmed;
+  return `pending+${clerkUserId}@users.noreply.botbuyer.ai`;
+}
+
 function toUser(row: {
   id: string;
   email: string;
@@ -23,14 +37,19 @@ function toUser(row: {
   company: string | null;
   role: string;
   clerkUserId?: string | null;
+  notificationEmail?: string | null;
+  phone?: string | null;
 }): User {
+  const email = displayAccountEmail(row.email);
   return {
     id: row.id,
-    email: row.email,
+    email,
     name: row.name,
     company: row.company ?? "",
     role: row.role === "admin" ? "admin" : "customer",
     clerkUserId: row.clerkUserId ?? null,
+    notificationEmail: row.notificationEmail ?? email,
+    phone: row.phone ?? "",
   };
 }
 
@@ -63,7 +82,8 @@ export async function resolveOrCreateAppUser(
   identity: ClerkIdentity,
 ): Promise<User> {
   const email = identity.email.trim().toLowerCase();
-  const name = identity.name.trim() || email;
+  const storedEmail = persistableEmail(email, identity.clerkUserId);
+  const name = identity.name.trim() || email || "Buyer";
   const db = getDb();
 
   if (db) {
@@ -78,15 +98,17 @@ export async function resolveOrCreateAppUser(
       return user;
     }
 
-    const byEmail = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email))
-      .limit(1);
-    if (byEmail[0]) {
+    const byEmail = email
+      ? await db
+          .select()
+          .from(users)
+          .where(eq(users.email, email))
+          .limit(1)
+      : [];
+    if (byEmail[0] && !isPendingClerkEmail(storedEmail)) {
       const [updated] = await db
         .update(users)
-        .set({ clerkUserId: identity.clerkUserId, name })
+        .set({ clerkUserId: identity.clerkUserId })
         .where(eq(users.id, byEmail[0].id))
         .returning();
       const user = toUser(updated ?? { ...byEmail[0], clerkUserId: identity.clerkUserId });
@@ -100,9 +122,10 @@ export async function resolveOrCreateAppUser(
       .values({
         id,
         clerkUserId: identity.clerkUserId,
-        email,
+        email: storedEmail,
         name: ownerEmail(email) ? SEED_OWNER.name : name,
         company: ownerEmail(email) ? SEED_OWNER.company : null,
+        notificationEmail: email || null,
         role: roleForEmail(email),
       })
       .returning();
@@ -110,27 +133,91 @@ export async function resolveOrCreateAppUser(
     const user = toUser(
       inserted ?? {
         id,
-        email,
+        email: storedEmail,
         name: ownerEmail(email) ? SEED_OWNER.name : name,
         company: ownerEmail(email) ? SEED_OWNER.company : null,
         role: roleForEmail(email),
         clerkUserId: identity.clerkUserId,
+        notificationEmail: email || null,
       },
     );
     rememberDirectoryUser(user);
     return user;
   }
 
+  const existing = findDirectoryUser({
+    clerkUserId: identity.clerkUserId,
+    email: email || null,
+  });
+  if (existing) {
+    const merged: User = {
+      ...existing,
+      email: email || existing.email,
+      clerkUserId: identity.clerkUserId,
+    };
+    rememberDirectoryUser(merged);
+    return merged;
+  }
+
   const user: User = {
-    id: newUserId({ ...identity, email }),
+    id: newUserId({ ...identity, email: storedEmail }),
     email,
     name: ownerEmail(email) ? SEED_OWNER.name : name,
     company: ownerEmail(email) ? SEED_OWNER.company : "",
     role: roleForEmail(email),
     clerkUserId: identity.clerkUserId,
+    notificationEmail: email || "",
+    phone: "",
   };
   rememberDirectoryUser(user);
   return user;
+}
+
+export async function updateAppUserProfile(
+  userId: string,
+  patch: {
+    name?: string;
+    notificationEmail?: string | null;
+    phone?: string | null;
+    company?: string | null;
+  },
+): Promise<User | null> {
+  const current = getDirectoryUser(userId);
+  const db = getDb();
+
+  if (db) {
+    const [updated] = await db
+      .update(users)
+      .set({
+        ...(patch.name !== undefined ? { name: patch.name } : {}),
+        ...(patch.notificationEmail !== undefined
+          ? { notificationEmail: patch.notificationEmail || null }
+          : {}),
+        ...(patch.phone !== undefined ? { phone: patch.phone || null } : {}),
+        ...(patch.company !== undefined ? { company: patch.company || null } : {}),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    if (updated) {
+      const user = toUser(updated);
+      rememberDirectoryUser(user);
+      return user;
+    }
+  }
+
+  if (!current) return null;
+  const next: User = {
+    ...current,
+    name: patch.name ?? current.name,
+    notificationEmail:
+      patch.notificationEmail !== undefined
+        ? patch.notificationEmail
+        : current.notificationEmail,
+    phone: patch.phone !== undefined ? patch.phone : current.phone,
+    company: patch.company !== undefined ? patch.company ?? "" : current.company,
+  };
+  rememberDirectoryUser(next);
+  return next;
 }
 
 export async function listPersistedUsers(): Promise<User[] | null> {

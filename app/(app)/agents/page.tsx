@@ -5,6 +5,7 @@ import {
   AGENT_EMPTY,
   AGENT_HOLD_NOTE,
   AGENT_SPEND_MICRO,
+  AGENTS_INBOX_NOTE,
 } from "@/lib/agent-org";
 import { listAgentOrgs } from "@/lib/agent-runtime";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
@@ -23,11 +24,14 @@ export default function AgentsPage() {
           {AGENT_DEMO_BANNER}
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">Your agents</h1>
-        <p className="max-w-xl text-xs leading-relaxed text-zinc-500">
+        <p className="max-w-xl text-xs leading-relaxed text-muted">
           {AGENT_SPEND_MICRO}
         </p>
-        <p className="max-w-xl text-xs leading-relaxed text-zinc-500">
+        <p className="max-w-xl text-xs leading-relaxed text-muted">
           {AGENT_HOLD_NOTE}
+        </p>
+        <p className="max-w-xl text-xs leading-relaxed text-muted">
+          {AGENTS_INBOX_NOTE}
         </p>
       </header>
 

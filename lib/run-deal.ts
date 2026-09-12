@@ -73,13 +73,28 @@ export function runDealFromIntent(
   id = RUN_SEARCHING_DEAL_ID,
   userId?: string,
 ): Deal {
-  return buildRunSearchingDeal({
+  const extras = [
+    intent?.mustInclude ? `Must include: ${intent.mustInclude}` : null,
+    intent?.avoid ? `Avoid: ${intent.avoid}` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const deal = buildRunSearchingDeal({
     id,
     userId: userId ?? intent?.userId ?? SEED_OWNER.id,
     title: intent?.summary?.slice(0, 80) || "First BotBuy search",
     category: intent?.categories[0] ?? "software",
     intentSummary: intent?.summary ?? null,
   });
+  if (extras) {
+    deal.notes = `${RUN_DEAL_HOLD_NOTE} ${extras}`;
+    if (deal.timeline[0]) {
+      deal.timeline[0].detail = intent?.summary
+        ? `PLAN intent: ${intent.summary} · ${extras}`
+        : extras;
+    }
+  }
+  return deal;
 }
 
 export function seedRunDealEvents(deal: Deal, email?: string | null): DealEvent[] {

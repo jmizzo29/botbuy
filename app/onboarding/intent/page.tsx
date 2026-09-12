@@ -1,38 +1,23 @@
-import Link from "next/link";
 import { IntentForm } from "@/components/intent-form";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { requireUser } from "@/lib/auth";
+import { INTENT_H1, INTENT_SUB, hasReachableEmail } from "@/lib/john-ux";
 
 export const metadata = {
-  title: "Onboarding · Intent",
+  title: "What should BotBuy find?",
 };
 
-export default function OnboardingIntentPage() {
+export default async function OnboardingIntentPage() {
+  const user = await requireUser();
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8" data-surface="onboarding-intent">
       <header>
-        <h1 className="text-3xl font-semibold tracking-tight">Set intent</h1>
-        <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-          <Badge className="mr-2 bg-sky-500/10 text-sky-200 ring-sky-400/25">
-            PLAN
-          </Badge>
-          All software products across all channels — vendor checkout, SaaS
-          billing, marketplaces, license stores. Domains are OK. Not
-          domains-only.
-        </p>
+        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+          {INTENT_H1}
+        </h1>
+        <p className="mt-4 text-base leading-relaxed text-muted">{INTENT_SUB}</p>
       </header>
-      <Card>
-        <CardHeader>
-          <CardTitle>Intent</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <IntentForm />
-        </CardContent>
-      </Card>
-      <Button asChild>
-        <Link href="/onboarding/spend">Continue to spend</Link>
-      </Button>
+      <IntentForm emailMissing={!hasReachableEmail(user)} />
     </div>
   );
 }

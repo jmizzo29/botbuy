@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { ProfileForm } from "@/components/profile-form";
 import { SettingsUsageSection } from "@/components/usage-meter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignOutButtonPrimary } from "@/components/auth-session";
 import { requireUser } from "@/lib/auth";
-import { SETTINGS_USAGE_TITLE } from "@/lib/cpo-techlux";
+import { SETTINGS_PROFILE_HREF, SETTINGS_USAGE_TITLE } from "@/lib/cpo-techlux";
+import { displayAccountEmail, PROFILE_TITLE } from "@/lib/john-ux";
 import {
   hydrateStore,
   listAuditLogs,
@@ -39,19 +41,22 @@ export default async function SettingsPage() {
       </header>
       <p className="text-xs text-muted md:hidden">Settings</p>
 
-      <SettingsUsageSection
-        events={usageEvents}
-        totals={rollupUsageTotals(usageEvents)}
-      />
-
-      <Card>
+      <Card id="profile">
         <CardHeader>
-          <CardTitle>Profile</CardTitle>
+          <CardTitle>
+            <Link href={SETTINGS_PROFILE_HREF} className="hover:underline">
+              {PROFILE_TITLE}
+            </Link>
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
-          <Row label="Name" value={user.name} />
-          <Row label="Email" value={user.email} />
-          <Row label="Company" value={user.company} />
+          <ProfileForm
+            accountEmail={displayAccountEmail(user.email)}
+            name={user.name}
+            notificationEmail={user.notificationEmail ?? user.email}
+            phone={user.phone ?? ""}
+            company={user.company}
+          />
           <Row
             label="Role"
             value={user.role === "admin" ? "Admin · owner" : "Customer"}
@@ -66,6 +71,11 @@ export default async function SettingsPage() {
           ) : null}
         </CardContent>
       </Card>
+
+      <SettingsUsageSection
+        events={usageEvents}
+        totals={rollupUsageTotals(usageEvents)}
+      />
 
       <Card>
         <CardHeader>

@@ -353,7 +353,7 @@ assert(chrome.includes("MY_DEALS_LABEL") || chrome.includes("My deals"), "My dea
 assert(chrome.includes("CLERK_SIGN_IN_URL") || chrome.includes("/signin"), "public chrome offers Sign in");
 assert(shell.includes("SignOutControl"), "app chrome Sign out");
 
-assert(empty.includes("GO_LIVE_PRIMARY_LABEL"), "Searching empty uses Run BotBuy lock");
+assert(empty.includes("INTENT_CTA") || empty.includes("Start search"), "Searching empty uses Start search lock");
 assert(empty.includes('SEARCHING_EMPTY_SECONDARY = "Edit intent"'), "Searching Edit intent");
 assert(empty.includes('NEEDS_YOU_CTA = "Review gates"'), "Needs-you Review gates");
 assert(empty.includes('AGENTS_EMPTY_SECONDARY = "See how activation works"'), "Agents empty secondary");
@@ -723,8 +723,9 @@ assert(
   dealsPhone.includes('"All"') &&
     dealsPhone.includes('"Needs you"') &&
     dealsPhone.includes('"Searching"') &&
+    dealsPhone.includes('"Found"') &&
     dealsPhone.includes('"Closed"'),
-  "phone My deals filters All / Needs you / Searching / Closed",
+  "phone My deals filters All / Needs you / Searching / Found / Closed",
 );
 assert(approveUi.includes("w-full sm:w-auto") || approveUi.includes("w-full"), "deal detail Approve/Reject full-width on phone");
 assert(approveUi.includes("min-h-11"), "Approve/Reject 44pt taps");
@@ -902,6 +903,82 @@ assert(!css.includes("--bb-bg: #050A0C"), "black is not the default bg");
 assert(css.includes(".bb-prose"), "legal prose styles");
 assert(!siteFooter.includes("Namecheap"), "footer row has no Namecheap");
 assert(!siteFooter.includes("Run BotBuy"), "footer does not compete with Run BotBuy");
+
+const johnUx = read("lib/john-ux.ts");
+const johnIntentPage = read("app/onboarding/intent/page.tsx");
+const johnIntentForm = read("components/intent-form.tsx");
+const johnTemplates = read("lib/intent-templates.ts");
+const johnTemplatesSot = read("cpo-john-intent-templates.md");
+const johnUxSot = read("cpo-john-ux-intent-agents-profile-v1.md");
+const moatSot = read("cpo-moat-approve-gate-v1.md");
+const johnHome = home;
+const johnSettings = settingsPage;
+const johnProfilePage = read("app/(app)/settings/profile/page.tsx");
+const johnProfileForm = read("components/profile-form.tsx");
+const johnProfileApi = read("app/api/profile/route.ts");
+const johnIntentsApi = read("app/api/intents/route.ts");
+const johnOnboardLayout = read("app/onboarding/layout.tsx");
+const johnAgents = agents;
+const johnUsersSchema = schema;
+
+assert(existsSync(join(root, "cpo-john-ux-intent-agents-profile-v1.md")), "CPO John UX SoT committed");
+assert(existsSync(join(root, "cpo-moat-approve-gate-v1.md")), "CPO moat approve-gate SoT committed");
+assert(existsSync(join(root, "cpo-john-intent-templates.md")), "CPO John intent templates SoT committed");
+assert(johnUxSot.includes("`What should BotBuy find?`"), "John UX SoT locks intent H1");
+assert(johnUxSot.includes("`Start search`"), "John UX SoT locks Start search");
+assert(johnUxSot.includes("`Nothing searching yet`"), "John UX SoT locks empty title");
+assert(johnUxSot.includes("Add your email so we can reach you when a deal needs approval."), "John UX SoT locks email soft gate");
+assert(moatSot.includes("Auto-approve OFF"), "moat SoT keeps auto-approve OFF");
+assert(moatSot.includes("Busywork out"), "moat SoT drops busywork");
+assert(moatSot.includes("approve-each-spend KEEP") || moatSot.includes("Approve-each-spend KEEP"), "moat SoT keeps approve gate");
+assert(johnUx.includes('INTENT_H1 = "What should BotBuy find?"'), "intent H1 lock");
+assert(johnUx.includes('INTENT_SUB = "Pick a starter or describe it yourself."'), "intent sub lock");
+assert(johnUx.includes('INTENT_CTA = "Start search"'), "intent CTA lock");
+assert(johnUx.includes('INTENT_TEXTAREA_LABEL = "Describe what you want"'), "describe label lock");
+assert(johnUx.includes('INTENT_HELPERS_LABEL = "Optional details"'), "optional details lock");
+assert(johnUx.includes("Max price") && johnUx.includes("Must include") && johnUx.includes("Avoid"), "helper labels lock");
+assert(johnUx.includes('MY_DEALS_EMPTY_TITLE = "Nothing searching yet"'), "My deals empty title");
+assert(johnUx.includes("BotBuy is searching. Deals show up here."), "My deals progress lock");
+assert(johnUx.includes("Add your email so we can reach you when a deal needs approval."), "email soft gate lock");
+assert(johnUx.includes('PROFILE_TITLE = "Your details"'), "Your details title lock");
+assert(johnIntentPage.includes("INTENT_H1") && johnIntentPage.includes("INTENT_SUB"), "onboarding intent uses locked H1/sub");
+assert(!johnIntentPage.includes("Continue to spend"), "onboarding intent dropped Continue to spend");
+assert(!johnOnboardLayout.includes("/onboarding/spend"), "onboarding layout dropped busywork stepper");
+assert(johnIntentForm.includes("data-surface=\"intent-capture\""), "intent capture surface");
+assert(johnIntentForm.includes("JOHN_INTENT_TEMPLATES"), "intent form loads templates");
+assert(johnIntentForm.includes("INTENT_CTA"), "intent form Start search");
+assert(johnIntentForm.includes("Textarea"), "intent form textarea always available");
+assert(johnIntentForm.includes("startSearch: true"), "Start search creates Searching deal");
+assert(johnIntentsApi.includes("startSearch") && johnIntentsApi.includes("createSearchingDealFromIntent"), "intents API starts search");
+assert(store.includes("createSearchingDealFromIntent"), "store opens Searching from intent");
+assert(store.includes('autoApprove: false'), "store autoApprove stays false");
+assert(johnTemplates.includes('id: "software"') && johnTemplates.includes('id: "domain"'), "templates software-first + domain wedge");
+assert(
+  (johnTemplates.match(/id: "/g) || []).length >= 4 &&
+    (johnTemplates.match(/id: "/g) || []).length <= 6,
+  "4–6 honest starter templates",
+);
+assert(johnTemplatesSot.includes("Software-first"), "templates SoT software-first");
+assert(johnHome.includes("MY_DEALS_EMPTY_TITLE") || johnHome.includes("Nothing searching yet"), "My deals empty title wired");
+assert(johnHome.includes("IntentForm"), "My deals empty has chips + describe");
+assert(johnHome.includes("MY_DEALS_PROGRESS"), "My deals progress line");
+assert(johnHome.includes("APPROVE_MICRO") || johnHome.includes("BotBuy only runs what you approve."), "My deals approve micro");
+assert(johnHome.includes("AUTO_APPROVE_OFF"), "My deals auto-approve OFF");
+assert(johnAgents.includes("AGENTS_INBOX_NOTE"), "agents inbox honesty");
+assert(johnUx.includes("no live agent chat"), "agents no fake chatter");
+assert(johnSettings.includes("PROFILE_TITLE") && johnSettings.includes("ProfileForm"), "Settings Your details");
+assert(johnProfilePage.includes("PROFILE_TITLE") && johnProfilePage.includes("ProfileForm"), "/settings/profile Your details");
+assert(johnProfileForm.includes("PROFILE_CLERK_EMAIL_LABEL") && johnProfileForm.includes("readOnly"), "Clerk email read-only");
+assert(johnProfileForm.includes("PROFILE_NAME_LABEL") && johnProfileForm.includes("PROFILE_NOTIFY_LABEL"), "editable name + notification email");
+assert(johnProfileForm.includes("PROFILE_PHONE_LABEL") && johnProfileForm.includes("PROFILE_COMPANY_LABEL"), "optional phone + company");
+assert(johnProfileApi.includes("updateAppUserProfile"), "profile API persists details");
+assert(middleware.includes("/api/profile"), "middleware protects profile API");
+assert(johnUsersSchema.includes("notificationEmail") && johnUsersSchema.includes("phone"), "users profile columns");
+assert(schema.includes('autoApprove: boolean("auto_approve").notNull().default(false)'), "autoApprove default false after John UX");
+assert(!johnIntentForm.includes("$1,000") && !johnIntentForm.includes("$1000"), "intent form has no $1k gate");
+assert(!johnIntentPage.includes("$1,000") && !johnIntentPage.includes("Hard gate"), "onboarding intent has no $1k gate");
+assert(!goLive.includes("password"), "go-live has no password vault");
+assert(existsSync(join(root, "drizzle/0002_john_ux_profile.sql")), "profile SQL migration committed");
 
 if (failures.length) {
   console.error("craft-smoke FAIL");

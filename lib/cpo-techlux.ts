@@ -64,3 +64,5 @@ export const INSTALLED_START_HREF = "/start" as const;
 /** CPO Usage IA — Settings is the primary customer meter. */
 export const SETTINGS_USAGE_HREF = "/settings#usage" as const;
 export const SETTINGS_USAGE_TITLE = "Usage" as const;
+export const SETTINGS_PROFILE_HREF = "/settings/profile" as const;
+export const SETTINGS_PROFILE_TITLE = "Your details" as const;

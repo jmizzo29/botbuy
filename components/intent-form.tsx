@@ -1,30 +1,53 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   DEFAULT_INTENT_TEMPLATE,
   JOHN_INTENT_TEMPLATES,
 } from "@/lib/intent-templates";
-import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
+import {
+  EMAIL_SOFT_GATE,
+  INTENT_AVOID_LABEL,
+  INTENT_CTA,
+  INTENT_HELPERS_LABEL,
+  INTENT_MAX_PRICE_HINT,
+  INTENT_MAX_PRICE_LABEL,
+  INTENT_MUST_INCLUDE_LABEL,
+  INTENT_TEXTAREA_LABEL,
+  INTENT_TEXTAREA_PLACEHOLDER,
+} from "@/lib/john-ux";
+import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
 
-export function IntentForm() {
+export function IntentForm({
+  emailMissing = false,
+  compact = false,
+  initialSummary = "",
+}: {
+  emailMissing?: boolean;
+  compact?: boolean;
+  initialSummary?: string;
+}) {
   const router = useRouter();
-  const [templateId, setTemplateId] = useState<string>(
-    DEFAULT_INTENT_TEMPLATE.id,
+  const [templateId, setTemplateId] = useState<string | null>(
+    initialSummary ? null : DEFAULT_INTENT_TEMPLATE.id,
   );
-  const [summary, setSummary] = useState<string>(DEFAULT_INTENT_TEMPLATE.summary);
-  const [maxPriceUsd, setMaxPriceUsd] = useState(
-    String(DEFAULT_INTENT_TEMPLATE.maxPriceUsd),
-  );
-  const [categories, setCategories] = useState(
-    DEFAULT_INTENT_TEMPLATE.categories.join(", "),
-  );
+  const [summary, setSummary] = useState(initialSummary);
+  const [maxPriceUsd, setMaxPriceUsd] = useState("");
+  const [mustInclude, setMustInclude] = useState("");
+  const [avoid, setAvoid] = useState("");
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const selected = useMemo(
+    () => JOHN_INTENT_TEMPLATES.find((item) => item.id === templateId),
+    [templateId],
+  );
 
   function applyTemplate(id: string) {
     const template =
@@ -32,24 +55,31 @@ export function IntentForm() {
       DEFAULT_INTENT_TEMPLATE;
     setTemplateId(template.id);
     setSummary(template.summary);
-    setMaxPriceUsd(String(template.maxPriceUsd));
-    setCategories(template.categories.join(", "));
   }
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
+    const nextSummary = summary.trim();
+    if (nextSummary.length < 3) {
+      setError("Describe what you want, or pick a starter.");
+      return;
+    }
     setPending(true);
     setError(null);
+    const categories = selected
+      ? [...selected.categories]
+      : DEFAULT_INTENT_TEMPLATE.categories.slice();
     const response = await fetch("/api/intents", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        summary,
-        maxPriceUsd: Number(maxPriceUsd),
-        categories: categories
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean),
+        summary: nextSummary,
+        categories,
+        maxPriceUsd: maxPriceUsd ? Number(maxPriceUsd) : undefined,
+        mustInclude: mustInclude.trim() || undefined,
+        avoid: avoid.trim() || undefined,
+        templateId: templateId ?? undefined,
+        startSearch: true,
       }),
     });
     setPending(false);
@@ -57,15 +87,15 @@ export function IntentForm() {
       const body = (await response.json().catch(() => null)) as
         | { error?: string }
         | null;
-      setError(body?.error ?? "Could not save intent.");
+      setError(body?.error ?? "Could not start search.");
       return;
     }
-    applyTemplate(DEFAULT_INTENT_TEMPLATE.id);
+    router.push(MY_DEALS_HREF);
     router.refresh();
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-4">
+    <form onSubmit={onSubmit} className="grid gap-5" data-surface="intent-capture">
       <div className="flex flex-wrap gap-2">
         {JOHN_INTENT_TEMPLATES.map((template) => (
           <Button
@@ -76,51 +106,79 @@ export function IntentForm() {
             onClick={() => applyTemplate(template.id)}
           >
             {template.label}
-            {template.primary ? " · default" : ""}
           </Button>
         ))}
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="summary">What should BotBuy buy?</Label>
-        <Input
-          id="summary"
+        <Label htmlFor="intent-summary">{INTENT_TEXTAREA_LABEL}</Label>
+        <Textarea
+          id="intent-summary"
           required
+          minLength={3}
+          maxLength={280}
           value={summary}
-          onChange={(event) => setSummary(event.target.value)}
-          placeholder={DEFAULT_INTENT_TEMPLATE.summary}
+          onChange={(event) => {
+            setSummary(event.target.value);
+            const match = JOHN_INTENT_TEMPLATES.find(
+              (item) => item.summary === event.target.value,
+            );
+            setTemplateId(match?.id ?? null);
+          }}
+          placeholder={INTENT_TEXTAREA_PLACEHOLDER}
         />
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="grid gap-2">
-          <Label htmlFor="max">Max spend (USD)</Label>
-          <Input
-            id="max"
-            type="number"
-            min="1"
-            max={SPEND_HARD_GATE_USD}
-            step="0.01"
-            required
-            value={maxPriceUsd}
-            onChange={(event) => setMaxPriceUsd(event.target.value)}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="cats">Categories</Label>
-          <Input
-            id="cats"
-            value={categories}
-            onChange={(event) => setCategories(event.target.value)}
-            placeholder="software"
-          />
-          <p className="text-xs text-zinc-500">
-            Default category is software. Domains are secondary.
-          </p>
-        </div>
-      </div>
-      {error ? <p className="text-sm text-red-300">{error}</p> : null}
       <div>
-        <Button type="submit" disabled={pending}>
-          {pending ? "Saving…" : "Save intent"}
+        <button
+          type="button"
+          className="text-xs text-muted underline-offset-2 hover:text-foreground hover:underline"
+          onClick={() => setDetailsOpen((open) => !open)}
+          aria-expanded={detailsOpen}
+        >
+          {detailsOpen ? "Hide details" : INTENT_HELPERS_LABEL}
+        </button>
+        {detailsOpen ? (
+          <div className="mt-4 grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="intent-max">{INTENT_MAX_PRICE_LABEL}</Label>
+              <Input
+                id="intent-max"
+                type="number"
+                min="1"
+                step="0.01"
+                value={maxPriceUsd}
+                onChange={(event) => setMaxPriceUsd(event.target.value)}
+                placeholder="Optional"
+              />
+              <p className="text-xs text-muted">{INTENT_MAX_PRICE_HINT}</p>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="intent-include">{INTENT_MUST_INCLUDE_LABEL}</Label>
+              <Input
+                id="intent-include"
+                value={mustInclude}
+                onChange={(event) => setMustInclude(event.target.value)}
+                placeholder="Optional"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="intent-avoid">{INTENT_AVOID_LABEL}</Label>
+              <Input
+                id="intent-avoid"
+                value={avoid}
+                onChange={(event) => setAvoid(event.target.value)}
+                placeholder="Optional"
+              />
+            </div>
+          </div>
+        ) : null}
+      </div>
+      {emailMissing ? (
+        <p className="text-sm leading-relaxed text-muted">{EMAIL_SOFT_GATE}</p>
+      ) : null}
+      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      <div>
+        <Button type="submit" size={compact ? "sm" : "lg"} disabled={pending}>
+          {pending ? "Starting…" : INTENT_CTA}
         </Button>
       </div>
     </form>
