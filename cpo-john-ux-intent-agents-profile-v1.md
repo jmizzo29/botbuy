@@ -35,7 +35,7 @@ Route: `/onboarding/intent` (Clerk after-sign-up). In-app: `/intent`.
 | Helpers trigger | `Optional details` |
 | Helpers | Max price · Must include · Avoid |
 
-- Template chips: software-first; domains are a wedge. Load from `JOHN_INTENT_TEMPLATES` (4–6 honest starters).
+- Template chips: category-agnostic (Anything, Car, House, plus software/domain/catalog scaffolds). Consumer products are in scope via Anything / free text — not a new wedge. Load from `JOHN_INTENT_TEMPLATES` (4–6 honest starters).
 - Free-text textarea is always available. A chip fills it; the buyer can edit.
 - Helpers stay collapsed. Max price is optional — do not prefill or label a public $1,000 gate.
 - `Start search` saves the intent, opens a **Searching** deal, and goes to **My deals** (`/home`).
@@ -82,7 +82,7 @@ Settings → **Your details**. Also `/settings/profile`.
 ## Eng acceptance
 
 1. `/onboarding/intent` H1 is `What should BotBuyer find?` and sub is `Pick a starter or describe it yourself.`
-2. Four to six software-first template chips load from `JOHN_INTENT_TEMPLATES`.
+2. Four to six category-agnostic template chips load from `JOHN_INTENT_TEMPLATES`.
 3. Textarea `Describe what you want` is always visible.
 4. Optional collapsed helpers: max price / must include / avoid.
 5. CTA `Start search` creates a Searching deal and lands on `/home`.

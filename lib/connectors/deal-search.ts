@@ -88,10 +88,30 @@ function firstCandidateProduct(result: ConnectorToolResult): string | null {
     if (!Array.isArray(pool)) continue;
     for (const row of pool) {
       if (!row || typeof row !== "object") continue;
-      const record = row as { title?: unknown; handle?: unknown; sku?: unknown };
+      const record = row as {
+        title?: unknown;
+        handle?: unknown;
+        sku?: unknown;
+        listingId?: unknown;
+        vin?: unknown;
+        address?: unknown;
+        make?: unknown;
+        model?: unknown;
+      };
       if (typeof record.title === "string" && record.title) return record.title;
       if (typeof record.handle === "string" && record.handle) return record.handle;
       if (typeof record.sku === "string" && record.sku) return record.sku;
+      if (typeof record.listingId === "string" && record.listingId) {
+        return record.listingId;
+      }
+      if (typeof record.vin === "string" && record.vin) return record.vin;
+      if (typeof record.address === "string" && record.address) {
+        return record.address;
+      }
+      const vehicle = [record.make, record.model]
+        .filter((item): item is string => typeof item === "string" && Boolean(item))
+        .join(" ");
+      if (vehicle) return vehicle;
     }
   }
   if (typeof data.query === "string" && data.query) return data.query;
@@ -213,6 +233,9 @@ export async function applyDealSearchPipeline(input: {
         result: searchResult.result,
         reason: searchResult.reason,
         query: route.query || route.domain || "",
+        category: route.category,
+        accepted: route.accepted,
+        keysConfigured: searchResult.data?.keysConfigured ?? null,
         available: searchResult.data?.available ?? null,
         candidates: Array.isArray(searchResult.data?.candidates)
           ? (searchResult.data?.candidates as unknown[]).length
@@ -226,6 +249,9 @@ export async function applyDealSearchPipeline(input: {
         result: "stub",
         reason: route.reason,
         query: route.query,
+        category: route.category,
+        accepted: route.accepted,
+        keysConfigured: false,
         available: null,
         candidates: 0,
         amountStatus: "unverified",
@@ -253,8 +279,8 @@ export async function applyDealSearchPipeline(input: {
   appendSearchNote(
     deal,
     route.provider
-      ? `Connector search · ${searchResult?.provider} · ${searchResult?.result ?? "stub"} · live:false · amountStatus=unverified.`
-      : `Search stub · no mapped official-API connector · live:false · no invented results. ${CONNECTOR_TECH_LOCK_NOTE}`,
+      ? `Connector search · ${searchResult?.provider} · ${searchResult?.result ?? "stub"} · category=${route.category} · accepted=true · live:false · amountStatus=unverified.`
+      : `Search stub · category=${route.category} · accepted=true · no mapped official-API connector · live:false · no invented results. ${CONNECTOR_TECH_LOCK_NOTE}`,
   );
 
   if (!searchResult) {

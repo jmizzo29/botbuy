@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +18,11 @@ type PrepResponse = {
   prepared?: boolean;
   sessionCreated?: boolean;
   keysConfigured?: boolean;
+  publishableConfigured?: boolean;
+  webhookConfigured?: boolean;
   trail?: string;
+  amountCents?: number | null;
+  amountVerified?: boolean;
   reason?: string;
   error?: string;
 };
@@ -33,11 +37,26 @@ export function AuthorizedBuyPrep({
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<PrepResponse | null>(null);
 
+  useEffect(() => {
+    if (status !== "Buying") return;
+    let cancelled = false;
+    fetch(`/api/deals/${dealId}/authorized-buy`)
+      .then((response) => response.json().catch(() => null))
+      .then((body) => {
+        if (!cancelled && body) setResult(body as PrepResponse);
+      })
+      .catch(() => {
+        /* fail-closed UI stays on the note */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [dealId, status]);
+
   if (status !== "Buying") return null;
 
   async function prepare() {
     setPending(true);
-    setResult(null);
     const response = await fetch(`/api/deals/${dealId}/authorized-buy`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -65,7 +84,7 @@ export function AuthorizedBuyPrep({
         {pending ? "Preparing…" : "Prepare Checkout Session"}
       </Button>
       {result ? (
-        <dl className="space-y-1 text-xs leading-relaxed text-muted">
+        <dl className="space-y-1 text-xs leading-relaxed text-muted" data-surface="authorized-buy-status">
           <Row label="live" value={String(result.live ?? false)} />
           <Row label="charged" value={String(result.charged ?? false)} />
           <Row label="prepared" value={String(result.prepared ?? false)} />
@@ -77,7 +96,23 @@ export function AuthorizedBuyPrep({
             label="keysConfigured"
             value={String(result.keysConfigured ?? false)}
           />
+          <Row
+            label="publishableConfigured"
+            value={String(result.publishableConfigured ?? false)}
+          />
+          <Row
+            label="webhookConfigured"
+            value={String(result.webhookConfigured ?? false)}
+          />
           <Row label="trail" value={result.trail ?? "missing"} />
+          <Row
+            label="amountCents"
+            value={result.amountCents == null ? "null" : String(result.amountCents)}
+          />
+          <Row
+            label="amountVerified"
+            value={String(result.amountVerified ?? false)}
+          />
           <Row
             label="reason"
             value={result.reason ?? result.error ?? AUTHORIZED_BUY_NOTE}

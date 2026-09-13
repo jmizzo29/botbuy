@@ -64,6 +64,12 @@ assert(vaultApi.includes("authorizedBuyVaultStatus"), "vault API uses honesty he
 assert(vaultRails.includes("We don’t hold a balance."), "vault stays non-custody");
 assert(vaultRails.includes("VAULT_AUTHORIZED_BUY_NOTE"), "vault rails authorized-buy note");
 assert(vaultPage.includes("VAULT_AUTHORIZED_BUY_NOTE"), "vault page authorized-buy note");
+assert(vaultPage.includes("authorizedBuyVaultStatus"), "vault page prints key smoke");
+assert(vaultPage.includes("keysConfigured"), "vault page shows keysConfigured");
+assert(prepUi.includes("publishableConfigured"), "prep UI shows publishable status");
+assert(prepUi.includes("amountCents"), "prep UI shows amount honesty");
+assert(rails.includes("authorizedBuyPrepEventId"), "prep persists deal event");
+assert(dealApi.includes("amountToCents"), "GET authorized-buy reports deal amountCents");
 assert(!vaultPage.toLowerCase().includes("balance"), "vault page file has no balance");
 assert(!vaultPage.includes("Fund your vault"), "vault page has no Fund your vault");
 assert(dealPage.includes("AuthorizedBuyPrep"), "Buying deal shows prep");

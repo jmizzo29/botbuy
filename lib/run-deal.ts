@@ -1,5 +1,9 @@
 import { SEED_OWNER } from "@/lib/auth-owner";
 import { isPublicProofEligible, isVerifiedAmount } from "@/lib/deal-ui";
+import {
+  inferIntentCategories,
+  primaryDealCategory,
+} from "@/lib/intent-categories";
 import type { Deal, DealEvent, Intent } from "@/lib/types";
 
 /** Stable go-live deal. Random deal_run_<uuid> IDs 404 after a new isolate. */
@@ -28,7 +32,7 @@ export function buildRunSearchingDeal(input: {
     id,
     userId: input.userId ?? SEED_OWNER.id,
     title: input.title.slice(0, 80) || "First BotBuyer search",
-    category: input.category || "software",
+    category: primaryDealCategory(input.category ? [input.category] : []),
     marketplace: "any_channel",
     status: "Searching",
     priceUsd: 0,
@@ -83,7 +87,14 @@ export function runDealFromIntent(
     id,
     userId: userId ?? intent?.userId ?? SEED_OWNER.id,
     title: intent?.summary?.slice(0, 80) || "First BotBuyer search",
-    category: intent?.categories[0] ?? "software",
+    category: primaryDealCategory(
+      inferIntentCategories({
+        summary: intent?.summary,
+        mustInclude: intent?.mustInclude,
+        avoid: intent?.avoid,
+        explicit: intent?.categories,
+      }),
+    ),
     intentSummary: intent?.summary ?? null,
   });
   if (extras) {

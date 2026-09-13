@@ -1,5 +1,16 @@
 /** Map an intent onto a connector search. Official APIs only. No invented matches. */
 
+import {
+  DOMAIN_CATEGORIES,
+  HTTP_JSON_CATEGORIES,
+  PHONE_CATEGORIES,
+  SOFTWARE_CATEGORIES,
+  inferIntentCategories,
+  isConsumerCategory,
+  isPropertyCategory,
+  isVehicleCategory,
+  primaryDealCategory,
+} from "@/lib/intent-categories";
 import { providerSupportsTool } from "./registry";
 import { CONNECTOR_TECH_LOCK_NOTE } from "./tech-lock";
 import type { ConnectorProvider } from "./types";
@@ -18,35 +29,19 @@ export interface IntentSearchRoute {
   query: string;
   domain: string | null;
   country: string;
+  category: string;
+  accepted: true;
   reason: string;
 }
-
-const DOMAIN_CATEGORIES = new Set(["domain", "domains", "registrar"]);
-const PHONE_CATEGORIES = new Set([
-  "phone",
-  "sms",
-  "number",
-  "numbers",
-  "twilio",
-]);
-const MERCHANT_CATEGORIES = new Set([
-  "software",
-  "saas",
-  "merchant",
-  "shopify",
-  "shop",
-  "store",
-  "license",
-]);
-const HTTP_JSON_CATEGORIES = new Set(["http_json", "http", "json", "api"]);
 
 const FQDN_RE =
   /\b(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+(?:[a-z]{2,24})\b/gi;
 const DOMAIN_WORD_RE = /\b(domains?|registrar|tld|whois)\b/i;
 const PHONE_WORD_RE = /\b(phone|sms|twilio|did|text(?:ing)?)\b/i;
-const MERCHANT_WORD_RE =
-  /\b(software|saas|shopify|checkout|license|storefront|merchant)\b/i;
-const HTTP_JSON_WORD_RE = /\b(http json|openapi|official api|json api)\b/i;
+const SOFTWARE_WORD_RE =
+  /\b(software|saas|shopify|license|storefront)\b/i;
+const HTTP_JSON_WORD_RE =
+  /\b(http json|openapi|official api|json api|official catalog)\b/i;
 const COUNTRY_RE =
   /\b(US|USA|United States|GB|UK|CA|Canada|AU|Australia)\b/i;
 
@@ -96,10 +91,14 @@ export function routeIntentToSearch(input: {
   avoid?: string | null;
   category?: string | null;
 }): IntentSearchRoute {
-  const categories = (input.categories ?? [])
-    .concat(input.category ? [input.category] : [])
-    .map((item) => item.trim().toLowerCase())
-    .filter(Boolean);
+  const categories = inferIntentCategories({
+    summary: input.summary,
+    mustInclude: input.mustInclude,
+    avoid: input.avoid,
+    explicit: input.categories,
+    category: input.category,
+  });
+  const category = primaryDealCategory(categories);
   const text = [input.summary, input.mustInclude, input.avoid]
     .filter(Boolean)
     .join(" ");
@@ -109,12 +108,15 @@ export function routeIntentToSearch(input: {
   const phoneish =
     categories.some((item) => PHONE_CATEGORIES.has(item)) ||
     PHONE_WORD_RE.test(text);
-  const merchantish =
-    categories.some((item) => MERCHANT_CATEGORIES.has(item)) ||
-    MERCHANT_WORD_RE.test(text);
+  const softwareish =
+    categories.some((item) => SOFTWARE_CATEGORIES.has(item)) ||
+    SOFTWARE_WORD_RE.test(text);
   const httpJsonish =
     categories.some((item) => HTTP_JSON_CATEGORIES.has(item)) ||
     HTTP_JSON_WORD_RE.test(text);
+  const vehicleOrProperty =
+    categories.some((item) => isVehicleCategory(item) || isPropertyCategory(item));
+  const consumerish = categories.some((item) => isConsumerCategory(item));
 
   if (domainish && (!phoneish || domain || domainCategory)) {
     const provider = officialSearchProvider("namecheap");
@@ -125,6 +127,8 @@ export function routeIntentToSearch(input: {
         query: domain ?? "",
         domain,
         country: "US",
+        category,
+        accepted: true,
         reason: domain
           ? "Domain candidate mapped to Namecheap official API search."
           : "Domain-ish intent mapped to Namecheap official API search.",
@@ -141,12 +145,15 @@ export function routeIntentToSearch(input: {
         query: extractPhoneQuery(text),
         domain: null,
         country: extractCountry(text),
+        category,
+        accepted: true,
         reason: "Phone/SMS/number-ish intent mapped to Twilio official API search.",
       };
     }
   }
 
-  if (merchantish) {
+  /** Cars/houses/consumer products never wedge onto the software Shopify scaffold. */
+  if (softwareish && !vehicleOrProperty && !consumerish) {
     const provider = officialSearchProvider("shopify");
     if (provider) {
       return {
@@ -155,7 +162,9 @@ export function routeIntentToSearch(input: {
         query: (input.summary ?? "").trim(),
         domain: null,
         country: "US",
-        reason: `Software/merchant intent mapped to Shopify Admin API search via MCP registry. ${CONNECTOR_TECH_LOCK_NOTE}`,
+        category,
+        accepted: true,
+        reason: `Software scaffold mapped to Shopify Admin API search via MCP registry. Other categories stay accepted. ${CONNECTOR_TECH_LOCK_NOTE}`,
       };
     }
   }
@@ -169,7 +178,9 @@ export function routeIntentToSearch(input: {
         query: (input.summary ?? "").trim(),
         domain: null,
         country: "US",
-        reason: `HTTP/JSON intent mapped to official HTTPS JSON search via MCP registry. ${CONNECTOR_TECH_LOCK_NOTE}`,
+        category,
+        accepted: true,
+        reason: `Official HTTPS JSON catalog search via MCP registry. Category-agnostic. ${CONNECTOR_TECH_LOCK_NOTE}`,
       };
     }
   }
@@ -180,7 +191,9 @@ export function routeIntentToSearch(input: {
     query: (input.summary ?? "").trim(),
     domain: null,
     country: "US",
-    reason: `No mapped official-API connector. Honest search stub. ${CONNECTOR_TECH_LOCK_NOTE}`,
+    category,
+    accepted: true,
+    reason: `Category accepted (${category}). No mapped official-API connector yet. Honest search stub — not rejected. ${CONNECTOR_TECH_LOCK_NOTE}`,
   };
 }
 
@@ -193,5 +206,6 @@ export function connectorResultHasCandidates(
   if (Array.isArray(data.candidates) && data.candidates.length > 0) return true;
   if (Array.isArray(data.products) && data.products.length > 0) return true;
   if (Array.isArray(data.results) && data.results.length > 0) return true;
+  if (Array.isArray(data.listings) && data.listings.length > 0) return true;
   return false;
 }

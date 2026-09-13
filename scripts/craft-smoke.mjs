@@ -1358,13 +1358,22 @@ assert(johnIntentsApi.includes("startSearch") && johnIntentsApi.includes("create
 assert(store.includes("createSearchingDealFromIntent"), "store opens Searching from intent");
 assert(store.includes("thickenEngineDealSearch") && store.includes("applyDealSearchPipeline"), "intent/run deals thicken connector search");
 assert(store.includes('autoApprove: false'), "store autoApprove stays false");
-assert(johnTemplates.includes('id: "software"') && johnTemplates.includes('id: "domain"'), "templates software-first + domain wedge");
+assert(johnTemplates.includes('id: "software"') && johnTemplates.includes('id: "domain"'), "templates keep software + domain scaffolds");
+assert(
+  johnTemplates.includes('id: "car"') &&
+    johnTemplates.includes('id: "house"') &&
+    johnTemplates.includes('id: "anything"'),
+  "templates include car + house + anything",
+);
 assert(
   (johnTemplates.match(/id: "/g) || []).length >= 4 &&
     (johnTemplates.match(/id: "/g) || []).length <= 6,
   "4–6 honest starter templates",
 );
-assert(johnTemplatesSot.includes("Software-first"), "templates SoT software-first");
+assert(
+  johnTemplatesSot.includes("category-agnostic") || johnTemplatesSot.includes("Cars + houses"),
+  "templates SoT category-agnostic",
+);
 assert(johnHome.includes("MY_DEALS_EMPTY_TITLE") || johnHome.includes("Nothing searching yet"), "My deals empty title wired");
 assert(johnHome.includes("IntentForm"), "My deals empty has chips + describe");
 assert(johnHome.includes("MY_DEALS_PROGRESS"), "My deals progress line");

@@ -1,6 +1,7 @@
 # CPO John intent templates v1
 
-Software-first. Domains are a wedge, not the product.
+John LOCK 2026-09-13: **category-agnostic**. Cars + houses + consumer products + broader.
+Software / domain / official catalog remain scaffolds — not the product.
 
 Runtime source: `lib/intent-templates.ts` (`JOHN_INTENT_TEMPLATES`).
 IA: `cpo-john-ux-intent-agents-profile-v1.md`.
@@ -9,11 +10,12 @@ Chips are honest starters — they fill the describe box. The buyer can edit or 
 
 | id | Label | Categories | Notes |
 | --- | --- | --- | --- |
-| `software` | Software | software | Default |
-| `saas_tool` | SaaS tool | software | Checkout we can approve |
-| `software_license` | Software license | software | Keep / license store |
-| `software_domain` | Software + domain | software, domain | Wedge |
-| `team_software` | Team software | software | Seats |
-| `domain` | Domain | domain | Secondary wedge |
+| `anything` | Anything | (inferred) | Default |
+| `car` | Car | vehicle | Explicit John lock |
+| `house` | House | property | Explicit John lock |
+| `software` | Software | software | Scaffold |
+| `domain` | Domain | domain | Scaffold |
+| `official_catalog` | Official catalog | http_json | Official HTTPS JSON |
 
-Do not invent merchant allowlists. Do not present domains-only as the default.
+Do not invent merchant allowlists. Do not present software-only or domains-only as the default.
+Do not reject cars, houses, or other categories.

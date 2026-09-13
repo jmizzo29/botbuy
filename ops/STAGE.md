@@ -13,6 +13,11 @@ Stage mirrors current prod brand: soft-spine logo + BotBuyer. `x-robots-tag: noi
 
 **CPO Approve walk (stage only):** Add **`qa-needs-you`** to the intent (or open `/intent?fixture=1`, or Start search on `VERCEL_ENV=preview`). Empty connector stubs then attach an unverified fixture candidate and move Searching → Needs you. Fixture/stub — not a live purchase. Auto-approve OFF. Production / main refuses this path.
 
+**CPO/CHO next smoke (category-agnostic + vault/Link):**
+1. `/intent` — starters include **Anything / Car / House / Software / Domain / Official catalog**. Start search for a car, house, or a consumer product (no `qa-needs-you`). My deals stays **Searching** with `category=vehicle|property|product|general` · `accepted=true` · `live:false` · no invented results. Not rejected. Not mapped to Shopify.
+2. Official catalog starter (or intent text with “official JSON API”) → deal timeline **Connector search · http_json · stub · keysConfigured=false**.
+3. Car/House (or Anything) + **`qa-needs-you`** → Needs you → Approve → Buying. Deal detail **Prepare Checkout Session**. Without `BOTBUY_STRIPE_*`: `keysConfigured=false` · `prepared=false` · `sessionCreated=false` · `charged=false` · `live:false`. `/vault` shows the same key smoke. Auto-approve OFF.
+
 ## Workflow
 1. Land / marketing UI PRs target **`staging`** (not `main`).
 2. Designer QA against **stage URL**.

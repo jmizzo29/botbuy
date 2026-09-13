@@ -20,7 +20,9 @@ This scaffold **prepares** Checkout Session params. It does not create a Stripe 
 - `GET /api/deals/[id]/authorized-buy` — deal + trail + key status. Does not prepare.
 - `POST /api/deals/[id]/authorized-buy` — Checkout Session prep after Approve. 409 without the trail.
 
-Deal detail shows **Prepare Checkout Session** only in **Buying**.
+Deal detail shows **Prepare Checkout Session** only in **Buying**. GET loads honesty (`keysConfigured`, `publishableConfigured`, `webhookConfigured`, `amountCents`, `amountVerified`) before POST. POST appends a `Checkout Session prep` deal event. Vault `/vault` prints the same key status.
+
+Zero-amount / unverified deals stay fail-closed: `prepared: false`, `sessionCreated: false`, `charged: false`, `live: false`. Do not invent verified amounts. When `BOTBUY_STRIPE_SECRET_KEY` appears later, GET/POST flip `keysConfigured` and may prepare params — still not live pay.
 
 ## Env vars (names only)
 

@@ -196,15 +196,25 @@ function evaluateIntentRoute({ summary = "", categories = [], mustInclude = "" }
   const phoneish =
     categories.some((item) => ["phone", "sms", "number", "numbers", "twilio"].includes(item)) ||
     /\b(phone|sms|twilio|did|text(?:ing)?)\b/i.test(text);
-  const merchantish =
-    categories.some((item) => ["software", "saas", "merchant", "shopify", "shop", "store", "license"].includes(item)) ||
-    /\b(software|saas|shopify|checkout|license|storefront|merchant)\b/i.test(text);
+  const softwareish =
+    categories.some((item) => ["software", "saas", "shopify", "license"].includes(item)) ||
+    /\b(software|saas|shopify|license|storefront)\b/i.test(text);
   const httpJsonish =
-    categories.some((item) => ["http_json", "http", "json", "api"].includes(item)) ||
-    /\b(http json|openapi|official api|json api)\b/i.test(text);
+    categories.some((item) => ["http_json", "http", "json", "api", "catalog"].includes(item)) ||
+    /\b(http json|openapi|official api|json api|official catalog)\b/i.test(text);
+  const vehicleOrProperty =
+    categories.some((item) =>
+      ["vehicle", "car", "cars", "property", "house", "houses"].includes(item),
+    ) ||
+    /\b(cars?|houses?|vehicles?|real estate)\b/i.test(text);
+  const consumerish =
+    categories.some((item) =>
+      ["product", "products", "consumer", "goods", "retail"].includes(item),
+    ) ||
+    /\b(consumer products?|household|appliances?)\b/i.test(text);
   if (domainish) return "namecheap";
   if (phoneish) return "twilio";
-  if (merchantish) return "shopify";
+  if (softwareish && !vehicleOrProperty && !consumerish) return "shopify";
   if (httpJsonish) return "http_json";
   return "stub";
 }
@@ -245,6 +255,34 @@ assert(
   "unmapped intent stays an honest stub",
 );
 assert(
+  evaluateIntentRoute({
+    summary: "Find a used Honda Civic in Austin.",
+    categories: ["vehicle"],
+  }) === "stub",
+  "car intent stays an accepted stub",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Find a 3-bed house in Denver.",
+    categories: ["property"],
+  }) === "stub",
+  "house intent stays an accepted stub",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Find a car at a shop near Austin.",
+    categories: ["vehicle"],
+  }) === "stub",
+  "vehicle wording does not wedge onto Shopify",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Find household appliances for the kitchen.",
+    categories: ["product"],
+  }) === "stub",
+  "consumer products stay an accepted stub",
+);
+assert(
   !evaluateSpendGate({
     tool: "buy",
     autoApproveAllowed: false,
@@ -270,6 +308,11 @@ assert(techLock.includes("landPromote: false"), "tech lock land promote HOLD");
 assert(gate.includes("Designated-holder Approve sheet"), "gate names designated-holder Approve sheet");
 const intentRouteSrc = readFileSync(join(root, "lib/connectors/intent-route.ts"), "utf8");
 assert(!/puppeteer|playwright|selenium/i.test(intentRouteSrc), "intent route has no browser farm");
+assert(intentRouteSrc.includes("vehicleOrProperty"), "intent route refuses software wedge for cars/houses");
+assert(intentRouteSrc.includes("consumerish"), "intent route refuses software wedge for consumer products");
+assert(intentRouteSrc.includes("accepted: true"), "intent route never rejects a category");
+const categoriesSrc = readFileSync(join(root, "lib/intent-categories.ts"), "utf8");
+assert(categoriesSrc.includes("DEFAULT_DEAL_CATEGORY"), "deal category default is general, not software");
 
 const mapped = spawnSync(
   process.execPath,
@@ -308,6 +351,9 @@ assert(approveUi.includes('status !== "Needs you"'), "Approve sheet still Needs 
 const httpSearch = readFileSync(join(root, "lib/connectors/http-json/search.ts"), "utf8");
 assert(httpSearch.includes("parseHttpJsonCandidates"), "HTTP JSON search maps JSON rows");
 assert(httpSearch.includes("candidates"), "HTTP JSON search exposes candidates");
+assert(httpSearch.includes("keysConfigured"), "HTTP JSON stub reports keysConfigured");
+assert(httpSearch.includes("categoryAgnostic"), "HTTP JSON catalog is category-agnostic");
+assert(httpSearch.includes("vin") && httpSearch.includes("address"), "HTTP JSON parses listing fields");
 
 const pipeline = spawnSync(
   process.execPath,
@@ -339,7 +385,7 @@ console.log(" - AES-256-GCM roundtrip");
 console.log(" - approve gate Needs you → Buying · auto-approve OFF");
 console.log(" - register/buy fail closed without deal, auto-approve, or approve trail");
 console.log(" - M2 registry: shopify + http_json · live:false · spend gated");
-console.log(" - intent maps domain→Namecheap, phone→Twilio, software→Shopify, HTTP JSON, else official stub");
+console.log(" - intent maps domain→Namecheap, phone→Twilio, software→Shopify, HTTP JSON; cars/houses stay accepted stubs");
 console.log(" - deal search pipeline is search/quote only · MCP-first · no browser farms");
 console.log(" - candidates attach structured handoff · Searching → Found → Needs you");
 console.log(" - stage fixture Searching → Needs you for non-seed user · production refused");
