@@ -31,6 +31,7 @@ assert(gate.includes("assertAuthorizedBuyAllowed"), "approve-gate exports author
 assert(gate.includes('fromStatus === "Needs you"'), "gate requires Needs you");
 assert(gate.includes('toStatus === "Buying"'), "gate requires Buying");
 assert(gate.includes("Auto-approve is OFF"), "gate auto-approve OFF");
+assert(gate.includes("Designated-holder Approve sheet"), "gate designated-holder Approve sheet");
 assert(!gate.includes("autoApprove: true"), "gate never enables auto-approve");
 
 assert(rails.includes("BOTBUY_STRIPE_SECRET_KEY"), "dedicated secret env");

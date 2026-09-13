@@ -38,7 +38,7 @@ export interface SearchActHandoff {
 }
 
 export const HUMAN_REVIEW_BLOCKER =
-  "Human approve required. Auto-approve OFF." as const;
+  "Designated-holder Approve sheet required. Auto-approve OFF." as const;
 
 export const SEARCH_ACT_HOLD_NOTE =
   `Candidates attached · Needs you · human review · not bought · auto-approve OFF. ${CONNECTOR_TECH_LOCK_NOTE}` as const;

@@ -265,6 +265,9 @@ const techLock = readFileSync(join(root, "lib/connectors/tech-lock.ts"), "utf8")
 assert(techLock.includes("mcpFirst: true") && techLock.includes("apisFirst: true"), "tech lock is MCP-first · APIs-first");
 assert(techLock.includes("captchaFarms: false") && techLock.includes("htmlLoginAutomation: false"), "tech lock forbids captcha/HTML login");
 assert(techLock.includes("autoApprove: false") && techLock.includes("hold: \"soft\""), "tech lock auto-approve OFF · Soft HOLD");
+assert(techLock.includes("designatedHolderApprove: true"), "tech lock designated-holder approve");
+assert(techLock.includes("landPromote: false"), "tech lock land promote HOLD");
+assert(gate.includes("Designated-holder Approve sheet"), "gate names designated-holder Approve sheet");
 const intentRouteSrc = readFileSync(join(root, "lib/connectors/intent-route.ts"), "utf8");
 assert(!/puppeteer|playwright|selenium/i.test(intentRouteSrc), "intent route has no browser farm");
 

@@ -1472,6 +1472,9 @@ assert(existsSync(join(root, "lib/connectors/deal-search.ts")), "deal search pip
 assert(intentRoute.includes("namecheap") && intentRoute.includes("twilio") && intentRoute.includes("shopify") && intentRoute.includes("http_json") && intentRoute.includes("stub"), "mapper covers domain/phone/shopify/http_json/stub");
 assert(existsSync(join(root, "lib/connectors/tech-lock.ts")), "M1 tech lock committed");
 assert(read("lib/connectors/tech-lock.ts").includes("MCP-first"), "tech lock names MCP-first");
+assert(read("lib/connectors/tech-lock.ts").includes("designatedHolderApprove: true"), "tech lock designated-holder");
+assert(read("lib/connectors/tech-lock.ts").includes("landPromote: false"), "tech lock never promotes land");
+assert(approveGate.includes("Designated-holder Approve sheet"), "approve gate designated-holder");
 assert(connectDocs.includes("captcha farms") && connectDocs.includes("HTML login"), "POC docs lock no captcha/HTML login");
 assert(!/puppeteer|playwright|selenium/i.test(dealSearch), "pipeline adds no browser farm");
 assert(dealSearch.includes("invokeConnectorTool"), "pipeline uses connector tools");

@@ -28,7 +28,8 @@ export function dealHasHumanApprove(
 }
 
 /**
- * Fail-closed spend gate. Auto-approve is OFF.
+ * Fail-closed spend gate. Designated-holder Approve sheet only.
+ * Auto-approve is OFF always — spend limits cannot flip it on.
  * Search/quote may run without a deal. Register/buy require the existing
  * human Approve sheet trail: Needs you → Buying.
  */
@@ -47,7 +48,7 @@ export function assertConnectorSpendAllowed(input: {
 
   if (autoApproveAllowed()) {
     throw new ConnectorError(
-      "Auto-approve is OFF. Fail-closed.",
+      "Auto-approve is OFF. Designated-holder Approve sheet required. Fail-closed.",
       "approve",
     );
   }
@@ -55,14 +56,14 @@ export function assertConnectorSpendAllowed(input: {
   const limits = getSpendLimits(input.userId);
   if (limits.autoApprove) {
     throw new ConnectorError(
-      "Auto-approve is OFF. Spend limits cannot flip it on. Fail-closed.",
+      "Auto-approve is OFF. Spend limits cannot flip it on. Designated-holder Approve sheet required. Fail-closed.",
       "approve",
     );
   }
 
   if (!input.dealId) {
     throw new ConnectorError(
-      "A deal id is required before register or buy. Approve the deal first. Fail-closed.",
+      "A deal id is required before register or buy. Designated-holder Approve sheet required. Fail-closed.",
       "approve",
     );
   }
@@ -74,14 +75,14 @@ export function assertConnectorSpendAllowed(input: {
 
   if (deal.status !== "Buying") {
     throw new ConnectorError(
-      "Human approve required before register or buy. Deal must be Buying after Needs you. Auto-approve OFF. Fail-closed.",
+      "Designated-holder Approve sheet required before register or buy. Deal must be Buying after Needs you. Auto-approve OFF. Fail-closed.",
       "approve",
     );
   }
 
   if (!dealHasHumanApprove(deal)) {
     throw new ConnectorError(
-      "Missing Needs you → Buying approve event. Existing Approve sheet is required. Auto-approve OFF. Fail-closed.",
+      "Missing Needs you → Buying approve event. Designated-holder Approve sheet required. Auto-approve OFF. Fail-closed.",
       "approve",
     );
   }
@@ -91,8 +92,8 @@ export function assertConnectorSpendAllowed(input: {
 
 /**
  * Fail-closed authorized-buy / Checkout Session prep gate.
- * Same human trail as connector spend: Needs you → Buying.
- * Auto-approve stays OFF. Does not charge.
+ * Same designated-holder trail as connector spend: Needs you → Buying.
+ * Auto-approve stays OFF always. Does not charge.
  */
 export function assertAuthorizedBuyAllowed(input: {
   userId: string;
@@ -100,7 +101,7 @@ export function assertAuthorizedBuyAllowed(input: {
 }): { ok: true; deal: Deal } {
   if (autoApproveAllowed()) {
     throw new ConnectorError(
-      "Auto-approve is OFF. Checkout Session prep is fail-closed.",
+      "Auto-approve is OFF. Designated-holder Approve sheet required. Checkout Session prep is fail-closed.",
       "approve",
     );
   }
@@ -108,14 +109,14 @@ export function assertAuthorizedBuyAllowed(input: {
   const limits = getSpendLimits(input.userId);
   if (limits.autoApprove) {
     throw new ConnectorError(
-      "Auto-approve is OFF. Spend limits cannot flip it on. Fail-closed.",
+      "Auto-approve is OFF. Spend limits cannot flip it on. Designated-holder Approve sheet required. Fail-closed.",
       "approve",
     );
   }
 
   if (!input.dealId) {
     throw new ConnectorError(
-      "A deal id is required before Checkout Session prep. Approve the deal first. Fail-closed.",
+      "A deal id is required before Checkout Session prep. Designated-holder Approve sheet required. Fail-closed.",
       "approve",
     );
   }
@@ -127,14 +128,14 @@ export function assertAuthorizedBuyAllowed(input: {
 
   if (deal.status !== "Buying") {
     throw new ConnectorError(
-      "Human approve required before Checkout Session prep. Deal must be Buying after Needs you. Auto-approve OFF. Fail-closed.",
+      "Designated-holder Approve sheet required before Checkout Session prep. Deal must be Buying after Needs you. Auto-approve OFF. Fail-closed.",
       "approve",
     );
   }
 
   if (!dealHasHumanApprove(deal)) {
     throw new ConnectorError(
-      "Missing Needs you → Buying approve event. Existing Approve sheet is required. Auto-approve OFF. Fail-closed.",
+      "Missing Needs you → Buying approve event. Designated-holder Approve sheet required. Auto-approve OFF. Fail-closed.",
       "approve",
     );
   }
