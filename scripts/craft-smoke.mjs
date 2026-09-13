@@ -1489,13 +1489,25 @@ assert(dealSearch.includes("live: false") || dealSearch.includes("live:false"), 
 assert(dealSearch.includes('transitionDeal(deal.id, "Found"'), "candidates advance Searching → Found");
 assert(dealSearch.includes('transitionDeal(found.id, "Needs you"'), "candidates then move Found → Needs you");
 assert(dealSearch.includes("applySearchActHandoff"), "search act handoff is wired");
+assert(dealSearch.includes("applyStageSearchFixtureHandoff"), "stage fixture handoff is wired");
+assert(dealSearch.includes("isStageSearchFixtureEnabled"), "stage fixture is gated");
 assert(existsSync(join(root, "lib/connectors/search-handoff.ts")), "structured candidate handoff module");
+assert(existsSync(join(root, "lib/connectors/stage-search-fixture.ts")), "stage search fixture module");
+assert(existsSync(join(root, "scripts/stage-search-fixture-smoke.mts")), "stage fixture smoke for non-seed user");
 assert(existsSync(join(root, "components/deal-candidates.tsx")), "deal candidates card");
+const stageFixture = read("lib/connectors/stage-search-fixture.ts");
+assert(stageFixture.includes("qa-needs-you"), "stage fixture token qa-needs-you");
+assert(stageFixture.includes("isProductionSearchEnv"), "stage fixture refuses production/main");
+assert(stageFixture.includes('VERCEL_ENV') && stageFixture.includes("preview"), "preview enables stage fixture");
+assert(!stageFixture.includes("priceVerified: true"), "stage fixture invents no verified prices");
+assert(johnIntentForm.includes("stageFixture"), "intent form accepts stage fixture toggle");
+assert(johnIntentForm.includes("STAGE_SEARCH_FIXTURE_TOKEN"), "intent form sends qa-needs-you when ?fixture=1");
 assert(dealDetail.includes("DealCandidates"), "deal detail renders candidates");
 assert(!dealSearch.includes("tool: \"register\"") && !dealSearch.includes("tool: \"buy\""), "pipeline never auto-buys");
 assert(!dealSearch.includes("autoApprove: true"), "pipeline never enables auto-approve");
 assert(!dealSearch.includes("priceVerified: true") && !dealSearch.includes("amountVerified: true"), "pipeline invents no verified prices");
 assert(connectDocs.includes("Intent → search"), "POC docs cover intent search pipeline");
+assert(connectDocs.includes("Stage search fixture"), "POC docs cover stage search fixture");
 assert(dealDetail.includes("deal.status === \"Searching\"") && dealDetail.includes("PersistRunDeal"), "Found deals do not re-open Run");
 
 if (failures.length) {

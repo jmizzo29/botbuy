@@ -18,6 +18,14 @@ import {
   formatSearchActDetail,
   searchActHandoffEventId,
 } from "@/lib/connectors/search-handoff";
+import {
+  STAGE_SEARCH_FIXTURE_NOTE,
+  STAGE_SEARCH_FIXTURE_PROVIDER,
+  buildStageSearchFixtureData,
+  buildStageSearchFixtureQuote,
+  isStageSearchFixtureEnabled,
+  stageSearchFixtureEventId,
+} from "@/lib/connectors/stage-search-fixture";
 import { CONNECTOR_TECH_LOCK_NOTE } from "@/lib/connectors/tech-lock";
 import type { ConnectorProvider, ConnectorToolResult } from "@/lib/connectors/types";
 import { assertRunDealSoftHold } from "@/lib/run-deal";
@@ -146,18 +154,35 @@ export async function applyDealSearchPipeline(input: {
   > | null;
 }): Promise<Deal> {
   const deal = getDeal(input.deal.id, input.userId) ?? input.deal;
+  const intentForFixture = {
+    summary: input.intent?.summary ?? deal.title,
+    mustInclude: input.intent?.mustInclude,
+    avoid: input.intent?.avoid,
+  };
+  const route = routeIntentToSearch({
+    summary: intentForFixture.summary,
+    categories: input.intent?.categories ?? [deal.category],
+    mustInclude: intentForFixture.mustInclude,
+    avoid: intentForFixture.avoid,
+    category: deal.category,
+  });
+
   if (dealHasConnectorSearchAttempt(deal.id)) {
+    if (
+      deal.status === "Searching" &&
+      !dealHasSearchActHandoff(deal.id, listDealEvents(deal.id)) &&
+      isStageSearchFixtureEnabled(intentForFixture)
+    ) {
+      return applyStageSearchFixtureHandoff({
+        deal,
+        userId: input.userId,
+        query: route.query || route.domain || deal.title,
+        domain: route.domain,
+      });
+    }
     assertRunDealSoftHold(deal);
     return deal;
   }
-
-  const route = routeIntentToSearch({
-    summary: input.intent?.summary ?? deal.title,
-    categories: input.intent?.categories ?? [deal.category],
-    mustInclude: input.intent?.mustInclude,
-    avoid: input.intent?.avoid,
-    category: deal.category,
-  });
 
   const at = new Date().toISOString();
   let searchResult: ConnectorToolResult | null = null;
@@ -244,6 +269,20 @@ export async function applyDealSearchPipeline(input: {
         reason: route.reason,
       }),
     });
+    if (
+      deal.status === "Searching" &&
+      isStageSearchFixtureEnabled(intentForFixture)
+    ) {
+      const next = applyStageSearchFixtureHandoff({
+        deal,
+        userId: input.userId,
+        query: route.query || deal.title,
+        domain: route.domain,
+      });
+      assertRunDealSoftHold(next);
+      await persistEngineStore();
+      return next;
+    }
     assertRunDealSoftHold(deal);
     await persistEngineStore();
     return deal;
@@ -327,6 +366,21 @@ export async function applyDealSearchPipeline(input: {
     return next;
   }
 
+  if (
+    deal.status === "Searching" &&
+    isStageSearchFixtureEnabled(intentForFixture)
+  ) {
+    const next = applyStageSearchFixtureHandoff({
+      deal,
+      userId: input.userId,
+      query: route.query || route.domain || deal.title,
+      domain: route.domain,
+    });
+    assertRunDealSoftHold(next);
+    await persistEngineStore();
+    return next;
+  }
+
   assertRunDealSoftHold(deal);
   await persistEngineStore();
   return deal;
@@ -342,6 +396,7 @@ export function applySearchActHandoff(input: {
   provider: ConnectorProvider | null;
   searchData?: Record<string, unknown>;
   quoteData?: Record<string, unknown> | null;
+  fixture?: boolean;
 }): Deal {
   const deal = getDeal(input.deal.id, input.userId) ?? input.deal;
   const events = listDealEvents(deal.id);
@@ -350,16 +405,23 @@ export function applySearchActHandoff(input: {
     return deal;
   }
 
-  const provider = input.provider;
-  if (!provider || !providerSupportsTool(provider, "search")) {
+  const fixture = input.fixture === true;
+  if (
+    !fixture &&
+    (!input.provider || !providerSupportsTool(input.provider, "search"))
+  ) {
     assertRunDealSoftHold(deal);
     return deal;
   }
+  const provider = fixture
+    ? STAGE_SEARCH_FIXTURE_PROVIDER
+    : input.provider ?? STAGE_SEARCH_FIXTURE_PROVIDER;
 
   const handoff = buildSearchActHandoff({
     provider,
     searchData: input.searchData,
     quoteData: input.quoteData,
+    fixture,
   });
   if (!handoff.candidates.length) {
     assertRunDealSoftHold(deal);
@@ -376,13 +438,16 @@ export function applySearchActHandoff(input: {
   });
   assertNoSecretsLogged(metadata);
 
+  const candidateTitle = fixture
+    ? "Stage fixture candidates"
+    : "Connector candidates";
   if (!events.some((event) => event.id === connectorCandidatesEventId(deal.id))) {
     appendDealEvent({
       id: connectorCandidatesEventId(deal.id),
       dealId: deal.id,
       type: "diligence",
       stage: "diligence",
-      title: "Connector candidates",
+      title: candidateTitle,
       detail,
       at,
       status: "done",
@@ -391,7 +456,7 @@ export function applySearchActHandoff(input: {
     });
     attachTimeline(
       deal,
-      "Connector candidates",
+      candidateTitle,
       detail,
       at,
       `ev_${deal.id}_connector_candidates`,
@@ -423,7 +488,9 @@ export function applySearchActHandoff(input: {
   attachTimeline(
     next,
     "Needs you",
-    `Connector candidates ready for review. Auto-approve OFF. Not bought.`,
+    fixture
+      ? "Stage fixture candidates ready for review. Auto-approve OFF. Not bought. Not a live connector result."
+      : "Connector candidates ready for review. Auto-approve OFF. Not bought.",
     gateAt,
     `ev_${next.id}_search_act`,
   );
@@ -431,7 +498,63 @@ export function applySearchActHandoff(input: {
     next.blockers = [...next.blockers, HUMAN_REVIEW_BLOCKER];
   }
   appendSearchNote(next, SEARCH_ACT_HOLD_NOTE);
+  if (fixture) appendSearchNote(next, STAGE_SEARCH_FIXTURE_NOTE);
   assertRunDealSoftHold(next);
   void persistEngineStore();
   return next;
+}
+
+/** Honest unverified stub candidates — never live, never verified, never auto-approved. */
+export function applyStageSearchFixtureHandoff(input: {
+  deal: Deal;
+  userId: string;
+  query?: string;
+  domain?: string | null;
+}): Deal {
+  const deal = getDeal(input.deal.id, input.userId) ?? input.deal;
+  const events = listDealEvents(deal.id);
+  const fixtureId = stageSearchFixtureEventId(deal.id);
+  if (!events.some((event) => event.id === fixtureId)) {
+    const at = new Date().toISOString();
+    const detail = `live:false · fixture=true · provider=${STAGE_SEARCH_FIXTURE_PROVIDER} · amountStatus=unverified · verified=false · not a live connector result. ${CONNECTOR_TECH_LOCK_NOTE}`;
+    appendDealEvent({
+      id: fixtureId,
+      dealId: deal.id,
+      type: "search",
+      stage: "search",
+      title: "Stage search fixture",
+      detail,
+      at,
+      status: "done",
+      actor: "engine",
+      toStatus: deal.status,
+      metadata: sanitizeAuditMetadata({
+        live: false,
+        fixture: true,
+        provider: STAGE_SEARCH_FIXTURE_PROVIDER,
+        amountStatus: "unverified",
+        verified: false,
+      }),
+    });
+    attachTimeline(
+      deal,
+      "Stage search fixture",
+      detail,
+      at,
+      `ev_${deal.id}_stage_search_fixture`,
+    );
+    appendSearchNote(deal, STAGE_SEARCH_FIXTURE_NOTE);
+  }
+
+  return applySearchActHandoff({
+    deal,
+    userId: input.userId,
+    provider: null,
+    fixture: true,
+    searchData: buildStageSearchFixtureData({
+      query: input.query,
+      domain: input.domain,
+    }),
+    quoteData: buildStageSearchFixtureQuote(),
+  });
 }

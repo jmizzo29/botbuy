@@ -30,6 +30,19 @@ John/CEO tech lock (Soft HOLD): **MCP-first · APIs-first**. Prefer the connecto
 
 Search/quote persist as `deal_events` + notes. Shopify Admin API and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
 
+### Stage search fixture (CHO-honest)
+
+Unmapped / empty connector stubs stay **Searching** with no invented live results. On **staging / preview only**, an explicit fixture can attach an unverified demo candidate (`live:false` · `amountStatus=unverified` · `verified=false` · `provider=stage_fixture`) and hand off Searching → Found → **Needs you** so CPO can walk Approve. It never marks `priceVerified`, `amountVerified`, or `agentExecuted`. Auto-approve stays OFF. Production / `main` refuses the fixture even if the env or token is set.
+
+Enable with any of:
+
+- `STAGE_SEARCH_FIXTURE=1` (server env on the staging deployment)
+- `VERCEL_ENV=preview` (git staging / PR previews)
+- Intent text containing **`qa-needs-you`** (preferred), or `fixture-candidates` / `STAGE_QA`
+- Query toggle `?fixture=1` on `/intent`, `/onboarding/intent`, or empty My deals (`/home?fixture=1`) — appends `qa-needs-you`
+
+CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) → Intent → include **`qa-needs-you`** (or Start search on preview, which auto-enables) → My deals shows **Needs you** → Approve sheet. Amounts stay $0 / unverified. Fixture/stub — not a live purchase.
+
 ## Routes
 
 - `/settings#connected-accounts` — section on Settings

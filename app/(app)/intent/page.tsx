@@ -10,14 +10,21 @@ import {
 import { formatUsd } from "@/lib/money";
 import { listIntents } from "@/lib/store";
 import { formatDate } from "@/lib/utils";
+import { stageFixtureQueryEnabled } from "@/lib/connectors/stage-search-fixture";
 
 export const metadata = {
   title: "Intent",
 };
 
-export default async function IntentPage() {
+export default async function IntentPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ fixture?: string | string[] }>;
+}) {
   const user = await requireUser();
   const intents = listIntents(user.id);
+  const params = searchParams ? await searchParams : undefined;
+  const stageFixture = stageFixtureQueryEnabled(params?.fixture);
 
   return (
     <div className="space-y-8">
@@ -30,7 +37,10 @@ export default async function IntentPage() {
 
       <Card>
         <CardContent className="pt-5">
-          <IntentForm emailMissing={!hasReachableEmail(user)} />
+          <IntentForm
+            emailMissing={!hasReachableEmail(user)}
+            stageFixture={stageFixture}
+          />
         </CardContent>
       </Card>
 
