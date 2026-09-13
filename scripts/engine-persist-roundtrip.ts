@@ -4,15 +4,45 @@
  * globalThis.__botbuyEngine. Mirrors Vercel isolate hydrate.
  */
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  decodeJournal,
+  emptyJournal,
+  encodeJournal,
+  setDurableJournalIO,
+} from "@/lib/engine-journal";
 
 const ROUNDTRIP_USER = "usr_clerk_roundtrip_c1d5";
 const ROLE = process.argv[2];
 
+function installFileJournal(path: string) {
+  setDurableJournalIO({
+    async read() {
+      try {
+        return decodeJournal(readFileSync(path, "utf8"));
+      } catch (error) {
+        const code = (error as NodeJS.ErrnoException).code;
+        if (code === "ENOENT") return emptyJournal();
+        throw error;
+      }
+    },
+    async write(journal) {
+      writeFileSync(path, encodeJournal(journal), "utf8");
+    },
+  });
+}
+
+function journalPathFromEnv() {
+  const path = process.env.BOTBUY_ENGINE_JOURNAL_PATH;
+  if (!path) throw new Error("BOTBUY_ENGINE_JOURNAL_PATH is required in child isolates");
+  return path;
+}
+
 async function createRole() {
+  installFileJournal(journalPathFromEnv());
   const { addIntent, createSearchingDealFromIntent, listDeals } = await import(
     "@/lib/store"
   );
@@ -51,6 +81,7 @@ async function createRole() {
 }
 
 async function hydrateRole() {
+  installFileJournal(journalPathFromEnv());
   const { hydrateStore, listDeals, listIntents } = await import("@/lib/store");
   const globalStore = globalThis as typeof globalThis & {
     __botbuyEngine?: { deals: unknown[] };

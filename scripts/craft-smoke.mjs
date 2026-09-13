@@ -479,7 +479,7 @@ assert(journal.includes("ENGINE_JOURNAL_COOKIE"), "cookie journal still used");
 assert(journal.includes("readNeonJournal"), "Neon journal read when DATABASE_URL");
 assert(journal.includes("writeNeonJournal"), "Neon journal write when DATABASE_URL");
 assert(journal.includes("COOKIE_JOURNAL_MAX_CHARS"), "cookie journal size-capped");
-assert(journal.includes("BOTBUY_ENGINE_JOURNAL_PATH"), "file journal for isolate tests");
+assert(journal.includes("setDurableJournalIO"), "isolate test hook for durable journal");
 assert(store.includes("durable.intents"), "hydrate restores persisted intents");
 assert(store.includes("intents: intents.slice()"), "persist writes intents with engine journal");
 assert(dealDetail.includes("DealUsageSection"), "deal detail usage section");

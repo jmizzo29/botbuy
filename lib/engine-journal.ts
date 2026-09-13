@@ -1,11 +1,20 @@
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
 import type { Deal, DealEvent, Intent, UsageEvent } from "@/lib/types";
 
 export const ENGINE_JOURNAL_COOKIE = "bb_engine_journal";
-export const ENGINE_JOURNAL_PATH_ENV = "BOTBUY_ENGINE_JOURNAL_PATH";
 /** Browsers drop cookies near 4KB. Stay under and fail closed to Neon. */
 export const COOKIE_JOURNAL_MAX_CHARS = 3500;
+
+export interface DurableJournalIO {
+  read: () => Promise<EngineJournal>;
+  write: (journal: EngineJournal) => Promise<void>;
+}
+
+let testDurableIO: DurableJournalIO | null = null;
+
+/** Test-only isolate hook. Do not use from app routes. */
+export function setDurableJournalIO(io: DurableJournalIO | null) {
+  testDurableIO = io;
+}
 
 export interface EngineJournal {
   deals: Deal[];
@@ -18,7 +27,7 @@ export function emptyJournal(): EngineJournal {
   return { deals: [], events: [], usage: [], intents: [] };
 }
 
-function decodeJournal(raw: string | null | undefined): EngineJournal {
+export function decodeJournal(raw: string | null | undefined): EngineJournal {
   if (!raw) return emptyJournal();
   try {
     const parsed = JSON.parse(raw) as EngineJournal;
@@ -78,28 +87,6 @@ export function mergeJournals(...journals: EngineJournal[]): EngineJournal {
   };
 }
 
-function journalFilePath() {
-  const path = process.env[ENGINE_JOURNAL_PATH_ENV]?.trim();
-  return path || null;
-}
-
-async function readFileJournal(path: string): Promise<EngineJournal> {
-  try {
-    return decodeJournal(await readFile(path, "utf8"));
-  } catch (error) {
-    const code = (error as NodeJS.ErrnoException).code;
-    if (code === "ENOENT") return emptyJournal();
-    throw error;
-  }
-}
-
-async function writeFileJournal(path: string, journal: EngineJournal) {
-  await mkdir(dirname(path), { recursive: true });
-  const tmp = `${path}.${process.pid}.tmp`;
-  await writeFile(tmp, encodeJournal(journal), "utf8");
-  await rename(tmp, path);
-}
-
 export async function readCookieJournal(): Promise<EngineJournal> {
   if (typeof window !== "undefined") return emptyJournal();
   try {
@@ -142,8 +129,7 @@ export async function writeCookieJournal(
 }
 
 export async function readDurableJournal(): Promise<EngineJournal> {
-  const filePath = journalFilePath();
-  if (filePath) return readFileJournal(filePath);
+  if (testDurableIO) return testDurableIO.read();
 
   if (process.env.DATABASE_URL) {
     try {
@@ -162,9 +148,8 @@ export async function readDurableJournal(): Promise<EngineJournal> {
 }
 
 export async function writeDurableJournal(journal: EngineJournal) {
-  const filePath = journalFilePath();
-  if (filePath) {
-    await writeFileJournal(filePath, journal);
+  if (testDurableIO) {
+    await testDurableIO.write(journal);
     return;
   }
 
