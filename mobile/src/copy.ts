@@ -23,6 +23,8 @@ export const NO_LIVE_BUY =
   "No live spend. No fake live-buy." as const;
 export const STORE_HOLD =
   "Soft HOLD until TestFlight / Play internal. No store listing claims." as const;
+export const STAGE_APPS_FIRST =
+  "Stage iPhone + Android apps first. BLOCK prod App Store / Play submit until internal tracks exist and Design/CPO/CHO smoke PASS." as const;
 
 export const HONESTY_LIVE_FALSE = "live=false" as const;
 export const HONESTY_SPEND_FALSE = "spend=false" as const;

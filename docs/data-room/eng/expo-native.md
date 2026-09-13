@@ -14,10 +14,12 @@
 
 ## Stage / internal before store
 
+**CEO LOCK:** stage apps for **iPhone AND Android** before any prod/store push.
+
 1. Stage the **web** product on https://botbuy-git-staging-jmizzo29s-projects.vercel.app (full product Soft HOLD).
-2. Stage native **internal** builds (TestFlight + Play internal) before any prod store.
-3. Apple / Google Dev **Blocking=NO** until those internal tracks exist — see [`human-gates.md`](human-gates.md).
-4. **BLOCK prod App Store / Play until smoke** (install, sign-in, My deals, Approve sheet, fail-closed spend). No smoke → no store.
+2. Next milestone after M0: **EAS / internal tracks** — TestFlight **internal** + Play **internal**. Soft HOLD. Do not configure production store submit in M0 (no `eas.json`).
+3. Apple / Google Dev **Blocking=NO** until TestFlight / internal is needed — see [`human-gates.md`](human-gates.md).
+4. **BLOCK App Store / Play production submit** until stage/internal builds exist for **both** platforms **and** Design / CPO / CHO smoke PASS (install, sign-in, My deals, Approve sheet, fail-closed spend). No smoke → no prod store.
 
 ## BLOCK PWA-as-product
 
