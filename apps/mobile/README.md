@@ -53,7 +53,7 @@ M0 remains: navy shell + Clerk fail-closed scaffold + read-only stage API stub +
 
 Both internal tracks must exist before any production store push. Apple Developer + Google Play Console stay **Blocking=NO** until TestFlight / internal is actually needed. M0 ships **no** `eas.json`, no EAS submit profile, no store credentials.
 
-Chrome mark is `mobile/assets/mark.png` — kit reverse/white soft-spine (`brand/logo-soft-spine/botbuyer-mark-reverse.svg`) for the Quiet Capital `#0B1F3A` shell. Do not swap in the navy-on-white mark.
+Chrome mark is `apps/mobile/assets/mark.png` — kit reverse/white soft-spine (`brand/logo-soft-spine/botbuyer-mark-reverse.svg`) for the Quiet Capital `#0B1F3A` shell. Do not swap in the navy-on-white mark.
 
 ## Env vars
 
