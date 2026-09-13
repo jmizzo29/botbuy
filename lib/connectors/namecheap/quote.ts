@@ -1,3 +1,4 @@
+import { namecheapKeysConfigured } from "@/lib/connectors/keys";
 import type { ConnectorToolResult, VaultSecretPayload } from "@/lib/connectors/types";
 
 export async function quoteNamecheapDomain(input: {
@@ -6,6 +7,7 @@ export async function quoteNamecheapDomain(input: {
   vault: VaultSecretPayload | null;
 }): Promise<ConnectorToolResult> {
   const domain = (input.domain ?? input.vault?.username ?? "example.com").trim();
+  const keysConfigured = namecheapKeysConfigured(input.vault);
   return {
     ok: true,
     live: false,
@@ -17,6 +19,7 @@ export async function quoteNamecheapDomain(input: {
     data: {
       domain,
       years: input.years ?? 1,
+      keysConfigured,
       listedUsd: null,
       amountStatus: "unverified",
     },

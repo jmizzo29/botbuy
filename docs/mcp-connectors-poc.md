@@ -30,7 +30,7 @@ John/CEO tech lock (Soft HOLD): **MCP-first · APIs-first**. Prefer the connecto
 
 John LOCK: intent + deal model stay **category-agnostic**. Cars, houses, consumer products, and broader are valid searches. Software/domains may ship first as scaffolds. Routing must not assume software-only or reject other categories.
 
-Search/quote persist as `deal_events` + notes. Shopify Admin API and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. HTTP JSON stubs report `keysConfigured` and accept listing-shaped rows (title, vin, address, make/model) without inventing prices. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
+Search/quote persist as `deal_events` + notes. Shopify Admin API and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. Every provider search/quote reports `keysConfigured` and `live:false`. HTTP JSON accepts listing-shaped rows (title, vin, address, make/model) without inventing prices. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
 
 ### Stage search fixture (CHO-honest)
 
@@ -48,11 +48,14 @@ CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) →
 
 - `/settings#connected-accounts` — section on Settings
 - `/settings/connected-accounts` — dedicated page (same IA)
-- `GET/POST /api/connectors` — status + connect
+- `GET/POST /api/connectors` — status + connect + honest `readiness` (`keysConfigured`, `searchHttpReady`, `live:false`)
+- `GET/POST /api/connectors/smoke` — read-only search smoke (never register/buy)
 - `POST /api/connectors/revoke`
 - `POST /api/connectors/tools` — search / quote / register / buy
 - `GET /api/connectors/oauth/twilio` — OAuth start (not live unless Twilio OAuth env is set)
 - `GET /api/connectors/oauth/shopify` — OAuth start (not live unless Shopify OAuth env + `?shop=` are set)
+
+Settings → Connected accounts shows `keysConfigured` / `searchHttpReady` per provider and a **Read-only smoke** button. Smoke stays `live:false` and `spend:false`. Missing Preview env names are listed — never paste values into chat.
 
 ## M2 registry (additive)
 
@@ -67,9 +70,11 @@ CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) →
 
 M2 shells follow Legal shortlist **spirit** (official APIs, encrypt tokens, revoke wipes ciphertext, never log secrets, `live: false`). They are **not** a new Legal PASS and not a public live claim. CPO IA v1 still describes the original Namecheap + Twilio rows.
 
-## Env vars (names only)
+## Env vars (names only — Vercel Preview)
 
-Required to store tokens:
+Do **not** paste values into chat. Add names on the BotBuy Vercel project → Preview (and Development if you want local `vercel env pull`). Production stays untouched under Soft HOLD.
+
+Required to store buyer-connected tokens:
 
 - `BOTBUY_VAULT_KEY` — 32-byte key as 64 hex chars (AES-256-GCM). Server-only. Do not commit.
 
@@ -78,13 +83,13 @@ Already in the app:
 - `DATABASE_URL` — Neon. Creates / reads `connected_accounts`. Without it, the vault stays in process memory (POC only).
 - Clerk keys — session identity (`clerkUserId` stored beside `userId`)
 
-Optional (real HTTP). If absent, tools return typed stubs + `live: false`:
+Optional (real HTTP). If absent, tools return typed stubs + `keysConfigured=false` + `live: false`:
 
-- `BOTBUY_CONNECTORS_LIVE` — default unset/false. Mutation tools (register / buy) never call provider HTTP unless this is `true` **and** the deal was human-approved.
+- `BOTBUY_CONNECTORS_LIVE` — default unset/false. Mutation tools (register / buy) never call provider HTTP unless this is `true` **and** the deal was human-approved. Responses still say `live: false`.
 - `NAMECHEAP_API_USER`
 - `NAMECHEAP_API_KEY`
 - `NAMECHEAP_USERNAME`
-- `NAMECHEAP_CLIENT_IP` — do not invent. UI IP rows are Demo placeholders `X.X.X.X` with `— CTO provides egress IPs —` until CTO publishes real egress SoT.
+- `NAMECHEAP_CLIENT_IP` — do not invent. UI IP rows are Demo placeholders `X.X.X.X` with `— CTO provides egress IPs —` until CTO publishes real egress SoT. Namecheap search HTTP stays stub without this even when API keys exist.
 - `NAMECHEAP_API_SANDBOX` — `true` to hit Namecheap sandbox host
 - `TWILIO_ACCOUNT_SID`
 - `TWILIO_AUTH_TOKEN`
@@ -102,6 +107,8 @@ Optional (real HTTP). If absent, tools return typed stubs + `live: false`:
 - `HTTP_JSON_BEARER_TOKEN`
 
 Buyer-connected credentials are encrypted in `connected_accounts` and preferred over platform env at call time. Env is a fallback for CHO-honest HTTP experiments — still not a public live connector.
+
+`live: true` is **not** unlocked by env today. Structural `live: false` stays until CHO/John flip the type lock. Preview keys flip `keysConfigured` and may return `result=http` on search/quote. `BOTBUY_CONNECTORS_LIVE=true` later unlocks mutation HTTP after Approve — JSON still `live: false`.
 
 ## Schema
 

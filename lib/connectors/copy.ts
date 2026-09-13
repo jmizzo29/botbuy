@@ -85,3 +85,9 @@ export const HTTP_JSON_BASE_URL_LABEL = "HTTPS base URL" as const;
 export const HTTP_JSON_BEARER_LABEL = "Bearer token" as const;
 export const HTTP_JSON_TOKEN_DISCLOSURE =
   "Optional bearer token. Encrypted at rest, never logged. Official APIs only. POC · not live." as const;
+
+export const CONNECT_SMOKE_CTA = "Read-only smoke" as const;
+export const CONNECT_SMOKE_NOTE =
+  "Search only. Never register or buy. live:false. Fail-closed when keys are missing. Not a live purchase." as const;
+export const CONNECT_KEYS_STRIP =
+  "keysConfigured is honest. Preview env unlocks official-API search HTTP. live:false stays locked. Auto-approve OFF." as const;

@@ -13,6 +13,9 @@ import {
   CONNECT_ACCOUNTS_HONESTY,
   CONNECT_ACCOUNTS_LEGAL,
   CONNECT_ACCOUNTS_SUB,
+  CONNECT_KEYS_STRIP,
+  CONNECT_SMOKE_CTA,
+  CONNECT_SMOKE_NOTE,
   CONNECTOR_APPROVE_LOCK,
   HTTP_JSON_BASE_URL_LABEL,
   HTTP_JSON_BEARER_LABEL,
@@ -44,6 +47,7 @@ import {
   TWILIO_OAUTH_CTA,
   TWILIO_OAUTH_PREFERRED,
 } from "@/lib/connectors/copy";
+import type { ConnectorPlatformReadiness, ConnectorProviderReadiness } from "@/lib/connectors/keys";
 import type { ConnectorProvider, ConnectorPublicStatus } from "@/lib/connectors/types";
 import { DEMO_PILL_CLASS, SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
@@ -75,12 +79,14 @@ export function ConnectedAccountsPanel({
   vaultKeyConfigured,
   twilioOauthAvailable,
   shopifyOauthAvailable = false,
+  readiness,
   heading = "h2",
 }: {
   providers: ConnectorPublicStatus[];
   vaultKeyConfigured: boolean;
   twilioOauthAvailable: boolean;
   shopifyOauthAvailable?: boolean;
+  readiness?: ConnectorPlatformReadiness;
   heading?: "h1" | "h2";
 }) {
   return (
@@ -124,6 +130,7 @@ export function ConnectedAccountsPanel({
               BOTBUY_VAULT_KEY is required before tokens can be stored.
             </p>
           ) : null}
+          {readiness ? <ReadinessStrip readiness={readiness} /> : null}
           {providers.map((row) => (
             <ProviderRow
               key={row.provider}
@@ -131,6 +138,9 @@ export function ConnectedAccountsPanel({
               vaultKeyConfigured={vaultKeyConfigured}
               twilioOauthAvailable={twilioOauthAvailable}
               shopifyOauthAvailable={shopifyOauthAvailable}
+              readiness={readiness?.providers.find(
+                (item) => item.provider === row.provider,
+              )}
             />
           ))}
         </CardContent>
@@ -139,22 +149,99 @@ export function ConnectedAccountsPanel({
   );
 }
 
+function HonestyFlag({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <span className="rounded-full bg-black/[0.04] px-2 py-0.5 text-[11px] font-medium text-muted ring-1 ring-[var(--bb-line)]">
+      {label}={value}
+    </span>
+  );
+}
+
+function ReadinessStrip({ readiness }: { readiness: ConnectorPlatformReadiness }) {
+  return (
+    <div
+      data-surface="connector-readiness"
+      className="space-y-2 rounded-[var(--bb-radius)] bg-black/[0.02] px-4 py-3"
+    >
+      <div className="flex flex-wrap gap-1.5">
+        <HonestyFlag label="live" value="false" />
+        <HonestyFlag
+          label="keysConfigured"
+          value={String(readiness.providers.some((row) => row.keysConfigured))}
+        />
+        <HonestyFlag
+          label="vaultKeyConfigured"
+          value={String(readiness.vaultKeyConfigured)}
+        />
+        <HonestyFlag
+          label="databaseConfigured"
+          value={String(readiness.databaseConfigured)}
+        />
+        <HonestyFlag
+          label="mutationsLiveEnabled"
+          value={String(readiness.mutationsLiveEnabled)}
+        />
+      </div>
+      <p className="text-xs leading-relaxed text-muted">{CONNECT_KEYS_STRIP}</p>
+    </div>
+  );
+}
+
 function ProviderRow({
   row,
   vaultKeyConfigured,
   twilioOauthAvailable,
   shopifyOauthAvailable,
+  readiness,
 }: {
   row: ConnectorPublicStatus;
   vaultKeyConfigured: boolean;
   twilioOauthAvailable: boolean;
   shopifyOauthAvailable: boolean;
+  readiness?: ConnectorProviderReadiness;
 }) {
   const router = useRouter();
   const [sheet, setSheet] = useState<"connect" | "revoke" | null>(null);
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [smoke, setSmoke] = useState<{
+    result: string;
+    keysConfigured: boolean;
+    reason: string;
+  } | null>(null);
   const canRevoke = row.status === "connected" || row.status === "needs_setup";
+
+  async function runSmoke() {
+    setPending("smoke");
+    setError(null);
+    const response = await fetch("/api/connectors/smoke", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ provider: row.provider }),
+    });
+    const body = (await response.json().catch(() => null)) as {
+      error?: string;
+      result?: string;
+      keysConfigured?: boolean;
+      reason?: string;
+    } | null;
+    setPending(null);
+    if (!response.ok && !body?.result) {
+      setError(body?.error ?? "Read-only smoke failed closed.");
+      return;
+    }
+    setSmoke({
+      result: body?.result ?? "error",
+      keysConfigured: Boolean(body?.keysConfigured),
+      reason: body?.reason ?? body?.error ?? "Read-only smoke finished.",
+    });
+  }
 
   async function revoke() {
     setPending("revoke");
@@ -185,8 +272,25 @@ function ProviderRow({
           <div className="flex flex-wrap items-center gap-2">
             <StatusBadge row={row} />
             <DemoChip />
+            {readiness ? (
+              <>
+                <HonestyFlag
+                  label="keysConfigured"
+                  value={String(readiness.keysConfigured)}
+                />
+                <HonestyFlag
+                  label="searchHttpReady"
+                  value={String(readiness.searchHttpReady)}
+                />
+              </>
+            ) : null}
           </div>
           {row.hint ? <p className="text-xs text-muted">{row.hint}</p> : null}
+          {readiness && readiness.missing.length ? (
+            <p className="text-xs text-muted">
+              Missing Preview env: {readiness.missing.join(", ")}
+            </p>
+          ) : null}
         </div>
         <div className="flex flex-wrap gap-2">
           <Button
@@ -214,6 +318,17 @@ function ProviderRow({
           >
             Revoke
           </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            className="min-h-11"
+            data-cta="connector-smoke"
+            disabled={pending !== null}
+            onClick={() => void runSmoke()}
+          >
+            {pending === "smoke" ? "…" : CONNECT_SMOKE_CTA}
+          </Button>
         </div>
       </div>
       {row.provider === "namecheap" && row.status !== "connected" ? (
@@ -224,6 +339,23 @@ function ProviderRow({
       ) : null}
       {row.provider === "http_json" && row.status !== "connected" ? (
         <HttpJsonNeedsSetup />
+      ) : null}
+      {smoke ? (
+        <div
+          data-surface="connector-smoke-result"
+          className="space-y-1 rounded-[var(--bb-radius)] bg-black/[0.02] px-4 py-3 text-xs leading-relaxed text-muted"
+        >
+          <div className="flex flex-wrap gap-1.5">
+            <HonestyFlag label="live" value="false" />
+            <HonestyFlag label="result" value={smoke.result} />
+            <HonestyFlag
+              label="keysConfigured"
+              value={String(smoke.keysConfigured)}
+            />
+          </div>
+          <p>{smoke.reason}</p>
+          <p>{CONNECT_SMOKE_NOTE}</p>
+        </div>
       ) : null}
       {error && !sheet ? <p className="text-sm text-demo">{error}</p> : null}
       {sheet === "connect" ? (

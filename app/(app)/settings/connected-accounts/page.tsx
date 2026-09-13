@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { CONNECT_ACCOUNTS_H1 } from "@/lib/connectors/copy";
 import { isVaultKeyConfigured } from "@/lib/connectors/crypto";
 import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/http";
+import { listConnectorReadiness } from "@/lib/connectors/keys";
 import { listPublicConnectorStatus } from "@/lib/connectors/vault";
 
 export const metadata = {
@@ -17,6 +18,7 @@ export default async function ConnectedAccountsPage() {
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
   });
+  const readiness = await listConnectorReadiness(user.id);
   return (
     <div className="space-y-6">
       <ConnectedAccountsPanel
@@ -25,6 +27,7 @@ export default async function ConnectedAccountsPage() {
         vaultKeyConfigured={isVaultKeyConfigured()}
         twilioOauthAvailable={twilioOauthConfigured()}
         shopifyOauthAvailable={shopifyOauthConfigured()}
+        readiness={readiness}
       />
     </div>
   );

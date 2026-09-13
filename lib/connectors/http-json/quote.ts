@@ -1,4 +1,4 @@
-import { httpJsonKeysConfigured } from "@/lib/connectors/http-json/search";
+import { httpJsonKeysConfigured } from "@/lib/connectors/keys";
 import type { ConnectorToolResult, VaultSecretPayload } from "@/lib/connectors/types";
 
 export async function quoteHttpJson(input: {

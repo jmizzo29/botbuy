@@ -18,6 +18,12 @@ Stage mirrors current prod brand: soft-spine logo + BotBuyer. `x-robots-tag: noi
 2. Official catalog starter (or intent text with “official JSON API”) → deal timeline **Connector search · http_json · stub · keysConfigured=false**.
 3. Car/House (or Anything) + **`qa-needs-you`** → Needs you → Approve → Buying. Deal detail **Prepare Checkout Session**. Without `BOTBUY_STRIPE_*`: `keysConfigured=false` · `prepared=false` · `sessionCreated=false` · `charged=false` · `live:false`. `/vault` shows the same key smoke. Auto-approve OFF.
 
+**CPO/CHO connector key-readiness smoke (MCP-first · no live spend):**
+1. Sign in on [stage](https://stage.botbuyer.ai) → **Settings → Connected accounts** (`/settings/connected-accounts`). Honesty strip shows `live=false` · `keysConfigured=false` (until Preview env or a vault connect) · `mutationsLiveEnabled=false`.
+2. Each provider row shows `keysConfigured` + `searchHttpReady` and lists missing Preview env **names** (never paste values). Namecheap stays `searchHttpReady=false` without `NAMECHEAP_CLIENT_IP` even if API keys exist.
+3. Click **Read-only smoke** (or `POST /api/connectors/smoke` with `{ "provider": "http_json" }`). Expect `spend=false` · `tool=search` · `result=stub` · `keysConfigured=false` · `live=false` when secrets are missing. Domain / phone / official catalog intents without keys stay Searching.
+4. Do **not** set `BOTBUY_CONNECTORS_LIVE=true`. Fixture path (`qa-needs-you`) is unchanged and still opt-in.
+
 ## Workflow
 1. Land / marketing UI PRs target **`staging`** (not `main`).
 2. Designer QA against **stage URL**.

@@ -1468,6 +1468,11 @@ assert(connectDocs.includes("shopify") && connectDocs.includes("http_json"), "PO
 assert(envExample.includes("SHOPIFY_ADMIN_TOKEN=") && envExample.includes("HTTP_JSON_BASE_URL="), "env names M2 keys");
 assert(!/SHOPIFY_ADMIN_TOKEN=\S+/.test(envExample.split("\n").find((line) => line.startsWith("SHOPIFY_ADMIN_TOKEN=")) ?? ""), "env example has no Shopify secret");
 assert(connectUi.includes("Connect") && connectUi.includes("Revoke"), "Connect / Revoke actions");
+assert(connectUi.includes("data-cta=\"connector-smoke\""), "Connected accounts hosts read-only smoke");
+assert(connectUi.includes("keysConfigured"), "Connected accounts shows keysConfigured");
+assert(connectDocs.includes("/api/connectors/smoke"), "POC docs name smoke API");
+assert(connectDocs.includes("is **not** unlocked by env"), "POC docs refuse env live:true");
+assert(read("ops/STAGE.md").includes("Read-only smoke"), "STAGE docs CPO connector smoke");
 assert(connectUi.includes("data-cta=\"twilio-oauth\""), "Twilio OAuth is primary CTA");
 assert(connectUi.includes("TWILIO_ADVANCED_CREDENTIALS") || connectUi.includes("Use API credentials"), "Twilio API is advanced");
 assert(connectUi.includes("data-step=\"egress-ip-whitelist\""), "Namecheap step 2 IP whitelist");

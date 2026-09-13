@@ -1,3 +1,4 @@
+import { namecheapKeysConfigured } from "@/lib/connectors/keys";
 import { namecheapCommand, resolveNamecheapCreds } from "@/lib/connectors/namecheap/client";
 import type { ConnectorToolResult, VaultSecretPayload } from "@/lib/connectors/types";
 
@@ -32,6 +33,7 @@ export async function searchNamecheapDomains(input: {
 }): Promise<ConnectorToolResult> {
   const domain = (input.query ?? "").trim().toLowerCase() || "example.com";
   const creds = resolveNamecheapCreds(input.vault);
+  const keysConfigured = namecheapKeysConfigured(input.vault);
   if (creds) {
     const http = await namecheapCommand(creds, "namecheap.domains.check", {
       DomainList: domain,
@@ -48,6 +50,7 @@ export async function searchNamecheapDomains(input: {
         reason: "Namecheap check returned. POC · not live — not a public connector.",
         data: {
           domain,
+          keysConfigured: true,
           httpStatus: http.status,
           available: parsed.available,
           candidates: parsed.candidates,
@@ -63,7 +66,15 @@ export async function searchNamecheapDomains(input: {
     tool: "search",
     dealId: null,
     result: "stub",
-    reason: "Namecheap search stub. Not live.",
-    data: { domain, available: null, candidates: [], amountStatus: "unverified" },
+    reason: keysConfigured
+      ? "Namecheap keys present but search stayed a stub. NAMECHEAP_CLIENT_IP or API HTTP failed. Not live."
+      : "Namecheap search stub. keysConfigured=false · official API only · not live.",
+    data: {
+      domain,
+      keysConfigured,
+      available: null,
+      candidates: [],
+      amountStatus: "unverified",
+    },
   };
 }
