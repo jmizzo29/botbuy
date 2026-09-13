@@ -55,7 +55,7 @@ export interface VaultSecretPayload {
   shopDomain?: string;
   /** Official HTTPS JSON API base URL (http_json) */
   baseUrl?: string;
-  /** DigitalOcean personal access token lives in apiKey */}
+  /** DigitalOcean personal access token lives in apiKey */
 }
 
 export interface ConnectedAccountRecord {
