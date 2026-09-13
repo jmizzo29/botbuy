@@ -4,7 +4,7 @@
 
 Canonical chrome is **botbuyer.ai only**. Never botbuy.ai or getbotbuy.com. POC on botbuyer.ai · not an announced launch.
 
-POC dashboard + installable PWA. The buyer agent tracks search, diligence, purchase, gates, and close — not just receipts.
+POC dashboard on **web** plus native Expo clients at **`apps/mobile/`** (App Store + Play Store targets). **PWA / Add to Home Screen is not the product client.** The buyer agent tracks search, diligence, purchase, gates, and close — not just receipts. Soft HOLD. Stage-first — no App Store / Play production submit.
 
 ## Product spine (diligence evidence)
 
@@ -74,6 +74,12 @@ Identity is Clerk. `getCurrentUser()` resolves the session to a Neon `users` row
 `bb_signup` is not identity. Missing Clerk keys: build still completes; app routes fail closed (no DEMO_USER).
 
 John must add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `DATABASE_URL` in Vercel (Preview + Development for staging). Optional: `CLERK_WEBHOOK_SECRET` + Clerk webhook → `/api/webhooks/clerk`. Apply `drizzle/0000_engine_base.sql` (base CREATE TABLEs) or `npm run db:push` on the **BotBuy** Neon project — never Autofleeto. With `DATABASE_URL`, Start search persists engine deals / events / usage / intents in Neon so My deals survives Vercel isolates. Without it, Start search fails closed with a clear persist error instead of an opaque 500. The `bb_engine_journal` cookie is a size-capped fallback only. Soft HOLD. Land promote HOLD.
+
+## Native clients (`apps/mobile/`)
+
+Monorepo path for the Expo / React Native **iPhone + Android** client — same BotBuyer APIs as this Next.js app. Display name **BotBuyer**. Soft HOLD scaffold (welcome honesty, Clerk fail-closed, read-only stage API). **BLOCK PWA-as-product.** Apple Developer + Google Play Console are **Blocking=NO** until TestFlight / internal tracks are needed. **CEO LOCK:** stage apps for both platforms before any production store submit. No `eas.json` / prod submit in M0. See [`apps/mobile/README.md`](apps/mobile/README.md) and [`ops/john-human-gate-checklist-v1.md`](ops/john-human-gate-checklist-v1.md).
+
+Root `tsconfig.json` + ESLint **exclude** `apps/mobile/` so Vercel `next build` does not typecheck Expo.
 
 ## Local
 

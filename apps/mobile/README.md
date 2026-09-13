@@ -10,14 +10,14 @@ John LOCK 2026-09-13: native App Store **and** Play Store clients are required. 
 
 | | |
 |---|---|
-| Folder | `mobile/` (sibling of the Next.js web app — not a second product repo) |
+| Folder | **`apps/mobile/`** (monorepo native client — same BotBuyer product) |
 | Display name | **BotBuyer** |
 | Targets | **App Store + Play Store** · one Expo codebase · `ios/` + `android/` first-class |
 | API | Existing BotBuyer stage HTTP (`EXPO_PUBLIC_API_BASE`) |
 | Auth | Clerk Expo scaffold · fail-closed when keys missing |
 | Hold | `live:false` · `spend=false` · Auto-approve OFF · no fake live-buy · no PWA-as-product |
 
-Web land / auth routes / `globals.css` land styles are **out of scope**. Do not edit them from this app. The root Next.js `tsconfig.json` and ESLint config **exclude** `mobile/` so Vercel web builds do not typecheck Expo.
+Web land / auth routes / `globals.css` land styles are **out of scope**. Do not edit them from this app. The root Next.js `tsconfig.json` and ESLint config **exclude** `apps/mobile/` so Vercel web builds do not typecheck Expo.
 
 ## Soft HOLD
 
@@ -66,7 +66,7 @@ Never put `CLERK_SECRET_KEY` or other server secrets in Expo public env.
 
 ## How to run
 
-From `mobile/` after `npm install`.
+From `apps/mobile/` after `npm install`.
 
 ### Shared Metro (Expo Go)
 

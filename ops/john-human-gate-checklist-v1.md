@@ -18,7 +18,7 @@ Data-room pointer: [`../docs/data-room/eng/human-gates.md`](../docs/data-room/en
 - [ ] **BLOCK** App Store / Play **production** submit until stage/internal builds exist for **iPhone AND Android** **and** Design / CPO / CHO smoke PASS
 - [ ] **BLOCK** PWA-as-product
 
-M0 path: **`mobile/`** (Expo iOS+Android + web first-class · PWA not the product). Soft HOLD scaffold — welcome honesty only; full journey later. Next milestone: **EAS / TestFlight internal + Play internal**. No `eas.json` / production submit in M0. Apple/Google **Blocking=NO** until internal tracks are needed. **BLOCK PWA-as-product.**
+M0 path: **`apps/mobile/`** (Expo iOS+Android + web first-class · PWA not the product). Soft HOLD scaffold — welcome honesty only; full journey later. Next milestone: **EAS / TestFlight internal + Play internal**. No `eas.json` / production submit in M0. Apple/Google **Blocking=NO** until internal tracks are needed. **BLOCK PWA-as-product.** Stage-first.
 
 ## Egress
 
