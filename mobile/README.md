@@ -28,6 +28,8 @@ Home copy matches web brand locks:
 
 This scaffold does **not** spend, vault-mutate, or claim a live buy. It does **not** claim a shipped App Store / Play listing. Expo Go / simulators are development — not the product. **BLOCK PWA-as-product.**
 
+Chrome mark is `mobile/assets/mark.png` — kit reverse/white soft-spine (`brand/logo-soft-spine/botbuyer-mark-reverse.svg`) for the Quiet Capital `#0B1F3A` shell. Do not swap in the navy-on-white mark.
+
 ## Env vars
 
 Copy `.env.example` → `.env.local`. Do not invent secrets.
