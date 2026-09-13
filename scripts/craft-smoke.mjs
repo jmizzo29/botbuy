@@ -20,6 +20,8 @@ const signIn = read("app/signin/[[...sign-in]]/page.tsx");
 const authSignupIa = read("cpo-real-auth-signup-ia-v1.md");
 const authSignupCraft = read("designer-real-auth-signup-craft-v1.md");
 const authDoor = read("components/auth-door.tsx");
+const clerkUi = read("lib/clerk-ui.ts");
+const nextConfig = read("next.config.ts");
 const middleware = read("middleware.ts");
 const schema = read("lib/db/schema.ts");
 const authLib = read("lib/auth.ts");
@@ -322,6 +324,26 @@ assert(authDoor.includes('data-surface="auth-door"'), "auth door surface marker"
 assert(authDoor.includes("text-3xl"), "auth door Quiet Capital H1 not land display");
 assert(signup.includes("AuthDoor"), "signup uses Techlux auth door");
 assert(signIn.includes("AuthDoor"), "sign-in uses Techlux auth door");
+assert(signup.includes("<PublicChrome auth>"), "signup uses Quiet Capital auth chrome");
+assert(signIn.includes("<PublicChrome auth>"), "sign-in uses Quiet Capital auth chrome");
+assert(!signup.includes("BRAND.footerHold") && !signup.includes("No paid Stripe"), "signup has no status footer dump");
+assert(!signIn.includes("BRAND.footerHold") && !signIn.includes("No paid Stripe"), "sign-in has no status footer dump");
+assert(clerkUi.includes("unsafe_disableDevelopmentModeWarnings: true"), "Clerk hides Development mode badge");
+assert(clerkUi.includes('elevation: "flush"'), "Clerk card is flush — no giant circle shell");
+assert(clerkUi.includes('footer: "hidden"') && clerkUi.includes('footerPages: "hidden"'), "Clerk promo footer is hidden");
+assert(clerkUi.includes('colorPrimary: "#2DD4BF"') && clerkUi.includes('colorTextOnPrimaryBackground: "#042F2E"'), "Clerk primary is Electric Teal");
+assert(clerkUi.includes('colorBackground: "#122A46"'), "Clerk card surface is Quiet Capital navy");
+assert(css.includes(".bb-auth-shell") && css.includes("overflow-x: hidden"), "auth shell kills horizontal overflow");
+assert(css.includes(".bb-auth-card") && css.includes("overflow: hidden"), "auth card clips decorative circle");
+assert(css.includes(".bb-auth-shell") && css.includes("#0b1f3a"), "auth page bg is Quiet Capital navy");
+assert(css.includes("vercel-live-feedback") && nextConfig.includes("x-vercel-skip-toolbar"), "auth routes hide stage toolbar");
+assert(
+  read("lib/site-pages.ts").includes("AUTH_LEGAL_LINKS") &&
+    read("components/site-footer.tsx").includes("legalOnly"),
+  "auth footer is legal-only",
+);
+assert(!authDoor.includes("eyebrow"), "auth door dropped extra eyebrow chrome");
+assert(authDoor.includes("bb-auth-card"), "auth door uses Quiet Capital card");
 assert(!signup.includes("className=\"display\""), "signup H1 is not land display");
 assert(!signup.includes("DEMO_PILL_CLASS"), "signup has no Demo pill token");
 assert(!signIn.includes("DEMO_PILL_CLASS"), "sign-in has no Demo pill token");
@@ -423,7 +445,10 @@ assert(!chrome.includes("hidden sm:inline"), "About stays visible on phone and d
 assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air band");
 assert(chrome.includes("bb-land-header"), "land header overlays the navy stage");
 assert(chrome.includes("bb-land-nav") && chrome.includes("bb-land-link"), "land overlay is word links");
-assert(chrome.includes("onDark={land}"), "land chrome uses reverse lockup on navy");
+assert(
+  chrome.includes("onDark={land || auth}") || chrome.includes("onDark={land}"),
+  "land chrome uses reverse lockup on navy",
+);
 assert(!chrome.includes("bb-land-footer"), "land has no footer chrome strip");
 assert(!chrome.includes("<Button"), "land overlay nav has no Button pills");
 assert(!chrome.includes("rounded-full"), "land overlay nav has no pill radius");
@@ -635,6 +660,10 @@ assert(chrome.includes(") : land ? null : ("), "land nav has no signed-out Sign 
 assert(
   read("components/install-hint.tsx").includes("if (onLand) return null"),
   "InstallHint is already null on land",
+);
+assert(
+  read("components/install-hint.tsx").includes("if (onAuth) return null"),
+  "InstallHint is null on auth routes",
 );
 assert(
   land.includes("redirectSignedInFromLand") ||
@@ -908,7 +937,10 @@ assert(
   read("public/land/assets/06-arc-reverse.svg").includes('opacity="0.55"'),
   "reverse arc connectors sit at white opacity ~0.55",
 );
-assert(chrome.includes("{land ? null : <InstallHint />}"), "land chrome never mounts InstallHint");
+assert(
+  chrome.includes("{land || auth ? null : <InstallHint />}"),
+  "land/auth chrome never mounts InstallHint",
+);
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
 assert(
   read("land/assets/02-deals.svg").includes('aria-label="BotBuyer brings deals"'),
@@ -1702,6 +1734,7 @@ console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #B8860B");
 console.log(" - Quiet Capital type · Product door A · clean #F7F8FA");
+console.log(" - auth /signin /signup Quiet Capital navy shell · Soft HOLD");
 console.log(" - soft-spine mark+wordmark header · favicon/PWA/OG wired");
 console.log(" - site pages /privacy /terms /about /beta /contact · footer lock");
 console.log(" - /about graphical story · Land E captions · soft-spine sitewide · Soft HOLD");
