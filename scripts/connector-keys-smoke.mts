@@ -134,6 +134,7 @@ for (const provider of CONNECTOR_PROVIDERS) {
   assert(row.live === false, `${provider} readiness live:false`);
   assert(row.keysConfigured === false, `${provider} readiness keysConfigured=false`);
   assert(row.searchHttpReady === false, `${provider} readiness searchHttpReady=false`);
+  assert(row.oauthExchangeReady === false, `${provider} readiness oauthExchangeReady=false`);
   assert(smokeQueryFor(provider).length >= 0, `${provider} has a smoke query`);
 }
 

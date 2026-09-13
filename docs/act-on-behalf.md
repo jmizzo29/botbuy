@@ -20,7 +20,7 @@ Allowed only after **Needs you → Buying**. Searching / Found / Needs you witho
 
 Deal detail shows **Act on behalf** only in **Buying**. UI copy is **Prepared · not sent** (email/reply) or **Prepared · not registered**. HonestyFlags always include `live=false` · `spend=false` · `sent=false` · `registered=false` · `autoApprove=false`.
 
-Deal events record **draft prepared** / **register stub prepared**. They never claim sent, delivered, or registered.
+Deal events title **Prepared · not sent** (email/reply) or **Prepared · not registered**. They never claim sent, delivered, or registered.
 
 ## Honesty
 

@@ -18,6 +18,7 @@ import {
   SETTINGS_USAGE_TITLE,
 } from "@/lib/cpo-techlux";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
+import { settingsHonestyFlags } from "@/lib/honesty-flags";
 import { displayAccountEmail, PROFILE_TITLE } from "@/lib/john-ux";
 import {
   hydrateStore,
@@ -63,12 +64,14 @@ export default async function SettingsPage() {
         className="flex flex-wrap items-center gap-1.5"
         data-surface="settings-honesty-flags"
       >
-        <HonestyFlag token="live=false" />
-        <HonestyFlag token="spend=false" />
-        <HonestyFlag token="autoApprove=false" />
-        <HonestyFlag
-          token={`mutationsLiveEnabled=${String(readiness.mutationsLiveEnabled)}`}
-        />
+        {settingsHonestyFlags({
+          keysConfigured: readiness.providers.some((row) => row.keysConfigured),
+          vaultKeyConfigured: readiness.vaultKeyConfigured,
+          databaseConfigured: readiness.databaseConfigured,
+          mutationsLiveEnabled: readiness.mutationsLiveEnabled,
+        }).map((token) => (
+          <HonestyFlag key={token} token={token} />
+        ))}
         <Badge className={DEMO_PILL_CLASS}>{AUTO_APPROVE_OFF}</Badge>
       </div>
       <ConnectedAccountsPanel

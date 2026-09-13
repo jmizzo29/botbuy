@@ -12,6 +12,7 @@ import {
   NAMECHEAP_IP_WHITELIST_COPY,
   SHOPIFY_CUSTOM_APP_COPY,
   SHOPIFY_NEEDS_SETUP_COPY,
+  TWILIO_NEEDS_SETUP_COPY,
 } from "@/lib/connectors/copy";
 import type {
   ConnectorAuthMode,
@@ -49,7 +50,7 @@ export const CONNECTOR_REGISTRY: Record<
     kind: "phone",
     authModes: ["oauth", "api_key"],
     tools: ["search", "quote", "buy"],
-    needsSetup: [],
+    needsSetup: [TWILIO_NEEDS_SETUP_COPY],
   },
   shopify: {
     id: "shopify",

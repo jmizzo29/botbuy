@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import { requireApiUser } from "@/lib/api-auth";
 import { connectProvider } from "@/lib/connectors/connect";
 import { CONNECT_ACCOUNTS_HONESTY } from "@/lib/connectors/copy";
-import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/http";
+import {
+  shopifyOauthConfigured,
+  shopifyOauthExchangeReady,
+  twilioOauthConfigured,
+  twilioOauthExchangeReady,
+} from "@/lib/connectors/http";
 import { isVaultKeyConfigured } from "@/lib/connectors/crypto";
 import { listConnectorReadiness } from "@/lib/connectors/keys";
 import { ConnectorError } from "@/lib/connectors/types";
@@ -24,6 +29,10 @@ export async function GET() {
     vaultKeyConfigured: isVaultKeyConfigured(),
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
+    twilioOauthExchangeReady: twilioOauthExchangeReady(),
+    shopifyOauthExchangeReady: shopifyOauthExchangeReady(),
+    autoApprove: false,
+    keysConfigured: readiness.providers.some((row) => row.keysConfigured),
     providers,
     readiness,
   });
@@ -86,8 +95,21 @@ export async function POST(request: Request) {
     if (error instanceof ConnectorError) {
       const status =
         error.code === "vault_key" ? 503 : error.code === "validation" ? 400 : 409;
-      return NextResponse.json({ error: error.message, live: false }, { status });
+      return NextResponse.json(
+        {
+          error: error.message,
+          live: false,
+          spend: false,
+          autoApprove: false,
+          vaultKeyConfigured: isVaultKeyConfigured(),
+          keysConfigured: false,
+        },
+        { status },
+      );
     }
-    return NextResponse.json({ error: "Connect failed closed." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Connect failed closed.", live: false, spend: false },
+      { status: 500 },
+    );
   }
 }

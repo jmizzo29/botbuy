@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ActOnBehalfPrep } from "@/components/act-on-behalf-prep";
 import { AuthorizedBuyPrep } from "@/components/authorized-buy-prep";
+import { HonestyFlag } from "@/components/honesty-flag";
 import { DealApproveActions } from "@/components/deal-approve-actions";
 import { DealBadges } from "@/components/deal-badges";
 import { DealCandidates } from "@/components/deal-candidates";
@@ -31,6 +32,10 @@ import {
   verifiedSpendUsd,
 } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
+import {
+  ACT_ON_BEHALF_PREPARED_NOT_REGISTERED,
+  ACT_ON_BEHALF_PREPARED_NOT_SENT,
+} from "@/lib/act-copy";
 import { readSearchActHandoff } from "@/lib/connectors/search-handoff";
 import { runVerificationStub } from "@/lib/verification";
 import type { DealEvent } from "@/lib/types";
@@ -367,6 +372,25 @@ function TimelineItem({
           {event.stage ? ` · ${event.stage}` : ""} · {formatDateTime(event.at)}
         </p>
         <p className="mt-1 text-sm font-medium">{event.title}</p>
+        {event.metadata?.kind === "act_on_behalf" ? (
+          <div
+            className="mt-1.5 flex flex-wrap gap-1.5"
+            data-surface="act-on-behalf-timeline"
+          >
+            <HonestyFlag
+              token={
+                event.metadata.action === "register"
+                  ? ACT_ON_BEHALF_PREPARED_NOT_REGISTERED
+                  : ACT_ON_BEHALF_PREPARED_NOT_SENT
+              }
+            />
+            <HonestyFlag token="live=false" />
+            <HonestyFlag token="spend=false" />
+            <HonestyFlag token="sent=false" />
+            <HonestyFlag token="registered=false" />
+            <HonestyFlag token="autoApprove=false" />
+          </div>
+        ) : null}
         <p className="mt-1 text-sm leading-relaxed text-muted">
           {event.detail}
         </p>

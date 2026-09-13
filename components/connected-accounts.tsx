@@ -36,6 +36,10 @@ import {
   NAMECHEAP_NEEDS_SETUP_TITLE,
   NAMECHEAP_STEP1,
   NAMECHEAP_STEP2,
+  OAUTH_CALLBACK_NEEDS_SETUP,
+  OAUTH_ENV_NEEDS_SETUP,
+  OAUTH_STORED_HONESTY,
+  OAUTH_VAULT_KEY_REQUIRED,
   REVOKE_CONFIRM_LABEL,
   REVOKE_SHEET_LEAD,
   REVOKE_SHEET_TITLE,
@@ -49,6 +53,7 @@ import {
   SHOPIFY_TOKEN_LABEL,
   TWILIO_ADVANCED_CREDENTIALS,
   TWILIO_API_KEY_DISCLOSURE,
+  TWILIO_NEEDS_SETUP_COPY,
   TWILIO_OAUTH_CTA,
   TWILIO_OAUTH_PREFERRED,
 } from "@/lib/connectors/copy";
@@ -58,6 +63,13 @@ import { honestyToken } from "@/lib/honesty-flags";
 import type { ConnectorProvider, ConnectorPublicStatus } from "@/lib/connectors/types";
 import { DEMO_PILL_CLASS, SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
+
+function oauthReturnCopy(result?: string) {
+  if (result === "stored") return OAUTH_STORED_HONESTY;
+  if (result === "vault_key") return OAUTH_VAULT_KEY_REQUIRED;
+  if (result === "needs_setup") return OAUTH_CALLBACK_NEEDS_SETUP;
+  return null;
+}
 
 function DemoChip({ className }: { className?: string }) {
   return <Badge className={cn(DEMO_PILL_CLASS, className)}>{CONNECT_ACCOUNTS_HONESTY}</Badge>;
@@ -88,6 +100,7 @@ export function ConnectedAccountsPanel({
   shopifyOauthAvailable = false,
   readiness,
   heading = "h2",
+  oauthReturn,
 }: {
   providers: ConnectorPublicStatus[];
   vaultKeyConfigured: boolean;
@@ -95,6 +108,7 @@ export function ConnectedAccountsPanel({
   shopifyOauthAvailable?: boolean;
   readiness?: ConnectorPlatformReadiness;
   heading?: "h1" | "h2";
+  oauthReturn?: { provider?: string; result?: string } | null;
 }) {
   return (
     <section
@@ -133,8 +147,18 @@ export function ConnectedAccountsPanel({
         )}
         <CardContent className="space-y-4">
           {!vaultKeyConfigured ? (
-            <p className="text-sm text-demo">
-              BOTBUY_VAULT_KEY is required before tokens can be stored.
+            <p className="text-sm text-demo" data-surface="vault-key-missing">
+              {OAUTH_VAULT_KEY_REQUIRED}
+            </p>
+          ) : null}
+          {oauthReturnCopy(oauthReturn?.result) ? (
+            <p
+              className="text-sm text-demo"
+              data-surface="oauth-return"
+              data-oauth={oauthReturn?.provider ?? ""}
+              data-result={oauthReturn?.result ?? ""}
+            >
+              {oauthReturnCopy(oauthReturn?.result)}
             </p>
           ) : null}
           {readiness ? <ReadinessStrip readiness={readiness} /> : null}
@@ -328,6 +352,9 @@ function ProviderRow({
       {row.provider === "namecheap" && row.status !== "connected" ? (
         <NamecheapNeedsSetup />
       ) : null}
+      {row.provider === "twilio" && row.status !== "connected" ? (
+        <TwilioNeedsSetup />
+      ) : null}
       {row.provider === "shopify" && row.status !== "connected" ? (
         <ShopifyNeedsSetup />
       ) : null}
@@ -377,6 +404,7 @@ function ProviderRow({
             <TwilioConnectForm
               disabled={!vaultKeyConfigured}
               oauthAvailable={twilioOauthAvailable}
+              oauthExchangeReady={Boolean(readiness?.oauthExchangeReady)}
               pending={pending === "connect"}
               onDone={() => {
                 setSheet(null);
@@ -389,6 +417,7 @@ function ProviderRow({
             <ShopifyConnectForm
               disabled={!vaultKeyConfigured}
               oauthAvailable={shopifyOauthAvailable}
+              oauthExchangeReady={Boolean(readiness?.oauthExchangeReady)}
               pending={pending === "connect"}
               onDone={() => {
                 setSheet(null);
@@ -485,6 +514,15 @@ function NamecheapNeedsSetup() {
       <p>{NAMECHEAP_ELIGIBILITY_COPY}</p>
       <p>{NAMECHEAP_IP_WHITELIST_COPY}</p>
       <EgressIpRows />
+    </NeedsSetupBlock>
+  );
+}
+
+function TwilioNeedsSetup() {
+  return (
+    <NeedsSetupBlock surface="twilio-needs-setup">
+      <p>{TWILIO_NEEDS_SETUP_COPY}</p>
+      <p>{TWILIO_OAUTH_PREFERRED}</p>
     </NeedsSetupBlock>
   );
 }
@@ -644,6 +682,7 @@ function NamecheapConnectForm({
 function TwilioConnectForm({
   disabled,
   oauthAvailable,
+  oauthExchangeReady = false,
   pending,
   onDone,
   onError,
@@ -651,6 +690,7 @@ function TwilioConnectForm({
 }: {
   disabled: boolean;
   oauthAvailable: boolean;
+  oauthExchangeReady?: boolean;
   pending: boolean;
   onDone: () => void;
   onError: (message: string | null) => void;
@@ -688,7 +728,7 @@ function TwilioConnectForm({
   return (
     <form data-flow="twilio-connect" onSubmit={(event) => void submit(event)} className="space-y-3">
       <p className="text-sm text-muted">{TWILIO_OAUTH_PREFERRED}</p>
-      {oauthAvailable ? (
+      {oauthExchangeReady && !disabled ? (
         <Button asChild className="min-h-11 w-full" data-cta="twilio-oauth">
           <a href="/api/connectors/oauth/twilio">{TWILIO_OAUTH_CTA}</a>
         </Button>
@@ -697,10 +737,13 @@ function TwilioConnectForm({
           type="button"
           className="min-h-11 w-full"
           data-cta="twilio-oauth"
-          disabled={disabled}
           onClick={() =>
             onError(
-              "Twilio OAuth is the primary path and is not configured on this POC. Use API credentials (advanced) or add TWILIO_OAUTH_CLIENT_ID.",
+              disabled
+                ? OAUTH_VAULT_KEY_REQUIRED
+                : oauthAvailable
+                  ? "Twilio OAuth client is incomplete. Add TWILIO_OAUTH_CLIENT_SECRET. Tokens are not stored. Needs setup — not connected live."
+                  : OAUTH_ENV_NEEDS_SETUP,
             )
           }
         >
@@ -745,6 +788,7 @@ function TwilioConnectForm({
 function ShopifyConnectForm({
   disabled,
   oauthAvailable,
+  oauthExchangeReady = false,
   pending,
   onDone,
   onError,
@@ -752,6 +796,7 @@ function ShopifyConnectForm({
 }: {
   disabled: boolean;
   oauthAvailable: boolean;
+  oauthExchangeReady?: boolean;
   pending: boolean;
   onDone: () => void;
   onError: (message: string | null) => void;
@@ -791,7 +836,13 @@ function ShopifyConnectForm({
   return (
     <form data-flow="shopify-connect" onSubmit={(event) => void submit(event)} className="space-y-3">
       <p className="text-sm text-muted">{SHOPIFY_OAUTH_PREFERRED}</p>
-      {oauthAvailable ? (
+      <Field
+        label={SHOPIFY_SHOP_LABEL}
+        value={shopDomain}
+        onChange={setShopDomain}
+        autoComplete="off"
+      />
+      {oauthExchangeReady && !disabled && shopDomain.trim() ? (
         <Button asChild className="min-h-11 w-full" data-cta="shopify-oauth">
           <a
             href={`/api/connectors/oauth/shopify?shop=${encodeURIComponent(shopDomain)}`}
@@ -804,10 +855,15 @@ function ShopifyConnectForm({
           type="button"
           className="min-h-11 w-full"
           data-cta="shopify-oauth"
-          disabled={disabled}
           onClick={() =>
             onError(
-              "Shopify OAuth is the preferred path and is not configured on this POC. Use an Admin API token (advanced) or add SHOPIFY_OAUTH_CLIENT_ID.",
+              disabled
+                ? OAUTH_VAULT_KEY_REQUIRED
+                : !shopDomain.trim()
+                  ? "A *.myshopify.com shop domain is required to start Shopify OAuth. Tokens are not stored."
+                  : oauthAvailable
+                    ? "Shopify OAuth client is incomplete. Add SHOPIFY_OAUTH_CLIENT_SECRET. Tokens are not stored. Needs setup — not connected live."
+                    : OAUTH_ENV_NEEDS_SETUP,
             )
           }
         >
@@ -825,12 +881,6 @@ function ShopifyConnectForm({
       {advanced ? (
         <div className="space-y-3" data-surface="shopify-advanced">
           <p className="text-xs leading-relaxed text-muted">{SHOPIFY_API_TOKEN_DISCLOSURE}</p>
-          <Field
-            label={SHOPIFY_SHOP_LABEL}
-            value={shopDomain}
-            onChange={setShopDomain}
-            autoComplete="off"
-          />
           <Field
             label={SHOPIFY_TOKEN_LABEL}
             value={apiKey}

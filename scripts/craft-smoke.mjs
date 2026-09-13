@@ -1483,6 +1483,12 @@ assert(connectUi.includes("Shopify") && connectUi.includes("HTTP JSON"), "M2 Sho
 assert(connectUi.includes("DigitalOcean") && connectUi.includes("digitalocean-needs-setup"), "DigitalOcean SaaS MCP row");
 assert(connectUi.includes("data-flow=\"digitalocean-connect\""), "DigitalOcean connect hook");
 assert(connectUi.includes("shopify-needs-setup") && connectUi.includes("http-json-needs-setup"), "M2 Needs setup honesty");
+assert(connectUi.includes("twilio-needs-setup"), "Twilio Needs setup honesty");
+assert(connectUi.includes("OAUTH_VAULT_KEY_REQUIRED") || connectUi.includes("BOTBUY_VAULT_KEY is required"), "Connect UI fail-closed without vault key");
+assert(existsSync(join(root, "app/api/connectors/oauth/twilio/callback/route.ts")), "Twilio OAuth callback vault shell");
+assert(existsSync(join(root, "app/api/connectors/oauth/shopify/callback/route.ts")), "Shopify OAuth callback vault shell");
+assert(read("lib/connectors/oauth.ts").includes("isVaultKeyConfigured"), "OAuth shell checks vault key");
+assert(read("lib/connectors/oauth.ts").includes("connectProvider"), "OAuth callback encrypts via connect");
 assert(connectUi.includes("data-cta=\"shopify-oauth\""), "Shopify OAuth is preferred CTA");
 assert(connectUi.includes("data-flow=\"http-json-connect\""), "HTTP JSON connect hook");
 assert(connectDocs.includes("shopify") && connectDocs.includes("http_json"), "POC docs list M2 shells");
@@ -1502,10 +1508,10 @@ assert(connectUi.includes("keysConfigured"), "Connected accounts shows keysConfi
 assert(connectUi.includes('token="spend=false"'), "HonestyFlag spend=false");
 assert(connectUi.includes('token="autoApprove=false"'), "HonestyFlag autoApprove=false");
 assert(connectUi.includes("AUTO_APPROVE_OFF"), "Connected accounts Auto-approve OFF");
-assert(settingsPageSrc.includes('token="spend=false"'), "Settings page spend=false HonestyFlag");
-assert(settingsPageSrc.includes('token="live=false"'), "Settings page live=false HonestyFlag");
+assert(settingsPageSrc.includes("settingsHonestyFlags"), "Settings page uses settingsHonestyFlags");
 assert(settingsPageSrc.includes("AUTO_APPROVE_OFF"), "Settings page Auto-approve OFF");
-assert(connectPage.includes('token="spend=false"'), "Connected accounts page spend=false HonestyFlag");
+assert(connectPage.includes("settingsHonestyFlags"), "Connected accounts page uses settingsHonestyFlags");
+assert(connectPage.includes("keysConfigured"), "Connected accounts page shows keysConfigured");
 assert(existsSync(join(root, "components/honesty-flag.tsx")), "shared HonestyFlag");
 assert(read("components/honesty-flag.tsx").includes("data-honesty"), "HonestyFlag data-honesty token");
 assert(read("lib/honesty-flags.ts").includes('HONESTY_SPEND_FALSE = "spend=false"'), "spend=false SoT");

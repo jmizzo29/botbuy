@@ -44,3 +44,10 @@ export {
   upsertConnectedAccount,
   revokeConnectedAccount,
 } from "@/lib/connectors/vault";
+export {
+  startConnectorOauth,
+  completeConnectorOauth,
+  oauthStartGate,
+  twilioOauthStartReady,
+  shopifyOauthStartReady,
+} from "@/lib/connectors/oauth";
