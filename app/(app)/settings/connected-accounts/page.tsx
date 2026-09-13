@@ -8,6 +8,7 @@ import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/
 import { listConnectorReadiness } from "@/lib/connectors/keys";
 import { listPublicConnectorStatus } from "@/lib/connectors/vault";
 import { AUTO_APPROVE_OFF } from "@/lib/cpo-techlux";
+import { settingsHonestyFlags } from "@/lib/honesty-flags";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 export const metadata = {
@@ -16,25 +17,33 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function ConnectedAccountsPage() {
+export default async function ConnectedAccountsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ oauth?: string; result?: string }>;
+}) {
   const user = await requireUser();
+  const params = searchParams ? await searchParams : undefined;
   const providers = await listPublicConnectorStatus(user.id, {
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
   });
   const readiness = await listConnectorReadiness(user.id);
+  const keysConfigured = readiness.providers.some((row) => row.keysConfigured);
   return (
     <div className="space-y-6">
       <div
         className="flex flex-wrap items-center gap-1.5"
         data-surface="settings-honesty-flags"
       >
-        <HonestyFlag token="live=false" />
-        <HonestyFlag token="spend=false" />
-        <HonestyFlag token="autoApprove=false" />
-        <HonestyFlag
-          token={`mutationsLiveEnabled=${String(readiness.mutationsLiveEnabled)}`}
-        />
+        {settingsHonestyFlags({
+          keysConfigured,
+          vaultKeyConfigured: readiness.vaultKeyConfigured,
+          databaseConfigured: readiness.databaseConfigured,
+          mutationsLiveEnabled: readiness.mutationsLiveEnabled,
+        }).map((token) => (
+          <HonestyFlag key={token} token={token} />
+        ))}
         <Badge className={DEMO_PILL_CLASS}>{AUTO_APPROVE_OFF}</Badge>
       </div>
       <ConnectedAccountsPanel
@@ -44,6 +53,10 @@ export default async function ConnectedAccountsPage() {
         twilioOauthAvailable={twilioOauthConfigured()}
         shopifyOauthAvailable={shopifyOauthConfigured()}
         readiness={readiness}
+        oauthReturn={{
+          provider: params?.oauth,
+          result: params?.result,
+        }}
       />
     </div>
   );

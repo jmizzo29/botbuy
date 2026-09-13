@@ -54,6 +54,16 @@ export const TWILIO_OAUTH_CTA = "Continue with Twilio" as const;
 export const TWILIO_ADVANCED_CREDENTIALS = "Use API credentials" as const;
 export const TWILIO_API_KEY_DISCLOSURE =
   "API key connect is OK for this POC. Keys are encrypted and never logged. This is not a live public connector." as const;
+export const TWILIO_NEEDS_SETUP_COPY =
+  "Twilio OAuth. Continue with Twilio when a BotBuy Twilio OAuth client is configured. Without TWILIO_OAUTH_CLIENT_ID + TWILIO_OAUTH_CLIENT_SECRET, this row stays Needs setup — not connected live." as const;
+export const OAUTH_VAULT_KEY_REQUIRED =
+  "BOTBUY_VAULT_KEY is required before tokens can be stored. OAuth does not start. Tokens are not stored in plaintext. Fail-closed." as const;
+export const OAUTH_ENV_NEEDS_SETUP =
+  "OAuth is not configured on this POC. Needs setup — not connected. Tokens are not stored." as const;
+export const OAUTH_STORED_HONESTY =
+  "OAuth tokens were encrypted at rest. Connected ≠ live. spend=false. Auto-approve OFF. Not a live public connector." as const;
+export const OAUTH_CALLBACK_NEEDS_SETUP =
+  "OAuth Needs setup. Tokens were not stored. Not connected live." as const;
 
 export const REVOKE_SHEET_TITLE = "Revoke this connection?" as const;
 export const REVOKE_SHEET_LEAD =

@@ -6,8 +6,10 @@ import {
   namecheapEnvPresent,
   shopifyEnvPresent,
   shopifyOauthConfigured,
+  shopifyOauthExchangeReady,
   twilioEnvPresent,
   twilioOauthConfigured,
+  twilioOauthExchangeReady,
 } from "@/lib/connectors/http";
 import { resolveDigitalOceanCreds } from "@/lib/connectors/digitalocean/client";
 import { resolveHttpJsonCreds } from "@/lib/connectors/http-json/client";
@@ -154,6 +156,7 @@ export interface ConnectorProviderReadiness {
   envPresent: boolean;
   vaultConnected: boolean;
   oauthConfigured: boolean;
+  oauthExchangeReady: boolean;
   clientIpConfigured: boolean | null;
   searchHttpReady: boolean;
   live: false;
@@ -194,6 +197,12 @@ export function buildProviderReadiness(input: {
     envPresent: providerEnvPresent(input.provider),
     vaultConnected: input.vaultConnected,
     oauthConfigured: providerOauthConfigured(input.provider),
+    oauthExchangeReady:
+      input.provider === "twilio"
+        ? twilioOauthExchangeReady()
+        : input.provider === "shopify"
+          ? shopifyOauthExchangeReady()
+          : false,
     clientIpConfigured:
       input.provider === "namecheap" ? namecheapClientIpConfigured() : null,
     searchHttpReady: providerSearchHttpReady(input.provider, input.vault),

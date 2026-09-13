@@ -12,3 +12,12 @@ export const ACT_ON_BEHALF_SUB =
 
 export const ACT_ON_BEHALF_NOTE =
   "Prepared drafts only. sent=false · registered=false · live=false · spend=false. Auto-approve OFF. Fail-closed without Needs you → Buying. BOTBUY_MAIL_* and BOTBUY_CONNECTORS_LIVE stay off.";
+
+export const ACT_ON_BEHALF_PREPARED_NOT_SENT = "Prepared · not sent";
+export const ACT_ON_BEHALF_PREPARED_NOT_REGISTERED = "Prepared · not registered";
+
+export function actOnBehalfTimelineTitle(action: ActOnBehalfAction) {
+  return action === "register"
+    ? ACT_ON_BEHALF_PREPARED_NOT_REGISTERED
+    : ACT_ON_BEHALF_PREPARED_NOT_SENT;
+}

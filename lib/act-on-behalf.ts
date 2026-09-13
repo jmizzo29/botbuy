@@ -9,6 +9,7 @@
  */
 import {
   ACT_ON_BEHALF_NOTE,
+  actOnBehalfTimelineTitle,
   type ActOnBehalfAction,
 } from "@/lib/act-copy";
 import { buildEmailDraft, buildReplyDraft } from "@/lib/act-drafts";
@@ -48,7 +49,10 @@ export {
   ACT_ON_BEHALF_ACTIONS,
   ACT_ON_BEHALF_H1,
   ACT_ON_BEHALF_NOTE,
+  ACT_ON_BEHALF_PREPARED_NOT_REGISTERED,
+  ACT_ON_BEHALF_PREPARED_NOT_SENT,
   ACT_ON_BEHALF_SUB,
+  actOnBehalfTimelineTitle,
   isActOnBehalfAction,
   type ActOnBehalfAction,
 } from "@/lib/act-copy";
@@ -273,7 +277,7 @@ function registerReason(mutationsLiveEnabled: boolean, keysConfigured: boolean) 
   if (mutationsLiveEnabled) {
     return `${ACT_ON_BEHALF_NO_REGISTER} BOTBUY_CONNECTORS_LIVE is set; this surface still does not call register HTTP. keysConfigured=${String(keysConfigured)} · registered=false.`;
   }
-  return `Register stub prepared · not registered. keysConfigured=${String(keysConfigured)} · BOTBUY_CONNECTORS_LIVE=false. ${ACT_ON_BEHALF_NO_REGISTER}`;
+  return `Prepared · not registered. keysConfigured=${String(keysConfigured)} · BOTBUY_CONNECTORS_LIVE=false. ${ACT_ON_BEHALF_NO_REGISTER}`;
 }
 
 export function prepareActOnBehalf(input: {
@@ -367,12 +371,7 @@ function persistActOnBehalfDealEvent(userId: string, result: ActOnBehalfPrep) {
   const id = actOnBehalfPrepEventId(deal.id, result.action);
   if (listDealEvents(deal.id).some((event) => event.id === id)) return;
   const at = new Date().toISOString();
-  const title =
-    result.action === "register"
-      ? "Register stub prepared"
-      : result.action === "reply"
-        ? "Merchant reply draft prepared"
-        : "On-behalf email draft prepared";
+  const title = actOnBehalfTimelineTitle(result.action);
   const detail = [
     "live=false",
     "spend=false",

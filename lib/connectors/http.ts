@@ -7,6 +7,14 @@ export function twilioOauthConfigured() {
   return Boolean(process.env.TWILIO_OAUTH_CLIENT_ID?.trim());
 }
 
+export function twilioOauthSecretConfigured() {
+  return Boolean(process.env.TWILIO_OAUTH_CLIENT_SECRET?.trim());
+}
+
+export function twilioOauthExchangeReady() {
+  return twilioOauthConfigured() && twilioOauthSecretConfigured();
+}
+
 export function namecheapEnvPresent() {
   return Boolean(
     process.env.NAMECHEAP_API_USER?.trim() && process.env.NAMECHEAP_API_KEY?.trim(),
@@ -24,6 +32,14 @@ export function twilioEnvPresent() {
 
 export function shopifyOauthConfigured() {
   return Boolean(process.env.SHOPIFY_OAUTH_CLIENT_ID?.trim());
+}
+
+export function shopifyOauthSecretConfigured() {
+  return Boolean(process.env.SHOPIFY_OAUTH_CLIENT_SECRET?.trim());
+}
+
+export function shopifyOauthExchangeReady() {
+  return shopifyOauthConfigured() && shopifyOauthSecretConfigured();
 }
 
 export function shopifyEnvPresent() {

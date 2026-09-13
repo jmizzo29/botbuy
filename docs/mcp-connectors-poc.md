@@ -54,8 +54,9 @@ CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) →
 - `POST /api/connectors/revoke`
 - `POST /api/connectors/tools` — search / quote / register / buy
 - `GET/POST /api/deals/[id]/act` — after Needs you → Buying: reply / email drafts + register stub (`sent=false` · `registered=false` · never SMTP / never register HTTP from this surface)
-- `GET /api/connectors/oauth/twilio` — OAuth start (not live unless Twilio OAuth env is set)
-- `GET /api/connectors/oauth/shopify` — OAuth start (not live unless Shopify OAuth env + `?shop=` are set)
+- `GET /api/connectors/oauth/twilio` — OAuth start. Fail-closed without `BOTBUY_VAULT_KEY` + Twilio OAuth client id/secret. Not live.
+- `GET /api/connectors/oauth/shopify` — OAuth start. Fail-closed without vault key + Shopify OAuth client id/secret + `?shop=`. Not live.
+- `GET /api/connectors/oauth/{twilio,shopify}/callback` — encrypt-at-rest vault shell. Missing vault key → fail-closed. Missing OAuth env or failed exchange → Needs setup. Tokens never stored in plaintext. Never log tokens. `live:false` · `spend=false`.
 
 Settings → Connected accounts shows literal HonestyFlags `live=false` · `spend=false` · `autoApprove=false` plus **Auto-approve OFF**, `keysConfigured` / `searchHttpReady` per provider, and a **Read-only smoke** button. Smoke stays `live:false` and `spend=false`. Missing Preview env names are listed — never paste values into chat.
 

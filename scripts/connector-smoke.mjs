@@ -5,7 +5,7 @@
  */
 import { spawnSync } from "node:child_process";
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -45,6 +45,18 @@ assert(register.includes('"shopify"') && register.includes("buyShopifyProduct"),
 assert(register.includes("buyDigitalOcean") && register.includes("searchDigitalOcean"), "runtime routes DigitalOcean");
 assert(register.includes("buyHttpJson") && register.includes("searchHttpJson"), "runtime routes HTTP JSON");
 assert(register.includes("providerSupportsTool"), "runtime checks registry tools");
+
+const oauthLib = readFileSync(join(root, "lib/connectors/oauth.ts"), "utf8");
+assert(oauthLib.includes("isVaultKeyConfigured"), "OAuth vault shell checks vault key");
+assert(oauthLib.includes("connectProvider"), "OAuth callback stores via connectProvider");
+assert(oauthLib.includes("live: false"), "OAuth honesty live:false");
+assert(oauthLib.includes("spend: false"), "OAuth honesty spend=false");
+assert(!oauthLib.includes("console.log"), "OAuth shell never console.logs tokens");
+assert(
+  existsSync(join(root, "app/api/connectors/oauth/twilio/callback/route.ts")) &&
+    existsSync(join(root, "app/api/connectors/oauth/shopify/callback/route.ts")),
+  "OAuth callback routes exist",
+);
 
 const types = readFileSync(join(root, "lib/connectors/types.ts"), "utf8");
 assert(types.includes('"shopify"') && types.includes('"digitalocean"') && types.includes('"http_json"'), "provider types include M2 shells");
@@ -425,6 +437,16 @@ const digitalOceanSearch = readFileSync(join(root, "lib/connectors/digitalocean/
 assert(digitalOceanSearch.includes("keysConfigured"), "DigitalOcean search reports keysConfigured");
 assert(digitalOceanSearch.includes("api.digitalocean.com") || readFileSync(join(root, "lib/connectors/digitalocean/client.ts"), "utf8").includes("api.digitalocean.com"), "DigitalOcean client is official API host");
 
+const oauthVault = spawnSync(
+  process.execPath,
+  [join(root, "node_modules/.bin/tsx"), join(root, "scripts/oauth-vault-smoke.mts")],
+  { encoding: "utf8" },
+);
+assert(
+  oauthVault.status === 0,
+  `oauth vault smoke${oauthVault.stderr ? `: ${oauthVault.stderr.trim()}` : oauthVault.stdout ? `: ${oauthVault.stdout.trim()}` : ""}`,
+);
+
 const keysRuntime = spawnSync(
   process.execPath,
   [join(root, "node_modules/.bin/tsx"), join(root, "scripts/connector-keys-smoke.mts")],
@@ -471,3 +493,4 @@ console.log(" - candidates attach structured handoff · Searching → Found → 
 console.log(" - empty stubs stay Searching; qa-needs-you still Needs you · production refused");
 console.log(" - Approve sheet Needs you → Buying still required before spend");
 console.log(" - keysConfigured honesty on all five providers · read-only smoke · live:false");
+console.log(" - OAuth vault shell fail-closed without BOTBUY_VAULT_KEY · Needs setup without OAuth env");

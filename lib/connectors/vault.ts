@@ -382,7 +382,7 @@ export async function listPublicConnectorStatus(
         baseUrl: connected ? row?.hint : null,
       });
     } else {
-      needsSetup = [];
+      needsSetup = connected ? [] : defaultNeedsSetup(provider);
     }
     return toPublicStatus(provider, row, {
       oauthAvailable:

@@ -1,31 +1,16 @@
-import { NextResponse } from "next/server";
 import { requireApiUser } from "@/lib/api-auth";
-import { CONNECT_ACCOUNTS_HONESTY } from "@/lib/connectors/copy";
-import { twilioOauthConfigured } from "@/lib/connectors/http";
+import { startConnectorOauth } from "@/lib/connectors/oauth";
 
 /**
- * OAuth start. Prefer Twilio OAuth when env is present.
- * POC · not live — no callback exchange is claimed public.
+ * OAuth start. Prefer Twilio OAuth when vault key + client id/secret are present.
+ * Fail-closed without BOTBUY_VAULT_KEY. POC · not live — Connected ≠ live.
  */
-export async function GET() {
+export async function GET(request: Request) {
   const gated = await requireApiUser();
   if (gated.error) return gated.error;
-  const clientId = process.env.TWILIO_OAUTH_CLIENT_ID?.trim();
-  const redirect = process.env.TWILIO_OAUTH_REDIRECT_URL?.trim();
-  if (!twilioOauthConfigured() || !clientId) {
-    return NextResponse.json(
-      {
-        error:
-          "Twilio OAuth is preferred but not configured. API key connect is OK for this POC.",
-        honesty: CONNECT_ACCOUNTS_HONESTY,
-        live: false,
-      },
-      { status: 501 },
-    );
-  }
-  const authorize = new URL("https://www.twilio.com/authorize");
-  authorize.searchParams.set("client_id", clientId);
-  if (redirect) authorize.searchParams.set("redirect_uri", redirect);
-  authorize.searchParams.set("response_type", "code");
-  return NextResponse.redirect(authorize);
+  return startConnectorOauth({
+    request,
+    userId: gated.user.id,
+    provider: "twilio",
+  });
 }
