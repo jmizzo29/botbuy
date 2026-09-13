@@ -42,6 +42,21 @@ export const HONESTY_FLAGS = [
   HONESTY_AUTO_APPROVE_FALSE,
 ] as const;
 
+export const SOFT_HOLD = "Soft HOLD" as const;
+export const CTA_RUN = "Run BotBuy" as const;
+export const HOLD_ONELINER =
+  "Soft HOLD · no store listing claims · spends only with your OK" as const;
+export const AGENTS_EMPTY_TITLE = "No agents yet" as const;
+export const AGENTS_EMPTY_BODY =
+  "Close a deal, then activate agents to operate it." as const;
+export const BLOCK_PWA_LINE =
+  "BLOCK PWA-as-product · same BotBuyer APIs" as const;
+export const SETTINGS_LINK = "Settings" as const;
+export const TAB_HOME = "Home" as const;
+export const TAB_RUN = "Run" as const;
+export const TAB_DEALS = "Deals" as const;
+export const TAB_VAULT = "Vault" as const;
+
 export const CLERK_KEYS_MISSING =
   "Clerk Expo keys are not configured. Sign-in stays fail-closed. keysConfigured=false." as const;
 export const CLERK_KEYS_READY =
