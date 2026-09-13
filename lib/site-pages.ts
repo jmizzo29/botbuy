@@ -17,6 +17,11 @@ export const SITE_FOOTER_LINKS = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
+/** Auth doors — required legal only. Soft-signal HOLD. */
+export const AUTH_LEGAL_LINKS = SITE_FOOTER_LINKS.filter(
+  (link) => link.href === "/privacy" || link.href === "/terms",
+);
+
 export const SITE_PAGE_CHROME = {
   privacy: {
     title: "Privacy Policy",
