@@ -55,6 +55,9 @@ export function AppChrome({
           </Pressable>
         </View>
         <View style={styles.chromeHairline} />
+        <View style={styles.tealHairlineWrap}>
+          <View style={styles.tealHairline} />
+        </View>
       </View>
 
       <View style={styles.body}>{children}</View>
@@ -128,6 +131,16 @@ const styles = StyleSheet.create({
   chromeHairline: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: COLORS.line,
+  },
+  tealHairlineWrap: {
+    paddingHorizontal: 24,
+    paddingTop: 10,
+  },
+  tealHairline: {
+    width: 28,
+    height: 1,
+    backgroundColor: COLORS.tealHairline,
+    alignSelf: "flex-start",
   },
   body: {
     flex: 1,

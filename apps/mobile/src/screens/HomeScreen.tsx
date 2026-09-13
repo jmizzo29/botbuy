@@ -57,8 +57,6 @@ function HomeFold({ onRun }: { onRun: () => void }) {
       contentContainerStyle={styles.scroll}
       showsVerticalScrollIndicator={false}
     >
-      <View style={styles.tealHairline} />
-
       <Text style={styles.h1}>{PRODUCT_H1}</Text>
       <Text style={styles.support}>{PRODUCT_SUPPORT}</Text>
 
@@ -120,11 +118,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 28,
     gap: 14,
-  },
-  tealHairline: {
-    width: 28,
-    height: 1,
-    backgroundColor: COLORS.tealHairline,
   },
   h1: {
     color: COLORS.reverse,
