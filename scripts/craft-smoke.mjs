@@ -605,6 +605,8 @@ assert(!land.includes("HowItWorksRail"), "land fold dropped elevate how-stack");
 assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy stage");
 assert(land.includes("bb-land-stage"), "land stage class is wired");
 assert(land.includes("bb-atm-richer-mesh-deep"), "land A1 richer-mesh-deep atmosphere class");
+assert(land.includes('className="bb-land-sky bb-atm-richer-mesh-deep"'), "A1 atmosphere is sky-only");
+assert(!land.includes("bb-land-stage bb-atm-richer-mesh-deep"), "A1 atmosphere is not on the solid panel stage");
 assert(!land.includes("bb-atm-mesh-glow"), "land no longer wires unused mesh-glow");
 assert(land.includes("bb-land-h1") && land.includes("bb-land-support"), "land fold uses CSS type-scale classes");
 assert(!land.includes("bb-land-meta"), "land fold dropped meta one-liner");
@@ -696,7 +698,7 @@ assert(
 );
 assert(
   brand.includes('LAND_ARC_SRC = "/land/assets/06-arc-reverse.svg"'),
-  "land B wires the dedicated reverse arc",
+  "historical reverse arc path stays in brand",
 );
 assert(
   read("public/land/assets/06-arc-reverse.svg").includes('viewBox="0 0 280 72"') &&
@@ -713,8 +715,8 @@ assert(
 assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage gradient tokens");
 assert(css.includes(".bb-atm-richer-mesh-deep::before"), "A1 richer-mesh-deep atmosphere CSS");
 assert(css.includes("rgba(42,125,158,0.42)"), "A1 richer-mesh-deep teal blob");
-assert(css.includes(".bb-land-stage::before") && css.includes("z-index: 0"), "stage ::before stays behind content");
-assert(css.includes(".bb-land-stage-grid") && css.includes("z-index: 1"), "stage content stays above atmosphere");
+assert(css.includes(".bb-land-sky::before") && css.includes("z-index: 0"), "sky ::before stays behind the mark");
+assert(css.includes(".bb-land-panel") && css.includes("z-index: 1"), "panel stays above atmosphere");
 assert(!css.includes("bb-atm-grain-veil"), "do not ship grain-veil");
 assert(!css.includes("bb-atm-eclipse-whisper"), "do not ship eclipse-whisper");
 assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
@@ -737,12 +739,11 @@ assert(
   "phone overlay is lockup + About on the chrome row",
 );
 assert(
-  css.includes("text-align: left") &&
-    css.includes("grid-template-columns: minmax(20rem, 34rem) minmax(16rem, 20rem)") &&
-    css.includes("max-width: 56rem") &&
-    css.includes("justify-self: start") &&
-    css.includes("justify-content: space-between"),
-  "desktop binds copy+rail in one packed optical system; overlay stays spread",
+  css.includes("justify-content: space-between") &&
+    css.includes(".bb-land-sky") &&
+    css.includes(".bb-land-panel") &&
+    css.includes("border-top: 2px solid #2dd4bf"),
+  "desktop keeps R3 two-zone hard edge; overlay stays spread",
 );
 assert(css.includes("@media (max-width: 1023px)"), "phone center axis is locked at max-lg");
 assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "fold CTA is a Sign up + Sign in row");
@@ -766,73 +767,91 @@ assert(
 );
 assert(
   css.includes('.bb-land-cta [data-cta="land-signin"]') &&
-    css.includes("border: 1.5px solid rgba(255, 255, 255, 0.78)") &&
+    css.includes("border: 1.5px solid rgba(255, 255, 255, 0.7)") &&
     css.includes("background: transparent"),
   "Sign in is a higher-contrast ghost/outline pill",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(!land.includes("data-fold"), "land production DOM has no data-fold debug tag");
 assert(
-  land.includes("bb-land-rule") &&
-    css.includes(".bb-land-rule") &&
-    css.includes("width: 28px") &&
-    css.includes("height: 1.5px"),
-  "D1 teal hairline is .bb-land-rule 28×1.5",
+  land.includes("bb-land-sky") &&
+    land.includes("bb-land-panel") &&
+    css.includes(".bb-land-sky") &&
+    css.includes(".bb-land-panel") &&
+    css.includes("border-top: 2px solid #2dd4bf") &&
+    css.includes("background: #050a0c"),
+  "R3 two-zone is sky + solid #050A0C panel with 2px teal edge",
 );
 assert(
-  css.includes("font-size: 2.5rem") &&
-    css.includes("letter-spacing: -0.045em") &&
+  css.includes("font-size: 1.875rem") &&
+    css.includes("letter-spacing: -0.04em") &&
     css.includes("text-wrap: balance"),
-  "D1 H1 is 40px / 600 / -0.045em / balance",
+  "R3 H1 is 30px / 600 / -0.04em / balance",
+);
+assert(!land.includes("bb-land-arc"), "R3 fold has no arc rail");
+assert(!land.includes("bb-land-rule"), "R3 fold has no D1 teal rule");
+assert(!land.includes("LAND_ARC_SRC"), "R3 fold does not mount the arc asset");
+assert(!css.includes(".bb-land-arc"), "R3 CSS dropped the arc rail");
+assert(!css.includes(".bb-land-rule"), "R3 CSS dropped the D1 hairline rule");
+assert(
+  land.includes("bb-mark-hero") &&
+    css.includes(".bb-mark-hero") &&
+    css.includes("width: 148px") &&
+    css.includes("height: 148px"),
+  "R3 sky mark is the oversized 148px soft-spine",
 );
 assert(
-  css.includes("width: min(240px, 70%)") &&
-    css.includes("margin-block: 1rem 1.25rem"),
-  "D1 arc is a min(240px, 70%) secondary rail",
+  land.includes("LAND_SKY_MARK_SRC") &&
+    brand.includes(
+      'LAND_SKY_MARK_SRC =\n  "/brand/logo-soft-spine/botbuyer-mark-reverse.svg"',
+    ),
+  "R3 sky mark is the locked soft-spine reverse",
 );
 assert(
-  css.includes("order: 1") &&
-    css.includes("order: 2") &&
-    css.includes("order: 3") &&
-    css.includes("order: 4"),
-  "D1 phone CSS sketch orders copy → rule → arc → CTA",
-);
-assert(
-  land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
-    land.indexOf("bb-land-support") < land.indexOf("bb-land-rule") &&
-    land.indexOf("bb-land-rule") < land.indexOf("bb-land-arc") &&
-    land.indexOf("bb-land-arc") < land.indexOf("bb-land-cta"),
-  "D1 fold order is H1 → support → rule → arc → CTA",
+  land.indexOf("bb-land-sky") < land.indexOf("bb-land-panel") &&
+    land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
+    land.indexOf("bb-land-support") < land.indexOf("bb-land-cta"),
+  "R3 fold order is sky → panel H1 → support → CTA",
 );
 assert(
   css.includes("margin-block-start: 0") &&
     css.includes("justify-content: center") &&
-    css.includes("padding: 5.25rem 1.25rem"),
-  "phone D1 stack is centered under overlay pad",
+    css.includes("padding: 28px 24px"),
+  "phone R3 panel uses the locked 28/24/48 pad",
+);
+assert(
+  existsSync(join(root, "land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md")) &&
+    read("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md").includes("READY-TO-SHIP") &&
+    read("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md").includes("bb-land-panel"),
+  "R3 designer INSTALL is READY-TO-SHIP",
+);
+assert(
+  read("land/INSTALL.md").includes("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md"),
+  "land INSTALL points at R3 kit SoT",
 );
 assert(
   existsSync(join(root, "land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md")) &&
     read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md").includes("READY-TO-SHIP") &&
     read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md").includes("bb-land-rule"),
-  "D1 designer INSTALL is READY-TO-SHIP",
+  "historical D1 designer INSTALL stays committed",
 );
 assert(
   read("land/INSTALL.md").includes("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md"),
-  "land INSTALL points at D1 kit SoT",
+  "land INSTALL records replaced D1 kit",
 );
 assert(
   existsSync(join(root, "land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md")) &&
     read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md").includes("P1") &&
     read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md").includes("staging"),
-  "D1 Quiet Capital harden INSTALL is committed",
+  "historical D1 Quiet Capital harden INSTALL stays committed",
 );
 assert(
   existsSync(join(root, "land/mobile-rebuild-v1/d1-bold-h1-first/designer-d1-quiet-capital-harden-v1.md")),
-  "D1 Quiet Capital harden designer notes committed",
+  "historical D1 Quiet Capital harden designer notes stay committed",
 );
 assert(
   read("land/INSTALL.md").includes("INSTALL-harden-v1.md"),
-  "land INSTALL points at D1 harden kit",
+  "land INSTALL records replaced D1 harden kit",
 );
 assert(
   css.includes("fractalNoise") &&
@@ -926,9 +945,9 @@ assert(lockup.includes("onDark"), "BrandLockup can render reverse on dark");
 assert(lockup.includes("219") && lockup.includes("46"), "land reverse lockup intrinsic ~219×46");
 assert(
   css.includes(".bb-land-lockup") &&
-    css.includes("height: 2.15rem") &&
+    css.includes("height: 1.75rem") &&
     css.includes("height: 2.875rem"),
-  "land overlay lockup reads ~34px phone (−8–10%) / ~46px desk on navy",
+  "land overlay lockup reads 28px phone / ~46px desk on navy",
 );
 assert(lockup.includes('alt="BotBuyer"'), "BrandLockup accessible alt");
 assert(shell.includes("BrandLockup"), "app shell soft-spine header lockup");
