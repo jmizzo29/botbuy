@@ -8,6 +8,8 @@ export const LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK." as
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
 export const LAND_WORDMARK = "BotBuyer" as const;
+export const LAND_SKY_MARK_SRC =
+  "/brand/logo-soft-spine/botbuyer-mark-reverse.svg" as const;
 export const LAND_ARC_SRC = "/land/assets/06-arc-reverse.svg" as const;
 export const LAND_ARC_LABEL = "Find Decide Buy arc" as const;
 

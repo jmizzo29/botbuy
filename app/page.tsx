@@ -6,10 +6,9 @@ import { Button } from "@/components/ui/button";
 import { CLERK_SIGN_IN_URL } from "@/lib/auth-config";
 import {
   BRAND,
-  LAND_ARC_LABEL,
-  LAND_ARC_SRC,
   LAND_PRODUCT_H1,
   LAND_PRODUCT_SUPPORT,
+  LAND_SKY_MARK_SRC,
   SIGN_IN_H1,
 } from "@/lib/brand";
 import { redirectSignedInFromLand } from "@/lib/land-gate";
@@ -30,44 +29,40 @@ export default async function LandPage() {
 
   return (
     <PublicChrome land>
-      <section
-        data-surface="land-stage"
-        className="bb-land-stage bb-atm-richer-mesh-deep"
-      >
-        <div className="bb-land-stage-grid">
+      <section data-surface="land-stage" className="bb-land-stage">
+        <div
+          data-zone="sky"
+          className="bb-land-sky bb-atm-richer-mesh-deep"
+        >
+          <Image
+            src={LAND_SKY_MARK_SRC}
+            alt=""
+            width={148}
+            height={148}
+            unoptimized
+            preload
+            aria-hidden="true"
+            className="bb-mark-hero"
+          />
+        </div>
+        <div data-zone="panel" className="bb-land-panel">
           <div className="bb-land-copy">
-            <h1 className="bb-land-h1">
-              {LAND_PRODUCT_H1}
-            </h1>
-            <p className="bb-land-support">
-              {LAND_PRODUCT_SUPPORT}
-            </p>
-            <div className="bb-land-rule" aria-hidden="true" />
-            <div className="bb-land-arc">
-              <Image
-                src={LAND_ARC_SRC}
-                alt={LAND_ARC_LABEL}
-                width={280}
-                height={72}
-                unoptimized
-                preload
-                className="h-auto w-full"
-              />
-            </div>
-            <div className="bb-land-cta">
-              <Button asChild className="bb-land-signup">
-                <Link href="/signup" data-cta="land-signup">
-                  {BRAND.primaryCta}
-                </Link>
-              </Button>
-              <Link
-                href={CLERK_SIGN_IN_URL}
-                data-cta="land-signin"
-                className="bb-land-signin"
-              >
-                {SIGN_IN_H1}
+            <h1 className="bb-land-h1">{LAND_PRODUCT_H1}</h1>
+            <p className="bb-land-support">{LAND_PRODUCT_SUPPORT}</p>
+          </div>
+          <div className="bb-land-cta">
+            <Button asChild className="bb-land-signup">
+              <Link href="/signup" data-cta="land-signup">
+                {BRAND.primaryCta}
               </Link>
-            </div>
+            </Button>
+            <Link
+              href={CLERK_SIGN_IN_URL}
+              data-cta="land-signin"
+              className="bb-land-signin"
+            >
+              {SIGN_IN_H1}
+            </Link>
           </div>
         </div>
       </section>
