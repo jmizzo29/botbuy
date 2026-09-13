@@ -1,12 +1,23 @@
 import {
   connectorResultHasCandidates,
+  officialSearchProvider,
   routeIntentToSearch,
 } from "@/lib/connectors/intent-route";
+import { providerSupportsTool } from "@/lib/connectors/registry";
 import { invokeConnectorTool } from "@/lib/connectors/runtime";
 import {
   assertNoSecretsLogged,
   sanitizeAuditMetadata,
 } from "@/lib/connectors/sanitize";
+import {
+  HUMAN_REVIEW_BLOCKER,
+  SEARCH_ACT_HOLD_NOTE,
+  buildSearchActHandoff,
+  connectorCandidatesEventId,
+  dealHasSearchActHandoff,
+  formatSearchActDetail,
+  searchActHandoffEventId,
+} from "@/lib/connectors/search-handoff";
 import { CONNECTOR_TECH_LOCK_NOTE } from "@/lib/connectors/tech-lock";
 import type { ConnectorProvider, ConnectorToolResult } from "@/lib/connectors/types";
 import { assertRunDealSoftHold } from "@/lib/run-deal";
@@ -150,12 +161,13 @@ export async function applyDealSearchPipeline(input: {
 
   const at = new Date().toISOString();
   let searchResult: ConnectorToolResult | null = null;
+  const registryProvider = officialSearchProvider(route.kind);
 
-  if (route.provider) {
+  if (registryProvider && route.provider === registryProvider) {
     try {
       searchResult = await invokeConnectorTool({
         userId: input.userId,
-        provider: route.provider,
+        provider: registryProvider,
         tool: "search",
         dealId: deal.id,
         payload: {
@@ -237,6 +249,7 @@ export async function applyDealSearchPipeline(input: {
     return deal;
   }
 
+  let quoteData: Record<string, unknown> | null = null;
   if (connectorResultHasCandidates(searchResult.data) && route.provider) {
     const domain = firstCandidateDomain(searchResult);
     const product = firstCandidateProduct(searchResult);
@@ -253,6 +266,7 @@ export async function applyDealSearchPipeline(input: {
           product: product ?? undefined,
         },
       });
+      quoteData = quote.data ?? null;
       const quoteAt = new Date().toISOString();
       const quoteDetail = `live:false · ${compactDetail({
         provider: route.provider,
@@ -275,6 +289,13 @@ export async function applyDealSearchPipeline(input: {
         at: quoteAt,
         status: "done",
         actor: "engine",
+        metadata: sanitizeAuditMetadata({
+          live: false,
+          provider: route.provider,
+          listedUsd: quote.data?.listedUsd ?? null,
+          amountStatus: quote.data?.amountStatus ?? "unverified",
+          verified: false,
+        }),
       });
       attachTimeline(
         deal,
@@ -294,11 +315,13 @@ export async function applyDealSearchPipeline(input: {
     connectorResultHasCandidates(searchResult.data) &&
     deal.status === "Searching"
   ) {
-    const next = transitionDeal(deal.id, "Found", input.userId);
-    appendSearchNote(
-      next,
-      "Candidates found · Found · human review · not bought · auto-approve OFF.",
-    );
+    const next = applySearchActHandoff({
+      deal,
+      userId: input.userId,
+      provider: route.provider,
+      searchData: searchResult.data,
+      quoteData,
+    });
     assertRunDealSoftHold(next);
     await persistEngineStore();
     return next;
@@ -307,4 +330,108 @@ export async function applyDealSearchPipeline(input: {
   assertRunDealSoftHold(deal);
   await persistEngineStore();
   return deal;
+}
+
+/**
+ * Attach structured candidates + quote, then Searching → Found → Needs you.
+ * Does not invent verified prices or skip the Approve sheet.
+ */
+export function applySearchActHandoff(input: {
+  deal: Deal;
+  userId: string;
+  provider: ConnectorProvider | null;
+  searchData?: Record<string, unknown>;
+  quoteData?: Record<string, unknown> | null;
+}): Deal {
+  const deal = getDeal(input.deal.id, input.userId) ?? input.deal;
+  const events = listDealEvents(deal.id);
+  if (dealHasSearchActHandoff(deal.id, events)) {
+    assertRunDealSoftHold(deal);
+    return deal;
+  }
+
+  const provider = input.provider;
+  if (!provider || !providerSupportsTool(provider, "search")) {
+    assertRunDealSoftHold(deal);
+    return deal;
+  }
+
+  const handoff = buildSearchActHandoff({
+    provider,
+    searchData: input.searchData,
+    quoteData: input.quoteData,
+  });
+  if (!handoff.candidates.length) {
+    assertRunDealSoftHold(deal);
+    return deal;
+  }
+
+  const at = new Date().toISOString();
+  const detail = formatSearchActDetail(handoff);
+  const metadata = sanitizeAuditMetadata({
+    ...handoff,
+    live: false,
+    verified: false,
+    amountStatus: "unverified",
+  });
+  assertNoSecretsLogged(metadata);
+
+  if (!events.some((event) => event.id === connectorCandidatesEventId(deal.id))) {
+    appendDealEvent({
+      id: connectorCandidatesEventId(deal.id),
+      dealId: deal.id,
+      type: "diligence",
+      stage: "diligence",
+      title: "Connector candidates",
+      detail,
+      at,
+      status: "done",
+      actor: "engine",
+      metadata,
+    });
+    attachTimeline(
+      deal,
+      "Connector candidates",
+      detail,
+      at,
+      `ev_${deal.id}_connector_candidates`,
+    );
+  }
+
+  if (deal.status !== "Searching") {
+    assertRunDealSoftHold(deal);
+    return deal;
+  }
+
+  const found = transitionDeal(deal.id, "Found", input.userId);
+  const next = transitionDeal(found.id, "Needs you", input.userId);
+  const gateAt = new Date().toISOString();
+  appendDealEvent({
+    id: searchActHandoffEventId(next.id),
+    dealId: next.id,
+    type: "gate",
+    stage: "gate",
+    title: "Needs you",
+    detail: `Candidates ready for review. ${SEARCH_ACT_HOLD_NOTE}`,
+    at: gateAt,
+    status: "blocked",
+    actor: "engine",
+    fromStatus: "Found",
+    toStatus: "Needs you",
+    metadata,
+  });
+  attachTimeline(
+    next,
+    "Needs you",
+    `Connector candidates ready for review. Auto-approve OFF. Not bought.`,
+    gateAt,
+    `ev_${next.id}_search_act`,
+  );
+  if (!next.blockers.includes(HUMAN_REVIEW_BLOCKER)) {
+    next.blockers = [...next.blockers, HUMAN_REVIEW_BLOCKER];
+  }
+  appendSearchNote(next, SEARCH_ACT_HOLD_NOTE);
+  assertRunDealSoftHold(next);
+  void persistEngineStore();
+  return next;
 }

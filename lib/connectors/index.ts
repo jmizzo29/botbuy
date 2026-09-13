@@ -8,8 +8,15 @@ export {
 } from "@/lib/connectors/copy";
 export { invokeConnectorTool } from "@/lib/connectors/runtime";
 export { assertConnectorSpendAllowed } from "@/lib/connectors/approve-gate";
-export { applyDealSearchPipeline } from "@/lib/connectors/deal-search";
+export {
+  applyDealSearchPipeline,
+  applySearchActHandoff,
+} from "@/lib/connectors/deal-search";
 export { routeIntentToSearch } from "@/lib/connectors/intent-route";
+export {
+  readSearchActHandoff,
+  buildSearchActHandoff,
+} from "@/lib/connectors/search-handoff";
 export {
   CONNECTOR_TECH_LOCK,
   CONNECTOR_TECH_LOCK_NOTE,

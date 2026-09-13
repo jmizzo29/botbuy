@@ -265,6 +265,9 @@ const techLock = readFileSync(join(root, "lib/connectors/tech-lock.ts"), "utf8")
 assert(techLock.includes("mcpFirst: true") && techLock.includes("apisFirst: true"), "tech lock is MCP-first · APIs-first");
 assert(techLock.includes("captchaFarms: false") && techLock.includes("htmlLoginAutomation: false"), "tech lock forbids captcha/HTML login");
 assert(techLock.includes("autoApprove: false") && techLock.includes("hold: \"soft\""), "tech lock auto-approve OFF · Soft HOLD");
+assert(techLock.includes("designatedHolderApprove: true"), "tech lock designated-holder approve");
+assert(techLock.includes("landPromote: false"), "tech lock land promote HOLD");
+assert(gate.includes("Designated-holder Approve sheet"), "gate names designated-holder Approve sheet");
 const intentRouteSrc = readFileSync(join(root, "lib/connectors/intent-route.ts"), "utf8");
 assert(!/puppeteer|playwright|selenium/i.test(intentRouteSrc), "intent route has no browser farm");
 
@@ -274,6 +277,37 @@ const mapped = spawnSync(
   { encoding: "utf8" },
 );
 assert(mapped.status === 0, `intent-route runtime smoke${mapped.stderr ? `: ${mapped.stderr.trim()}` : ""}`);
+
+const handoffSrc = readFileSync(join(root, "lib/connectors/search-handoff.ts"), "utf8");
+assert(handoffSrc.includes("search_act_handoff"), "structured search act handoff");
+assert(handoffSrc.includes('amountStatus: "unverified"'), "handoff amounts stay unverified");
+assert(handoffSrc.includes("verified: false"), "handoff never marks verified");
+assert(!handoffSrc.includes("priceVerified: true"), "handoff invents no verified prices");
+
+assert(dealSearch.includes("applySearchActHandoff"), "pipeline uses search act handoff");
+assert(dealSearch.includes('transitionDeal(found.id, "Needs you"'), "candidates advance Found → Needs you");
+assert(dealSearch.includes("connector_candidates"), "pipeline attaches structured candidates");
+
+const dealPage = readFileSync(join(root, "app/(app)/deals/[id]/page.tsx"), "utf8");
+assert(dealPage.includes("DealCandidates"), "deal detail shows candidates");
+assert(dealPage.includes("readSearchActHandoff"), "deal detail reads structured handoff");
+
+const approveUi = readFileSync(join(root, "components/deal-approve-actions.tsx"), "utf8");
+assert(approveUi.includes('status !== "Needs you"'), "Approve sheet still Needs you only");
+
+const httpSearch = readFileSync(join(root, "lib/connectors/http-json/search.ts"), "utf8");
+assert(httpSearch.includes("parseHttpJsonCandidates"), "HTTP JSON search maps JSON rows");
+assert(httpSearch.includes("candidates"), "HTTP JSON search exposes candidates");
+
+const pipeline = spawnSync(
+  process.execPath,
+  [join(root, "node_modules/.bin/tsx"), join(root, "scripts/deal-search-runtime.mts")],
+  { encoding: "utf8" },
+);
+assert(
+  pipeline.status === 0,
+  `deal-search runtime smoke${pipeline.stderr ? `: ${pipeline.stderr.trim()}` : pipeline.stdout ? `: ${pipeline.stdout.trim()}` : ""}`,
+);
 
 if (failures.length) {
   console.error("connector-smoke FAIL");
@@ -285,5 +319,7 @@ console.log(" - AES-256-GCM roundtrip");
 console.log(" - approve gate Needs you → Buying · auto-approve OFF");
 console.log(" - register/buy fail closed without deal, auto-approve, or approve trail");
 console.log(" - M2 registry: shopify + http_json · live:false · spend gated");
-console.log(" - intent maps domain→Namecheap, phone→Twilio, software→Shopify, else official stub");
+console.log(" - intent maps domain→Namecheap, phone→Twilio, software→Shopify, HTTP JSON, else official stub");
 console.log(" - deal search pipeline is search/quote only · MCP-first · no browser farms");
+console.log(" - candidates attach structured handoff · Searching → Found → Needs you");
+console.log(" - Approve sheet Needs you → Buying still required before spend");

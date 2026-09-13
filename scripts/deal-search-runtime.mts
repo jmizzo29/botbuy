@@ -1,7 +1,24 @@
 import { SEED_OWNER } from "../lib/auth-owner.ts";
-import { applyDealSearchPipeline } from "../lib/connectors/deal-search.ts";
-import { connectorResultHasCandidates } from "../lib/connectors/intent-route.ts";
-import { addIntent, createSearchingDealFromIntent, listDealEvents } from "../lib/store.ts";
+import {
+  assertAuthorizedBuyAllowed,
+  assertConnectorSpendAllowed,
+} from "../lib/connectors/approve-gate.ts";
+import {
+  applyDealSearchPipeline,
+  applySearchActHandoff,
+} from "../lib/connectors/deal-search.ts";
+import { parseHttpJsonCandidates } from "../lib/connectors/http-json/search.ts";
+import {
+  connectorResultHasCandidates,
+  officialSearchProvider,
+} from "../lib/connectors/intent-route.ts";
+import { readSearchActHandoff } from "../lib/connectors/search-handoff.ts";
+import {
+  addIntent,
+  createSearchingDealFromIntent,
+  listDealEvents,
+  transitionDeal,
+} from "../lib/store.ts";
 
 const stamp = Date.now();
 const software = addIntent(
@@ -82,6 +99,48 @@ if (!phoneSearch.detail.includes("live:false")) {
   throw new Error("phone search event must include live:false");
 }
 
+const catalog = addIntent(
+  {
+    summary: `Query the official JSON API catalog for act handoff smoke ${stamp}.`,
+    categories: ["http_json"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const catalogDeal = await createSearchingDealFromIntent(
+  catalog,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+const catalogSearch = listDealEvents(catalogDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!catalogSearch?.detail.includes("http_json")) {
+  throw new Error("HTTP JSON intent should attempt official HTTPS JSON search");
+}
+if (!catalogSearch.detail.includes("live:false")) {
+  throw new Error("HTTP JSON search event must include live:false");
+}
+if (catalogDeal.status !== "Searching") {
+  throw new Error("HTTP JSON stub must stay Searching without invented candidates");
+}
+
+if (officialSearchProvider("shopify") !== "shopify") {
+  throw new Error("Shopify search must resolve from MCP registry");
+}
+if (officialSearchProvider("http_json") !== "http_json") {
+  throw new Error("HTTP JSON search must resolve from MCP registry");
+}
+
+const parsedJson = parseHttpJsonCandidates(
+  JSON.stringify({
+    results: [{ title: "Catalog license", sku: "lic-1" }],
+  }),
+);
+if (parsedJson.length !== 1 || parsedJson[0].title !== "Catalog license") {
+  throw new Error("HTTP JSON search must map official JSON rows into candidates");
+}
+
 if (connectorResultHasCandidates({ available: null, candidates: [] })) {
   throw new Error("empty stub must not look like candidates");
 }
@@ -96,7 +155,99 @@ const replayCount = listDealEvents(replay.id).filter((event) =>
 ).length;
 if (replayCount !== 1) throw new Error("pipeline must be idempotent");
 
+const reviewed = applySearchActHandoff({
+  deal: softwareDeal,
+  userId: SEED_OWNER.id,
+  provider: "shopify",
+  searchData: {
+    candidates: [
+      {
+        title: "Invoice tools",
+        handle: "invoice-tools",
+        amountStatus: "unverified",
+      },
+    ],
+    amountStatus: "unverified",
+  },
+  quoteData: { listedUsd: null, amountStatus: "unverified" },
+});
+if (reviewed.status !== "Needs you") {
+  throw new Error("candidates must advance Searching → Found → Needs you");
+}
+if (reviewed.priceUsd !== 0 || reviewed.amountVerified || reviewed.priceVerified) {
+  throw new Error("handoff must not invent verified prices");
+}
+if (reviewed.amountStatus === "verified") {
+  throw new Error("handoff must keep amountStatus unverified");
+}
+const handoff = readSearchActHandoff(listDealEvents(reviewed.id));
+if (!handoff || handoff.candidates[0]?.label !== "Invoice tools") {
+  throw new Error("deal events must carry structured candidates");
+}
+if (handoff.live !== false || handoff.quote?.verified !== false) {
+  throw new Error("handoff must stay live:false and quote unverified");
+}
+
+function expectSpendClosed(run: () => unknown, label: string) {
+  try {
+    run();
+    throw new Error(`${label} must fail closed`);
+  } catch (error) {
+    const name = error instanceof Error ? error.name : "";
+    const message = error instanceof Error ? error.message : String(error);
+    if (name !== "ConnectorError" && !/Fail-closed|Auto-approve is OFF/.test(message)) {
+      throw error;
+    }
+  }
+}
+expectSpendClosed(
+  () =>
+    assertConnectorSpendAllowed({
+      tool: "buy",
+      userId: SEED_OWNER.id,
+      dealId: reviewed.id,
+    }),
+  "buy on Needs you",
+);
+expectSpendClosed(
+  () =>
+    assertAuthorizedBuyAllowed({
+      userId: SEED_OWNER.id,
+      dealId: reviewed.id,
+    }),
+  "authorized-buy on Needs you",
+);
+
+const buying = transitionDeal(reviewed.id, "Buying", SEED_OWNER.id);
+if (buying.status !== "Buying") {
+  throw new Error("Approve sheet path Needs you → Buying must still work");
+}
+assertConnectorSpendAllowed({
+  tool: "buy",
+  userId: SEED_OWNER.id,
+  dealId: buying.id,
+});
+assertAuthorizedBuyAllowed({
+  userId: SEED_OWNER.id,
+  dealId: buying.id,
+});
+
+const replayHandoff = applySearchActHandoff({
+  deal: buying,
+  userId: SEED_OWNER.id,
+  provider: "shopify",
+  searchData: {
+    candidates: [{ title: "Invoice tools", amountStatus: "unverified" }],
+  },
+});
+if (replayHandoff.status !== "Buying") {
+  throw new Error("search act handoff must be idempotent after approve");
+}
+
 console.log("deal-search-runtime PASS");
 console.log(` - software ${softwareDeal.id} Shopify search live:false`);
 console.log(` - domain ${domainDeal.id} Namecheap search live:false`);
 console.log(` - phone ${phoneDeal.id} Twilio search live:false`);
+console.log(` - http_json ${catalogDeal.id} official JSON search live:false`);
+console.log(` - ${reviewed.id} candidates → Needs you · buy still fail-closed`);
+console.log(" - Needs you → Buying still required before spend / authorized-buy");

@@ -145,6 +145,7 @@ export interface DealEvent {
   actor: DealEventActor;
   fromStatus?: DealStatus | null;
   toStatus?: DealStatus | null;
+  metadata?: Record<string, unknown>;
 }
 
 export interface DealVerification {

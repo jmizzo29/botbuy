@@ -28,7 +28,7 @@ John/CEO tech lock (Soft HOLD): **MCP-first · APIs-first**. Prefer the connecto
 - HTTP/JSON / OpenAPI-ish → `http_json` official HTTPS JSON
 - otherwise → typed stub event (`live:false`, no invented results)
 
-Search/quote persist as `deal_events` + notes. If a provider returns candidates, the deal moves Searching → Found for human review. Not bought. Not a public live-connector claim.
+Search/quote persist as `deal_events` + notes. Shopify Admin API and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
 
 ## Routes
 

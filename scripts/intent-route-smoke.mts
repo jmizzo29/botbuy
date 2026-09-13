@@ -1,5 +1,6 @@
 import {
   connectorResultHasCandidates,
+  officialSearchProvider,
   routeIntentToSearch,
 } from "../lib/connectors/intent-route.ts";
 
@@ -31,8 +32,14 @@ const httpJson = routeIntentToSearch({
   summary: "Query the official JSON API catalog.",
   categories: ["http_json"],
 });
-if (httpJson.kind !== "http_json") {
+if (httpJson.kind !== "http_json" || httpJson.provider !== "http_json") {
   throw new Error("HTTP JSON intent should map to http_json");
+}
+if (officialSearchProvider("shopify") !== "shopify") {
+  throw new Error("Shopify must be MCP-registry search");
+}
+if (officialSearchProvider("http_json") !== "http_json") {
+  throw new Error("HTTP JSON must be MCP-registry search");
 }
 
 const stub = routeIntentToSearch({

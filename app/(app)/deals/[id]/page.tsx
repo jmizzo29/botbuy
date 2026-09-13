@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { AuthorizedBuyPrep } from "@/components/authorized-buy-prep";
 import { DealApproveActions } from "@/components/deal-approve-actions";
 import { DealBadges } from "@/components/deal-badges";
+import { DealCandidates } from "@/components/deal-candidates";
 import { DealAmount } from "@/components/money";
 import { StatusControls } from "@/components/status-controls";
 import { StatusPill } from "@/components/status-pill";
@@ -29,6 +30,7 @@ import {
   verifiedSpendUsd,
 } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
+import { readSearchActHandoff } from "@/lib/connectors/search-handoff";
 import { runVerificationStub } from "@/lib/verification";
 import type { DealEvent } from "@/lib/types";
 
@@ -59,6 +61,8 @@ export default async function DealDetailPage({
   if (deal.source === "engine") {
     ensureSearchingUsageStub(deal);
   }
+  const dealEvents = listDealEvents(deal.id);
+  const candidates = readSearchActHandoff(dealEvents);
   const verification = runVerificationStub(deal);
   const usage = listUsageEvents(deal.id);
   const remaining = formatUsd(remainingAfterVerified(verifiedSpendUsd(deal.userId)));
@@ -141,6 +145,8 @@ export default async function DealDetailPage({
         <span>price_verified={String(deal.priceVerified)}</span>
         {deal.evidencePath ? <span>evidence={deal.evidencePath}</span> : null}
       </div>
+
+      {candidates ? <DealCandidates handoff={candidates} /> : null}
 
       {deal.status === "Searching" ? <SearchingEmpty /> : null}
 
@@ -231,7 +237,7 @@ export default async function DealDetailPage({
         </CardHeader>
         <CardContent>
           <ol className="space-y-0">
-            {listDealEvents(deal.id).map((event, index, all) => (
+            {dealEvents.map((event, index, all) => (
               <TimelineItem
                 key={event.id}
                 event={event}
