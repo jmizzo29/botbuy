@@ -16,6 +16,8 @@ import {
   CONNECTOR_STATUS_LABEL,
   DIGITALOCEAN_NEEDS_SETUP_COPY,
   DIGITALOCEAN_TOKEN_DISCLOSURE,
+  GITHUB_NEEDS_SETUP_COPY,
+  GITHUB_TOKEN_DISCLOSURE,
   HTTP_JSON_HOST_COPY,
   HTTP_JSON_NEEDS_SETUP_COPY,
   NAMECHEAP_ELIGIBILITY_COPY,
@@ -298,6 +300,16 @@ export function digitalOceanNeedsSetupReasons(input: {
   return reasons;
 }
 
+export function githubNeedsSetupReasons(input: {
+  officialApiAck?: boolean;
+  hasToken?: boolean;
+}) {
+  const reasons: string[] = [];
+  if (!input.hasToken) reasons.push(GITHUB_NEEDS_SETUP_COPY);
+  if (!input.officialApiAck) reasons.push(GITHUB_TOKEN_DISCLOSURE);
+  return reasons;
+}
+
 export function httpJsonNeedsSetupReasons(input: {
   officialApiAck?: boolean;
   baseUrl?: string | null;
@@ -324,7 +336,7 @@ export function toPublicStatus(
   const status = row?.status ?? "disconnected";
   const needsSetup = extras?.needsSetup ?? defaultNeedsSetup(provider);
   const oauthPreferred =
-    provider === "twilio" || provider === "shopify";
+    provider === "twilio" || provider === "shopify" || provider === "github";
   return {
     provider,
     label: providerLabel(provider),
@@ -353,6 +365,7 @@ export async function listPublicConnectorStatus(
   options?: {
     twilioOauthAvailable?: boolean;
     shopifyOauthAvailable?: boolean;
+    githubOauthAvailable?: boolean;
   },
 ): Promise<ConnectorPublicStatus[]> {
   const rows = await listConnectedAccounts(userId);
@@ -376,6 +389,11 @@ export async function listPublicConnectorStatus(
         officialApiAck: connected,
         hasToken: connected,
       });
+    } else if (provider === "github") {
+      needsSetup = githubNeedsSetupReasons({
+        officialApiAck: connected,
+        hasToken: connected,
+      });
     } else if (provider === "http_json") {
       needsSetup = httpJsonNeedsSetupReasons({
         officialApiAck: connected,
@@ -390,7 +408,9 @@ export async function listPublicConnectorStatus(
           ? options?.twilioOauthAvailable
           : provider === "shopify"
             ? options?.shopifyOauthAvailable
-            : false,
+            : provider === "github"
+              ? options?.githubOauthAvailable
+              : false,
       needsSetup,
     });
   });

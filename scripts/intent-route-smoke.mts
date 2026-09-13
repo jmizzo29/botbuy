@@ -113,11 +113,40 @@ if (carNotDo.kind === "digitalocean") {
   throw new Error("car intent must not wedge onto DigitalOcean");
 }
 
+const github = routeIntentToSearch({
+  summary: "Find a GitHub repo or gist we can search.",
+  categories: ["github"],
+});
+if (github.kind !== "github" || github.provider !== "github") {
+  throw new Error("github intent should map to GitHub official API");
+}
+if (github.kind === "namecheap" || github.kind === "digitalocean") {
+  throw new Error("GitHub must not duplicate Namecheap or DigitalOcean");
+}
+
+const githubHost = routeIntentToSearch({
+  summary: "Search github.com/octocat/Hello-World",
+});
+if (githubHost.kind !== "github") {
+  throw new Error("github.com host must map to GitHub SaaS MCP, not Namecheap");
+}
+
+const carNotGh = routeIntentToSearch({
+  summary: "Find a used Honda Civic in Austin.",
+  categories: ["vehicle"],
+});
+if (carNotGh.kind === "github") {
+  throw new Error("car intent must not wedge onto GitHub");
+}
+
 if (officialSearchProvider("shopify") !== "shopify") {
   throw new Error("Shopify must be MCP-registry search");
 }
 if (officialSearchProvider("digitalocean") !== "digitalocean") {
   throw new Error("DigitalOcean must be MCP-registry search");
+}
+if (officialSearchProvider("github") !== "github") {
+  throw new Error("GitHub must be MCP-registry search");
 }
 if (officialSearchProvider("http_json") !== "http_json") {
   throw new Error("HTTP JSON must be MCP-registry search");

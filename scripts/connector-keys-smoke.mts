@@ -10,6 +10,7 @@ import {
   shopifyKeysConfigured,
   twilioKeysConfigured,
   digitalOceanKeysConfigured,
+  githubKeysConfigured,
 } from "../lib/connectors/keys.ts";
 import {
   CONNECTOR_SMOKE_NOTE,
@@ -32,6 +33,10 @@ import {
   parseDigitalOceanCandidates,
   searchDigitalOcean,
 } from "../lib/connectors/digitalocean/search.ts";
+import {
+  parseGithubCandidates,
+  searchGithub,
+} from "../lib/connectors/github/search.ts";
 import { searchHttpJson } from "../lib/connectors/http-json/search.ts";
 
 function assert(ok: unknown, message: string) {
@@ -57,12 +62,17 @@ assert(
   CONNECTOR_PREVIEW_ENV.digitalocean.includes("DIGITALOCEAN_ACCESS_TOKEN"),
   "Preview env names DigitalOcean access token",
 );
+assert(
+  CONNECTOR_PREVIEW_ENV.github.includes("GITHUB_TOKEN"),
+  "Preview env names GitHub token",
+);
 
 const empty = null;
 assert(!namecheapKeysConfigured(empty), "Namecheap keysConfigured=false without vault/env");
 assert(!twilioKeysConfigured(empty), "Twilio keysConfigured=false without vault/env");
 assert(!shopifyKeysConfigured(empty), "Shopify keysConfigured=false without vault/env");
 assert(!digitalOceanKeysConfigured(empty), "DigitalOcean keysConfigured=false without vault/env");
+assert(!githubKeysConfigured(empty), "GitHub keysConfigured=false without vault/env");
 assert(!httpJsonKeysConfigured(empty), "HTTP JSON keysConfigured=false without vault/env");
 assert(!namecheapClientIpConfigured(), "Namecheap client IP unset in smoke env");
 assert(
@@ -116,6 +126,14 @@ assert(
   "DigitalOcean searchHttpReady with vault",
 );
 
+const githubVault = {
+  provider: "github" as const,
+  authMode: "api_key" as const,
+  apiKey: "ghp_test_token",
+};
+assert(githubKeysConfigured(githubVault), "GitHub vault counts as keysConfigured");
+assert(providerSearchHttpReady("github", githubVault), "GitHub searchHttpReady with vault");
+
 const httpVault = {
   provider: "http_json" as const,
   authMode: "api_key" as const,
@@ -154,6 +172,20 @@ assert(shopify.data?.keysConfigured === false, "Shopify search keysConfigured=fa
 const digitalocean = await searchDigitalOcean({ vault: null, query: "droplet" });
 assert(digitalocean.live === false && digitalocean.result === "stub", "DigitalOcean search stub live:false");
 assert(digitalocean.data?.keysConfigured === false, "DigitalOcean search keysConfigured=false");
+
+const github = await searchGithub({ vault: null, query: "octocat" });
+assert(github.live === false && github.result === "stub", "GitHub search stub live:false");
+assert(github.data?.keysConfigured === false, "GitHub search keysConfigured=false");
+const ghParsed = parseGithubCandidates(
+  JSON.stringify({
+    items: [
+      { id: 1, full_name: "octocat/Hello-World", name: "Hello-World", html_url: "https://github.com/octocat/Hello-World" },
+    ],
+  }),
+);
+assert(ghParsed.length === 1 && ghParsed[0]?.kind === "repository", "GitHub parser maps repositories");
+assert(ghParsed.every((row) => row.amountStatus === "unverified"), "GitHub candidates stay unverified");
+
 const doParsed = parseDigitalOceanCandidates(
   JSON.stringify({
     droplets: [{ id: 1, name: "web-1", region: { slug: "nyc3" }, size_slug: "s-1vcpu-1gb" }],
@@ -193,6 +225,15 @@ const carReady = routeIntentToSearch({
 assert(carReady.kind === "http_json", "category-agnostic MCP when HTTP JSON keys are ready");
 assert(carReady.kind !== "shopify", "MCP catalog is not a Shopify wedge");
 assert(carReady.kind !== "digitalocean", "car intent is not a DigitalOcean wedge");
+assert(carReady.kind !== "github", "car intent is not a GitHub wedge");
+
+const githubRoute = routeIntentToSearch({
+  summary: "Find a GitHub repo or gist we can search.",
+  categories: ["github"],
+});
+assert(githubRoute.kind === "github", "github intent maps to GitHub");
+assert(githubRoute.kind !== "namecheap", "GitHub is not a Namecheap duplicate");
+assert(githubRoute.kind !== "digitalocean", "GitHub is not a DigitalOcean duplicate");
 
 const dropletRoute = routeIntentToSearch({
   summary: "Find a DigitalOcean droplet or volume we can buy.",
@@ -207,7 +248,7 @@ const carStub = routeIntentToSearch({
 assert(carStub.kind === "stub", "empty car stub without HTTP JSON keys");
 
 console.log("connector-keys-smoke PASS");
-console.log(" - keysConfigured=false without vault/env for all five providers");
+console.log(" - keysConfigured=false without vault/env for all six providers");
 console.log(" - Namecheap searchHttpReady stays false without NAMECHEAP_CLIENT_IP");
 console.log(" - read-only smoke is search-only · live:false");
 console.log(" - Namecheap getPricing parse · category-agnostic HTTP JSON MCP when keys ready");

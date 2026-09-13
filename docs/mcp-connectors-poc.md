@@ -2,7 +2,7 @@
 
 Soft-signal HOLD. BotBuy-dedicated. Not a public live-connector claim.
 
-Internal-first tool layer for **Namecheap** (domains) and **Twilio** (phone numbers), plus M2 merchant/search shells: **Shopify** (Admin API), **DigitalOcean** (droplets/volumes official API), and **HTTP JSON** (generic official HTTPS JSON registry). Settings → Connected accounts is the buyer surface. Auto-approve stays **OFF**.
+Internal-first tool layer for **Namecheap** (domains) and **Twilio** (phone numbers), plus M2 merchant/search shells: **Shopify** (Admin API), **DigitalOcean** (droplets/volumes official API), **GitHub** (repo search official API, SaaS MCP), and **HTTP JSON** (generic official HTTPS JSON registry). Settings → Connected accounts is the buyer surface. Auto-approve stays **OFF**.
 
 Amazon Product Advertising is **not** in this POC — PA-API signing + associate-tag terms are not a clean official-API shell. Stripe rails stay vault **M3**.
 
@@ -26,12 +26,13 @@ John/CEO tech lock (Soft HOLD): **MCP-first · APIs-first**. Prefer the connecto
 - phone / SMS / number-ish → Twilio official API (scaffold)
 - software / SaaS / Shopify / license-ish → Shopify Admin API (scaffold)
 - droplet / volume / VPS / DigitalOcean-ish → DigitalOcean official API (scaffold)
+- GitHub / gist / GitHub marketplace-ish → GitHub official API repo search (SaaS MCP scaffold — not a registrar)
 - HTTP/JSON / OpenAPI / official catalog → `http_json` official HTTPS JSON (category-agnostic)
 - cars, houses, consumer products, and anything else → HTTP JSON MCP catalog **when** `keysConfigured` (vault or `HTTP_JSON_BASE_URL`); otherwise typed stub (`live:false`, category accepted, not rejected, no invented results). Never a Shopify wedge.
 
 John LOCK: intent + deal model stay **category-agnostic**. Cars, houses, consumer products, and broader are valid searches. Software/domains may ship first as scaffolds. Routing must not assume software-only or reject other categories.
 
-Search/quote persist as `deal_events` + notes. Shopify Admin API, DigitalOcean, and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. Every provider search/quote reports `keysConfigured` and `live:false`. HTTP JSON accepts listing-shaped rows (title, vin, address, make/model) without inventing prices. Namecheap quote calls official `namecheap.users.getPricing` when keys + `NAMECHEAP_CLIENT_IP` are present — listed amounts stay `amountStatus=unverified`. Without keys or IP, quote stays a stub. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
+Search/quote persist as `deal_events` + notes. Shopify Admin API, DigitalOcean, GitHub, and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. Every provider search/quote reports `keysConfigured` and `live:false`. HTTP JSON accepts listing-shaped rows (title, vin, address, make/model) without inventing prices. GitHub search uses official `api.github.com` repository search when a vault token or `GITHUB_TOKEN` is present — empty stubs invent no results. Namecheap quote calls official `namecheap.users.getPricing` when keys + `NAMECHEAP_CLIENT_IP` are present — listed amounts stay `amountStatus=unverified`. Without keys or IP, quote stays a stub. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
 
 ### Stage search fixture (CHO-honest)
 
@@ -56,7 +57,8 @@ CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) →
 - `GET/POST /api/deals/[id]/act` — after Needs you → Buying: reply / email drafts + register stub (`sent=false` · `registered=false` · never SMTP / never register HTTP from this surface)
 - `GET /api/connectors/oauth/twilio` — OAuth start. Fail-closed without `BOTBUY_VAULT_KEY` + Twilio OAuth client id/secret. Not live.
 - `GET /api/connectors/oauth/shopify` — OAuth start. Fail-closed without vault key + Shopify OAuth client id/secret + `?shop=`. Not live.
-- `GET /api/connectors/oauth/{twilio,shopify}/callback` — encrypt-at-rest vault shell. Missing vault key → fail-closed. Missing OAuth env or failed exchange → Needs setup. Tokens never stored in plaintext. Never log tokens. `live:false` · `spend=false`.
+- `GET /api/connectors/oauth/github` — OAuth start. Fail-closed without vault key + GitHub OAuth client id/secret. Not live.
+- `GET /api/connectors/oauth/{twilio,shopify,github}/callback` — encrypt-at-rest vault shell. Missing vault key → fail-closed. Missing OAuth env or failed exchange → Needs setup. Tokens never stored in plaintext. Never log tokens. `live:false` · `spend=false`.
 
 Settings → Connected accounts shows literal HonestyFlags `live=false` · `spend=false` · `autoApprove=false` plus **Auto-approve OFF**, `keysConfigured` / `searchHttpReady` per provider, and a **Read-only smoke** button. Smoke stays `live:false` and `spend=false`. Missing Preview env names are listed — never paste values into chat.
 
@@ -70,6 +72,7 @@ Settings → Connected accounts shows literal HonestyFlags `live=false` · `spen
 | `twilio` | phone | search / quote | buy | OAuth preferred · API advanced |
 | `shopify` | merchant | search / quote | buy (draft order stub) | OAuth preferred · Admin API token + `*.myshopify.com` |
 | `digitalocean` | saas | search / quote | buy (create stays stub — no invented region/size/image) | Personal access token. Official `api.digitalocean.com` only. |
+| `github` | saas | search / quote | buy (create stays stub — no invented owner/name/visibility) | OAuth preferred · PAT (`GITHUB_TOKEN`) advanced. Official `api.github.com` repo search. Not a registrar. |
 | `http_json` | mcp_http | search / quote | buy | Official HTTPS base URL + optional bearer. Private/loopback hosts rejected. |
 
 M2 shells follow Legal shortlist **spirit** (official APIs, encrypt tokens, revoke wipes ciphertext, never log secrets, `live: false`). They are **not** a new Legal PASS and not a public live claim. CPO IA v1 still describes the original Namecheap + Twilio rows.
@@ -109,6 +112,10 @@ Optional (real HTTP). If absent, tools return typed stubs + `keysConfigured=fals
 - `SHOPIFY_OAUTH_REDIRECT_URL`
 - `DIGITALOCEAN_ACCESS_TOKEN` — official personal access token (doctl name)
 - `DIGITALOCEAN_API_TOKEN` — optional alias for the same token
+- `GITHUB_TOKEN` — official personal access token (PAT). `keysConfigured=false` when this, OAuth vault token, and OAuth env are all absent.
+- `GITHUB_OAUTH_CLIENT_ID`
+- `GITHUB_OAUTH_CLIENT_SECRET`
+- `GITHUB_OAUTH_REDIRECT_URL`
 - `HTTP_JSON_BASE_URL` — official HTTPS JSON API only
 - `HTTP_JSON_BEARER_TOKEN`
 

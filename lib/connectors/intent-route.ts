@@ -3,6 +3,7 @@
 import {
   DIGITALOCEAN_CATEGORIES,
   DOMAIN_CATEGORIES,
+  GITHUB_CATEGORIES,
   HTTP_JSON_CATEGORIES,
   PHONE_CATEGORIES,
   SOFTWARE_CATEGORIES,
@@ -22,6 +23,7 @@ export type IntentSearchKind =
   | "twilio"
   | "shopify"
   | "digitalocean"
+  | "github"
   | "http_json"
   | "stub";
 
@@ -44,6 +46,8 @@ const SOFTWARE_WORD_RE =
   /\b(software|saas|shopify|license|storefront)\b/i;
 const DIGITALOCEAN_WORD_RE =
   /\b(digitalocean|digital ocean|droplets?|block storage|vps|cloud servers?)\b/i;
+const GITHUB_WORD_RE =
+  /\b(github|gists?|github marketplace)\b/i;
 const HTTP_JSON_WORD_RE =
   /\b(http json|openapi|official api|json api|official catalog)\b/i;
 const COUNTRY_RE =
@@ -58,6 +62,15 @@ export function extractDomainCandidate(text: string): string | null {
     return value;
   }
   return null;
+}
+
+/** github.com hosts are SaaS MCP, not a Namecheap registrar candidate. */
+export function isGithubHost(domain: string | null): boolean {
+  if (!domain) return false;
+  return (
+    /(^|\.)github\.com$/.test(domain) ||
+    /(^|\.)githubusercontent\.com$/.test(domain)
+  );
 }
 
 export function extractPhoneQuery(text: string): string {
@@ -120,6 +133,10 @@ export function routeIntentToSearch(input: {
   const digitaloceanish =
     categories.some((item) => DIGITALOCEAN_CATEGORIES.has(item)) ||
     DIGITALOCEAN_WORD_RE.test(text);
+  const githubish =
+    categories.some((item) => GITHUB_CATEGORIES.has(item)) ||
+    GITHUB_WORD_RE.test(text) ||
+    isGithubHost(domain);
   const httpJsonish =
     categories.some((item) => HTTP_JSON_CATEGORIES.has(item)) ||
     HTTP_JSON_WORD_RE.test(text);
@@ -127,7 +144,11 @@ export function routeIntentToSearch(input: {
     categories.some((item) => isVehicleCategory(item) || isPropertyCategory(item));
   const consumerish = categories.some((item) => isConsumerCategory(item));
 
-  if (domainish && (!phoneish || domain || domainCategory)) {
+  if (
+    domainish &&
+    !isGithubHost(domain) &&
+    (!phoneish || domain || domainCategory)
+  ) {
     const provider = officialSearchProvider("namecheap");
     if (provider) {
       return {
@@ -174,6 +195,23 @@ export function routeIntentToSearch(input: {
         category,
         accepted: true,
         reason: `DigitalOcean droplets/volumes mapped to official API search via MCP registry. ${CONNECTOR_TECH_LOCK_NOTE}`,
+      };
+    }
+  }
+
+  /** GitHub repos / marketplace — official API SaaS MCP. Not a registrar duplicate. */
+  if (githubish && !vehicleOrProperty && !consumerish) {
+    const provider = officialSearchProvider("github");
+    if (provider) {
+      return {
+        kind: "github",
+        provider,
+        query: (input.summary ?? "").trim(),
+        domain: null,
+        country: "US",
+        category,
+        accepted: true,
+        reason: `GitHub repository search mapped to official API via MCP registry. SaaS MCP — not a registrar. ${CONNECTOR_TECH_LOCK_NOTE}`,
       };
     }
   }

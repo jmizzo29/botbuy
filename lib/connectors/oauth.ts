@@ -17,6 +17,9 @@ import {
 import { isVaultKeyConfigured, requireVaultKey } from "@/lib/connectors/crypto";
 import {
   safeProviderFetch,
+  githubOauthConfigured,
+  githubOauthExchangeReady,
+  githubOauthSecretConfigured,
   shopifyOauthConfigured,
   shopifyOauthExchangeReady,
   shopifyOauthSecretConfigured,
@@ -27,7 +30,7 @@ import {
 import { normalizeShopifyShop } from "@/lib/connectors/shopify";
 import { ConnectorError } from "@/lib/connectors/types";
 
-export type OauthProvider = "twilio" | "shopify";
+export type OauthProvider = "twilio" | "shopify" | "github";
 export type OauthCallbackResult = "stored" | "needs_setup" | "vault_key";
 
 const STATE_TTL_MS = 15 * 60 * 1000;
@@ -59,23 +62,29 @@ export function shopifyOauthStartReady() {
   return isVaultKeyConfigured() && shopifyOauthExchangeReady();
 }
 
+export function githubOauthStartReady() {
+  return isVaultKeyConfigured() && githubOauthExchangeReady();
+}
+
 export function oauthProviderConfigured(provider: OauthProvider) {
-  return provider === "twilio"
-    ? twilioOauthConfigured()
-    : shopifyOauthConfigured();
+  if (provider === "twilio") return twilioOauthConfigured();
+  if (provider === "github") return githubOauthConfigured();
+  return shopifyOauthConfigured();
 }
 
 export function oauthExchangeReady(provider: OauthProvider) {
-  return provider === "twilio"
-    ? twilioOauthExchangeReady()
-    : shopifyOauthExchangeReady();
+  if (provider === "twilio") return twilioOauthExchangeReady();
+  if (provider === "github") return githubOauthExchangeReady();
+  return shopifyOauthExchangeReady();
 }
 
 export function oauthClientId(provider: OauthProvider) {
   const raw =
     provider === "twilio"
       ? process.env.TWILIO_OAUTH_CLIENT_ID
-      : process.env.SHOPIFY_OAUTH_CLIENT_ID;
+      : provider === "github"
+        ? process.env.GITHUB_OAUTH_CLIENT_ID
+        : process.env.SHOPIFY_OAUTH_CLIENT_ID;
   return raw?.trim() || "";
 }
 
@@ -83,7 +92,9 @@ export function oauthClientSecret(provider: OauthProvider) {
   const raw =
     provider === "twilio"
       ? process.env.TWILIO_OAUTH_CLIENT_SECRET
-      : process.env.SHOPIFY_OAUTH_CLIENT_SECRET;
+      : provider === "github"
+        ? process.env.GITHUB_OAUTH_CLIENT_SECRET
+        : process.env.SHOPIFY_OAUTH_CLIENT_SECRET;
   return raw?.trim() || "";
 }
 
@@ -91,7 +102,9 @@ export function oauthRedirectUrl(request: Request, provider: OauthProvider) {
   const configured =
     provider === "twilio"
       ? process.env.TWILIO_OAUTH_REDIRECT_URL?.trim()
-      : process.env.SHOPIFY_OAUTH_REDIRECT_URL?.trim();
+      : provider === "github"
+        ? process.env.GITHUB_OAUTH_REDIRECT_URL?.trim()
+        : process.env.SHOPIFY_OAUTH_REDIRECT_URL?.trim();
   if (configured) return configured;
   const url = new URL(request.url);
   return `${url.origin}/api/connectors/oauth/${provider}/callback`;
@@ -166,7 +179,9 @@ export function oauthStartGate(provider: OauthProvider) {
       error:
         provider === "twilio"
           ? "Twilio OAuth is preferred but not configured. Add TWILIO_OAUTH_CLIENT_ID and TWILIO_OAUTH_CLIENT_SECRET. API key connect is OK for this POC. Tokens are not stored."
-          : "Shopify OAuth is preferred but not configured. Add SHOPIFY_OAUTH_CLIENT_ID and SHOPIFY_OAUTH_CLIENT_SECRET. Admin API token connect is OK for this POC. Tokens are not stored.",
+          : provider === "github"
+            ? "GitHub OAuth is preferred but not configured. Add GITHUB_OAUTH_CLIENT_ID and GITHUB_OAUTH_CLIENT_SECRET. Personal access token connect is OK for this POC. Tokens are not stored."
+            : "Shopify OAuth is preferred but not configured. Add SHOPIFY_OAUTH_CLIENT_ID and SHOPIFY_OAUTH_CLIENT_SECRET. Admin API token connect is OK for this POC. Tokens are not stored.",
     };
   }
   return { ok: true as const };
@@ -227,6 +242,16 @@ export function startConnectorOauth(input: {
     authorize.searchParams.set("client_id", clientId);
     authorize.searchParams.set("redirect_uri", redirect);
     authorize.searchParams.set("response_type", "code");
+    authorize.searchParams.set("state", state);
+    return Response.redirect(authorize, 302);
+  }
+
+  if (input.provider === "github") {
+    const authorize = new URL("https://github.com/login/oauth/authorize");
+    authorize.searchParams.set("client_id", clientId);
+    authorize.searchParams.set("redirect_uri", redirect);
+    authorize.searchParams.set("response_type", "code");
+    authorize.searchParams.set("scope", "public_repo read:user");
     authorize.searchParams.set("state", state);
     return Response.redirect(authorize, 302);
   }
@@ -300,6 +325,36 @@ async function exchangeShopifyCode(input: {
         client_id: clientId,
         client_secret: clientSecret,
         code: input.code,
+      }),
+      cache: "no-store",
+    },
+  );
+  const parsed = readOauthJson(response.body);
+  if (!response.ok || !parsed) return null;
+  const oauthAccess = takeSecretField(parsed, "access_token");
+  if (!oauthAccess) return null;
+  return {
+    oauthAccess,
+    oauthRefresh: takeSecretField(parsed, "refresh_token") || undefined,
+  };
+}
+
+async function exchangeGithubCode(input: { code: string; redirect: string }) {
+  const clientId = oauthClientId("github");
+  const clientSecret = oauthClientSecret("github");
+  const response = await safeProviderFetch(
+    "https://github.com/login/oauth/access_token",
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        client_id: clientId,
+        client_secret: clientSecret,
+        code: input.code,
+        redirect_uri: input.redirect,
       }),
       cache: "no-store",
     },
@@ -419,6 +474,38 @@ export async function completeConnectorOauth(input: {
       });
     }
 
+    if (input.provider === "github") {
+      const code = url.searchParams.get("code")?.trim();
+      if (!code) {
+        return connectedAccountsOauthRedirect(input.request, {
+          provider: "github",
+          result: "needs_setup",
+        });
+      }
+      const tokens = await exchangeGithubCode({
+        code,
+        redirect: oauthRedirectUrl(input.request, "github"),
+      });
+      if (!tokens) {
+        return connectedAccountsOauthRedirect(input.request, {
+          provider: "github",
+          result: "needs_setup",
+        });
+      }
+      await connectProvider({
+        userId: input.userId,
+        clerkUserId: input.clerkUserId,
+        provider: "github",
+        oauthAccess: tokens.oauthAccess,
+        oauthRefresh: tokens.oauthRefresh,
+        officialApiAck: true,
+      });
+      return connectedAccountsOauthRedirect(input.request, {
+        provider: "github",
+        result: "stored",
+      });
+    }
+
     const code = url.searchParams.get("code")?.trim();
     const accountSid = url.searchParams.get("AccountSid")?.trim();
     const authToken = url.searchParams.get("AuthToken")?.trim();
@@ -492,6 +579,9 @@ export {
   OAUTH_ENV_NEEDS_SETUP,
   OAUTH_STORED_HONESTY,
   OAUTH_VAULT_KEY_REQUIRED,
+  githubOauthConfigured,
+  githubOauthExchangeReady,
+  githubOauthSecretConfigured,
   shopifyOauthConfigured,
   shopifyOauthExchangeReady,
   shopifyOauthSecretConfigured,

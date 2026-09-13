@@ -25,6 +25,7 @@ const SMOKE_QUERY: Record<ConnectorProvider, string> = {
   twilio: "415",
   shopify: "",
   digitalocean: "droplet",
+  github: "octocat",
   http_json: "smoke",
 };
 

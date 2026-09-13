@@ -2,6 +2,9 @@ import { isVaultKeyConfigured } from "@/lib/connectors/crypto";
 import {
   connectorsLiveEnabled,
   digitalOceanEnvPresent,
+  githubEnvPresent,
+  githubOauthConfigured,
+  githubOauthExchangeReady,
   httpJsonEnvPresent,
   namecheapEnvPresent,
   shopifyEnvPresent,
@@ -12,6 +15,7 @@ import {
   twilioOauthExchangeReady,
 } from "@/lib/connectors/http";
 import { resolveDigitalOceanCreds } from "@/lib/connectors/digitalocean/client";
+import { resolveGithubCreds } from "@/lib/connectors/github/client";
 import { resolveHttpJsonCreds } from "@/lib/connectors/http-json/client";
 import { resolveNamecheapCreds } from "@/lib/connectors/namecheap/client";
 import { CONNECTOR_LABEL } from "@/lib/connectors/copy";
@@ -56,6 +60,12 @@ export const CONNECTOR_PREVIEW_ENV = {
     "SHOPIFY_OAUTH_REDIRECT_URL",
   ] as const,
   digitalocean: ["DIGITALOCEAN_ACCESS_TOKEN", "DIGITALOCEAN_API_TOKEN"] as const,
+  github: [
+    "GITHUB_TOKEN",
+    "GITHUB_OAUTH_CLIENT_ID",
+    "GITHUB_OAUTH_CLIENT_SECRET",
+    "GITHUB_OAUTH_REDIRECT_URL",
+  ] as const,
   http_json: ["HTTP_JSON_BASE_URL", "HTTP_JSON_BEARER_TOKEN"] as const,
 } as const;
 
@@ -82,6 +92,10 @@ export function digitalOceanKeysConfigured(vault: VaultSecretPayload | null) {
   return Boolean(resolveDigitalOceanCreds(vault));
 }
 
+export function githubKeysConfigured(vault: VaultSecretPayload | null) {
+  return Boolean(resolveGithubCreds(vault));
+}
+
 export function httpJsonKeysConfigured(vault: VaultSecretPayload | null) {
   return Boolean(resolveHttpJsonCreds(vault));
 }
@@ -94,6 +108,7 @@ export function providerKeysConfigured(
   if (provider === "twilio") return twilioKeysConfigured(vault);
   if (provider === "shopify") return shopifyKeysConfigured(vault);
   if (provider === "digitalocean") return digitalOceanKeysConfigured(vault);
+  if (provider === "github") return githubKeysConfigured(vault);
   return httpJsonKeysConfigured(vault);
 }
 
@@ -102,12 +117,14 @@ export function providerEnvPresent(provider: ConnectorProvider) {
   if (provider === "twilio") return twilioEnvPresent();
   if (provider === "shopify") return shopifyEnvPresent();
   if (provider === "digitalocean") return digitalOceanEnvPresent();
+  if (provider === "github") return githubEnvPresent();
   return httpJsonEnvPresent();
 }
 
 export function providerOauthConfigured(provider: ConnectorProvider) {
   if (provider === "twilio") return twilioOauthConfigured();
   if (provider === "shopify") return shopifyOauthConfigured();
+  if (provider === "github") return githubOauthConfigured();
   return false;
 }
 
@@ -142,6 +159,10 @@ export function missingConnectorEnvNames(
   } else if (provider === "digitalocean") {
     if (!digitalOceanKeysConfigured(vault)) {
       missing.push("DIGITALOCEAN_ACCESS_TOKEN");
+    }
+  } else if (provider === "github") {
+    if (!githubKeysConfigured(vault)) {
+      missing.push("GITHUB_TOKEN");
     }
   } else if (!httpJsonKeysConfigured(vault)) {
     missing.push("HTTP_JSON_BASE_URL");
@@ -202,7 +223,9 @@ export function buildProviderReadiness(input: {
         ? twilioOauthExchangeReady()
         : input.provider === "shopify"
           ? shopifyOauthExchangeReady()
-          : false,
+          : input.provider === "github"
+            ? githubOauthExchangeReady()
+            : false,
     clientIpConfigured:
       input.provider === "namecheap" ? namecheapClientIpConfigured() : null,
     searchHttpReady: providerSearchHttpReady(input.provider, input.vault),

@@ -43,6 +43,7 @@ assert(register.includes("assertConnectorSpendAllowed"), "runtime uses approve g
 assert(register.includes("recordConnectorAudit"), "runtime writes audit");
 assert(register.includes('"shopify"') && register.includes("buyShopifyProduct"), "runtime routes Shopify");
 assert(register.includes("buyDigitalOcean") && register.includes("searchDigitalOcean"), "runtime routes DigitalOcean");
+assert(register.includes("buyGithub") && register.includes("searchGithub"), "runtime routes GitHub");
 assert(register.includes("buyHttpJson") && register.includes("searchHttpJson"), "runtime routes HTTP JSON");
 assert(register.includes("providerSupportsTool"), "runtime checks registry tools");
 
@@ -54,17 +55,18 @@ assert(oauthLib.includes("spend: false"), "OAuth honesty spend=false");
 assert(!oauthLib.includes("console.log"), "OAuth shell never console.logs tokens");
 assert(
   existsSync(join(root, "app/api/connectors/oauth/twilio/callback/route.ts")) &&
-    existsSync(join(root, "app/api/connectors/oauth/shopify/callback/route.ts")),
+    existsSync(join(root, "app/api/connectors/oauth/shopify/callback/route.ts")) &&
+    existsSync(join(root, "app/api/connectors/oauth/github/callback/route.ts")),
   "OAuth callback routes exist",
 );
 
 const types = readFileSync(join(root, "lib/connectors/types.ts"), "utf8");
-assert(types.includes('"shopify"') && types.includes('"digitalocean"') && types.includes('"http_json"'), "provider types include M2 shells");
+assert(types.includes('"shopify"') && types.includes('"digitalocean"') && types.includes('"github"') && types.includes('"http_json"'), "provider types include M2 shells");
 assert(types.includes("live: false"), "public status live stays false");
 
 const registry = readFileSync(join(root, "lib/connectors/registry.ts"), "utf8");
 assert(registry.includes("kind: \"merchant\"") && registry.includes("kind: \"saas\"") && registry.includes("kind: \"mcp_http\""), "registry kinds");
-assert(registry.includes('id: "shopify"') && registry.includes('id: "digitalocean"') && registry.includes('id: "http_json"'), "registry entries");
+assert(registry.includes('id: "shopify"') && registry.includes('id: "digitalocean"') && registry.includes('id: "github"') && registry.includes('id: "http_json"'), "registry entries");
 
 const shopifyBuy = readFileSync(join(root, "lib/connectors/shopify/buy.ts"), "utf8");
 assert(shopifyBuy.includes("connectorsLiveEnabled"), "Shopify buy not live by default");
@@ -77,6 +79,10 @@ const digitalOceanBuy = readFileSync(join(root, "lib/connectors/digitalocean/buy
 assert(digitalOceanBuy.includes("connectorsLiveEnabled"), "DigitalOcean buy not live by default");
 assert(digitalOceanBuy.includes("live: false"), "DigitalOcean buy CHO-honest live:false");
 assert(!digitalOceanBuy.includes("regions[0]") && !digitalOceanBuy.includes("nyc1"), "DigitalOcean buy invents no region");
+const githubBuy = readFileSync(join(root, "lib/connectors/github/buy.ts"), "utf8");
+assert(githubBuy.includes("connectorsLiveEnabled"), "GitHub buy not live by default");
+assert(githubBuy.includes("live: false"), "GitHub buy CHO-honest live:false");
+assert(!githubBuy.includes("octocat") && !githubBuy.includes("Hello-World"), "GitHub buy invents no repo");
 
 const safeUrl = readFileSync(join(root, "lib/connectors/safe-url.ts"), "utf8");
 assert(safeUrl.includes("https:"), "HTTP JSON requires HTTPS");
@@ -222,6 +228,9 @@ function evaluateIntentRoute({ summary = "", categories = [], mustInclude = "" }
       ["digitalocean", "droplet", "droplets", "volume", "volumes", "vps", "cloud"].includes(item),
     ) ||
     /\b(digitalocean|digital ocean|droplets?|block storage|vps|cloud servers?)\b/i.test(text);
+  const githubish =
+    categories.some((item) => ["github", "gist", "gists", "github_marketplace"].includes(item)) ||
+    /\b(github|gists?|github marketplace)\b/i.test(text);
   const httpJsonish =
     categories.some((item) => ["http_json", "http", "json", "api", "catalog"].includes(item)) ||
     /\b(http json|openapi|official api|json api|official catalog)\b/i.test(text);
@@ -235,9 +244,10 @@ function evaluateIntentRoute({ summary = "", categories = [], mustInclude = "" }
       ["product", "products", "consumer", "goods", "retail"].includes(item),
     ) ||
     /\b(consumer products?|household|appliances?)\b/i.test(text);
-  if (domainish) return "namecheap";
+  if (domainish && !/\bgithub\.com\b/i.test(text)) return "namecheap";
   if (phoneish) return "twilio";
   if (digitaloceanish && !vehicleOrProperty && !consumerish) return "digitalocean";
+  if (githubish && !vehicleOrProperty && !consumerish) return "github";
   if (softwareish && !vehicleOrProperty && !consumerish) return "shopify";
   if (httpJsonish) return "http_json";
   return "stub";
@@ -284,6 +294,26 @@ assert(
     categories: ["vehicle"],
   }) !== "digitalocean",
   "car intent does not wedge onto DigitalOcean",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Find a GitHub repo or gist we can search.",
+    categories: ["github"],
+  }) === "github",
+  "github intent maps to GitHub official API",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Search github.com/octocat/Hello-World",
+  }) === "github",
+  "github.com host maps to GitHub SaaS MCP, not Namecheap",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Find a used Honda Civic in Austin.",
+    categories: ["vehicle"],
+  }) !== "github",
+  "car intent does not wedge onto GitHub",
 );
 assert(
   evaluateIntentRoute({
@@ -436,6 +466,9 @@ assert(shopifySearch.includes("keysConfigured"), "Shopify search reports keysCon
 const digitalOceanSearch = readFileSync(join(root, "lib/connectors/digitalocean/search.ts"), "utf8");
 assert(digitalOceanSearch.includes("keysConfigured"), "DigitalOcean search reports keysConfigured");
 assert(digitalOceanSearch.includes("api.digitalocean.com") || readFileSync(join(root, "lib/connectors/digitalocean/client.ts"), "utf8").includes("api.digitalocean.com"), "DigitalOcean client is official API host");
+const githubSearch = readFileSync(join(root, "lib/connectors/github/search.ts"), "utf8");
+assert(githubSearch.includes("keysConfigured"), "GitHub search reports keysConfigured");
+assert(readFileSync(join(root, "lib/connectors/github/client.ts"), "utf8").includes("api.github.com"), "GitHub client is official API host");
 
 const oauthVault = spawnSync(
   process.execPath,
@@ -486,11 +519,11 @@ console.log("connector-smoke PASS");
 console.log(" - AES-256-GCM roundtrip");
 console.log(" - approve gate Needs you → Buying · auto-approve OFF");
 console.log(" - register/buy fail closed without deal, auto-approve, or approve trail");
-console.log(" - M2 registry: shopify + digitalocean + http_json · live:false · spend gated");
-console.log(" - intent maps domain→Namecheap, phone→Twilio, droplet→DigitalOcean, software→Shopify, HTTP JSON; cars/houses stay accepted stubs");
+console.log(" - M2 registry: shopify + digitalocean + github + http_json · live:false · spend gated");
+console.log(" - intent maps domain→Namecheap, phone→Twilio, droplet→DigitalOcean, github→GitHub, software→Shopify, HTTP JSON; cars/houses stay accepted stubs");
 console.log(" - deal search pipeline is search/quote only · MCP-first · no browser farms");
 console.log(" - candidates attach structured handoff · Searching → Found → Needs you");
 console.log(" - empty stubs stay Searching; qa-needs-you still Needs you · production refused");
 console.log(" - Approve sheet Needs you → Buying still required before spend");
-console.log(" - keysConfigured honesty on all five providers · read-only smoke · live:false");
+console.log(" - keysConfigured honesty on all six providers · read-only smoke · live:false");
 console.log(" - OAuth vault shell fail-closed without BOTBUY_VAULT_KEY · Needs setup without OAuth env");

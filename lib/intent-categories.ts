@@ -54,6 +54,13 @@ export const DIGITALOCEAN_CATEGORIES = new Set([
   "cloud",
 ]);
 
+export const GITHUB_CATEGORIES = new Set([
+  "github",
+  "gist",
+  "gists",
+  "github_marketplace",
+]);
+
 export const HTTP_JSON_CATEGORIES = new Set([
   "http_json",
   "http",
@@ -80,6 +87,8 @@ const SOFTWARE_WORD_RE =
   /\b(software|saas|shopify|license|storefront)\b/i;
 const DIGITALOCEAN_WORD_RE =
   /\b(digitalocean|digital ocean|droplets?|block storage|vps|cloud servers?)\b/i;
+const GITHUB_WORD_RE =
+  /\b(github|gists?|github marketplace)\b/i;
 const HTTP_JSON_WORD_RE =
   /\b(http json|openapi|official api|json api|official catalog)\b/i;
 const CONSUMER_WORD_RE =
@@ -118,6 +127,7 @@ export function inferIntentCategories(input: {
   if (PHONE_WORD_RE.test(text)) inferred.push("phone");
   if (SOFTWARE_WORD_RE.test(text)) inferred.push("software");
   if (DIGITALOCEAN_WORD_RE.test(text)) inferred.push("digitalocean");
+  if (GITHUB_WORD_RE.test(text)) inferred.push("github");
   if (HTTP_JSON_WORD_RE.test(text)) inferred.push("http_json");
   if (CONSUMER_WORD_RE.test(text)) inferred.push("product");
 

@@ -15,6 +15,7 @@ export const NAMECHEAP_LABEL = "Namecheap" as const;
 export const TWILIO_LABEL = "Twilio" as const;
 export const SHOPIFY_LABEL = "Shopify" as const;
 export const DIGITALOCEAN_LABEL = "DigitalOcean" as const;
+export const GITHUB_LABEL = "GitHub" as const;
 export const HTTP_JSON_LABEL = "HTTP JSON" as const;
 
 export const CONNECTOR_LABEL = {
@@ -22,6 +23,7 @@ export const CONNECTOR_LABEL = {
   twilio: TWILIO_LABEL,
   shopify: SHOPIFY_LABEL,
   digitalocean: DIGITALOCEAN_LABEL,
+  github: GITHUB_LABEL,
   http_json: HTTP_JSON_LABEL,
 } as const;
 
@@ -94,6 +96,16 @@ export const DIGITALOCEAN_NEEDS_SETUP_COPY =
 export const DIGITALOCEAN_TOKEN_DISCLOSURE =
   "Access token connect is OK for this POC. Tokens are encrypted and never logged. This is not a live public connector." as const;
 export const DIGITALOCEAN_TOKEN_LABEL = "Access token" as const;
+
+export const GITHUB_NEEDS_SETUP_COPY =
+  "GitHub official API. Continue with GitHub when a BotBuy GitHub OAuth client is configured. Search repositories (or marketplace-ish resources) via the official API — never a GitHub password or HTML login." as const;
+export const GITHUB_TOKEN_DISCLOSURE =
+  "Personal access token connect is OK for this POC. Tokens are encrypted and never logged. This is not a live public connector." as const;
+export const GITHUB_OAUTH_PREFERRED =
+  "OAuth is preferred when a GitHub OAuth app client is configured." as const;
+export const GITHUB_OAUTH_CTA = "Continue with GitHub" as const;
+export const GITHUB_ADVANCED_CREDENTIALS = "Use personal access token" as const;
+export const GITHUB_TOKEN_LABEL = "Personal access token" as const;
 
 export const HTTP_JSON_NEEDS_SETUP_COPY =
   "Official HTTPS JSON catalog. Category-agnostic — cars, houses, software, or anything the API lists. Paste a documented public API base URL. Never a password. Never a browser farm." as const;

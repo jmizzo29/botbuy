@@ -4,7 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { requireUser } from "@/lib/auth";
 import { CONNECT_ACCOUNTS_H1 } from "@/lib/connectors/copy";
 import { isVaultKeyConfigured } from "@/lib/connectors/crypto";
-import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/http";
+import {
+  githubOauthConfigured,
+  shopifyOauthConfigured,
+  twilioOauthConfigured,
+} from "@/lib/connectors/http";
 import { listConnectorReadiness } from "@/lib/connectors/keys";
 import { listPublicConnectorStatus } from "@/lib/connectors/vault";
 import { AUTO_APPROVE_OFF } from "@/lib/cpo-techlux";
@@ -27,6 +31,7 @@ export default async function ConnectedAccountsPage({
   const providers = await listPublicConnectorStatus(user.id, {
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
+    githubOauthAvailable: githubOauthConfigured(),
   });
   const readiness = await listConnectorReadiness(user.id);
   const keysConfigured = readiness.providers.some((row) => row.keysConfigured);
@@ -52,6 +57,7 @@ export default async function ConnectedAccountsPage({
         vaultKeyConfigured={isVaultKeyConfigured()}
         twilioOauthAvailable={twilioOauthConfigured()}
         shopifyOauthAvailable={shopifyOauthConfigured()}
+        githubOauthAvailable={githubOauthConfigured()}
         readiness={readiness}
         oauthReturn={{
           provider: params?.oauth,

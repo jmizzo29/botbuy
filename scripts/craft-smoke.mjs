@@ -1482,24 +1482,36 @@ assert(connectUi.includes("Namecheap") && connectUi.includes("Twilio"), "Nameche
 assert(connectUi.includes("Shopify") && connectUi.includes("HTTP JSON"), "M2 Shopify + HTTP JSON rows");
 assert(connectUi.includes("DigitalOcean") && connectUi.includes("digitalocean-needs-setup"), "DigitalOcean SaaS MCP row");
 assert(connectUi.includes("data-flow=\"digitalocean-connect\""), "DigitalOcean connect hook");
+assert(connectUi.includes("GitHub") && connectUi.includes("github-needs-setup"), "GitHub SaaS MCP row");
+assert(connectUi.includes("data-flow=\"github-connect\""), "GitHub connect hook");
+assert(connectUi.includes("data-cta=\"github-oauth\""), "GitHub OAuth is preferred CTA");
 assert(connectUi.includes("shopify-needs-setup") && connectUi.includes("http-json-needs-setup"), "M2 Needs setup honesty");
 assert(connectUi.includes("twilio-needs-setup"), "Twilio Needs setup honesty");
 assert(connectUi.includes("OAUTH_VAULT_KEY_REQUIRED") || connectUi.includes("BOTBUY_VAULT_KEY is required"), "Connect UI fail-closed without vault key");
 assert(existsSync(join(root, "app/api/connectors/oauth/twilio/callback/route.ts")), "Twilio OAuth callback vault shell");
 assert(existsSync(join(root, "app/api/connectors/oauth/shopify/callback/route.ts")), "Shopify OAuth callback vault shell");
+assert(existsSync(join(root, "app/api/connectors/oauth/github/callback/route.ts")), "GitHub OAuth callback vault shell");
 assert(read("lib/connectors/oauth.ts").includes("isVaultKeyConfigured"), "OAuth shell checks vault key");
 assert(read("lib/connectors/oauth.ts").includes("connectProvider"), "OAuth callback encrypts via connect");
 assert(connectUi.includes("data-cta=\"shopify-oauth\""), "Shopify OAuth is preferred CTA");
 assert(connectUi.includes("data-flow=\"http-json-connect\""), "HTTP JSON connect hook");
 assert(connectDocs.includes("shopify") && connectDocs.includes("http_json"), "POC docs list M2 shells");
 assert(connectDocs.includes("digitalocean") && connectDocs.includes("DIGITALOCEAN_ACCESS_TOKEN"), "POC docs list DigitalOcean SaaS MCP");
+assert(connectDocs.includes("github") && connectDocs.includes("GITHUB_TOKEN"), "POC docs list GitHub SaaS MCP");
 assert(envExample.includes("SHOPIFY_ADMIN_TOKEN=") && envExample.includes("HTTP_JSON_BASE_URL="), "env names M2 keys");
 assert(envExample.includes("DIGITALOCEAN_ACCESS_TOKEN="), "env names DigitalOcean token");
+assert(envExample.includes("GITHUB_TOKEN="), "env names GitHub token");
 assert(
   !/DIGITALOCEAN_ACCESS_TOKEN=\S+/.test(
     envExample.split("\n").find((line) => line.startsWith("DIGITALOCEAN_ACCESS_TOKEN=")) ?? "",
   ),
   "env example has no DigitalOcean secret",
+);
+assert(
+  !/GITHUB_TOKEN=\S+/.test(
+    envExample.split("\n").find((line) => line.startsWith("GITHUB_TOKEN=")) ?? "",
+  ),
+  "env example has no GitHub secret",
 );
 assert(!/SHOPIFY_ADMIN_TOKEN=\S+/.test(envExample.split("\n").find((line) => line.startsWith("SHOPIFY_ADMIN_TOKEN=")) ?? ""), "env example has no Shopify secret");
 assert(connectUi.includes("Connect") && connectUi.includes("Revoke"), "Connect / Revoke actions");
@@ -1562,7 +1574,7 @@ const intentRoute = read("lib/connectors/intent-route.ts");
 const dealSearch = read("lib/connectors/deal-search.ts");
 assert(existsSync(join(root, "lib/connectors/intent-route.ts")), "intent→connector mapper");
 assert(existsSync(join(root, "lib/connectors/deal-search.ts")), "deal search pipeline");
-assert(intentRoute.includes("namecheap") && intentRoute.includes("twilio") && intentRoute.includes("shopify") && intentRoute.includes("digitalocean") && intentRoute.includes("http_json") && intentRoute.includes("stub"), "mapper covers domain/phone/shopify/digitalocean/http_json/stub");
+assert(intentRoute.includes("namecheap") && intentRoute.includes("twilio") && intentRoute.includes("shopify") && intentRoute.includes("digitalocean") && intentRoute.includes("github") && intentRoute.includes("http_json") && intentRoute.includes("stub"), "mapper covers domain/phone/shopify/digitalocean/github/http_json/stub");
 assert(existsSync(join(root, "lib/connectors/tech-lock.ts")), "M1 tech lock committed");
 assert(read("lib/connectors/tech-lock.ts").includes("MCP-first"), "tech lock names MCP-first");
 assert(read("lib/connectors/tech-lock.ts").includes("designatedHolderApprove: true"), "tech lock designated-holder");

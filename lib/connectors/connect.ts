@@ -2,6 +2,8 @@ import { recordConnectorAccountAudit } from "@/lib/connectors/audit";
 import {
   DIGITALOCEAN_NEEDS_SETUP_COPY,
   DIGITALOCEAN_TOKEN_DISCLOSURE,
+  GITHUB_NEEDS_SETUP_COPY,
+  GITHUB_TOKEN_DISCLOSURE,
   HTTP_JSON_HOST_COPY,
   HTTP_JSON_NEEDS_SETUP_COPY,
   NAMECHEAP_ELIGIBILITY_COPY,
@@ -9,7 +11,11 @@ import {
   SHOPIFY_CUSTOM_APP_COPY,
   SHOPIFY_NEEDS_SETUP_COPY,
 } from "@/lib/connectors/copy";
-import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/http";
+import {
+  githubOauthConfigured,
+  shopifyOauthConfigured,
+  twilioOauthConfigured,
+} from "@/lib/connectors/http";
 import { hostnameHint, parseOfficialHttpsUrl } from "@/lib/connectors/safe-url";
 import { normalizeShopifyShop } from "@/lib/connectors/shopify";
 import {
@@ -20,6 +26,7 @@ import {
 } from "@/lib/connectors/types";
 import {
   digitalOceanNeedsSetupReasons,
+  githubNeedsSetupReasons,
   httpJsonNeedsSetupReasons,
   namecheapNeedsSetupReasons,
   revokeConnectedAccount,
@@ -49,6 +56,11 @@ export interface ConnectInput {
 function hintFor(input: ConnectInput) {
   if (input.provider === "namecheap") return input.apiUser?.trim() || null;
   if (input.provider === "digitalocean") {
+    const token = input.apiKey?.trim();
+    return token ? `token · ${token.slice(-4)}` : null;
+  }
+  if (input.provider === "github") {
+    if (input.oauthAccess?.trim()) return "oauth · github";
     const token = input.apiKey?.trim();
     return token ? `token · ${token.slice(-4)}` : null;
   }
@@ -243,6 +255,53 @@ async function connectDigitalOcean(input: ConnectInput) {
   };
 }
 
+async function connectGithub(input: ConnectInput) {
+  const apiKey = input.apiKey?.trim();
+  const oauthAccess = input.oauthAccess?.trim();
+
+  if (!oauthAccess && !apiKey) {
+    throw new ConnectorError(
+      githubOauthConfigured()
+        ? "GitHub OAuth or a personal access token is required. Never a password."
+        : "A GitHub personal access token is required. OAuth is preferred when a GitHub OAuth app client is configured. Never a password.",
+      "validation",
+    );
+  }
+
+  const needs = githubNeedsSetupReasons({
+    officialApiAck: oauthAccess ? true : input.officialApiAck,
+    hasToken: Boolean(oauthAccess || apiKey),
+  });
+  const status: ConnectorStatus = needs.length ? "needs_setup" : "connected";
+  const secret: VaultSecretPayload = {
+    provider: "github",
+    authMode: oauthAccess ? "oauth" : "api_key",
+    apiKey,
+    oauthAccess,
+    oauthRefresh: input.oauthRefresh?.trim(),
+  };
+  const row = await upsertConnectedAccount({
+    userId: input.userId,
+    clerkUserId: input.clerkUserId,
+    provider: "github",
+    secret,
+    status,
+    hint: hintFor(input),
+  });
+  recordConnectorAccountAudit({
+    userId: input.userId,
+    provider: "github",
+    tool: "connect",
+    result: status,
+  });
+  return {
+    row,
+    status,
+    needsSetup: needs,
+    setupCopy: [GITHUB_NEEDS_SETUP_COPY, GITHUB_TOKEN_DISCLOSURE],
+  };
+}
+
 async function connectHttpJson(input: ConnectInput) {
   const rawUrl = input.baseUrl?.trim();
   if (!rawUrl) {
@@ -290,6 +349,7 @@ export async function connectProvider(input: ConnectInput) {
   if (input.provider === "twilio") return connectTwilio(input);
   if (input.provider === "shopify") return connectShopify(input);
   if (input.provider === "digitalocean") return connectDigitalOcean(input);
+  if (input.provider === "github") return connectGithub(input);
   if (input.provider === "http_json") return connectHttpJson(input);
   throw new ConnectorError("Unknown connector. Fail-closed.", "validation");
 }

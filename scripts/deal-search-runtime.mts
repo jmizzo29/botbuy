@@ -157,6 +157,35 @@ if (dropletSearch.detail.includes("namecheap")) {
 if (dropletDeal.status !== "Searching") {
   throw new Error("DigitalOcean stub must stay Searching without invented candidates");
 }
+
+const githubIntent = addIntent(
+  {
+    summary: `Find a GitHub repo or gist for SaaS MCP smoke ${stamp}.`,
+    categories: ["github"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const githubDeal = await createSearchingDealFromIntent(
+  githubIntent,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+const githubSearch = listDealEvents(githubDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!githubSearch?.detail.includes("github")) {
+  throw new Error("github intent should attempt GitHub official API");
+}
+if (!githubSearch.detail.includes("live:false") || !githubSearch.detail.includes("keysConfigured")) {
+  throw new Error("GitHub search must report live:false and keysConfigured");
+}
+if (githubSearch.detail.includes("namecheap") || githubSearch.detail.includes("digitalocean")) {
+  throw new Error("GitHub must not duplicate Namecheap or DigitalOcean");
+}
+if (githubDeal.status !== "Searching") {
+  throw new Error("GitHub stub must stay Searching without invented candidates");
+}
 if (!catalogSearch.detail.includes("live:false")) {
   throw new Error("HTTP JSON search event must include live:false");
 }
@@ -191,6 +220,9 @@ if (!carSearch?.detail.includes("accepted=true") && !carSearch?.detail.includes(
 }
 if (carSearch.detail.includes("shopify")) {
   throw new Error("car search must not map to Shopify");
+}
+if (carSearch.detail.includes("github")) {
+  throw new Error("car search must not map to GitHub");
 }
 if (carDeal.status !== "Searching") {
   throw new Error("car stub must stay Searching without invented candidates");
@@ -264,6 +296,9 @@ if (officialSearchProvider("shopify") !== "shopify") {
 }
 if (officialSearchProvider("digitalocean") !== "digitalocean") {
   throw new Error("DigitalOcean search must resolve from MCP registry");
+}
+if (officialSearchProvider("github") !== "github") {
+  throw new Error("GitHub search must resolve from MCP registry");
 }
 if (officialSearchProvider("http_json") !== "http_json") {
   throw new Error("HTTP JSON search must resolve from MCP registry");
@@ -415,6 +450,7 @@ console.log(` - domain ${domainDeal.id} Namecheap search live:false`);
 console.log(` - phone ${phoneDeal.id} Twilio search live:false`);
 console.log(` - http_json ${catalogDeal.id} official JSON search live:false`);
 console.log(` - digitalocean ${dropletDeal.id} droplet search live:false`);
+console.log(` - github ${githubDeal.id} repo search live:false`);
 console.log(` - car ${carDeal.id} accepted stub live:false`);
 console.log(` - house ${houseDeal.id} accepted stub live:false`);
 console.log(` - product ${goodsDeal.id} accepted stub live:false`);

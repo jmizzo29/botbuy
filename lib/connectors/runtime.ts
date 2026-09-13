@@ -6,6 +6,7 @@ import {
   quoteDigitalOcean,
   searchDigitalOcean,
 } from "@/lib/connectors/digitalocean";
+import { buyGithub, quoteGithub, searchGithub } from "@/lib/connectors/github";
 import { buyHttpJson, quoteHttpJson, searchHttpJson } from "@/lib/connectors/http-json";
 import {
   quoteNamecheapDomain,
@@ -140,6 +141,27 @@ export async function invokeConnectorTool(input: {
         });
       } else {
         result = await buyDigitalOcean({
+          query,
+          product: input.payload?.product,
+          dealId: dealId ?? "",
+          vault,
+        });
+      }
+    } else if (input.provider === "github") {
+      if (input.tool === "search") {
+        result = await searchGithub({
+          query,
+          product: input.payload?.product,
+          vault,
+        });
+      } else if (input.tool === "quote") {
+        result = await quoteGithub({
+          query,
+          product: input.payload?.product,
+          vault,
+        });
+      } else {
+        result = await buyGithub({
           query,
           product: input.payload?.product,
           dealId: dealId ?? "",
