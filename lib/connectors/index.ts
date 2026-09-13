@@ -13,7 +13,10 @@ export {
   CONNECTOR_LIVE_LOCK_NOTE,
 } from "@/lib/connectors/keys";
 export { smokeConnectorSearch, CONNECTOR_SMOKE_NOTE } from "@/lib/connectors/smoke";
-export { assertConnectorSpendAllowed } from "@/lib/connectors/approve-gate";
+export {
+  assertConnectorSpendAllowed,
+  assertActOnBehalfAllowed,
+} from "@/lib/connectors/approve-gate";
 export {
   applyDealSearchPipeline,
   applySearchActHandoff,

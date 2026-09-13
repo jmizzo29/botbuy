@@ -1517,6 +1517,7 @@ assert(read("lib/authorized-buy.ts").includes("spend: false"), "authorized-buy s
 assert(connectDocs.includes("/api/connectors/smoke"), "POC docs name smoke API");
 assert(connectDocs.includes("is **not** unlocked by env"), "POC docs refuse env live:true");
 assert(read("ops/STAGE.md").includes("Read-only smoke"), "STAGE docs CPO connector smoke");
+assert(read("ops/STAGE.md").includes("Act on behalf"), "STAGE docs CPO act-on-behalf smoke");
 assert(connectUi.includes("data-cta=\"twilio-oauth\""), "Twilio OAuth is primary CTA");
 assert(connectUi.includes("TWILIO_ADVANCED_CREDENTIALS") || connectUi.includes("Use API credentials"), "Twilio API is advanced");
 assert(connectUi.includes("data-step=\"egress-ip-whitelist\""), "Namecheap step 2 IP whitelist");
@@ -1541,6 +1542,15 @@ assert(read("lib/authorized-buy.ts").includes("assertAuthorizedBuyAllowed"), "au
 assert(read("lib/authorized-buy.ts").includes("live: false"), "authorized-buy live false");
 assert(read("app/api/deals/[id]/authorized-buy/route.ts").includes("prepareAuthorizedBuy"), "authorized-buy deal API");
 assert(read("app/(app)/deals/[id]/page.tsx").includes("AuthorizedBuyPrep"), "Buying surface hosts prep");
+assert(read("app/(app)/deals/[id]/page.tsx").includes("ActOnBehalfPrep"), "Buying surface hosts act-on-behalf");
+assert(read("components/act-on-behalf-prep.tsx").includes('token="sent=false"'), "Act-on-behalf sent=false HonestyFlag");
+assert(read("components/act-on-behalf-prep.tsx").includes('token="registered=false"'), "Act-on-behalf registered=false HonestyFlag");
+assert(read("lib/act-on-behalf.ts").includes("actOnBehalfFailClosed"), "act-on-behalf fail-closed helper");
+assert(read("lib/act-on-behalf.ts").includes("sent: false"), "act-on-behalf sent false");
+assert(read("lib/act-on-behalf.ts").includes("registered: false"), "act-on-behalf registered false");
+assert(read("lib/connectors/approve-gate.ts").includes("assertActOnBehalfAllowed"), "approve gate covers act-on-behalf");
+assert(envExample.includes("BOTBUY_MAIL_LIVE=false"), "env example mail live stays false");
+assert(read("docs/act-on-behalf.md").includes("Needs you → Buying"), "act-on-behalf docs");
 assert(approveGate.includes("assertAuthorizedBuyAllowed"), "approve gate covers Checkout prep");
 const intentRoute = read("lib/connectors/intent-route.ts");
 const dealSearch = read("lib/connectors/deal-search.ts");

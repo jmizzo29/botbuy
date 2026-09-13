@@ -142,3 +142,56 @@ export function assertAuthorizedBuyAllowed(input: {
 
   return { ok: true, deal };
 }
+
+/**
+ * Fail-closed act-on-behalf prep gate (email / reply / register stub).
+ * Same designated-holder trail: Needs you → Buying.
+ * Auto-approve stays OFF always. Does not send or register.
+ */
+export function assertActOnBehalfAllowed(input: {
+  userId: string;
+  dealId?: string | null;
+}): { ok: true; deal: Deal } {
+  if (autoApproveAllowed()) {
+    throw new ConnectorError(
+      "Auto-approve is OFF. Designated-holder Approve sheet required. Act-on-behalf prep is fail-closed.",
+      "approve",
+    );
+  }
+
+  const limits = getSpendLimits(input.userId);
+  if (limits.autoApprove) {
+    throw new ConnectorError(
+      "Auto-approve is OFF. Spend limits cannot flip it on. Designated-holder Approve sheet required. Fail-closed.",
+      "approve",
+    );
+  }
+
+  if (!input.dealId) {
+    throw new ConnectorError(
+      "A deal id is required before act-on-behalf prep. Designated-holder Approve sheet required. Fail-closed.",
+      "approve",
+    );
+  }
+
+  const deal = getDeal(input.dealId, input.userId);
+  if (!deal) {
+    throw new ConnectorError("Deal not found for this account. Fail-closed.", "approve");
+  }
+
+  if (deal.status !== "Buying") {
+    throw new ConnectorError(
+      "Designated-holder Approve sheet required before act-on-behalf prep. Deal must be Buying after Needs you. Auto-approve OFF. Fail-closed.",
+      "approve",
+    );
+  }
+
+  if (!dealHasHumanApprove(deal)) {
+    throw new ConnectorError(
+      "Missing Needs you → Buying approve event. Designated-holder Approve sheet required. Auto-approve OFF. Fail-closed.",
+      "approve",
+    );
+  }
+
+  return { ok: true, deal };
+}
