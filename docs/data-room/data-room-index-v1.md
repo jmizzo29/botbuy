@@ -10,13 +10,13 @@ CFO owns this checklist. Eng / legal / gtm / product folders are sibling-owned �
 |---|---|---|---|
 | 1 | Overview / pointer | `docs/data-room/INDEX.md` · `README.md` | EXISTS — stub points here |
 | 2 | Product | `docs/data-room/product/` | **PARTIAL** — folder not on staging tip |
-| 3 | Engineering | `docs/data-room/eng/` | **EXISTS** at tip `94407cc` (PR #92). Expo M0 **EXISTS** at tip `5f65302` path `mobile/` · Soft HOLD · no store prod. |
+| 3 | Engineering | `docs/data-room/eng/` | **EXISTS** at tip `94407cc` (PR #92). Expo M0 **EXISTS** at **`apps/mobile/`** · Soft HOLD · no store prod · stage-first. |
 | 4 | Finance | `docs/data-room/finance/` | **EXISTS** — CHO-patched narrative · inventory · burn/spend pack · locks |
 | 5 | Legal | `docs/data-room/legal/` | **PARTIAL** — folder not on staging tip (`docs/legal/` drafts exist outside the room) |
 | 6 | Ops / John gate | `docs/data-room/ops/` · `ops/` | **PARTIAL** — human-gate note + `ops/STAGE.md`; cash pool unnamed |
 | 7 | GTM | `docs/data-room/gtm/` | **PARTIAL** — folder not on staging tip |
 | — | Cash pool / runway | — | **PARTIAL** — undefined until John names the BotBuy cash pool |
-| — | Expo native | `mobile/` | **EXISTS** at tip `5f65302` path `mobile/` · Soft HOLD · no store prod |
+| — | Expo native | `apps/mobile/` | **EXISTS** · Soft HOLD · no store prod · stage-first |
 
 ## Finance files (EXISTS)
 
@@ -42,7 +42,7 @@ Eng map (do not overwrite): [`eng/README.md`](eng/README.md) · [`eng/tip-map.md
 - Token Actual $ (**BLOCK** until metered + CHO)  
 - Platform Closed GMV (still **$0**)  
 - Paid MRR / converting users (still **$0 / 0**)  
-- App Store / Play prod listing (Expo M0 at `5f65302` `mobile/` · Soft HOLD · no store prod)  
+- App Store / Play prod listing (Expo M0 at **`apps/mobile/`** · Soft HOLD · no store prod · stage-first)  
 - `docs/data-room/legal/` and `gtm/` room folders (**PARTIAL**)  
 - Cap table / counsel-signed IP pack  
 - Security pen-test / IR  

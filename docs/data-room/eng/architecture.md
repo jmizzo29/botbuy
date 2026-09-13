@@ -2,7 +2,7 @@
 
 **Soft HOLD.** Next.js App Router · Neon · Vercel · Clerk · API + MCP-first · Expo dual-target (M0) · fail-closed vault/spend.
 
-This is a single Next.js app at repo root (`package.json` name `botbuy`, Next `16.3.4`) plus a sibling Expo client at **`mobile/`**. It is **not** a shipped monorepo with `apps/web` + `apps/mobile`. See [`expo-native.md`](expo-native.md).
+This is a Next.js app at repo root (`package.json` name `botbuy`, Next `16.3.4`) plus the Expo native client at **`apps/mobile/`**. Web and native are first-class surfaces of the same BotBuyer. **PWA is not the product.** See [`expo-native.md`](expo-native.md).
 
 ## Stack
 
@@ -15,7 +15,7 @@ This is a single Next.js app at repo root (`package.json` name `botbuy`, Next `1
 | Identity store | Neon `users.clerk_user_id` unique | `getCurrentUser()` resolves Clerk → Neon. `bb_signup` is not identity. |
 | Connectors | `lib/connectors/*` MCP-style registry | Official APIs only. `live:false` structural. |
 | Spend | `lib/spend-policy.ts` · `lib/authorized-buy.ts` · `lib/vault-rails.ts` | Auto-approve OFF. `$1,000` hard gate. Prep ≠ pay. |
-| Native | `mobile/` Expo iOS+Android (SDK 57) | **M0 scaffold.** Soft HOLD. No store submit. **BLOCK PWA-as-product.** |
+| Native | `apps/mobile/` Expo iOS+Android (SDK 57) | **M0 scaffold.** Soft HOLD. Stage-first. No store submit. **BLOCK PWA-as-product.** |
 
 ## API + MCP-first
 

@@ -13,12 +13,12 @@ Data-room pointer: [`../docs/data-room/eng/human-gates.md`](../docs/data-room/en
 
 ## Native / stores
 
-- [ ] Apple Developer / App Store **Blocking=NO** until TestFlight / internal
-- [ ] Google Play **Blocking=NO** until internal testing track
-- [ ] **BLOCK** prod store until smoke
+- [ ] Apple Developer / App Store **Blocking=NO** until TestFlight / internal is needed
+- [ ] Google Play **Blocking=NO** until Play internal is needed
+- [ ] **BLOCK** App Store / Play **production** submit until stage/internal builds exist for **iPhone AND Android** **and** Design / CPO / CHO smoke PASS
 - [ ] **BLOCK** PWA-as-product
 
-M0 Expo scaffold is in **`mobile/`** (App Store + Play Store targets · one codebase · display name BotBuyer). Same product APIs. Soft HOLD until TestFlight / Play internal. No EAS submit in M0. Do not escalate John for Apple Dev or Play Console until store submit. **BLOCK PWA-as-product** — Add to Home Screen is not the shipped client.
+M0 path: **`apps/mobile/`** (Expo iOS+Android + web first-class · PWA not the product). Soft HOLD scaffold — welcome honesty only; full journey later. Next milestone: **EAS / TestFlight internal + Play internal**. No `eas.json` / production submit in M0. Apple/Google **Blocking=NO** until internal tracks are needed. **BLOCK PWA-as-product.** Stage-first.
 
 ## Egress
 

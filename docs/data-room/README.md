@@ -17,7 +17,7 @@ CFO owns the master index. Eng does not fill revenue, burn, runway, cap table, o
 - Full product is on **staging**. Production `botbuyer.ai` is **land-only**. No wholesale `staging` → `main`.
 - Connectors: official-API scaffolds. Default `keysConfigured=false` · `live:false` · `spend=false`.
 - Stripe/Link is Checkout Session **prep**, not live pay. Auto-approve is **OFF**.
-- `mobile/` is **M0 scaffold** (Expo iOS+Android). **BLOCK PWA-as-product.** **BLOCK prod store until smoke.**
+- `apps/mobile/` is **M0 scaffold** (Expo iOS+Android). **BLOCK PWA-as-product.** **BLOCK prod store until smoke.** Stage-first.
 - No fake live-buy, live-connector, App Store live, or traction claims in this room.
 - Never paste secrets. Key **names** only: [`eng/key-inventory.md`](eng/key-inventory.md).
 

@@ -20,11 +20,14 @@ import {
   APPROVE_MICRO,
   AUTO_APPROVE_OFF,
   BLOCK_PWA,
+  CLIENTS_FIRST_CLASS,
   CLERK_KEYS_MISSING,
   CLERK_KEYS_READY,
   FOOTER_HOLD,
   HONESTY_FLAGS,
+  M0_SCAFFOLD_ONLY,
   NO_LIVE_BUY,
+  NO_STORE_LIVE,
   ONE_LINER,
   POC_BANNER,
   PRODUCT_H1,
@@ -32,6 +35,7 @@ import {
   PRODUCT_SUPPORT,
   SAME_PRODUCT,
   SIGNAL_HOLD,
+  STAGE_APPS_FIRST,
   STORE_HOLD,
   STORE_TARGETS,
   TRUST_LINE,
@@ -128,10 +132,14 @@ export function HomeScreen({ auth }: { auth: HomeAuth }) {
         </View>
 
         <Text style={styles.hold}>{SIGNAL_HOLD}</Text>
+        <Text style={styles.micro}>{M0_SCAFFOLD_ONLY}</Text>
         <Text style={styles.support}>{STORE_TARGETS}</Text>
+        <Text style={styles.muted}>{CLIENTS_FIRST_CLASS}</Text>
         <Text style={styles.micro}>{APPROVE_MICRO}</Text>
         <Text style={styles.micro}>{TRUST_LINE}</Text>
+        <Text style={styles.muted}>{NO_STORE_LIVE}</Text>
         <Text style={styles.muted}>{BLOCK_PWA}</Text>
+        <Text style={styles.muted}>{STAGE_APPS_FIRST}</Text>
         <Text style={styles.muted}>{STORE_HOLD}</Text>
         <Text style={styles.muted}>{NO_LIVE_BUY}</Text>
         <Text style={styles.muted}>{SAME_PRODUCT}</Text>
