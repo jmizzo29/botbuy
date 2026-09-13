@@ -13,7 +13,7 @@ John LOCK 2026-09-13: native App Store **and** Play Store clients are required. 
 | Auth | Clerk Expo scaffold · fail-closed when keys missing |
 | Hold | `live:false` · `spend=false` · Auto-approve OFF · no fake live-buy |
 
-Web land / auth routes / `globals.css` land styles are **out of scope**. Do not edit them from this app.
+Web land / auth routes / `globals.css` land styles are **out of scope**. Do not edit them from this app. The root Next.js `tsconfig.json` and ESLint config **exclude** `mobile/` so Vercel web builds do not typecheck Expo.
 
 ## Soft HOLD
 
