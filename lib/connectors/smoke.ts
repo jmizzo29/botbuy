@@ -9,10 +9,16 @@ import {
   type ConnectorToolResult,
 } from "@/lib/connectors/types";
 import { readVaultSecret } from "@/lib/connectors/vault";
+import {
+  HONESTY_AUTO_APPROVE_FALSE,
+  HONESTY_LIVE_FALSE,
+  HONESTY_SPEND_FALSE,
+  honestyToken,
+} from "@/lib/honesty-flags";
 
 export const CONNECTOR_SMOKE_TOOL = "search" as const;
 export const CONNECTOR_SMOKE_NOTE =
-  "Read-only connector smoke. Search only — never register or buy. live:false. Fail-closed when keys are missing. Not a live purchase." as const;
+  "Read-only connector smoke. Search only — never register or buy. live:false · spend=false. Fail-closed when keys are missing. Auto-approve OFF. Not a live purchase." as const;
 
 const SMOKE_QUERY: Record<ConnectorProvider, string> = {
   namecheap: "example.com",
@@ -31,6 +37,7 @@ export interface ConnectorSmokeResult {
   ok: boolean;
   live: false;
   spend: false;
+  autoApprove: false;
   tool: typeof CONNECTOR_SMOKE_TOOL;
   provider: ConnectorProvider;
   query: string;
@@ -43,6 +50,7 @@ export interface ConnectorSmokeResult {
   httpStatus: number | null;
   missing: string[];
   readiness: ConnectorProviderReadiness;
+  honestyFlags: string[];
   note: typeof CONNECTOR_SMOKE_NOTE;
 }
 
@@ -87,6 +95,7 @@ export async function smokeConnectorSearch(input: {
     ok: tool.ok,
     live: false,
     spend: false,
+    autoApprove: false,
     tool: CONNECTOR_SMOKE_TOOL,
     provider: input.provider,
     query,
@@ -99,6 +108,13 @@ export async function smokeConnectorSearch(input: {
     httpStatus: httpStatus(tool.data),
     missing: readiness.missing,
     readiness,
+    honestyFlags: [
+      HONESTY_LIVE_FALSE,
+      HONESTY_SPEND_FALSE,
+      HONESTY_AUTO_APPROVE_FALSE,
+      honestyToken("keysConfigured", readiness.keysConfigured),
+      honestyToken("result", tool.result),
+    ],
     note: CONNECTOR_SMOKE_NOTE,
   };
 }

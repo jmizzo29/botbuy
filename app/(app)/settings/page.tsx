@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { ConnectedAccountsPanel } from "@/components/connected-accounts";
+import { HonestyFlag } from "@/components/honesty-flag";
 import { ProfileForm } from "@/components/profile-form";
 import { SettingsUsageSection } from "@/components/usage-meter";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignOutButtonPrimary } from "@/components/auth-session";
 import { requireUser } from "@/lib/auth";
@@ -11,9 +13,11 @@ import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/
 import { listConnectorReadiness } from "@/lib/connectors/keys";
 import { listPublicConnectorStatus } from "@/lib/connectors/vault";
 import {
+  AUTO_APPROVE_OFF,
   SETTINGS_PROFILE_HREF,
   SETTINGS_USAGE_TITLE,
 } from "@/lib/cpo-techlux";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import { displayAccountEmail, PROFILE_TITLE } from "@/lib/john-ux";
 import {
   hydrateStore,
@@ -55,6 +59,18 @@ export default async function SettingsPage() {
       </header>
       <p className="text-xs text-muted md:hidden">Settings</p>
 
+      <div
+        className="flex flex-wrap items-center gap-1.5"
+        data-surface="settings-honesty-flags"
+      >
+        <HonestyFlag token="live=false" />
+        <HonestyFlag token="spend=false" />
+        <HonestyFlag token="autoApprove=false" />
+        <HonestyFlag
+          token={`mutationsLiveEnabled=${String(readiness.mutationsLiveEnabled)}`}
+        />
+        <Badge className={DEMO_PILL_CLASS}>{AUTO_APPROVE_OFF}</Badge>
+      </div>
       <ConnectedAccountsPanel
         providers={connectors}
         vaultKeyConfigured={isVaultKeyConfigured()}

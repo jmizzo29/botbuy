@@ -96,8 +96,8 @@ export const HTTP_JSON_TOKEN_DISCLOSURE =
 
 export const CONNECT_SMOKE_CTA = "Read-only smoke" as const;
 export const CONNECT_SMOKE_NOTE =
-  "Search only. Never register or buy. live:false. Fail-closed when keys are missing. Not a live purchase." as const;
+  "Search only. Never register or buy. live:false · spend=false. Fail-closed when keys are missing. Auto-approve OFF. Not a live purchase." as const;
 export const CONNECT_KEYS_STRIP =
   "keysConfigured is honest. spend=false · Search only while mutationsLiveEnabled=false. Preview env unlocks official-API search HTTP. live:false stays locked. Auto-approve OFF." as const;
 export const CONNECT_SEARCH_ONLY =
-  "Search only. Register / buy stay stub until mutationsLiveEnabled and human Approve. Not live spend." as const;
+  "Search only. spend=false. Register / buy stay stub until mutationsLiveEnabled and human Approve. Auto-approve OFF. Not live spend." as const;

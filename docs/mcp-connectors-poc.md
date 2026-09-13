@@ -56,7 +56,7 @@ CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) →
 - `GET /api/connectors/oauth/twilio` — OAuth start (not live unless Twilio OAuth env is set)
 - `GET /api/connectors/oauth/shopify` — OAuth start (not live unless Shopify OAuth env + `?shop=` are set)
 
-Settings → Connected accounts shows `keysConfigured` / `searchHttpReady` per provider and a **Read-only smoke** button. Smoke stays `live:false` and `spend:false`. Missing Preview env names are listed — never paste values into chat.
+Settings → Connected accounts shows literal HonestyFlags `live=false` · `spend=false` · `autoApprove=false` plus **Auto-approve OFF**, `keysConfigured` / `searchHttpReady` per provider, and a **Read-only smoke** button. Smoke stays `live:false` and `spend=false`. Missing Preview env names are listed — never paste values into chat.
 
 ## M2 registry (additive)
 

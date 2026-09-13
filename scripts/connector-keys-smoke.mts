@@ -42,6 +42,8 @@ assert(CONNECTOR_SMOKE_TOOL === "search", "smoke tool is search only");
 assert(connectorSmokeIsReadOnly(), "smoke is read-only");
 assert(CONNECTOR_SMOKE_NOTE.toLowerCase().includes("never register"), "smoke copy forbids register");
 assert(CONNECTOR_SMOKE_NOTE.includes("live:false"), "smoke copy stays live:false");
+assert(CONNECTOR_SMOKE_NOTE.includes("spend=false"), "smoke copy stays spend=false");
+assert(CONNECTOR_SMOKE_NOTE.includes("Auto-approve OFF"), "smoke copy Auto-approve OFF");
 assert(CONNECTOR_LIVE_LOCK_NOTE.includes("live:false is structural"), "live lock note");
 assert(
   CONNECTOR_PREVIEW_ENV.namecheap.includes("NAMECHEAP_CLIENT_IP"),
