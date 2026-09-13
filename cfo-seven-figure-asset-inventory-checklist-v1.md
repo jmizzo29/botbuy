@@ -10,7 +10,7 @@
 | Asset | Owner | Status | Notes / path |
 |---|---|---|---|
 | Primary app repo | CTO | Known | `https://github.com/jmizzo29/botbuy` · Vercel `botbuy` · branches `main` (prod land) + `staging` (full product Soft HOLD) |
-| Mobile Expo app | CTO/CPO | Partial | Target `apps/mobile/` · M0 scaffold **in flight** (`bc-2590ca55`) · dual-target iOS+Android · **not on tip yet** · stage/internal before any store prod |
+| Mobile Expo app | CTO/CPO | Known | tip `5f65302` · path `mobile/` · Soft HOLD · no store prod · stage/internal first |
 | Cloud agent / PR history | CTO | Known (partial digest) | Notable merged: #76–#89 · open #90 Auth craft → staging · land-only prod #86 tip `102d08a` · U1 stage #89 tip `f9c94be` · Shopify #88 `89957ec` · GitHub MCP #87 `a455faf` · OAuth vault #85 `a88e72c` · Act #84 · Honesty #83 · DigitalOcean #81 `2805281` |
 | Separate from Autofleeto | CTO | Known | HARD LOCK — dedicated Clerk/Neon/Stripe/Vercel; never Autofleeto keys |
 | Diligence data room | CFO/CTO | Partial | `docs/data-room/` · CFO owns index · eng scaffold **in flight** (`bc-cf7cfa3e`) |
@@ -28,7 +28,7 @@
 | Web land (R3 on prod) | CPO/CTO | Known | Soft HOLD / POC honesty on land (Demo scrubbed) · soft-signal HOLD · `cpo-land-ceo-draft-c-lock-v1.md` |
 | Web app journey (stage) | CPO/CTO | Known | Soft HOLD full live buy · human approve |
 | Buy-anything | CPO | Known | Soft HOLD live everywhere claims |
-| Native iOS + Android (Expo) | CPO/CTO | Partial | stage first · store prod BLOCKED until smoke+CEO · `bc-2590ca55` |
+| Native iOS + Android (Expo) | CPO/CTO | Known | tip `5f65302` · path `mobile/` · Soft HOLD · no store prod · stage/internal first |
 | Admin | CPO/CTO/CFO | Known | Demo-badged KPIs until live · Soft HOLD fake traction |
 | Diligence data room product feed | CPO→CFO | Known | `docs/data-room/` |
 
@@ -45,10 +45,11 @@ Verified burn $179.96 · spend-gate v0.1 · Hybrid D planning hyp · cash pool T
 TBD / Partial — Legal.
 
 ## H) Tip map
-Prod land `102d08a` · Stage U1 `f9c94be` · Expo tip pending · eng scaffold tip pending.
+Prod land `102d08a` · Stage U1 `f9c94be` · Expo M0 `5f65302` (`mobile/`) · Soft HOLD · no store prod · eng scaffold `94407cc`.
 
 ## I) Open asks
-CTO: tip SHAs when Expo+eng land. CPO: keep §C current. CFO: index ownership. CHO: re-PASS before external share.
+CTO: Expo M0 tip `5f65302` (`mobile/`) Known — Soft HOLD · no store prod. Eng pack `94407cc`. CPO: keep §C current. CFO: index ownership. CHO: re-PASS before external share.
 
 ## Change log
 | 2026-09-13 | v1 · CPO §C · CTO A/D/E · CHO land Soft HOLD/POC (Demo scrubbed) |
+| 2026-09-13 | Expo M0 tip `5f65302` · path `mobile/` · Soft HOLD · no store prod · Partial→Known |
