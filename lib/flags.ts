@@ -7,6 +7,9 @@ export const flags = {
   analyticsLive: truthy(process.env.NEXT_PUBLIC_ANALYTICS_LIVE),
   vercelAnalytics: truthy(process.env.NEXT_PUBLIC_VERCEL_ANALYTICS),
   stripeLive: truthy(process.env.NEXT_PUBLIC_STRIPE_LIVE),
+  // BOTBUY_STRIPE_LIVE is named for later CHO wiring. Authorized-buy still
+  // returns live: false until keys/wiring are proven — do not use this flag
+  // to claim live pay.
   plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || null,
 };
 

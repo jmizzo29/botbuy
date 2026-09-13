@@ -34,6 +34,7 @@ assert(gate.includes('fromStatus === "Needs you"'), "gate requires Needs you");
 assert(gate.includes('toStatus === "Buying"'), "gate requires Buying");
 assert(gate.includes("Fail-closed"), "gate fail-closed copy");
 assert(!gate.includes("autoApprove: true"), "gate never enables auto-approve");
+assert(gate.includes("assertAuthorizedBuyAllowed"), "gate also locks authorized-buy");
 
 const register = readFileSync(join(root, "lib/connectors/runtime.ts"), "utf8");
 assert(register.includes("assertConnectorSpendAllowed"), "runtime uses approve gate");
