@@ -23,10 +23,10 @@ That file is the ops checklist home. This page is the data-room pointer + curren
 
 | Store | Blocking | Until |
 | --- | --- | --- |
-| Apple Developer / App Store | **NO** | TestFlight / internal |
-| Google Play | **NO** | Internal testing track |
+| Apple Developer / App Store | **NO** | TestFlight / internal is needed |
+| Google Play | **NO** | Play internal is needed |
 
-**Blocking=NO** means diligence should not treat missing store apps as a legal/dev-account blocker. It does **not** mean “ship to prod store.” **BLOCK prod store until smoke.** See [`expo-native.md`](expo-native.md).
+**Blocking=NO** means diligence should not treat missing store apps as a legal/dev-account blocker. It does **not** mean “ship to prod store.” **CEO LOCK:** stage apps for **iPhone AND Android** first. **BLOCK** App Store / Play **production** submit until those internal tracks exist **and** Design / CPO / CHO smoke PASS. See [`expo-native.md`](expo-native.md).
 
 ## Egress
 

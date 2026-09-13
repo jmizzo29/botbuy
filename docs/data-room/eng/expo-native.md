@@ -2,22 +2,24 @@
 
 **Soft HOLD.** Dual-target **iOS + Android**. Stage / internal before any store. **BLOCK PWA-as-product.** **BLOCK prod store until smoke.**
 
-## `mobile/` — M0 scaffold (not `apps/mobile`)
+## `apps/mobile/` — M0 scaffold
 
 | Claim | Current truth |
 | --- | --- |
-| Path | **`mobile/`** — Expo SDK 57 dual-target iOS + Android. Sibling of the Next.js web app (not a monorepo `apps/` layout). |
-| In this git tip | Scaffold present: `app.json`, `ios/`, `android/`, display name **BotBuyer**. Same BotBuyer HTTP APIs. |
-| Status | **M0 scaffold only.** Soft HOLD. Do not document a shipped binary or store listing. No TestFlight / Play upload / EAS submit. |
-| Clients | Native apps are the product clients. Web App Router remains API + MCP host / stage QA surface. |
-| Web build | Root `tsconfig.json` + ESLint **exclude** `mobile/` so Vercel `next build` does not typecheck Expo. |
+| Path | **`apps/mobile/`** — Expo SDK 57 dual-target iOS + Android. Same BotBuyer product as the Next.js app at repo root. |
+| Status | **M0 scaffold.** Soft HOLD. Welcome honesty only — no invented full journey UI. Do not document a shipped binary or store listing. |
+| Clients | Native Expo + **web** are first-class. **PWA is not the product.** |
+| Web build | Root `tsconfig.json` + ESLint **exclude** `apps/mobile/` so Vercel `next build` does not typecheck Expo. |
+| Store submit | **No** `eas.json`. No production App Store / Play submit in M0. |
 
 ## Stage / internal before store
 
+**CEO LOCK:** stage apps for **iPhone AND Android** before any prod/store push.
+
 1. Stage the **web** product on https://botbuy-git-staging-jmizzo29s-projects.vercel.app (full product Soft HOLD).
-2. Stage native **internal** builds (TestFlight + Play internal) before any prod store.
-3. Apple / Google Dev **Blocking=NO** until those internal tracks exist — see [`human-gates.md`](human-gates.md).
-4. **BLOCK prod App Store / Play until smoke** (install, sign-in, My deals, Approve sheet, fail-closed spend). No smoke → no store.
+2. Next milestone after M0: **EAS / internal tracks** — TestFlight **internal** + Play **internal**. Soft HOLD.
+3. Apple / Google Dev **Blocking=NO** until TestFlight / internal is needed — see [`human-gates.md`](human-gates.md).
+4. **BLOCK App Store / Play production submit** until stage/internal builds exist for **both** platforms **and** Design / CPO / CHO smoke PASS. No smoke → no prod store.
 
 ## BLOCK PWA-as-product
 
@@ -34,6 +36,6 @@ An installable Home Screen PWA exists for phone-first IA. It is **not** the prod
 ## Honesty
 
 - No TestFlight / Play internal URL in this repo.
-- No Apple Team ID, Play package name, or Expo project id committed as live.
+- No Apple Team ID or Expo project id committed as live.
 - Soft HOLD until TestFlight + Play internal exist **and** smoke passes.
 - Do not invent download counts or store ratings.

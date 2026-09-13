@@ -76,7 +76,7 @@ Vision narrative unit-econ appendix stays **empty** until real numbers (append-o
 2. Real in-app token meter → Actual COGS (CHO)  
 3. First **platform** Closed deals → GMV that isn’t personal import  
 4. Paid conversions (or signed LOIs) — no fake MRR  
-5. Expo `apps/mobile/` tip SHA (M0 still in flight). Eng pack **EXISTS** at `94407cc` (PR #92).  
+5. Expo **`apps/mobile/`** EXISTS (M0 Soft HOLD scaffold · no store prod · stage-first). Eng pack **EXISTS** at `94407cc` (PR #92).  
 6. Legal counsel / IP pack; security pen-test / IR  
 7. Cap table / entity pack  
 

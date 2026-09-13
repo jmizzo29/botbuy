@@ -1,6 +1,8 @@
 # BotBuyer native client (M0)
 
-**Product client:** native Expo / React Native for **App Store (iPhone) + Play Store (Android)** — same BotBuyer APIs. Not a second product.
+**Product truth:** Expo **iOS + Android** and **web** are first-class clients of the same BotBuyer. **PWA is not the product.**
+
+**Product client (stores):** native Expo / React Native for **App Store (iPhone) + Play Store (Android)** — same APIs. Not a second product.
 
 **CHO LOCK: BLOCK PWA-as-product.** Add to Home Screen / installable PWA is **not** the shipped client. Soft HOLD until TestFlight / Play internal are real. No store listing claims in M0.
 
@@ -8,14 +10,14 @@ John LOCK 2026-09-13: native App Store **and** Play Store clients are required. 
 
 | | |
 |---|---|
-| Folder | `mobile/` (sibling of the Next.js web app — not a second product repo) |
+| Folder | **`apps/mobile/`** (monorepo native client — same BotBuyer product) |
 | Display name | **BotBuyer** |
 | Targets | **App Store + Play Store** · one Expo codebase · `ios/` + `android/` first-class |
 | API | Existing BotBuyer stage HTTP (`EXPO_PUBLIC_API_BASE`) |
 | Auth | Clerk Expo scaffold · fail-closed when keys missing |
 | Hold | `live:false` · `spend=false` · Auto-approve OFF · no fake live-buy · no PWA-as-product |
 
-Web land / auth routes / `globals.css` land styles are **out of scope**. Do not edit them from this app. The root Next.js `tsconfig.json` and ESLint config **exclude** `mobile/` so Vercel web builds do not typecheck Expo.
+Web land / auth routes / `globals.css` land styles are **out of scope**. Do not edit them from this app. The root Next.js `tsconfig.json` and ESLint config **exclude** `apps/mobile/` so Vercel web builds do not typecheck Expo.
 
 ## Soft HOLD
 
@@ -26,7 +28,30 @@ Home copy matches web brand locks:
 - Honesty flags: `live=false` · `spend=false` · `autoApprove=false`
 - Auto-approve OFF. Every deal needs approval. No invented MRR / fake metrics.
 
-This scaffold does **not** spend, vault-mutate, or claim a live buy. It does **not** claim a shipped App Store / Play listing. Expo Go / simulators are development — not the product. **BLOCK PWA-as-product.**
+M0 home/welcome is honesty only — same promise as web. **Do not invent the full journey UI here.**
+
+This scaffold does **not** spend, vault-mutate, or claim a live buy. It does **not** claim App Store / Play live. Expo Go / simulators are development — not the product. No fake metrics. **BLOCK PWA-as-product.**
+
+## Journey north star (later milestones — not M0)
+
+Documented so later work matches CPO SoT. **Do not build these screens in M0.**
+
+Sign up → Intent + spend + vault → Run BotBuy → My deals → Needs you Approve/Reject → Deal detail → Settings
+
+M0 remains: navy shell + Clerk fail-closed scaffold + read-only stage API stub + this README + human-gate checklist (Apple/Google **Blocking=NO**) + stage-first (no prod store submit).
+
+**CEO LOCK:** stage apps for **iPhone AND Android** before any prod/store push. **BLOCK** App Store / Play **production** submit until stage/internal builds exist **and** Design / CPO / CHO smoke PASS.
+
+## Next milestone (not M0)
+
+**EAS / internal tracks** — Soft HOLD. Do **not** configure production store submit here.
+
+| Track | Platform | When |
+|---|---|---|
+| TestFlight **internal** | iPhone | After M0. Stage app. |
+| Play **internal** testing | Android | After M0. Stage app. |
+
+Both internal tracks must exist before any production store push. Apple Developer + Google Play Console stay **Blocking=NO** until TestFlight / internal is actually needed. M0 ships **no** `eas.json`, no EAS submit profile, no store credentials.
 
 Chrome mark is `mobile/assets/mark.png` — kit reverse/white soft-spine (`brand/logo-soft-spine/botbuyer-mark-reverse.svg`) for the Quiet Capital `#0B1F3A` shell. Do not swap in the navy-on-white mark.
 
@@ -43,7 +68,7 @@ Never put `CLERK_SECRET_KEY` or other server secrets in Expo public env.
 
 ## How to run
 
-From `mobile/` after `npm install`.
+From `apps/mobile/` after `npm install`.
 
 ### Shared Metro (Expo Go)
 
@@ -92,8 +117,9 @@ Do **not** treat Android as an afterthought. Do **not** claim either store is sh
 
 ## Out of scope M0
 
-- TestFlight / EAS submit / Apple certificates
-- Google Play Console / Play upload / signing keys
+- EAS project / `eas.json` / production submit profiles
+- TestFlight / Play **production** submit
+- Apple certificates / Play signing keys (escalate John only when internal tracks are needed)
 - Live spend / Link / vault mutations
 - Browser automation farms
 - Changing web land or auth craft

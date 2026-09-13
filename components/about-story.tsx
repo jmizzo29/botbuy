@@ -20,9 +20,9 @@ export function AboutStory() {
   return (
     <div
       data-surface="about-story"
-      className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(22rem,28rem)] lg:items-start lg:gap-16 xl:gap-20"
+      className="flex flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(22rem,28rem)] lg:grid-rows-[auto_auto] lg:items-start lg:gap-16 xl:gap-20"
     >
-      <section className="pt-6 lg:pt-4">
+      <section className="pt-6 lg:col-start-1 lg:row-start-1 lg:pt-4">
         <p className="text-sm text-muted">{ABOUT_ENTITY}</p>
         <Image
           src={ABOUT_MARK_SRC}
@@ -54,10 +54,9 @@ export function AboutStory() {
           unoptimized
           className="mt-10 h-auto w-full max-w-sm"
         />
-        <ControlBlock className="mt-12 hidden lg:block" />
       </section>
 
-      <aside className="mt-14 lg:mt-4">
+      <aside className="mt-14 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-4">
         <h2 className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted lg:sr-only">
           {ABOUT_HOW_HEADING}
         </h2>
@@ -87,26 +86,23 @@ export function AboutStory() {
         </ol>
       </aside>
 
-      <ControlBlock className="mt-12 lg:hidden" />
+      <ControlBlock className="mt-12 lg:col-start-1 lg:row-start-2" />
     </div>
   );
 }
 
 function ControlBlock({ className }: { className?: string }) {
   return (
-    <div className={className}>
-      <p className="hidden text-base font-semibold tracking-tight lg:block">
-        {ABOUT_CONTROL}
-      </p>
+    <div className={className} data-surface="about-control">
       <Image
         src={ABOUT_CONTROL_SRC}
-        alt={ABOUT_CONTROL}
+        alt=""
         width={280}
         height={120}
         unoptimized
-        className="mt-4 h-auto w-full max-w-sm lg:mt-5"
+        className="h-auto w-full max-w-sm"
       />
-      <p className="mt-4 text-base font-semibold tracking-tight lg:hidden">
+      <p className="mt-4 text-base font-semibold tracking-tight">
         {ABOUT_CONTROL}
       </p>
       <div className="mt-6">

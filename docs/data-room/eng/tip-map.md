@@ -25,7 +25,7 @@
 | **Stage** | Act-on-behalf | `ed44d02` | [#84](https://github.com/jmizzo29/botbuy/pull/84) | Drafts after Needs you → Buying. `sent=false` · `registered=false`. |
 | **Stage** | HonestyFlag + vault harden | `684d459` | [#83](https://github.com/jmizzo29/botbuy/pull/83) | Literal `spend=false`. Vault fail-closed. |
 | **Stage** | DigitalOcean SaaS MCP | `2805281` | [#81](https://github.com/jmizzo29/botbuy/pull/81) | Droplets/volumes official API scaffold. Buy stays stub. |
-| **Stage** | Expo M0 native | `5f65302` | [#93](https://github.com/jmizzo29/botbuy/pull/93) | Path `mobile/` · Soft HOLD · no store prod · stage/internal first |
+| **Stage** | Expo M0 native | `5f65302` | [#93](https://github.com/jmizzo29/botbuy/pull/93) | Landed as `mobile/`; **canonical path now `apps/mobile/`** (this follow-up). Soft HOLD · no store prod · stage/internal first |
 
 ## Notable staging PRs 76–90
 

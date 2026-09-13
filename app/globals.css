@@ -657,11 +657,14 @@ html:has(.bb-auth-shell) body {
   overflow-x: hidden;
 }
 
-html:has(.bb-auth-shell) vercel-live-feedback,
-html:has(.bb-auth-shell) vercel-toolbar,
-html:has(.bb-auth-shell) #vercel-live-feedback,
-html:has(.bb-auth-shell) [data-vercel-toolbar],
-html:has(.bb-auth-shell) [data-vercel-live-feedback] {
+html:has(:is(.bb-auth-shell, .bb-land-shell, [data-surface="about-story"]))
+  :is(
+    vercel-live-feedback,
+    vercel-toolbar,
+    #vercel-live-feedback,
+    [data-vercel-toolbar],
+    [data-vercel-live-feedback]
+  ) {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
