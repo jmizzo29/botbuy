@@ -18,6 +18,8 @@ Data-room pointer: [`../docs/data-room/eng/human-gates.md`](../docs/data-room/en
 - [ ] **BLOCK** prod store until smoke
 - [ ] **BLOCK** PWA-as-product
 
+M0 Expo scaffold is in **`mobile/`** (one codebase · iOS + Android · display name BotBuyer). Same product APIs. Soft HOLD. No TestFlight / Play upload / EAS submit in M0. Do not escalate John for Apple Dev or Play Console until store submit. PWA is not this client.
+
 ## Egress
 
 - [ ] Egress SoT still EMPTY unless [`egress-ip-sot-v1.md`](egress-ip-sot-v1.md) is published

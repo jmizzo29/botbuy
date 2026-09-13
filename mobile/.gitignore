@@ -1,0 +1,44 @@
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Native build output (keep committed ios/ + android/ project trees)
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+android/app/build/
+android/.gradle/
+android/build/
+ios/Pods/
+ios/build/
+ios/DerivedData/
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files — never commit keys
+.env
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# local agent extras
+.claude/
