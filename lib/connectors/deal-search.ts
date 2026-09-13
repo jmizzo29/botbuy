@@ -500,7 +500,12 @@ export function applySearchActHandoff(input: {
   appendSearchNote(next, SEARCH_ACT_HOLD_NOTE);
   if (fixture) appendSearchNote(next, STAGE_SEARCH_FIXTURE_NOTE);
   assertRunDealSoftHold(next);
-  void persistEngineStore();
+  void persistEngineStore().catch((error) => {
+    console.error(
+      "[deal-search] persist after act handoff failed",
+      error instanceof Error ? error.message : error,
+    );
+  });
   return next;
 }
 

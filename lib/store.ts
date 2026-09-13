@@ -550,7 +550,12 @@ export function transitionDeal(
   ];
   if (deal.source === "engine") {
     rememberEngineDeal(deal, []);
-    void persistEngineStore();
+    void persistEngineStore().catch((error) => {
+      console.error(
+        "[store] persist after transition failed",
+        error instanceof Error ? error.message : error,
+      );
+    });
   }
   return deal;
 }

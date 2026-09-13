@@ -34,3 +34,24 @@ Namecheap Advanced DNS for `botbuyer.ai`:
 - TTL: Automatic
 
 Vercel already has `stage.botbuyer.ai` assigned to git branch `staging` (verified in project).
+
+## Engine persist (Start search)
+
+PR #74 writes Searching deals to Neon when `DATABASE_URL` is set. Without it, cookie fallback overflows (~6KB journal vs 3500 cap) and Start search fails closed.
+
+**CTO 2026-09-13:** Dedicated Neon `botbuy` (`late-union-34785215`) is live. `DATABASE_URL` is set on Vercel Preview + Development + Production. Do **not** recreate Neon or reprint secrets. Never Autofleeto / `fleetos-production`. Soft HOLD. Land promote HOLD.
+
+### Future Neon clone (idempotent, no wipe)
+
+```bash
+psql "$DATABASE_URL" -f drizzle/0000_engine_base.sql
+# then incrementals 0001–0003, or: npm run db:push
+```
+
+`0000_engine_base.sql` is the documented base `CREATE TABLE IF NOT EXISTS` for `users`, `deals`, `deal_events`, `usage_events`, `intents`, and related tables from `lib/db/schema.ts`. It does not drop users. `spend_limits.auto_approve` stays default false.
+
+### Prove locally
+
+```bash
+npm run test:engine-neon
+```

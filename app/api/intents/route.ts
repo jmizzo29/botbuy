@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiUser } from "@/lib/api-auth";
+import { persistFailureResponse } from "@/lib/api-persist";
 import {
   addIntent,
   createSearchingDealFromIntent,
@@ -56,11 +57,8 @@ export async function POST(request: Request) {
   if (!parsed.data.startSearch) {
     try {
       await persistEngineStore();
-    } catch {
-      return NextResponse.json(
-        { error: "Could not save intent." },
-        { status: 500 },
-      );
+    } catch (error) {
+      return persistFailureResponse(error, "Could not save intent.");
     }
     return NextResponse.json({ intent }, { status: 201 });
   }
@@ -71,10 +69,7 @@ export async function POST(request: Request) {
       gated.user.notificationEmail || gated.user.email,
     );
     return NextResponse.json({ intent, deal }, { status: 201 });
-  } catch {
-    return NextResponse.json(
-      { error: "Could not start search." },
-      { status: 500 },
-    );
+  } catch (error) {
+    return persistFailureResponse(error, "Could not start search.");
   }
 }
