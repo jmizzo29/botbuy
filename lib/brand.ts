@@ -2,15 +2,14 @@
 export const LAND_META_LINE =
   "BotBuyer finds it and handles the chase. You approve before it pays.";
 
-/** Public land fold — John GO coming-soon. Soft-signal HOLD. */
-export const LAND_COMING_SOON = "Coming soon" as const;
-
-/** Product H1 / support — used off-land (about). Soft-signal HOLD. */
+/** Land H1 / support — CMO LOCKED ≤10s lead. Soft-signal HOLD. */
 export const LAND_PRODUCT_H1 = "Your AI agent for buying." as const;
 export const LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK." as const;
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
 export const LAND_WORDMARK = "BotBuyer" as const;
+export const LAND_SKY_MARK_SRC =
+  "/brand/logo-soft-spine/botbuyer-mark-reverse.svg" as const;
 export const LAND_ARC_SRC = "/land/assets/06-arc-reverse.svg" as const;
 export const LAND_ARC_LABEL = "Find Decide Buy arc" as const;
 

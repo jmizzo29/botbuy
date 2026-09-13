@@ -32,7 +32,7 @@ export function PublicChrome({
           </Link>
           <PublicNav land={land} />
         </header>
-        <InstallHint />
+        {land ? null : <InstallHint />}
         <main
           className={
             land
@@ -71,7 +71,7 @@ async function PublicNav({ land }: { land: boolean }) {
   return (
     <div className={land ? "bb-land-nav" : "flex items-center gap-3 text-sm"}>
       {land ? (
-        <Link href="/about" className={link()}>
+        <Link href="/about" className={link()} data-nav="about">
           About
         </Link>
       ) : null}

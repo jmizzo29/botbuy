@@ -241,7 +241,7 @@ body {
   z-index: 2;
 }
 
-/* Land B · full-bleed navy + overlay word-link nav. Soft-signal HOLD. */
+/* Land R3 · two-zone navy sky + Quiet Capital panel. Soft-signal HOLD. */
 .bb-land-header {
   position: absolute;
   top: 0;
@@ -250,7 +250,7 @@ body {
   z-index: 4;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.85rem;
   width: 100%;
@@ -261,8 +261,8 @@ body {
 }
 
 .bb-land-lockup {
-  /* Overlay lockup ~38px phone / ~46px desk. Soft-spine reverse. Soft-signal HOLD. */
-  height: 2.375rem;
+  /* Overlay lockup 28px phone / ~46px desk. Soft-spine reverse. Soft-signal HOLD. */
+  height: 1.75rem;
   width: auto;
 }
 
@@ -277,16 +277,20 @@ body {
 .bb-land-link {
   font-size: 0.75rem;
   line-height: 1.2;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.9);
   background: none;
   border: 0;
   border-radius: 0;
   padding: 0;
   box-shadow: none;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
 }
 
-.bb-land-link:hover {
+.bb-land-link:hover,
+.bb-land-link:focus-visible {
   color: #ffffff;
+  text-decoration: underline;
 }
 
 .bb-land-main {
@@ -300,18 +304,14 @@ body {
   position: relative;
   isolation: isolate;
   display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: 100dvh;
   min-height: 100svh;
   overflow: hidden;
   border-radius: 0;
   color: #ffffff;
-  background: linear-gradient(
-    180deg,
-    var(--bb-land-navy) 0%,
-    var(--bb-land-navy-mid) 48%,
-    var(--bb-land-navy-deep) 100%
-  );
+  background: #050a0c;
 }
 
 .bb-land-footer {
@@ -328,83 +328,83 @@ body {
   box-shadow: none;
 }
 
-.bb-land-stage-grid {
+.bb-land-sky {
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 50%;
+  width: 100%;
+  height: 50dvh;
+  min-height: 50dvh;
+  overflow: hidden;
+  background: #0b1f3a;
+}
+
+.bb-land-sky::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bb-mark-hero {
+  position: relative;
+  z-index: 1;
+  width: 148px;
+  height: 148px;
+}
+
+.bb-land-panel {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  flex: 1 1 auto;
-  min-height: inherit;
-}
-
-/* Coming-soon fold — centered Quiet Capital. Soft-signal HOLD. */
-.bb-land-coming {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  flex: 1 1 50%;
   width: 100%;
-  min-height: inherit;
-  padding: 5.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
-}
-
-.bb-land-coming-title {
-  margin: 0;
-  font-size: clamp(1.5rem, 4.2vw, 2rem);
-  font-weight: 600;
-  letter-spacing: -0.035em;
-  line-height: 1.15;
-  color: #ffffff;
-}
-
-.bb-land-arc {
-  order: 1;
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  justify-content: center;
-  padding: 5.25rem 1.25rem 0.35rem;
+  min-height: 50dvh;
+  background: #050a0c;
+  border-top: 2px solid #2dd4bf;
+  padding: 28px 24px calc(48px + env(safe-area-inset-bottom, 0px));
 }
 
 .bb-land-copy {
-  order: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   width: 100%;
-  padding: 0.2rem 1.25rem calc(1.65rem + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(
-    180deg,
-    rgba(10, 24, 44, 0) 0%,
-    rgba(10, 24, 44, 0.62) 36%,
-    rgba(10, 24, 44, 0.94) 100%
-  );
+  max-width: 22rem;
+  margin-inline: auto;
+  margin-block-start: 0;
+  padding: 0;
+  background: none;
 }
 
 .bb-land-h1 {
   width: 100%;
   max-width: 22rem;
-  font-size: clamp(1.375rem, 6.55vw, 1.6875rem);
+  font-size: 1.875rem;
   font-weight: 600;
-  letter-spacing: -0.038em;
+  letter-spacing: -0.04em;
   line-height: 1.12;
   color: #ffffff;
+  text-wrap: balance;
 }
 
 .bb-land-support {
   width: 100%;
   max-width: 22rem;
-  margin-top: 0.7rem;
-  font-size: clamp(0.9375rem, 3.85vw, 1.0625rem);
+  margin-top: 0.75rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
-  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .bb-land-meta {
@@ -426,7 +426,7 @@ body {
   width: 100%;
   max-width: 22rem;
   margin-inline: auto;
-  margin-block-start: 1.25rem;
+  margin-top: auto;
 }
 
 .bb-land-cta > a,
@@ -459,8 +459,8 @@ body {
 
 .bb-land-cta [data-cta="land-signin"] {
   background: transparent;
-  color: rgba(255, 255, 255, 0.92);
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
 }
 
 .bb-land-signin:hover {
@@ -469,37 +469,50 @@ body {
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* Phone / max-lg: mobile-density-v1 + equal CTA boxes. Soft-signal HOLD. */
+/* Phone / max-lg: R3 lower-panel. Soft-signal HOLD. */
 @media (max-width: 1023px) {
-  .bb-land-header,
-  .bb-land-nav {
-    justify-content: center;
+  .bb-land-header {
+    justify-content: space-between;
   }
 
-  .bb-land-stage .bb-land-arc {
-    align-items: flex-end;
-    justify-content: center;
-    margin-block-end: 1.25rem;
-    padding-bottom: 0;
+  .bb-land-nav {
+    justify-content: flex-end;
+  }
+
+  .bb-land-sky {
+    height: 50dvh;
+    min-height: 50dvh;
+  }
+
+  .bb-land-sky .bb-mark-hero {
+    width: 148px;
+    height: 148px;
+  }
+
+  .bb-land-panel {
+    min-height: 50dvh;
+    padding: 28px 24px calc(48px + env(safe-area-inset-bottom, 0px));
   }
 
   .bb-land-copy {
     align-items: center;
     text-align: center;
     margin-block-start: 0;
-    gap: 0.5rem;
+    gap: 0;
     padding-top: 0;
   }
 
-  .bb-land-support {
-    margin-top: 0;
+  .bb-land-h1 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: -0.04em;
   }
 
   .bb-land-cta {
+    margin-top: auto;
     justify-content: center;
     max-width: 22rem;
     margin-inline: auto;
-    margin-block-start: 1.25rem;
   }
 }
 
@@ -528,41 +541,49 @@ body {
     min-height: 100svh;
   }
 
-  .bb-land-stage-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.28fr) minmax(18rem, 0.92fr);
-    align-items: center;
-    gap: 4rem;
-    padding: 5rem 5.5rem;
+  .bb-land-sky {
+    height: 50dvh;
+    min-height: 50dvh;
+  }
+
+  .bb-land-sky .bb-mark-hero {
+    width: 180px;
+    height: 180px;
+  }
+
+  .bb-land-panel {
+    min-height: 50dvh;
+    padding: 3rem 5.5rem calc(3.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .bb-land-copy {
-    order: 1;
-    align-items: flex-start;
-    text-align: left;
-    max-width: none;
-    padding: 0;
-    background: none;
-  }
-
-  .bb-land-arc {
-    order: 2;
-    flex: none;
-    justify-content: flex-end;
-    padding: 0;
+    align-items: center;
+    text-align: center;
+    max-width: 32rem;
   }
 
   .bb-land-h1 {
-    font-size: clamp(2.75rem, 3.7vw, 3.55rem);
-    letter-spacing: -0.042em;
-    line-height: 1.05;
-    max-width: none;
+    font-size: clamp(2.25rem, 3.2vw, 3rem);
+    letter-spacing: -0.04em;
+    line-height: 1.08;
+    max-width: 32rem;
+    text-align: center;
   }
 
   .bb-land-support {
-    margin-top: 1.15rem;
+    margin-top: 1rem;
+    margin-bottom: 1.75rem;
     max-width: 32rem;
-    font-size: 1.35rem;
+    font-size: 1.125rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .bb-land-cta {
+    justify-content: center;
+    max-width: 22rem;
+    margin-inline: auto;
+    margin-top: auto;
   }
 
   .bb-land-meta {
@@ -571,36 +592,17 @@ body {
     font-size: 0.9375rem;
     line-height: 1.55;
   }
-
-  .bb-land-cta {
-    justify-content: flex-start;
-    max-width: 22rem;
-    margin-inline: 0;
-    margin-top: 1.75rem;
-  }
 }
 
-@media (min-width: 1280px) {
-  .bb-land-h1 {
-    white-space: nowrap;
-  }
-}
-
-/* Land atmosphere — A1 richer-mesh-deep LIVE. mesh-glow unused. Soft-signal HOLD. */
-.bb-land-stage {
-  position: relative;
-  background: #0B1F3A;
+/* Land atmosphere — A1 richer-mesh-deep LIVE on sky only. mesh-glow unused. Soft-signal HOLD. */
+.bb-land-sky {
   overflow: hidden;
 }
-.bb-land-stage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
 .bb-atm-richer-mesh-deep::before {
+  pointer-events: none;
   background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'%3E%3Cfilter id='bbn' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' seed='7' stitchTiles='noStitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='1600' height='900' filter='url(%23bbn)' opacity='0.16'/%3E%3Cg fill='none' stroke='rgb(255,255,255)' stroke-width='0.55' opacity='0.06'%3E%3Cpath d='M0 140 L1600 48'/%3E%3Cpath d='M0 380 L1600 270'/%3E%3Cpath d='M0 640 L1600 520'/%3E%3Cpath d='M220 900 L1040 0'/%3E%3Cpath d='M760 900 L1600 200'/%3E%3C/g%3E%3C/svg%3E")
+      center / cover no-repeat,
     radial-gradient(ellipse 62% 52% at 82% 18%, rgba(42,125,158,0.42), transparent 72%),
     radial-gradient(ellipse 55% 48% at 12% 32%, rgba(26,78,125,0.36), transparent 72%),
     radial-gradient(ellipse 58% 50% at 55% 52%, rgba(45,155,158,0.30), transparent 72%),
