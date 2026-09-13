@@ -581,8 +581,9 @@ assert(!land.includes("HowItWorksRail"), "land fold dropped elevate how-stack");
 assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy stage");
 assert(land.includes("bb-land-stage"), "land stage class is wired");
 assert(land.includes("bb-atm-richer-mesh-deep"), "land A1 richer-mesh-deep atmosphere class");
-assert(land.includes('className="bb-land-sky bb-atm-richer-mesh-deep"'), "A1 atmosphere is sky-only");
-assert(!land.includes("bb-land-stage bb-atm-richer-mesh-deep"), "A1 atmosphere is not on the solid panel stage");
+assert(land.includes("bb-land-atm") && land.includes("atm"), "A1 atmosphere is a full-bleed atm layer");
+assert(!land.includes('className="bb-land-sky bb-atm-richer-mesh-deep"'), "A1 atmosphere is not sky-only");
+assert(!land.includes("bb-land-stage bb-atm-richer-mesh-deep"), "A1 atmosphere is not on the panel stage class");
 assert(!land.includes("bb-atm-mesh-glow"), "land no longer wires unused mesh-glow");
 assert(land.includes("bb-land-h1") && land.includes("bb-land-support"), "land fold uses CSS type-scale classes");
 assert(!land.includes("bb-land-meta"), "land fold dropped meta one-liner");
@@ -732,8 +733,8 @@ assert(
   css.includes("justify-content: space-between") &&
     css.includes(".bb-land-sky") &&
     css.includes(".bb-land-panel") &&
-    css.includes("border-top: 2px solid #2dd4bf"),
-  "desktop keeps R3 two-zone hard edge; overlay stays spread",
+    css.includes("border-top: none"),
+  "desktop keeps R3 50/50 skeleton; overlay stays spread; no teal divider",
 );
 assert(css.includes("@media (max-width: 1023px)"), "phone center axis is locked at max-lg");
 assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "fold CTA is a Sign up + Sign in row");
@@ -757,9 +758,10 @@ assert(
 );
 assert(
   css.includes('.bb-land-cta [data-cta="land-signin"]') &&
-    css.includes("border: 1.5px solid rgba(255, 255, 255, 0.7)") &&
+    css.includes("border: 1.5px solid #2DD4BF") &&
+    css.includes("color: #2DD4BF") &&
     css.includes("background: transparent"),
-  "Sign in is a higher-contrast ghost/outline pill",
+  "Sign in is a matched teal outline pill",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(
@@ -767,9 +769,11 @@ assert(
     land.includes("bb-land-panel") &&
     css.includes(".bb-land-sky") &&
     css.includes(".bb-land-panel") &&
-    css.includes("border-top: 2px solid #2dd4bf") &&
-    css.includes("background: #050a0c"),
-  "R3 two-zone is sky + solid #050A0C panel with 2px teal edge",
+    css.includes("border-top: none") &&
+    css.includes("rgba(5, 10, 12, 0.38)") &&
+    !css.includes("border-top: 2px solid #2dd4bf") &&
+    !css.includes("background: #050a0c"),
+  "U1 fold is continuous mesh + scrim panel with no teal edge",
 );
 assert(
   css.includes("font-size: 1.875rem") &&
@@ -815,8 +819,43 @@ assert(
   "R3 designer INSTALL is READY-TO-SHIP",
 );
 assert(
+  existsSync(join(root, "land/mobile-rebuild-v2/r3-unify-bg/INSTALL.md")) &&
+    read("land/mobile-rebuild-v2/r3-unify-bg/INSTALL.md").includes("READY-TO-SHIP") &&
+    read("land/mobile-rebuild-v2/r3-unify-bg/INSTALL.md").includes("mesh-continuous"),
+  "U1 unify-bg INSTALL is READY-TO-SHIP",
+);
+assert(
   read("land/INSTALL.md").includes("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md"),
   "land INSTALL points at R3 kit SoT",
+);
+assert(chrome.includes('data-nav="about"'), "land About link is marked for chrome QA");
+assert(chrome.includes('link("about")') || chrome.includes('className={link("about")}'), "land About uses U1 about class");
+assert(
+  css.includes("font-size: 15px") &&
+    css.includes("font-weight: 550") &&
+    css.includes(".about"),
+  "U1 About chrome is 15px / 550",
+);
+assert(
+  css.includes(".bb-land-atm") &&
+    css.includes("inset: 0") &&
+    css.includes(".atm"),
+  "U1 atmosphere is full-bleed inset 0",
+);
+assert(
+  !read("public/brand/logo-soft-spine/botbuyer-mark-reverse.svg").includes(
+    'fill="#2DD4BF"',
+  ) &&
+    !read("brand/logo-soft-spine/botbuyer-mark-reverse.svg").includes(
+      'fill="#2DD4BF"',
+    ) &&
+    !read("public/brand/logo-soft-spine/botbuyer-logo-header.svg").includes(
+      'fill="#2DD4BF"',
+    ) &&
+    !read("brand/logo-soft-spine/botbuyer-logo-header.svg").includes(
+      'fill="#2DD4BF"',
+    ),
+  "land soft-spine reverse + chrome mark have no teal tip",
 );
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
 assert(
