@@ -136,6 +136,54 @@ assert(
   }).ok,
   "register after Approve sheet trail passes",
 );
+assert(
+  evaluateSpendGate({
+    tool: "buy",
+    autoApproveAllowed: false,
+    autoApprove: false,
+    deal: { status: "Buying" },
+    events: [{ from: "Needs you", to: "Buying" }],
+  }).ok,
+  "Shopify/HTTP JSON buy after Approve sheet trail would pass the same gate",
+);
+assert(
+  !evaluateSpendGate({
+    tool: "buy",
+    autoApproveAllowed: false,
+    autoApprove: false,
+    deal: null,
+    events: [],
+  }).ok,
+  "Shopify/HTTP JSON buy without deal fails closed",
+);
+
+const SHOP_HOST = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.myshopify\.com$/;
+assert(SHOP_HOST.test("acme.myshopify.com"), "shopify host accepts myshopify.com");
+assert(!SHOP_HOST.test("example.com"), "shopify host rejects generic domains");
+assert(!SHOP_HOST.test("acme.myshopify.com.evil.test"), "shopify host rejects suffix spoof");
+
+function blockedHost(hostname) {
+  const host = hostname.replace(/^\[|\]$/g, "").toLowerCase();
+  if (
+    host === "localhost" ||
+    host === "::1" ||
+    host.endsWith(".localhost") ||
+    host.endsWith(".local") ||
+    host.endsWith(".internal") ||
+    host === "metadata.google.internal"
+  ) {
+    return true;
+  }
+  if (/^(?:127\.|10\.|0\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[0-1])\.)/.test(host)) {
+    return true;
+  }
+  return false;
+}
+assert(blockedHost("localhost"), "reject localhost");
+assert(blockedHost("127.0.0.1"), "reject loopback");
+assert(blockedHost("169.254.169.254"), "reject metadata IP");
+assert(blockedHost("192.168.1.8"), "reject RFC1918");
+assert(!blockedHost("api.example.com"), "allow public hostname");
 
 if (failures.length) {
   console.error("connector-smoke FAIL");
