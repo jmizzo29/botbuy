@@ -243,10 +243,7 @@ body {
 
 /* Land B · full-bleed navy + overlay word-link nav. Soft-signal HOLD. */
 .bb-land-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: relative;
   z-index: 4;
   display: flex;
   align-items: center;
@@ -257,11 +254,12 @@ body {
   padding: max(0.85rem, env(safe-area-inset-top, 0px)) 1.25rem 0.75rem;
   background: transparent;
   border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow: none;
 }
 
 .bb-land-lockup {
-  /* Overlay lockup 28px phone / ~46px desk. Soft-spine reverse. Soft-signal HOLD. */
+  /* Q1 chrome-only 28px reverse white. Soft-spine. Soft-signal HOLD. */
   height: 1.75rem;
   width: auto;
 }
@@ -321,7 +319,7 @@ body {
   overflow: hidden;
   border-radius: 0;
   color: #ffffff;
-  background: transparent;
+  background: #0b1f3a;
 }
 
 .bb-land-atm,
@@ -346,34 +344,21 @@ body {
   box-shadow: none;
 }
 
-.bb-land-sky {
-  position: relative;
-  isolation: isolate;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1 1 50%;
-  width: 100%;
-  height: 50dvh;
-  min-height: 50dvh;
-  overflow: hidden;
-  background: transparent;
-}
-
-.bb-land-sky::before {
-  content: "";
+.bb-land-watermark {
   position: absolute;
   inset: 0;
-  pointer-events: none;
   z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-.bb-mark-hero {
-  position: relative;
-  z-index: 1;
-  width: 148px;
-  height: 148px;
+.bb-mark-watermark {
+  position: absolute;
+  top: 22%;
+  right: -6%;
+  width: min(72vw, 22rem);
+  height: auto;
+  opacity: 0.12;
 }
 
 .bb-land-panel {
@@ -381,27 +366,22 @@ body {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  flex: 1 1 50%;
+  flex: 0 0 auto;
   width: 100%;
-  min-height: 50dvh;
-  background: linear-gradient(
-    180deg,
-    rgba(5, 10, 12, 0.18) 0%,
-    rgba(5, 10, 12, 0.32) 40%,
-    rgba(5, 10, 12, 0.38) 100%
-  );
+  min-height: 0;
+  background: transparent;
   border-top: none;
-  padding: 28px 24px calc(48px + env(safe-area-inset-bottom, 0px));
+  padding: 48px 24px calc(48px + env(safe-area-inset-bottom, 0px));
 }
 
 .bb-land-copy {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   width: 100%;
   max-width: 22rem;
-  margin-inline: auto;
+  margin-inline: 0;
   margin-block-start: 0;
   padding: 0;
   background: none;
@@ -427,7 +407,7 @@ body {
   font-weight: 500;
   letter-spacing: -0.015em;
   line-height: 1.4;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.70);
 }
 
 .bb-land-meta {
@@ -441,30 +421,29 @@ body {
 
 .bb-land-cta {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: nowrap;
-  align-items: stretch;
-  justify-content: center;
-  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.85rem;
   width: 100%;
   max-width: 22rem;
-  margin-inline: auto;
-  margin-top: auto;
+  margin-inline: 0;
+  margin-top: 0;
 }
 
 .bb-land-cta > a,
 .bb-land-cta > button,
 .bb-land-cta [data-cta],
-.bb-land-signup,
-.bb-land-signin {
-  flex: 1 1 0%;
-  width: calc((100% - 10px) / 2);
-  min-width: calc((100% - 10px) / 2);
-  max-width: calc((100% - 10px) / 2);
+.bb-land-signup {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  max-width: none;
   min-height: 48px;
   height: 48px;
-  padding: 0.75rem 1rem;
-  border-radius: 9999px;
+  padding: 0.75rem 1.35rem;
+  border-radius: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -480,19 +459,37 @@ body {
   border: 1.5px solid #2DD4BF;
 }
 
-.bb-land-cta [data-cta="land-signin"] {
+.bb-land-cta [data-cta="land-signin"],
+.bb-land-signin {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  min-height: 0;
+  height: auto;
+  padding: 0;
+  border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
   background: transparent;
-  color: #2DD4BF;
-  border: 1.5px solid #2DD4BF;
+  color: rgba(255, 255, 255, 0.90);
+  border: 0;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.2;
 }
 
-.bb-land-signin:hover {
-  color: #5eead4;
-  border-color: #5eead4;
-  background: rgba(45, 212, 191, 0.08);
+.bb-land-signin:hover,
+.bb-land-signin:focus-visible {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  background: transparent;
+  border: 0;
 }
 
-/* Phone / max-lg: R3 lower-panel. Soft-signal HOLD. */
+/* Phone / max-lg: Q1 institutional-folio. Soft-signal HOLD. */
 @media (max-width: 1023px) {
   .bb-land-header {
     justify-content: space-between;
@@ -502,24 +499,14 @@ body {
     justify-content: flex-end;
   }
 
-  .bb-land-sky {
-    height: 50dvh;
-    min-height: 50dvh;
-  }
-
-  .bb-land-sky .bb-mark-hero {
-    width: 148px;
-    height: 148px;
-  }
-
   .bb-land-panel {
-    min-height: 50dvh;
-    padding: 28px 24px calc(48px + env(safe-area-inset-bottom, 0px));
+    min-height: 0;
+    padding: 48px 24px calc(48px + env(safe-area-inset-bottom, 0px));
   }
 
   .bb-land-copy {
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
     margin-block-start: 0;
     gap: 0;
     padding-top: 0;
@@ -532,10 +519,10 @@ body {
   }
 
   .bb-land-cta {
-    margin-top: auto;
-    justify-content: center;
+    margin-top: 0;
+    justify-content: flex-start;
     max-width: 22rem;
-    margin-inline: auto;
+    margin-inline: 0;
   }
 }
 
@@ -552,7 +539,7 @@ body {
   }
 
   .bb-land-lockup {
-    height: 2.875rem;
+    height: 1.75rem;
   }
 
   .bb-land-footer {
@@ -564,24 +551,20 @@ body {
     min-height: 100svh;
   }
 
-  .bb-land-sky {
-    height: 50dvh;
-    min-height: 50dvh;
-  }
-
-  .bb-land-sky .bb-mark-hero {
-    width: 180px;
-    height: 180px;
+  .bb-land-watermark .bb-mark-watermark {
+    top: 18%;
+    right: 6%;
+    width: min(36vw, 26rem);
   }
 
   .bb-land-panel {
-    min-height: 50dvh;
-    padding: 3rem 5.5rem calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    min-height: 0;
+    padding: 4.5rem 5.5rem calc(3.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .bb-land-copy {
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
     max-width: 32rem;
   }
 
@@ -590,7 +573,7 @@ body {
     letter-spacing: -0.04em;
     line-height: 1.08;
     max-width: 32rem;
-    text-align: center;
+    text-align: left;
   }
 
   .bb-land-support {
@@ -598,15 +581,15 @@ body {
     margin-bottom: 1.75rem;
     max-width: 32rem;
     font-size: 1.125rem;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.78);
+    text-align: left;
+    color: rgba(255, 255, 255, 0.70);
   }
 
   .bb-land-cta {
-    justify-content: center;
+    justify-content: flex-start;
     max-width: 22rem;
-    margin-inline: auto;
-    margin-top: auto;
+    margin-inline: 0;
+    margin-top: 0;
   }
 
   .bb-land-meta {
@@ -617,10 +600,7 @@ body {
   }
 }
 
-/* Land atmosphere — A1 richer-mesh-deep FULL-BLEED behind the fold. mesh-glow unused. Soft-signal HOLD. */
-.bb-land-sky {
-  overflow: hidden;
-}
+/* Auth atmosphere — A1 richer-mesh-deep. Land Q1 is flat navy. Soft-signal HOLD. */
 .bb-atm-richer-mesh-deep::before {
   content: "";
   position: absolute;
