@@ -5,7 +5,9 @@ import {
   addIntent,
   createSearchingDealFromIntent,
   getSpendLimits,
+  hydrateStore,
   listIntents,
+  persistEngineStore,
 } from "@/lib/store";
 
 const createIntent = z.object({
@@ -21,6 +23,7 @@ const createIntent = z.object({
 export async function GET() {
   const gated = await requireApiUser();
   if (gated.error) return gated.error;
+  await hydrateStore();
   return NextResponse.json({ intents: listIntents(gated.user.id) });
 }
 
@@ -36,6 +39,7 @@ export async function POST(request: Request) {
     );
   }
   const limits = getSpendLimits(gated.user.id);
+  await hydrateStore();
   const intent = addIntent(
     {
       summary: parsed.data.summary,
@@ -50,12 +54,27 @@ export async function POST(request: Request) {
     gated.user.id,
   );
   if (!parsed.data.startSearch) {
+    try {
+      await persistEngineStore();
+    } catch {
+      return NextResponse.json(
+        { error: "Could not save intent." },
+        { status: 500 },
+      );
+    }
     return NextResponse.json({ intent }, { status: 201 });
   }
-  const deal = await createSearchingDealFromIntent(
-    intent,
-    gated.user.id,
-    gated.user.notificationEmail || gated.user.email,
-  );
-  return NextResponse.json({ intent, deal }, { status: 201 });
+  try {
+    const deal = await createSearchingDealFromIntent(
+      intent,
+      gated.user.id,
+      gated.user.notificationEmail || gated.user.email,
+    );
+    return NextResponse.json({ intent, deal }, { status: 201 });
+  } catch {
+    return NextResponse.json(
+      { error: "Could not start search." },
+      { status: 500 },
+    );
+  }
 }

@@ -147,6 +147,7 @@ export async function hydrateStore() {
       durable,
     ),
   );
+  if (durable.intents?.length) rememberIntents(durable.intents);
   ensureDemoNeedsYou();
   ensureEngineUsageStubs();
   const persisted = await listPersistedUsers();
@@ -158,9 +159,10 @@ export async function hydrateStore() {
 export async function persistEngineStore() {
   const engine = engineState();
   await writeDurableJournal({
-    deals: engine.deals,
-    events: engine.events,
-    usage: engine.usage ?? [],
+    deals: engine.deals.filter((deal) => deal.id !== DEMO_NEEDS_YOU_ID),
+    events: engine.events.filter((event) => event.dealId !== DEMO_NEEDS_YOU_ID),
+    usage: (engine.usage ?? []).filter((row) => row.dealId !== DEMO_NEEDS_YOU_ID),
+    intents: intents.slice(),
   });
 }
 
@@ -233,6 +235,15 @@ const intents: Intent[] = [
     createdAt: "2026-09-11T14:00:00Z",
   },
 ];
+
+function rememberIntents(rows: Intent[]) {
+  const ids = new Set(intents.map((row) => row.id));
+  for (const row of rows) {
+    if (ids.has(row.id)) continue;
+    intents.push(row);
+    ids.add(row.id);
+  }
+}
 
 function defaultSpendLimits(userId: string): SpendLimits {
   return {

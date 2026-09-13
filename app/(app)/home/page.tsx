@@ -27,6 +27,8 @@ export const metadata = {
   title: "My deals",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   await hydrateStore();
   const user = await requireUser();
