@@ -287,6 +287,16 @@ body {
   text-decoration-thickness: 1px;
 }
 
+.bb-land-header .about,
+.bb-land-header [data-nav="about"] {
+  font-size: 15px;
+  font-weight: 550;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 10px 6px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
 .bb-land-link:hover,
 .bb-land-link:focus-visible {
   color: #ffffff;
@@ -311,7 +321,15 @@ body {
   overflow: hidden;
   border-radius: 0;
   color: #ffffff;
-  background: #050a0c;
+  background: transparent;
+}
+
+.bb-land-atm,
+.atm {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .bb-land-footer {
@@ -331,7 +349,7 @@ body {
 .bb-land-sky {
   position: relative;
   isolation: isolate;
-  z-index: 0;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -340,7 +358,7 @@ body {
   height: 50dvh;
   min-height: 50dvh;
   overflow: hidden;
-  background: #0b1f3a;
+  background: transparent;
 }
 
 .bb-land-sky::before {
@@ -366,8 +384,13 @@ body {
   flex: 1 1 50%;
   width: 100%;
   min-height: 50dvh;
-  background: #050a0c;
-  border-top: 2px solid #2dd4bf;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 10, 12, 0.18) 0%,
+    rgba(5, 10, 12, 0.32) 40%,
+    rgba(5, 10, 12, 0.38) 100%
+  );
+  border-top: none;
   padding: 28px 24px calc(48px + env(safe-area-inset-bottom, 0px));
 }
 
@@ -446,8 +469,8 @@ body {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  font-weight: 600;
-  font-size: 0.9375rem;
+  font-weight: 650;
+  font-size: 15px;
   line-height: 1.2;
 }
 
@@ -459,14 +482,14 @@ body {
 
 .bb-land-cta [data-cta="land-signin"] {
   background: transparent;
-  color: #ffffff;
-  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  color: #2DD4BF;
+  border: 1.5px solid #2DD4BF;
 }
 
 .bb-land-signin:hover {
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.92);
-  background: rgba(255, 255, 255, 0.06);
+  color: #5eead4;
+  border-color: #5eead4;
+  background: rgba(45, 212, 191, 0.08);
 }
 
 /* Phone / max-lg: R3 lower-panel. Soft-signal HOLD. */
@@ -594,11 +617,14 @@ body {
   }
 }
 
-/* Land atmosphere — A1 richer-mesh-deep LIVE on sky only. mesh-glow unused. Soft-signal HOLD. */
+/* Land atmosphere — A1 richer-mesh-deep FULL-BLEED behind the fold. mesh-glow unused. Soft-signal HOLD. */
 .bb-land-sky {
   overflow: hidden;
 }
 .bb-atm-richer-mesh-deep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   pointer-events: none;
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'%3E%3Cfilter id='bbn' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' seed='7' stitchTiles='noStitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='1600' height='900' filter='url(%23bbn)' opacity='0.16'/%3E%3Cg fill='none' stroke='rgb(255,255,255)' stroke-width='0.55' opacity='0.06'%3E%3Cpath d='M0 140 L1600 48'/%3E%3Cpath d='M0 380 L1600 270'/%3E%3Cpath d='M0 640 L1600 520'/%3E%3Cpath d='M220 900 L1040 0'/%3E%3Cpath d='M760 900 L1600 200'/%3E%3C/g%3E%3C/svg%3E")
