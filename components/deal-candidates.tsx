@@ -8,7 +8,7 @@ export function DealCandidates({ handoff }: { handoff: SearchActHandoff }) {
         <CardTitle>Candidates</CardTitle>
         <p className="mt-1 text-sm text-muted">
           {handoff.fixture
-            ? "Stage search fixture · live:false · amountStatus=unverified · not a live connector result · not bought."
+            ? "Stage search fixture · stub · not a live purchase · live:false · amountStatus=unverified · verified=false."
             : "Connector search · live:false · listed amounts unverified · not bought."}
         </p>
       </CardHeader>

@@ -181,8 +181,8 @@ export function IntentForm({
       </div>
       {stageFixture ? (
         <p className="text-sm leading-relaxed text-muted">
-          Stage fixture on · unverified candidate · live:false · not a live
-          connector. Auto-approve stays OFF.
+          Stage fixture on · stub · not a live purchase · live:false ·
+          unverified. Auto-approve stays OFF.
         </p>
       ) : null}
       {emailMissing ? (

@@ -99,14 +99,28 @@ if (
     { VERCEL_ENV: "production" },
   )
 ) {
-  throw new Error("production must refuse STAGE_QA token");
+  throw new Error("production must refuse qa-needs-you token");
 }
 if (
   !intentRequestsStageSearchFixture({
     summary: `Need a SaaS tool ${STAGE_SEARCH_FIXTURE_TOKEN} for CPO`,
   })
 ) {
-  throw new Error("STAGE_QA token must be detected in intent");
+  throw new Error("qa-needs-you token must be detected in intent");
+}
+if (
+  !intentRequestsStageSearchFixture({
+    summary: "Need a SaaS tool fixture-candidates for CPO",
+  })
+) {
+  throw new Error("fixture-candidates token must be detected in intent");
+}
+if (
+  !intentRequestsStageSearchFixture({
+    summary: "Need a SaaS tool STAGE_QA for CPO",
+  })
+) {
+  throw new Error("STAGE_QA alias must still be detected in intent");
 }
 if (intentRequestsStageSearchFixture({ summary: "Need a SaaS tool" })) {
   throw new Error("plain intent must not look like a fixture request");
@@ -194,7 +208,7 @@ const unmappedDeal = await createSearchingDealFromIntent(
   "stage-qa@example.com",
 );
 if (unmappedDeal.status !== "Needs you") {
-  throw new Error("unmapped stub + STAGE_QA must still reach Needs you");
+  throw new Error("unmapped stub + qa-needs-you must still reach Needs you");
 }
 assertSoftHold(unmappedDeal);
 
@@ -213,7 +227,7 @@ const tokenDeal = await createSearchingDealFromIntent(
   "stage-qa@example.com",
 );
 if (tokenDeal.status !== "Needs you") {
-  throw new Error("STAGE_QA intent token must hand off to Needs you");
+  throw new Error("qa-needs-you intent token must hand off to Needs you");
 }
 assertSoftHold(tokenDeal);
 const tokenHandoff = readSearchActHandoff(listDealEvents(tokenDeal.id));

@@ -38,10 +38,10 @@ Enable with any of:
 
 - `STAGE_SEARCH_FIXTURE=1` (server env on the staging deployment)
 - `VERCEL_ENV=preview` (git staging / PR previews)
-- Intent text containing the token `STAGE_QA` (summary, must include, or avoid)
-- Query toggle `?fixture=1` on `/intent`, `/onboarding/intent`, or empty My deals (`/home?fixture=1`) — appends `STAGE_QA`
+- Intent text containing **`qa-needs-you`** (preferred), or `fixture-candidates` / `STAGE_QA`
+- Query toggle `?fixture=1` on `/intent`, `/onboarding/intent`, or empty My deals (`/home?fixture=1`) — appends `qa-needs-you`
 
-CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) → Intent → Start search (Software starter is enough). Open the deal → Approve. Amounts stay $0 / unverified.
+CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) → Intent → include **`qa-needs-you`** (or Start search on preview, which auto-enables) → My deals shows **Needs you** → Approve sheet. Amounts stay $0 / unverified. Fixture/stub — not a live purchase.
 
 ## Routes
 

@@ -3,13 +3,19 @@
  * live connector result. Never runs on production/main.
  */
 
-export const STAGE_SEARCH_FIXTURE_TOKEN = "STAGE_QA" as const;
+/** CPO-preferred intent keyword. Also accept fixture-candidates / STAGE_QA. */
+export const STAGE_SEARCH_FIXTURE_TOKEN = "qa-needs-you" as const;
+export const STAGE_SEARCH_FIXTURE_TOKENS = [
+  STAGE_SEARCH_FIXTURE_TOKEN,
+  "fixture-candidates",
+  "STAGE_QA",
+] as const;
 export const STAGE_SEARCH_FIXTURE_PROVIDER = "stage_fixture" as const;
 export const STAGE_SEARCH_FIXTURE_LABEL = "Stage QA candidate" as const;
 export const STAGE_SEARCH_FIXTURE_NOTE =
-  "Stage search fixture · live:false · amountStatus=unverified · verified=false · not a live connector result. Auto-approve OFF." as const;
+  "Stage search fixture · stub · not a live purchase · live:false · amountStatus=unverified · verified=false · not a live connector result. Auto-approve OFF." as const;
 
-const TOKEN_RE = /\bSTAGE_QA\b/;
+const TOKEN_RE = /\b(?:qa-needs-you|fixture-candidates|STAGE_QA)\b/;
 
 export type StageSearchFixtureEnv = {
   STAGE_SEARCH_FIXTURE?: string;

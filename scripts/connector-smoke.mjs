@@ -292,7 +292,7 @@ assert(dealSearch.includes("connector_candidates"), "pipeline attaches structure
 assert(!dealSearch.includes("agentExecuted: true"), "pipeline never sets agentExecuted");
 
 const fixtureSrc = readFileSync(join(root, "lib/connectors/stage-search-fixture.ts"), "utf8");
-assert(fixtureSrc.includes("STAGE_QA"), "stage fixture token is STAGE_QA");
+assert(fixtureSrc.includes("qa-needs-you"), "stage fixture token is qa-needs-you");
 assert(fixtureSrc.includes("isProductionSearchEnv"), "stage fixture refuses production");
 assert(fixtureSrc.includes('amountStatus: "unverified"'), "stage fixture amounts stay unverified");
 assert(fixtureSrc.includes("live: false"), "stage fixture stays live:false");

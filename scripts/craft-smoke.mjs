@@ -1496,12 +1496,12 @@ assert(existsSync(join(root, "lib/connectors/stage-search-fixture.ts")), "stage 
 assert(existsSync(join(root, "scripts/stage-search-fixture-smoke.mts")), "stage fixture smoke for non-seed user");
 assert(existsSync(join(root, "components/deal-candidates.tsx")), "deal candidates card");
 const stageFixture = read("lib/connectors/stage-search-fixture.ts");
-assert(stageFixture.includes("STAGE_QA"), "stage fixture token STAGE_QA");
+assert(stageFixture.includes("qa-needs-you"), "stage fixture token qa-needs-you");
 assert(stageFixture.includes("isProductionSearchEnv"), "stage fixture refuses production/main");
 assert(stageFixture.includes('VERCEL_ENV') && stageFixture.includes("preview"), "preview enables stage fixture");
 assert(!stageFixture.includes("priceVerified: true"), "stage fixture invents no verified prices");
 assert(johnIntentForm.includes("stageFixture"), "intent form accepts stage fixture toggle");
-assert(johnIntentForm.includes("STAGE_SEARCH_FIXTURE_TOKEN"), "intent form sends STAGE_QA when ?fixture=1");
+assert(johnIntentForm.includes("STAGE_SEARCH_FIXTURE_TOKEN"), "intent form sends qa-needs-you when ?fixture=1");
 assert(dealDetail.includes("DealCandidates"), "deal detail renders candidates");
 assert(!dealSearch.includes("tool: \"register\"") && !dealSearch.includes("tool: \"buy\""), "pipeline never auto-buys");
 assert(!dealSearch.includes("autoApprove: true"), "pipeline never enables auto-approve");
