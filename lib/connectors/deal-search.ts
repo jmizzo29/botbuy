@@ -7,7 +7,8 @@ import {
   assertNoSecretsLogged,
   sanitizeAuditMetadata,
 } from "@/lib/connectors/sanitize";
-import type { ConnectorToolResult } from "@/lib/connectors/types";
+import { CONNECTOR_TECH_LOCK_NOTE } from "@/lib/connectors/tech-lock";
+import type { ConnectorProvider, ConnectorToolResult } from "@/lib/connectors/types";
 import { assertRunDealSoftHold } from "@/lib/run-deal";
 import {
   appendDealEvent,
@@ -61,6 +62,23 @@ function firstCandidateDomain(result: ConnectorToolResult): string | null {
   return null;
 }
 
+function firstCandidateProduct(result: ConnectorToolResult): string | null {
+  const data = result.data ?? {};
+  const pools = [data.candidates, data.products, data.results];
+  for (const pool of pools) {
+    if (!Array.isArray(pool)) continue;
+    for (const row of pool) {
+      if (!row || typeof row !== "object") continue;
+      const record = row as { title?: unknown; handle?: unknown; sku?: unknown };
+      if (typeof record.title === "string" && record.title) return record.title;
+      if (typeof record.handle === "string" && record.handle) return record.handle;
+      if (typeof record.sku === "string" && record.sku) return record.sku;
+    }
+  }
+  if (typeof data.query === "string" && data.query) return data.query;
+  return null;
+}
+
 function attachTimeline(
   deal: Deal,
   title: string,
@@ -88,7 +106,7 @@ function appendSearchNote(deal: Deal, line: string) {
 }
 
 function failedSearchStub(
-  provider: "namecheap" | "twilio",
+  provider: ConnectorProvider,
   dealId: string,
 ): ConnectorToolResult {
   return {
@@ -104,8 +122,9 @@ function failedSearchStub(
 }
 
 /**
- * After a Searching deal opens, attempt a mapped connector search (or an
- * honest unmapped stub). Search/quote only — never register/buy.
+ * After a Searching deal opens, attempt a mapped official-API connector
+ * search (or an honest unmapped stub). Search/quote only — never register/buy.
+ * MCP-first. No captcha farms, HTML login, or browser farms.
  */
 export async function applyDealSearchPipeline(input: {
   deal: Deal;
@@ -198,7 +217,7 @@ export async function applyDealSearchPipeline(input: {
     deal,
     route.provider
       ? `Connector search · ${searchResult?.provider} · ${searchResult?.result ?? "stub"} · live:false · amountStatus=unverified.`
-      : "Search stub · no mapped connector · live:false · no invented results.",
+      : `Search stub · no mapped official-API connector · live:false · no invented results. ${CONNECTOR_TECH_LOCK_NOTE}`,
   );
 
   if (!searchResult) {
@@ -218,26 +237,30 @@ export async function applyDealSearchPipeline(input: {
     return deal;
   }
 
-  if (
-    route.provider === "namecheap" &&
-    connectorResultHasCandidates(searchResult.data)
-  ) {
+  if (connectorResultHasCandidates(searchResult.data) && route.provider) {
     const domain = firstCandidateDomain(searchResult);
-    if (domain) {
+    const product = firstCandidateProduct(searchResult);
+    const quoteQuery = domain ?? product;
+    if (quoteQuery) {
       const quote = await invokeConnectorTool({
         userId: input.userId,
-        provider: "namecheap",
+        provider: route.provider,
         tool: "quote",
         dealId: deal.id,
-        payload: { domain, query: domain },
+        payload: {
+          domain: domain ?? undefined,
+          query: quoteQuery,
+          product: product ?? undefined,
+        },
       });
       const quoteAt = new Date().toISOString();
       const quoteDetail = `live:false · ${compactDetail({
-        provider: "namecheap",
+        provider: route.provider,
         tool: "quote",
         result: quote.result,
         reason: quote.reason,
-        domain,
+        domain: domain ?? null,
+        product: product ?? null,
         listedUsd: quote.data?.listedUsd ?? null,
         amountStatus: quote.data?.amountStatus ?? "unverified",
         verified: false,
@@ -262,7 +285,7 @@ export async function applyDealSearchPipeline(input: {
       );
       appendSearchNote(
         deal,
-        `Namecheap quote stub · listedUsd=${String(quote.data?.listedUsd ?? "null")} · unverified · not a verified price.`,
+        `${route.provider} quote stub · listedUsd=${String(quote.data?.listedUsd ?? "null")} · unverified · not a verified price.`,
       );
     }
   }

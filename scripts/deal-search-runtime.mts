@@ -25,8 +25,11 @@ if (!softwareSearch) throw new Error("software intent missing connector search e
 if (!softwareSearch.detail.includes("live:false")) {
   throw new Error("software search event must be typed stub live:false");
 }
+if (!softwareSearch.detail.includes("shopify")) {
+  throw new Error("software search should attempt Shopify official API");
+}
 if (softwareDeal.status !== "Searching") {
-  throw new Error("software stub must stay Searching");
+  throw new Error("software Shopify stub must stay Searching without invented candidates");
 }
 if (softwareDeal.priceUsd !== 0 || softwareDeal.amountVerified || softwareDeal.priceVerified) {
   throw new Error("software deal must stay $0 unverified");
@@ -94,6 +97,6 @@ const replayCount = listDealEvents(replay.id).filter((event) =>
 if (replayCount !== 1) throw new Error("pipeline must be idempotent");
 
 console.log("deal-search-runtime PASS");
-console.log(` - software ${softwareDeal.id} Searching stub`);
+console.log(` - software ${softwareDeal.id} Shopify search live:false`);
 console.log(` - domain ${domainDeal.id} Namecheap search live:false`);
 console.log(` - phone ${phoneDeal.id} Twilio search live:false`);

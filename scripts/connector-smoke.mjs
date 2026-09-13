@@ -196,8 +196,16 @@ function evaluateIntentRoute({ summary = "", categories = [], mustInclude = "" }
   const phoneish =
     categories.some((item) => ["phone", "sms", "number", "numbers", "twilio"].includes(item)) ||
     /\b(phone|sms|twilio|did|text(?:ing)?)\b/i.test(text);
+  const merchantish =
+    categories.some((item) => ["software", "saas", "merchant", "shopify", "shop", "store", "license"].includes(item)) ||
+    /\b(software|saas|shopify|checkout|license|storefront|merchant)\b/i.test(text);
+  const httpJsonish =
+    categories.some((item) => ["http_json", "http", "json", "api"].includes(item)) ||
+    /\b(http json|openapi|official api|json api)\b/i.test(text);
   if (domainish) return "namecheap";
   if (phoneish) return "twilio";
+  if (merchantish) return "shopify";
+  if (httpJsonish) return "http_json";
   return "stub";
 }
 
@@ -219,8 +227,22 @@ assert(
   evaluateIntentRoute({
     summary: "Find software we can buy across vendor checkout.",
     categories: ["software"],
+  }) === "shopify",
+  "software intent maps to Shopify Admin API",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Query the official JSON API catalog.",
+    categories: ["http_json"],
+  }) === "http_json",
+  "HTTP JSON intent maps to official HTTPS JSON",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Buy a used office chair for the studio.",
+    categories: ["other"],
   }) === "stub",
-  "software intent stays an honest stub",
+  "unmapped intent stays an honest stub",
 );
 assert(
   !evaluateSpendGate({
@@ -238,10 +260,17 @@ assert(dealSearch.includes("invokeConnectorTool"), "deal search uses tools runti
 assert(dealSearch.includes('tool: "search"'), "deal search calls search");
 assert(!dealSearch.includes('tool: "register"') && !dealSearch.includes('tool: "buy"'), "deal search never register/buy");
 assert(dealSearch.includes("assertRunDealSoftHold"), "deal search keeps run deals $0/unverified");
+assert(!/puppeteer|playwright|selenium/i.test(dealSearch), "deal search has no browser farm");
+const techLock = readFileSync(join(root, "lib/connectors/tech-lock.ts"), "utf8");
+assert(techLock.includes("mcpFirst: true") && techLock.includes("apisFirst: true"), "tech lock is MCP-first · APIs-first");
+assert(techLock.includes("captchaFarms: false") && techLock.includes("htmlLoginAutomation: false"), "tech lock forbids captcha/HTML login");
+assert(techLock.includes("autoApprove: false") && techLock.includes("hold: \"soft\""), "tech lock auto-approve OFF · Soft HOLD");
+const intentRouteSrc = readFileSync(join(root, "lib/connectors/intent-route.ts"), "utf8");
+assert(!/puppeteer|playwright|selenium/i.test(intentRouteSrc), "intent route has no browser farm");
 
 const mapped = spawnSync(
   process.execPath,
-  ["--experimental-strip-types", "--no-warnings", join(root, "scripts/intent-route-smoke.mts")],
+  [join(root, "node_modules/.bin/tsx"), join(root, "scripts/intent-route-smoke.mts")],
   { encoding: "utf8" },
 );
 assert(mapped.status === 0, `intent-route runtime smoke${mapped.stderr ? `: ${mapped.stderr.trim()}` : ""}`);
@@ -256,5 +285,5 @@ console.log(" - AES-256-GCM roundtrip");
 console.log(" - approve gate Needs you → Buying · auto-approve OFF");
 console.log(" - register/buy fail closed without deal, auto-approve, or approve trail");
 console.log(" - M2 registry: shopify + http_json · live:false · spend gated");
-console.log(" - intent maps domain→Namecheap, phone→Twilio, else honest stub");
-console.log(" - deal search pipeline is search/quote only");
+console.log(" - intent maps domain→Namecheap, phone→Twilio, software→Shopify, else official stub");
+console.log(" - deal search pipeline is search/quote only · MCP-first · no browser farms");
