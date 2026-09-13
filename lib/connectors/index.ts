@@ -8,6 +8,8 @@ export {
 } from "@/lib/connectors/copy";
 export { invokeConnectorTool } from "@/lib/connectors/runtime";
 export { assertConnectorSpendAllowed } from "@/lib/connectors/approve-gate";
+export { applyDealSearchPipeline } from "@/lib/connectors/deal-search";
+export { routeIntentToSearch } from "@/lib/connectors/intent-route";
 export {
   listConnectorRegistry,
   CONNECTOR_REGISTRY,

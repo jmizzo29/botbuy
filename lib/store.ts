@@ -349,8 +349,13 @@ export async function createSearchingDealFromRun(
   if (reused) {
     assertRunDealSoftHold(reused);
     ensureSearchingUsageStub(reused);
+    const thickened = await thickenEngineDealSearch(
+      reused,
+      listIntents(userId)[0],
+      userId,
+    );
     await persistEngineStore();
-    return reused;
+    return thickened;
   }
 
   const intent = listIntents(userId)[0];
@@ -378,7 +383,7 @@ export async function createSearchingDealFromRun(
     createdAt: deal.openedAt,
   });
   await persistEngineStore();
-  return deal;
+  return thickenEngineDealSearch(deal, intent, userId);
 }
 
 export async function createSearchingDealFromIntent(
@@ -397,8 +402,9 @@ export async function createSearchingDealFromIntent(
   if (existing) {
     assertRunDealSoftHold(existing);
     ensureSearchingUsageStub(existing);
+    const thickened = await thickenEngineDealSearch(existing, intent, userId);
     await persistEngineStore();
-    return existing;
+    return thickened;
   }
 
   const id = `deal_run_${crypto.randomUUID().slice(0, 8)}`;
@@ -421,7 +427,20 @@ export async function createSearchingDealFromIntent(
     createdAt: deal.openedAt,
   });
   await persistEngineStore();
-  return deal;
+  return thickenEngineDealSearch(deal, intent, userId);
+}
+
+async function thickenEngineDealSearch(
+  deal: Deal,
+  intent: Intent | undefined,
+  userId: string,
+) {
+  const { applyDealSearchPipeline } = await import("@/lib/connectors/deal-search");
+  return applyDealSearchPipeline({
+    deal,
+    intent: intent ?? null,
+    userId,
+  });
 }
 
 export function listDirectoryUsers(): User[] {
