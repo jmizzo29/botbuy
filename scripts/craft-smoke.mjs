@@ -1461,15 +1461,26 @@ assert(settingsPageSrc.includes('id="connected-accounts"') || connectUi.includes
 assert(connectPage.includes("ConnectedAccountsPanel"), "connected-accounts route");
 assert(connectUi.includes("Namecheap") && connectUi.includes("Twilio"), "Namecheap + Twilio rows");
 assert(connectUi.includes("Shopify") && connectUi.includes("HTTP JSON"), "M2 Shopify + HTTP JSON rows");
+assert(connectUi.includes("DigitalOcean") && connectUi.includes("digitalocean-needs-setup"), "DigitalOcean SaaS MCP row");
+assert(connectUi.includes("data-flow=\"digitalocean-connect\""), "DigitalOcean connect hook");
 assert(connectUi.includes("shopify-needs-setup") && connectUi.includes("http-json-needs-setup"), "M2 Needs setup honesty");
 assert(connectUi.includes("data-cta=\"shopify-oauth\""), "Shopify OAuth is preferred CTA");
 assert(connectUi.includes("data-flow=\"http-json-connect\""), "HTTP JSON connect hook");
 assert(connectDocs.includes("shopify") && connectDocs.includes("http_json"), "POC docs list M2 shells");
+assert(connectDocs.includes("digitalocean") && connectDocs.includes("DIGITALOCEAN_ACCESS_TOKEN"), "POC docs list DigitalOcean SaaS MCP");
 assert(envExample.includes("SHOPIFY_ADMIN_TOKEN=") && envExample.includes("HTTP_JSON_BASE_URL="), "env names M2 keys");
+assert(envExample.includes("DIGITALOCEAN_ACCESS_TOKEN="), "env names DigitalOcean token");
+assert(
+  !/DIGITALOCEAN_ACCESS_TOKEN=\S+/.test(
+    envExample.split("\n").find((line) => line.startsWith("DIGITALOCEAN_ACCESS_TOKEN=")) ?? "",
+  ),
+  "env example has no DigitalOcean secret",
+);
 assert(!/SHOPIFY_ADMIN_TOKEN=\S+/.test(envExample.split("\n").find((line) => line.startsWith("SHOPIFY_ADMIN_TOKEN=")) ?? ""), "env example has no Shopify secret");
 assert(connectUi.includes("Connect") && connectUi.includes("Revoke"), "Connect / Revoke actions");
 assert(connectUi.includes("data-cta=\"connector-smoke\""), "Connected accounts hosts read-only smoke");
 assert(connectUi.includes("keysConfigured"), "Connected accounts shows keysConfigured");
+assert(connectUi.includes('label="spend"') && connectUi.includes('value="false"'), "HonestyFlag spend=false");
 assert(connectDocs.includes("/api/connectors/smoke"), "POC docs name smoke API");
 assert(connectDocs.includes("is **not** unlocked by env"), "POC docs refuse env live:true");
 assert(read("ops/STAGE.md").includes("Read-only smoke"), "STAGE docs CPO connector smoke");
@@ -1502,7 +1513,7 @@ const intentRoute = read("lib/connectors/intent-route.ts");
 const dealSearch = read("lib/connectors/deal-search.ts");
 assert(existsSync(join(root, "lib/connectors/intent-route.ts")), "intent→connector mapper");
 assert(existsSync(join(root, "lib/connectors/deal-search.ts")), "deal search pipeline");
-assert(intentRoute.includes("namecheap") && intentRoute.includes("twilio") && intentRoute.includes("shopify") && intentRoute.includes("http_json") && intentRoute.includes("stub"), "mapper covers domain/phone/shopify/http_json/stub");
+assert(intentRoute.includes("namecheap") && intentRoute.includes("twilio") && intentRoute.includes("shopify") && intentRoute.includes("digitalocean") && intentRoute.includes("http_json") && intentRoute.includes("stub"), "mapper covers domain/phone/shopify/digitalocean/http_json/stub");
 assert(existsSync(join(root, "lib/connectors/tech-lock.ts")), "M1 tech lock committed");
 assert(read("lib/connectors/tech-lock.ts").includes("MCP-first"), "tech lock names MCP-first");
 assert(read("lib/connectors/tech-lock.ts").includes("designatedHolderApprove: true"), "tech lock designated-holder");

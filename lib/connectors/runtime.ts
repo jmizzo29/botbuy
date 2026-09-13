@@ -1,6 +1,11 @@
 import { hydrateStore } from "@/lib/store";
 import { assertConnectorSpendAllowed } from "@/lib/connectors/approve-gate";
 import { recordConnectorAudit } from "@/lib/connectors/audit";
+import {
+  buyDigitalOcean,
+  quoteDigitalOcean,
+  searchDigitalOcean,
+} from "@/lib/connectors/digitalocean";
 import { buyHttpJson, quoteHttpJson, searchHttpJson } from "@/lib/connectors/http-json";
 import {
   quoteNamecheapDomain,
@@ -116,6 +121,27 @@ export async function invokeConnectorTool(input: {
           query,
           product: input.payload?.product,
           sku: input.payload?.sku,
+          dealId: dealId ?? "",
+          vault,
+        });
+      }
+    } else if (input.provider === "digitalocean") {
+      if (input.tool === "search") {
+        result = await searchDigitalOcean({
+          query,
+          product: input.payload?.product,
+          vault,
+        });
+      } else if (input.tool === "quote") {
+        result = await quoteDigitalOcean({
+          query,
+          product: input.payload?.product,
+          vault,
+        });
+      } else {
+        result = await buyDigitalOcean({
+          query,
+          product: input.payload?.product,
           dealId: dealId ?? "",
           vault,
         });

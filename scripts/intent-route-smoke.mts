@@ -94,8 +94,30 @@ const httpJson = routeIntentToSearch({
 if (httpJson.kind !== "http_json" || httpJson.provider !== "http_json") {
   throw new Error("HTTP JSON intent should map to http_json");
 }
+const droplet = routeIntentToSearch({
+  summary: "Find a DigitalOcean droplet or volume we can buy.",
+  categories: ["digitalocean"],
+});
+if (droplet.kind !== "digitalocean" || droplet.provider !== "digitalocean") {
+  throw new Error("droplet intent should map to DigitalOcean official API");
+}
+if (droplet.kind === "namecheap") {
+  throw new Error("DigitalOcean must not duplicate Namecheap");
+}
+
+const carNotDo = routeIntentToSearch({
+  summary: "Find a used Honda Civic in Austin.",
+  categories: ["vehicle"],
+});
+if (carNotDo.kind === "digitalocean") {
+  throw new Error("car intent must not wedge onto DigitalOcean");
+}
+
 if (officialSearchProvider("shopify") !== "shopify") {
   throw new Error("Shopify must be MCP-registry search");
+}
+if (officialSearchProvider("digitalocean") !== "digitalocean") {
+  throw new Error("DigitalOcean must be MCP-registry search");
 }
 if (officialSearchProvider("http_json") !== "http_json") {
   throw new Error("HTTP JSON must be MCP-registry search");

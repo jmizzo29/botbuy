@@ -44,6 +44,16 @@ export const SOFTWARE_CATEGORIES = new Set([
   "license",
 ]);
 
+export const DIGITALOCEAN_CATEGORIES = new Set([
+  "digitalocean",
+  "droplet",
+  "droplets",
+  "volume",
+  "volumes",
+  "vps",
+  "cloud",
+]);
+
 export const HTTP_JSON_CATEGORIES = new Set([
   "http_json",
   "http",
@@ -68,6 +78,8 @@ const DOMAIN_WORD_RE = /\b(domains?|registrar|tld|whois)\b/i;
 const PHONE_WORD_RE = /\b(phone|sms|twilio|did|text(?:ing)?)\b/i;
 const SOFTWARE_WORD_RE =
   /\b(software|saas|shopify|license|storefront)\b/i;
+const DIGITALOCEAN_WORD_RE =
+  /\b(digitalocean|digital ocean|droplets?|block storage|vps|cloud servers?)\b/i;
 const HTTP_JSON_WORD_RE =
   /\b(http json|openapi|official api|json api|official catalog)\b/i;
 const CONSUMER_WORD_RE =
@@ -105,6 +117,7 @@ export function inferIntentCategories(input: {
   if (DOMAIN_WORD_RE.test(text)) inferred.push("domain");
   if (PHONE_WORD_RE.test(text)) inferred.push("phone");
   if (SOFTWARE_WORD_RE.test(text)) inferred.push("software");
+  if (DIGITALOCEAN_WORD_RE.test(text)) inferred.push("digitalocean");
   if (HTTP_JSON_WORD_RE.test(text)) inferred.push("http_json");
   if (CONSUMER_WORD_RE.test(text)) inferred.push("product");
 

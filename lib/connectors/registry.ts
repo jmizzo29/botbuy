@@ -4,6 +4,8 @@
  */
 import {
   CONNECTOR_LABEL,
+  DIGITALOCEAN_NEEDS_SETUP_COPY,
+  DIGITALOCEAN_TOKEN_DISCLOSURE,
   HTTP_JSON_HOST_COPY,
   HTTP_JSON_NEEDS_SETUP_COPY,
   NAMECHEAP_ELIGIBILITY_COPY,
@@ -18,7 +20,7 @@ import type {
 } from "@/lib/connectors/types";
 import { CONNECTOR_PROVIDERS } from "@/lib/connectors/types";
 
-export type ConnectorKind = "domains" | "phone" | "merchant" | "mcp_http";
+export type ConnectorKind = "domains" | "phone" | "merchant" | "saas" | "mcp_http";
 
 export interface ConnectorRegistryEntry {
   id: ConnectorProvider;
@@ -56,6 +58,14 @@ export const CONNECTOR_REGISTRY: Record<
     authModes: ["oauth", "api_key"],
     tools: ["search", "quote", "buy"],
     needsSetup: [SHOPIFY_NEEDS_SETUP_COPY, SHOPIFY_CUSTOM_APP_COPY],
+  },
+  digitalocean: {
+    id: "digitalocean",
+    label: CONNECTOR_LABEL.digitalocean,
+    kind: "saas",
+    authModes: ["api_key"],
+    tools: ["search", "quote", "buy"],
+    needsSetup: [DIGITALOCEAN_NEEDS_SETUP_COPY, DIGITALOCEAN_TOKEN_DISCLOSURE],
   },
   http_json: {
     id: "http_json",

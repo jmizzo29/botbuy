@@ -128,6 +128,35 @@ const catalogSearch = listDealEvents(catalogDeal.id).find((event) =>
 if (!catalogSearch?.detail.includes("http_json")) {
   throw new Error("HTTP JSON intent should attempt official HTTPS JSON search");
 }
+
+const droplet = addIntent(
+  {
+    summary: `Find a DigitalOcean droplet or volume for SaaS MCP smoke ${stamp}.`,
+    categories: ["digitalocean"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const dropletDeal = await createSearchingDealFromIntent(
+  droplet,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+const dropletSearch = listDealEvents(dropletDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!dropletSearch?.detail.includes("digitalocean")) {
+  throw new Error("droplet intent should attempt DigitalOcean official API");
+}
+if (!dropletSearch.detail.includes("live:false") || !dropletSearch.detail.includes("keysConfigured")) {
+  throw new Error("DigitalOcean search must report live:false and keysConfigured");
+}
+if (dropletSearch.detail.includes("namecheap")) {
+  throw new Error("DigitalOcean must not duplicate Namecheap");
+}
+if (dropletDeal.status !== "Searching") {
+  throw new Error("DigitalOcean stub must stay Searching without invented candidates");
+}
 if (!catalogSearch.detail.includes("live:false")) {
   throw new Error("HTTP JSON search event must include live:false");
 }
@@ -232,6 +261,9 @@ if (listDealEvents(generalDeal.id).some((event) => event.id.endsWith("_search_ac
 
 if (officialSearchProvider("shopify") !== "shopify") {
   throw new Error("Shopify search must resolve from MCP registry");
+}
+if (officialSearchProvider("digitalocean") !== "digitalocean") {
+  throw new Error("DigitalOcean search must resolve from MCP registry");
 }
 if (officialSearchProvider("http_json") !== "http_json") {
   throw new Error("HTTP JSON search must resolve from MCP registry");
@@ -382,6 +414,7 @@ console.log(` - software ${softwareDeal.id} Shopify search live:false`);
 console.log(` - domain ${domainDeal.id} Namecheap search live:false`);
 console.log(` - phone ${phoneDeal.id} Twilio search live:false`);
 console.log(` - http_json ${catalogDeal.id} official JSON search live:false`);
+console.log(` - digitalocean ${dropletDeal.id} droplet search live:false`);
 console.log(` - car ${carDeal.id} accepted stub live:false`);
 console.log(` - house ${houseDeal.id} accepted stub live:false`);
 console.log(` - product ${goodsDeal.id} accepted stub live:false`);

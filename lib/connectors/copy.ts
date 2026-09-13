@@ -14,12 +14,14 @@ export const CONNECT_ACCOUNTS_ANCHOR = "/settings#connected-accounts" as const;
 export const NAMECHEAP_LABEL = "Namecheap" as const;
 export const TWILIO_LABEL = "Twilio" as const;
 export const SHOPIFY_LABEL = "Shopify" as const;
+export const DIGITALOCEAN_LABEL = "DigitalOcean" as const;
 export const HTTP_JSON_LABEL = "HTTP JSON" as const;
 
 export const CONNECTOR_LABEL = {
   namecheap: NAMECHEAP_LABEL,
   twilio: TWILIO_LABEL,
   shopify: SHOPIFY_LABEL,
+  digitalocean: DIGITALOCEAN_LABEL,
   http_json: HTTP_JSON_LABEL,
 } as const;
 
@@ -77,6 +79,12 @@ export const SHOPIFY_API_TOKEN_DISCLOSURE =
 export const SHOPIFY_SHOP_LABEL = "Shop domain" as const;
 export const SHOPIFY_TOKEN_LABEL = "Admin API access token" as const;
 
+export const DIGITALOCEAN_NEEDS_SETUP_COPY =
+  "DigitalOcean official API. Connect a personal access token to search droplets and volumes. Official API only — never a DigitalOcean password or HTML login." as const;
+export const DIGITALOCEAN_TOKEN_DISCLOSURE =
+  "Access token connect is OK for this POC. Tokens are encrypted and never logged. This is not a live public connector." as const;
+export const DIGITALOCEAN_TOKEN_LABEL = "Access token" as const;
+
 export const HTTP_JSON_NEEDS_SETUP_COPY =
   "Official HTTPS JSON catalog. Category-agnostic — cars, houses, software, or anything the API lists. Paste a documented public API base URL. Never a password. Never a browser farm." as const;
 export const HTTP_JSON_HOST_COPY =
@@ -90,4 +98,6 @@ export const CONNECT_SMOKE_CTA = "Read-only smoke" as const;
 export const CONNECT_SMOKE_NOTE =
   "Search only. Never register or buy. live:false. Fail-closed when keys are missing. Not a live purchase." as const;
 export const CONNECT_KEYS_STRIP =
-  "keysConfigured is honest. Preview env unlocks official-API search HTTP. live:false stays locked. Auto-approve OFF." as const;
+  "keysConfigured is honest. spend=false · Search only while mutationsLiveEnabled=false. Preview env unlocks official-API search HTTP. live:false stays locked. Auto-approve OFF." as const;
+export const CONNECT_SEARCH_ONLY =
+  "Search only. Register / buy stay stub until mutationsLiveEnabled and human Approve. Not live spend." as const;
