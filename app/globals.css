@@ -529,11 +529,11 @@ body {
   .bb-land-cta {
     margin-top: 0;
     justify-content: flex-start;
-    max-width: 22rem;
+    max-width: 13.75rem;
     margin-inline: 0;
   }
 
-  /* Sign up = full fold content column (~220px bar). Sign in stays text. */
+  /* Sign up = 100% of ~220px content stack. Sign in stays text. */
   .bb-land-signup,
   .bb-land-cta [data-cta="land-signup"] {
     width: 100%;

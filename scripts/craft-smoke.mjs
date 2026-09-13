@@ -872,10 +872,13 @@ assert(
   "phone Q1 panel is top-weighted left folio",
 );
 assert(
-  /@media \(max-width: 1023px\)[\s\S]*?\[data-cta="land-signup"\][\s\S]*?width:\s*100%/.test(
+  /@media \(max-width: 1023px\)[\s\S]*?\.bb-land-cta \{[\s\S]*?max-width: 13\.75rem/.test(
     css,
-  ),
-  "phone Sign up is 100% of fold content column",
+  ) &&
+    /@media \(max-width: 1023px\)[\s\S]*?\[data-cta="land-signup"\][\s\S]*?width:\s*100%/.test(
+      css,
+    ),
+  "phone Sign up is 100% of the ~220px content stack",
 );
 assert(
   css.includes(
@@ -910,7 +913,8 @@ assert(
 assert(
   existsSync(join(root, "land/craft-raise-2026-09-13/INSTALL.md")) &&
     read("land/craft-raise-2026-09-13/INSTALL.md").includes("READY-TO-SHIP") &&
-    read("land/craft-raise-2026-09-13/INSTALL.md").includes("institutional-folio"),
+    read("land/craft-raise-2026-09-13/INSTALL.md").includes("institutional-folio") &&
+    read("land/craft-raise-2026-09-13/INSTALL.md").includes("Harden (6fdb02c Item 8)"),
   "Q1 institutional-folio INSTALL is READY-TO-SHIP",
 );
 assert(
