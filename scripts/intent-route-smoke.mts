@@ -59,11 +59,11 @@ const consumer = routeIntentToSearch({
   summary: "Find household appliances for the kitchen.",
   categories: ["product"],
 });
-if (consumer.kind !== "stub" || consumer.accepted !== true) {
-  throw new Error("consumer products must stay an accepted stub");
+if (consumer.kind !== "shopify" || consumer.provider !== "shopify" || consumer.accepted !== true) {
+  throw new Error("consumer products should route to the Shopify Admin stub");
 }
-if (consumer.kind === "shopify") {
-  throw new Error("consumer products must not wedge onto Shopify");
+if (consumer.kind === "stub") {
+  throw new Error("consumer products must not stay an unmapped stub");
 }
 
 const carReady = routeIntentToSearch({

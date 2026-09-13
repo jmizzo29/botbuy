@@ -65,7 +65,9 @@ function hintFor(input: ConnectInput) {
     return token ? `token · ${token.slice(-4)}` : null;
   }
   if (input.provider === "shopify") {
-    return normalizeShopifyShop(input.shopDomain) ?? null;
+    const shop = normalizeShopifyShop(input.shopDomain);
+    if (input.oauthAccess?.trim() && shop) return `oauth · ${shop}`;
+    return shop;
   }
   if (input.provider === "http_json") {
     return input.baseUrl ? hostnameHint(input.baseUrl) : null;

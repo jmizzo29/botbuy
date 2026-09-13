@@ -1486,6 +1486,8 @@ assert(connectUi.includes("GitHub") && connectUi.includes("github-needs-setup"),
 assert(connectUi.includes("data-flow=\"github-connect\""), "GitHub connect hook");
 assert(connectUi.includes("data-cta=\"github-oauth\""), "GitHub OAuth is preferred CTA");
 assert(connectUi.includes("shopify-needs-setup") && connectUi.includes("http-json-needs-setup"), "M2 Needs setup honesty");
+assert(connectUi.includes("SHOPIFY_OAUTH_PREFERRED"), "Shopify Needs setup names OAuth preferred");
+assert(connectUi.includes("SHOPIFY_OAUTH_INCOMPLETE"), "Shopify OAuth incomplete copy is honest");
 assert(connectUi.includes("twilio-needs-setup"), "Twilio Needs setup honesty");
 assert(connectUi.includes("OAUTH_VAULT_KEY_REQUIRED") || connectUi.includes("BOTBUY_VAULT_KEY is required"), "Connect UI fail-closed without vault key");
 assert(existsSync(join(root, "app/api/connectors/oauth/twilio/callback/route.ts")), "Twilio OAuth callback vault shell");
@@ -1514,6 +1516,27 @@ assert(
   "env example has no GitHub secret",
 );
 assert(!/SHOPIFY_ADMIN_TOKEN=\S+/.test(envExample.split("\n").find((line) => line.startsWith("SHOPIFY_ADMIN_TOKEN=")) ?? ""), "env example has no Shopify secret");
+assert(envExample.includes("SHOPIFY_OAUTH_CLIENT_ID="), "env names Shopify OAuth client id");
+assert(envExample.includes("SHOPIFY_OAUTH_CLIENT_SECRET="), "env names Shopify OAuth secret");
+assert(envExample.includes("SHOPIFY_OAUTH_REDIRECT_URL="), "env names Shopify OAuth redirect");
+assert(
+  !/SHOPIFY_OAUTH_CLIENT_ID=\S+/.test(
+    envExample.split("\n").find((line) => line.startsWith("SHOPIFY_OAUTH_CLIENT_ID=")) ?? "",
+  ),
+  "env example keeps Shopify OAuth client id empty",
+);
+assert(
+  !/SHOPIFY_OAUTH_CLIENT_SECRET=\S+/.test(
+    envExample.split("\n").find((line) => line.startsWith("SHOPIFY_OAUTH_CLIENT_SECRET=")) ?? "",
+  ),
+  "env example keeps Shopify OAuth secret empty",
+);
+assert(
+  !/SHOPIFY_OAUTH_REDIRECT_URL=\S+/.test(
+    envExample.split("\n").find((line) => line.startsWith("SHOPIFY_OAUTH_REDIRECT_URL=")) ?? "",
+  ),
+  "env example keeps Shopify OAuth redirect empty",
+);
 assert(connectUi.includes("Connect") && connectUi.includes("Revoke"), "Connect / Revoke actions");
 assert(connectUi.includes("data-cta=\"connector-smoke\""), "Connected accounts hosts read-only smoke");
 assert(connectUi.includes("keysConfigured"), "Connected accounts shows keysConfigured");

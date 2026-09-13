@@ -38,8 +38,16 @@ export function shopifyOauthSecretConfigured() {
   return Boolean(process.env.SHOPIFY_OAUTH_CLIENT_SECRET?.trim());
 }
 
+export function shopifyOauthRedirectConfigured() {
+  return Boolean(process.env.SHOPIFY_OAUTH_REDIRECT_URL?.trim());
+}
+
 export function shopifyOauthExchangeReady() {
-  return shopifyOauthConfigured() && shopifyOauthSecretConfigured();
+  return (
+    shopifyOauthConfigured() &&
+    shopifyOauthSecretConfigured() &&
+    shopifyOauthRedirectConfigured()
+  );
 }
 
 export function shopifyEnvPresent() {

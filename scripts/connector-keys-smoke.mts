@@ -28,7 +28,10 @@ import {
 } from "../lib/connectors/namecheap/xml.ts";
 import { routeIntentToSearch } from "../lib/connectors/intent-route.ts";
 import { searchTwilioNumbers } from "../lib/connectors/twilio/search.ts";
-import { searchShopifyProducts } from "../lib/connectors/shopify/search.ts";
+import {
+  parseShopifyProducts,
+  searchShopifyProducts,
+} from "../lib/connectors/shopify/search.ts";
 import {
   parseDigitalOceanCandidates,
   searchDigitalOcean,
@@ -71,6 +74,14 @@ const empty = null;
 assert(!namecheapKeysConfigured(empty), "Namecheap keysConfigured=false without vault/env");
 assert(!twilioKeysConfigured(empty), "Twilio keysConfigured=false without vault/env");
 assert(!shopifyKeysConfigured(empty), "Shopify keysConfigured=false without vault/env");
+assert(
+  missingConnectorEnvNames("shopify", empty).includes("SHOPIFY_OAUTH_CLIENT_ID"),
+  "Shopify missing list names OAuth client id",
+);
+assert(
+  missingConnectorEnvNames("shopify", empty).includes("SHOPIFY_OAUTH_REDIRECT_URL"),
+  "Shopify missing list names OAuth redirect",
+);
 assert(!digitalOceanKeysConfigured(empty), "DigitalOcean keysConfigured=false without vault/env");
 assert(!githubKeysConfigured(empty), "GitHub keysConfigured=false without vault/env");
 assert(!httpJsonKeysConfigured(empty), "HTTP JSON keysConfigured=false without vault/env");
@@ -168,6 +179,22 @@ assert(twilio.data?.keysConfigured === false, "Twilio search keysConfigured=fals
 const shopify = await searchShopifyProducts({ vault: null, query: "smoke" });
 assert(shopify.live === false && shopify.result === "stub", "Shopify search stub live:false");
 assert(shopify.data?.keysConfigured === false, "Shopify search keysConfigured=false");
+assert(shopify.data?.spend === false, "Shopify search spend=false");
+const shopifyParsed = parseShopifyProducts(
+  JSON.stringify({
+    products: [
+      {
+        id: 11,
+        title: "Studio headphones",
+        handle: "studio-headphones",
+        variants: [{ sku: "hp-1" }],
+      },
+    ],
+  }),
+  "headphones",
+);
+assert(shopifyParsed.length === 1 && shopifyParsed[0]?.handle === "studio-headphones", "Shopify parser maps products");
+assert(shopifyParsed.every((row) => row.amountStatus === "unverified"), "Shopify candidates stay unverified");
 
 const digitalocean = await searchDigitalOcean({ vault: null, query: "droplet" });
 assert(digitalocean.live === false && digitalocean.result === "stub", "DigitalOcean search stub live:false");
@@ -246,6 +273,14 @@ const carStub = routeIntentToSearch({
   categories: ["vehicle"],
 });
 assert(carStub.kind === "stub", "empty car stub without HTTP JSON keys");
+
+const consumerRoute = routeIntentToSearch({
+  summary: "Find household appliances for the kitchen.",
+  categories: ["product"],
+});
+assert(consumerRoute.kind === "shopify", "consumer products route to Shopify Admin stub");
+assert(consumerRoute.kind !== "github", "consumer products are not a GitHub wedge");
+assert(consumerRoute.accepted === true, "consumer products stay accepted");
 
 console.log("connector-keys-smoke PASS");
 console.log(" - keysConfigured=false without vault/env for all six providers");

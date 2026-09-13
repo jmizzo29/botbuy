@@ -79,7 +79,11 @@ export const CONNECTOR_NO_PASSWORD =
   "BotBuyer never asks for a registrar or carrier password." as const;
 
 export const SHOPIFY_NEEDS_SETUP_COPY =
-  "Shopify Admin API. Connect a custom-app Admin API token and the shop's *.myshopify.com host. Official API only — never a Shopify password or HTML login." as const;
+  "Shopify Admin OAuth. Continue with Shopify when a BotBuy Shopify app client is configured. Without SHOPIFY_OAUTH_CLIENT_ID + SHOPIFY_OAUTH_CLIENT_SECRET + SHOPIFY_OAUTH_REDIRECT_URL, this row stays Needs setup — not connected live. Official Admin API only — never a Shopify password or HTML login." as const;
+export const SHOPIFY_OAUTH_NEEDS_SETUP =
+  "Shopify OAuth is preferred but not configured. Add SHOPIFY_OAUTH_CLIENT_ID, SHOPIFY_OAUTH_CLIENT_SECRET, and SHOPIFY_OAUTH_REDIRECT_URL. Admin API token connect is OK for this POC. Tokens are not stored. Needs setup — not connected live." as const;
+export const SHOPIFY_OAUTH_INCOMPLETE =
+  "Shopify OAuth client is incomplete. Add SHOPIFY_OAUTH_CLIENT_SECRET and SHOPIFY_OAUTH_REDIRECT_URL. Tokens are not stored. Needs setup — not connected live." as const;
 export const SHOPIFY_CUSTOM_APP_COPY =
   "Custom app / partner access. Production Admin API access is not automatic. The shop must have a custom app (or OAuth app) before BotBuyer can call it." as const;
 export const SHOPIFY_OAUTH_PREFERRED =

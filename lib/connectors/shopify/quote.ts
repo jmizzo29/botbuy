@@ -23,6 +23,8 @@ export async function quoteShopifyProduct(input: {
       keysConfigured,
       listedUsd: null,
       amountStatus: "unverified",
+      verified: false,
+      spend: false,
     },
   };
 }

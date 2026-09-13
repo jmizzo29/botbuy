@@ -13,6 +13,7 @@ import {
   OAUTH_ENV_NEEDS_SETUP,
   OAUTH_STORED_HONESTY,
   OAUTH_VAULT_KEY_REQUIRED,
+  SHOPIFY_OAUTH_NEEDS_SETUP,
 } from "@/lib/connectors/copy";
 import { isVaultKeyConfigured, requireVaultKey } from "@/lib/connectors/crypto";
 import {
@@ -22,6 +23,7 @@ import {
   githubOauthSecretConfigured,
   shopifyOauthConfigured,
   shopifyOauthExchangeReady,
+  shopifyOauthRedirectConfigured,
   shopifyOauthSecretConfigured,
   twilioOauthConfigured,
   twilioOauthExchangeReady,
@@ -181,7 +183,7 @@ export function oauthStartGate(provider: OauthProvider) {
           ? "Twilio OAuth is preferred but not configured. Add TWILIO_OAUTH_CLIENT_ID and TWILIO_OAUTH_CLIENT_SECRET. API key connect is OK for this POC. Tokens are not stored."
           : provider === "github"
             ? "GitHub OAuth is preferred but not configured. Add GITHUB_OAUTH_CLIENT_ID and GITHUB_OAUTH_CLIENT_SECRET. Personal access token connect is OK for this POC. Tokens are not stored."
-            : "Shopify OAuth is preferred but not configured. Add SHOPIFY_OAUTH_CLIENT_ID and SHOPIFY_OAUTH_CLIENT_SECRET. Admin API token connect is OK for this POC. Tokens are not stored.",
+            : SHOPIFY_OAUTH_NEEDS_SETUP,
     };
   }
   return { ok: true as const };
@@ -584,6 +586,7 @@ export {
   githubOauthSecretConfigured,
   shopifyOauthConfigured,
   shopifyOauthExchangeReady,
+  shopifyOauthRedirectConfigured,
   shopifyOauthSecretConfigured,
   twilioOauthConfigured,
   twilioOauthExchangeReady,

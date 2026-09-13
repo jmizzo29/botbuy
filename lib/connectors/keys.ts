@@ -10,6 +10,8 @@ import {
   shopifyEnvPresent,
   shopifyOauthConfigured,
   shopifyOauthExchangeReady,
+  shopifyOauthRedirectConfigured,
+  shopifyOauthSecretConfigured,
   twilioEnvPresent,
   twilioOauthConfigured,
   twilioOauthExchangeReady,
@@ -156,6 +158,9 @@ export function missingConnectorEnvNames(
     if (!shopifyKeysConfigured(vault)) {
       missing.push("SHOPIFY_SHOP_DOMAIN", "SHOPIFY_ADMIN_TOKEN");
     }
+    if (!shopifyOauthConfigured()) missing.push("SHOPIFY_OAUTH_CLIENT_ID");
+    if (!shopifyOauthSecretConfigured()) missing.push("SHOPIFY_OAUTH_CLIENT_SECRET");
+    if (!shopifyOauthRedirectConfigured()) missing.push("SHOPIFY_OAUTH_REDIRECT_URL");
   } else if (provider === "digitalocean") {
     if (!digitalOceanKeysConfigured(vault)) {
       missing.push("DIGITALOCEAN_ACCESS_TOKEN");

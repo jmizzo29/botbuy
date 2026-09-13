@@ -268,11 +268,14 @@ if (goodsDeal.category !== "product") {
 const goodsSearch = listDealEvents(goodsDeal.id).find((event) =>
   event.id.endsWith("_connector_search"),
 );
-if (goodsSearch?.detail.includes("shopify")) {
-  throw new Error("consumer product search must not map to Shopify");
+if (!goodsSearch?.detail.includes("shopify")) {
+  throw new Error("consumer product search should attempt Shopify Admin stub");
+}
+if (!goodsSearch.detail.includes("live:false") || !goodsSearch.detail.includes("keysConfigured")) {
+  throw new Error("consumer product Shopify search must report live:false and keysConfigured");
 }
 if (goodsDeal.status !== "Searching") {
-  throw new Error("consumer product stub must stay Searching without invented candidates");
+  throw new Error("consumer product Shopify stub must stay Searching without invented candidates");
 }
 
 const general = addIntent(
@@ -453,7 +456,7 @@ console.log(` - digitalocean ${dropletDeal.id} droplet search live:false`);
 console.log(` - github ${githubDeal.id} repo search live:false`);
 console.log(` - car ${carDeal.id} accepted stub live:false`);
 console.log(` - house ${houseDeal.id} accepted stub live:false`);
-console.log(` - product ${goodsDeal.id} accepted stub live:false`);
+console.log(` - product ${goodsDeal.id} Shopify stub live:false · Searching`);
 console.log(` - general ${generalDeal.id} accepted stub live:false`);
 console.log(` - ${reviewed.id} candidates → Needs you · buy still fail-closed`);
 console.log(" - Needs you → Buying still required before spend / authorized-buy");

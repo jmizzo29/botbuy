@@ -71,6 +71,9 @@ assert(registry.includes('id: "shopify"') && registry.includes('id: "digitalocea
 const shopifyBuy = readFileSync(join(root, "lib/connectors/shopify/buy.ts"), "utf8");
 assert(shopifyBuy.includes("connectorsLiveEnabled"), "Shopify buy not live by default");
 assert(shopifyBuy.includes("live: false"), "Shopify buy CHO-honest live:false");
+assert(shopifyBuy.includes("spend: false"), "Shopify buy spend=false");
+assert(!shopifyBuy.includes("draft_orders"), "Shopify buy never live Admin API");
+assert(!shopifyBuy.includes("shopifyAdminRequest"), "Shopify buy never calls Admin HTTP");
 
 const httpBuy = readFileSync(join(root, "lib/connectors/http-json/buy.ts"), "utf8");
 assert(httpBuy.includes("connectorsLiveEnabled"), "HTTP JSON buy not live by default");
@@ -248,7 +251,7 @@ function evaluateIntentRoute({ summary = "", categories = [], mustInclude = "" }
   if (phoneish) return "twilio";
   if (digitaloceanish && !vehicleOrProperty && !consumerish) return "digitalocean";
   if (githubish && !vehicleOrProperty && !consumerish) return "github";
-  if (softwareish && !vehicleOrProperty && !consumerish) return "shopify";
+  if ((softwareish || consumerish) && !vehicleOrProperty) return "shopify";
   if (httpJsonish) return "http_json";
   return "stub";
 }
@@ -347,8 +350,8 @@ assert(
   evaluateIntentRoute({
     summary: "Find household appliances for the kitchen.",
     categories: ["product"],
-  }) === "stub",
-  "consumer products stay an accepted stub",
+  }) === "shopify",
+  "consumer products map to Shopify Admin stub",
 );
 assert(
   !evaluateSpendGate({
@@ -376,8 +379,9 @@ assert(techLock.includes("landPromote: false"), "tech lock land promote HOLD");
 assert(gate.includes("Designated-holder Approve sheet"), "gate names designated-holder Approve sheet");
 const intentRouteSrc = readFileSync(join(root, "lib/connectors/intent-route.ts"), "utf8");
 assert(!/puppeteer|playwright|selenium/i.test(intentRouteSrc), "intent route has no browser farm");
-assert(intentRouteSrc.includes("vehicleOrProperty"), "intent route refuses software wedge for cars/houses");
-assert(intentRouteSrc.includes("consumerish"), "intent route refuses software wedge for consumer products");
+assert(intentRouteSrc.includes("vehicleOrProperty"), "intent route refuses Shopify wedge for cars/houses");
+assert(intentRouteSrc.includes("consumerish"), "intent route maps consumer products to Shopify stub");
+assert(intentRouteSrc.includes("softwareish || consumerish"), "consumer products share the Shopify Admin stub");
 assert(intentRouteSrc.includes("accepted: true"), "intent route never rejects a category");
 assert(intentRouteSrc.includes("httpJsonReady"), "intent route can use HTTP JSON MCP when keys are ready");
 const categoriesSrc = readFileSync(join(root, "lib/intent-categories.ts"), "utf8");
@@ -463,6 +467,12 @@ const twilioSearch = readFileSync(join(root, "lib/connectors/twilio/search.ts"),
 assert(twilioSearch.includes("keysConfigured"), "Twilio search reports keysConfigured");
 const shopifySearch = readFileSync(join(root, "lib/connectors/shopify/search.ts"), "utf8");
 assert(shopifySearch.includes("keysConfigured"), "Shopify search reports keysConfigured");
+assert(shopifySearch.includes("parseShopifyProducts"), "Shopify search maps official products.json");
+assert(shopifySearch.includes("spend: false"), "Shopify search spend=false");
+const shopifyCopy = readFileSync(join(root, "lib/connectors/copy.ts"), "utf8");
+assert(shopifyCopy.includes("SHOPIFY_OAUTH_CLIENT_ID"), "Shopify Needs setup names OAuth client id");
+assert(shopifyCopy.includes("SHOPIFY_OAUTH_CLIENT_SECRET"), "Shopify Needs setup names OAuth secret");
+assert(shopifyCopy.includes("SHOPIFY_OAUTH_REDIRECT_URL"), "Shopify Needs setup names OAuth redirect");
 const digitalOceanSearch = readFileSync(join(root, "lib/connectors/digitalocean/search.ts"), "utf8");
 assert(digitalOceanSearch.includes("keysConfigured"), "DigitalOcean search reports keysConfigured");
 assert(digitalOceanSearch.includes("api.digitalocean.com") || readFileSync(join(root, "lib/connectors/digitalocean/client.ts"), "utf8").includes("api.digitalocean.com"), "DigitalOcean client is official API host");
@@ -520,7 +530,7 @@ console.log(" - AES-256-GCM roundtrip");
 console.log(" - approve gate Needs you → Buying · auto-approve OFF");
 console.log(" - register/buy fail closed without deal, auto-approve, or approve trail");
 console.log(" - M2 registry: shopify + digitalocean + github + http_json · live:false · spend gated");
-console.log(" - intent maps domain→Namecheap, phone→Twilio, droplet→DigitalOcean, github→GitHub, software→Shopify, HTTP JSON; cars/houses stay accepted stubs");
+console.log(" - intent maps domain→Namecheap, phone→Twilio, droplet→DigitalOcean, github→GitHub, software/consumer→Shopify, HTTP JSON; cars/houses stay accepted stubs");
 console.log(" - deal search pipeline is search/quote only · MCP-first · no browser farms");
 console.log(" - candidates attach structured handoff · Searching → Found → Needs you");
 console.log(" - empty stubs stay Searching; qa-needs-you still Needs you · production refused");

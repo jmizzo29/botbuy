@@ -216,8 +216,12 @@ export function routeIntentToSearch(input: {
     }
   }
 
-  /** Cars/houses/consumer products never wedge onto the software Shopify scaffold. */
-  if (softwareish && !vehicleOrProperty && !consumerish) {
+  /**
+   * Software / SaaS and buy-anything consumer products map to the Shopify
+   * Admin API stub. Cars and houses never wedge onto this merchant scaffold.
+   * Empty Shopify stubs stay Searching — no invented catalog.
+   */
+  if ((softwareish || consumerish) && !vehicleOrProperty) {
     const provider = officialSearchProvider("shopify");
     if (provider) {
       return {
@@ -228,7 +232,9 @@ export function routeIntentToSearch(input: {
         country: "US",
         category,
         accepted: true,
-        reason: `Software scaffold mapped to Shopify Admin API search via MCP registry. Other categories stay accepted. ${CONNECTOR_TECH_LOCK_NOTE}`,
+        reason: softwareish
+          ? `Software scaffold mapped to Shopify Admin API search via MCP registry. Other categories stay accepted. ${CONNECTOR_TECH_LOCK_NOTE}`
+          : `Consumer products mapped to Shopify Admin API search stub via MCP registry. Empty stubs stay Searching. ${CONNECTOR_TECH_LOCK_NOTE}`,
       };
     }
   }
