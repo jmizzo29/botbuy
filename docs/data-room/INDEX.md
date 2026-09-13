@@ -1,17 +1,21 @@
-# Data-room master index (pointer)
+# BotBuy diligence data room — INDEX
 
-**Owner: CFO.** Eng does not populate finance here.
+Date: 2026-09-13 · Soft HOLD · Soft-signal HOLD  
+**CFO owns inventory + this index.** Legal owns `legal/` contents only. Full checklist: `data-room-index-v1.md`.
 
-CFO SoT is [`data-room-index-v1.md`](data-room-index-v1.md) when that file is present. **Do not overwrite it.** This stub exists only so diligence has a pointer if the CFO pack has not landed on this branch yet.
+| # | Section | Path | Owner |
+|---|---|---|---|
+| 1 | Company & corp | `company/` | CEO / John |
+| 2 | Product | `product/` · `journey-proofs/` · `honesty/` | CPO |
+| 3 | Engineering | `eng/` · `eng/tip-map-v1.md` | CTO |
+| 4 | Security & privacy | `security/` | Legal + CTO |
+| 5 | Legal | `legal/` | Legal (contents) |
+| 6 | Financials | `finance/` | **CFO** |
+| 7 | GTM Soft HOLD | `gtm/` | CMO · CHO |
+| 8 | Ops | `ops/` | CPO / CTO / CFO |
 
-Finance pack landed: [`finance/`](finance/).
+## Finance (linked)
+- `finance/cfo-seven-figure-diligence-financial-narrative-v1.md` — CHO PASS Soft HOLD
+- `finance/cfo-seven-figure-asset-inventory-checklist-v1.md` — CTO A/D/E · CPO C
 
-Do **not** invent revenue, MRR, GMV, burn, runway, bank balances, cap table, or buyer multiples.
-
-## Eng (not finance)
-
-- Map: [`eng/README.md`](eng/README.md)
-- Tips: [`eng/tip-map.md`](eng/tip-map.md)
-- Keys (names only): [`eng/key-inventory.md`](eng/key-inventory.md)
-
-Soft HOLD.
+Truth: burn $179.96 · GMV/MRR $0 · token Actual $ BLOCK · no float · ≠ Autofleeto.
