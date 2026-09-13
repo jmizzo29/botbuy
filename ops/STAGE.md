@@ -11,7 +11,7 @@
 
 Stage mirrors current prod brand: soft-spine logo + BotBuyer. `x-robots-tag: noindex` on the git staging alias.
 
-**CPO Approve walk (stage only):** Add **`qa-needs-you`** to the intent (or open `/intent?fixture=1`). Empty connector stubs stay **Searching** unless that explicit fixture is present. With the keyword, an unverified fixture candidate attaches and Searching → Needs you. Fixture/stub — not a live purchase. Auto-approve OFF. Production / main refuses this path. Preview / `STAGE_SEARCH_FIXTURE` alone do not invent candidates.
+**CPO Approve walk (stage only):** Add **`qa-needs-you`** to the intent (or open `/intent?fixture=1`, or set `STAGE_SEARCH_FIXTURE=1`). Empty connector stubs stay **Searching** on Preview unless that explicit fixture is present. `VERCEL_ENV=preview` alone does **not** invent candidates. With the keyword or env flag, an unverified fixture candidate attaches and Searching → Needs you. Fixture/stub — not a live purchase. Auto-approve OFF. Production / main refuses this path.
 
 **CPO/CHO next smoke (category-agnostic + vault/Link):**
 1. `/intent` — starters include **Anything / Car / House / Software / Domain / Official catalog**. Start search for a car, house, or a consumer product (no `qa-needs-you`). My deals stays **Searching** with `category=vehicle|property|product|general` · `accepted=true` · `live:false` · no invented results. Not rejected. Not mapped to Shopify.

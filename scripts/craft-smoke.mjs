@@ -1529,8 +1529,12 @@ assert(
   "empty stubs stay Searching without an explicit fixture",
 );
 assert(
-  stageFixture.includes("Preview / STAGE_SEARCH_FIXTURE alone do not invent candidates"),
-  "preview and STAGE_SEARCH_FIXTURE alone do not invent candidates",
+  stageFixture.includes("VERCEL_ENV=preview alone does not invent candidates"),
+  "preview alone does not invent candidates",
+);
+assert(
+  stageFixture.includes("STAGE_SEARCH_FIXTURE=1"),
+  "STAGE_SEARCH_FIXTURE=1 remains an explicit opt-in",
 );
 assert(!stageFixture.includes("priceVerified: true"), "stage fixture invents no verified prices");
 assert(johnIntentForm.includes("stageFixture"), "intent form accepts stage fixture toggle");
