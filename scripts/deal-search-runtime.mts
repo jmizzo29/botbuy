@@ -157,7 +157,6 @@ if (dropletSearch.detail.includes("namecheap")) {
 if (dropletDeal.status !== "Searching") {
   throw new Error("DigitalOcean stub must stay Searching without invented candidates");
 }
-}
 if (!catalogSearch.detail.includes("live:false")) {
   throw new Error("HTTP JSON search event must include live:false");
 }
