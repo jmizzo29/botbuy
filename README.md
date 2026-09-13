@@ -9,7 +9,7 @@ POC dashboard + installable PWA. The buyer agent tracks search, diligence, purch
 ## Product spine (diligence evidence)
 
 1. Deals list/detail + append-only `deal_events` (imported / reconstructed `agent_executed=false` / engine)
-2. Vault screen H1 `Add a payment method` (vault = brand mark / linked methods / pay-at-purchase — not a held balance). Card Available ≠ live (Stripe/Link is one card path). Bank / X Money / Bitcoin Coming. `+ Add payment method` always visible. Vault-ready = ≥1 Available. Coming does not unlock Run. After human Approve (`Needs you` → `Buying`), Checkout Session **prep** may run (`POST /api/deals/[id]/authorized-buy`) via official Stripe/Link APIs only — `live: false` / `charged: false` until `BOTBUY_STRIPE_*` keys and wiring are proven. Spend ceiling $1,000. Every deal needs approval. Auto-approve OFF. Infra near-zero — no assumed paid infra budget.
+2. Vault screen H1 `Add a payment method` (vault = brand mark / linked methods / pay-at-purchase — not a held balance). Card Available ≠ live (Stripe/Link is one card path). Bank / X Money / Bitcoin Coming. `+ Add payment method` always visible. Vault-ready = ≥1 Available. Coming does not unlock Run. After human Approve (`Needs you` → `Buying`), Checkout Session **prep** may run (`POST /api/deals/[id]/authorized-buy`) via official Stripe/Link APIs only — `live: false` / `charged: false` until `BOTBUY_STRIPE_*` keys and wiring are proven. The same trail unlocks act-on-behalf **draft** prep (`POST /api/deals/[id]/act` — reply / email / register stub) with `sent=false` · `registered=false` · never SMTP. Spend ceiling $1,000. Every deal needs approval. Auto-approve OFF. Infra near-zero — no assumed paid infra budget.
 3. Owner `/admin` Demo badges. Real deal counts OK. No invented live MRR/traffic/paid users. Finance verified-only $179.96; never $596.64 as burn. Coarse usage meter v0: per-deal Estimate stub + per-day Admin tokens_est / calls rollup. Demo · not live. Never Actual $.
 4. Verification module path stub — Closing→Closed gated for agent-run; imported Closed stores receipt refs + `skipped_reason=imported_ledger`
 5. ProofStrip empty until verified live aggregates. Public copy: personal deals never count as public proof. No placeholders. No CHO-gated / `verified_at` caption on land.
@@ -49,6 +49,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | `/intent` | In-app intent capture (same Start search) |
 | `/vault` `/settings` `/settings/profile` | Vault · Settings · Your details. Vault authorized-buy note: Checkout Session prep ≠ live pay |
 | `POST /api/deals/[id]/authorized-buy` | Stripe/Link Checkout Session prep after Needs you → Buying. Fail-closed. Not live. |
+| `POST /api/deals/[id]/act` | Act-on-behalf after Needs you → Buying: reply / email drafts + register stub. `sent=false` · `registered=false` · `live:false` · `spend=false`. Never sends. |
 | `/settings/connected-accounts` | Namecheap + Twilio connector vault · POC · not live. Auto-approve OFF |
 | `/admin` | Owner only — hidden from buyer nav and land. Persistent **Demo** badge. |
 

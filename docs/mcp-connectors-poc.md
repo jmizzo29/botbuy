@@ -53,6 +53,7 @@ CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) →
 - `GET/POST /api/connectors/smoke` — read-only search smoke (never register/buy)
 - `POST /api/connectors/revoke`
 - `POST /api/connectors/tools` — search / quote / register / buy
+- `GET/POST /api/deals/[id]/act` — after Needs you → Buying: reply / email drafts + register stub (`sent=false` · `registered=false` · never SMTP / never register HTTP from this surface)
 - `GET /api/connectors/oauth/twilio` — OAuth start (not live unless Twilio OAuth env is set)
 - `GET /api/connectors/oauth/shopify` — OAuth start (not live unless Shopify OAuth env + `?shop=` are set)
 

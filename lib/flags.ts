@@ -10,6 +10,8 @@ export const flags = {
   // BOTBUY_STRIPE_LIVE is named for later CHO wiring. Authorized-buy still
   // returns live: false until keys/wiring are proven — do not use this flag
   // to claim live pay.
+  // BOTBUY_MAIL_LIVE is named for later on-behalf mail. Act/email still
+  // returns live: false and sent: false. Do not use this flag to claim sent.
   plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || null,
 };
 
