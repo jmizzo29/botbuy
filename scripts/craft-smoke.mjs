@@ -520,7 +520,7 @@ const LAND_META =
   "BotBuyer finds it and handles the chase. You approve before it pays.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
-assert(brand.includes('LAND_COMING_SOON = "Coming soon"'), "public land coming-soon lock");
+assert(!brand.includes("LAND_COMING_SOON"), "public land coming-soon lock retired");
 assert(brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying."'), "land H1 lock");
 assert(
   brand.includes('LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK."'),
@@ -581,44 +581,45 @@ assert(!land.includes("HowItWorksRail"), "land fold dropped elevate how-stack");
 assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy stage");
 assert(land.includes("bb-land-stage"), "land stage class is wired");
 assert(land.includes("bb-atm-richer-mesh-deep"), "land A1 richer-mesh-deep atmosphere class");
+assert(land.includes('className="bb-land-sky bb-atm-richer-mesh-deep"'), "A1 atmosphere is sky-only");
+assert(!land.includes("bb-land-stage bb-atm-richer-mesh-deep"), "A1 atmosphere is not on the solid panel stage");
 assert(!land.includes("bb-atm-mesh-glow"), "land no longer wires unused mesh-glow");
-assert(land.includes("bb-land-coming") && land.includes("bb-land-coming-title"), "land fold uses coming-soon classes");
-assert(!land.includes("bb-land-h1") && !land.includes("bb-land-support"), "coming soon dropped product type-scale classes");
+assert(land.includes("bb-land-h1") && land.includes("bb-land-support"), "land fold uses CSS type-scale classes");
 assert(!land.includes("bb-land-meta"), "land fold dropped meta one-liner");
 assert(chrome.includes("bb-land-main w-full"), "land main is unguttered full width");
 assert(!chrome.includes("bb-land-main mx-auto w-full max-w-6xl"), "land main is not a max-w-6xl inset frame");
 assert(!land.includes("filter"), "land does not CSS-filter the arc");
 assert(!land.includes("invert"), "land does not CSS-invert the light arc");
 assert(!land.includes("BRAND.landHonesty"), "land fold has no under-CTA Private beta chip");
-assert(!land.includes("Private beta"), "coming soon has no Private beta");
+assert(!land.includes("Private beta"), "R3 land has no Private beta");
 assert(!land.includes("bg-primary"), "land fold has no orphan teal hairline");
 assert(!land.includes("ProofStrip"), "land dropped No public proof essay card");
-assert(land.includes("LAND_COMING_SOON"), "land H1 is Coming soon");
-assert(!land.includes("LAND_PRODUCT_H1"), "coming soon dropped product H1");
-assert(!land.includes("LAND_PRODUCT_SUPPORT"), "coming soon dropped product support");
+assert(land.includes("LAND_PRODUCT_H1"), "land H1 is locked product H1");
+assert(land.includes("LAND_PRODUCT_SUPPORT"), "land support is locked product support");
+assert(!land.includes("LAND_COMING_SOON"), "R3 land dropped Coming soon");
 assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product tag");
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(!land.includes("LAND_META_LINE"), "land fold dropped meta one-liner constant");
-assert(land.includes("description: LAND_COMING_SOON"), "land page meta is Coming soon");
+assert(land.includes("description: LAND_PRODUCT_SUPPORT"), "land page meta is product support");
 assert(
   land.includes("openGraph:") &&
     land.includes("twitter:") &&
-    (land.match(/description: LAND_COMING_SOON/g) || []).length >= 3,
-  "coming soon quiets page/OG/twitter descriptions",
+    (land.match(/description: LAND_PRODUCT_SUPPORT/g) || []).length >= 3,
+  "land page/OG/twitter use product support description",
 );
 assert(
   land.includes("/brand/logo-soft-spine/og/og-1200x630.png") &&
     land.includes('card: "summary_large_image"'),
-  "coming soon keeps soft-spine OG/twitter image",
+  "R3 land keeps soft-spine OG/twitter image",
 );
 assert(!land.includes("LandInstallButton"), "land has no Install door");
 assert(!land.includes("Install"), "land page source has no Install string");
 assert(!land.includes("land-install"), "land fold has no Install CTA");
-assert(!land.includes('data-cta="land-signin"'), "coming soon has no Sign in CTA");
-assert(!land.includes('data-cta="land-signup"'), "coming soon has no Sign up CTA");
-assert(!land.includes("bb-land-signin") && !land.includes("bb-land-signup"), "coming soon has no CTA classes");
-assert(!land.includes("CLERK_SIGN_IN_URL") && !land.includes("/signin"), "coming soon has no Sign in door");
-assert(!land.includes("Sign up") && !land.includes("Sign in"), "coming soon has no launch doors");
+assert(land.includes('data-cta="land-signin"'), "R3 land has equal Sign in CTA");
+assert(land.includes('data-cta="land-signup"'), "R3 land has equal Sign up CTA");
+assert(land.includes("bb-land-signin") && land.includes("bb-land-signup"), "R3 land wires equal CTA classes");
+assert(land.includes("CLERK_SIGN_IN_URL"), "R3 land Sign in door is Clerk");
+assert(land.includes('href="/signup"'), "R3 land Sign up door is /signup");
 assert(chrome.includes(") : land ? null : ("), "land nav has no signed-out Sign in duplicate");
 assert(
   read("components/install-hint.tsx").includes("if (onLand) return null"),
@@ -638,10 +639,10 @@ assert(land.includes('dynamic = "force-dynamic"'), "land session redirect is req
 assert(land.includes('themeColor: "#0B1F3A"'), "land status/theme color is navy");
 assert(!land.includes("land-my-deals"), "My deals is never land primary");
 assert(!land.includes("BRAND.myDealsCta"), "land fold has no My deals CTA");
-assert(!land.includes('data-cta="land-signup"'), "coming soon is not a Sign up fold");
+assert(land.includes('data-cta="land-signup"'), "R3 land is a Sign up fold");
 assert(
-  (land.match(/<Button/g) || []).length === 0,
-  "coming soon land has no Button",
+  (land.match(/<Button/g) || []).length === 1,
+  "R3 land Sign up is the sole Button",
 );
 assert(!land.includes("variant="), "land fold Buttons have no secondary/ghost variant");
 assert(!landInstall.includes("<Button"), "land Install is not a Button");
@@ -687,7 +688,7 @@ assert(
 );
 assert(
   brand.includes('LAND_ARC_SRC = "/land/assets/06-arc-reverse.svg"'),
-  "land B wires the dedicated reverse arc",
+  "historical reverse arc path stays in brand",
 );
 assert(
   read("public/land/assets/06-arc-reverse.svg").includes('viewBox="0 0 280 72"') &&
@@ -704,8 +705,8 @@ assert(
 assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage gradient tokens");
 assert(css.includes(".bb-atm-richer-mesh-deep::before"), "A1 richer-mesh-deep atmosphere CSS");
 assert(css.includes("rgba(42,125,158,0.42)"), "A1 richer-mesh-deep teal blob");
-assert(css.includes(".bb-land-stage::before") && css.includes("z-index: 0"), "stage ::before stays behind content");
-assert(css.includes(".bb-land-stage-grid") && css.includes("z-index: 1"), "stage content stays above atmosphere");
+assert(css.includes(".bb-land-sky::before") && css.includes("z-index: 0"), "sky ::before stays behind the mark");
+assert(css.includes(".bb-land-panel") && css.includes("z-index: 1"), "panel stays above atmosphere");
 assert(!css.includes("bb-atm-grain-veil"), "do not ship grain-veil");
 assert(!css.includes("bb-atm-eclipse-whisper"), "do not ship eclipse-whisper");
 assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
@@ -719,26 +720,20 @@ assert(
 );
 assert(css.includes("border-radius: 0"), "stage is square full-bleed");
 assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
-assert(css.includes(".bb-land-coming") && css.includes(".bb-land-coming-title"), "coming soon type is CSS-owned");
-assert(
-  css.includes(".bb-land-coming") &&
-    css.includes("justify-content: center") &&
-    css.includes("text-align: center"),
-  "coming soon is centered Quiet Capital",
-);
 assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
 assert(css.includes(".bb-land-copy") && css.includes("text-align: center"), "phone land copy is centered");
 assert(
   css.includes(".bb-land-header") &&
-    css.includes("justify-content: center") &&
+    css.includes("justify-content: space-between") &&
     css.includes("flex-wrap: wrap"),
-  "phone overlay centers lockup + About on one axis",
+  "phone overlay is lockup + About on the chrome row",
 );
 assert(
-  css.includes("text-align: left") &&
-    css.includes("grid-template-columns: minmax(0, 1.28fr) minmax(18rem, 0.92fr)") &&
-    css.includes("justify-content: space-between"),
-  "desktop keeps left-copy / right-arc split and overlay spread",
+  css.includes("justify-content: space-between") &&
+    css.includes(".bb-land-sky") &&
+    css.includes(".bb-land-panel") &&
+    css.includes("border-top: 2px solid #2dd4bf"),
+  "desktop keeps R3 two-zone hard edge; overlay stays spread",
 );
 assert(css.includes("@media (max-width: 1023px)"), "phone center axis is locked at max-lg");
 assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "fold CTA is a Sign up + Sign in row");
@@ -762,17 +757,67 @@ assert(
 );
 assert(
   css.includes('.bb-land-cta [data-cta="land-signin"]') &&
-    css.includes("border: 1.5px solid rgba(255, 255, 255, 0.55)") &&
+    css.includes("border: 1.5px solid rgba(255, 255, 255, 0.7)") &&
     css.includes("background: transparent"),
-  "Sign in is a ghost/outline pill",
+  "Sign in is a higher-contrast ghost/outline pill",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
-assert(css.includes("margin-block-end: 1.25rem"), "phone density arc→H1 is 1.25rem");
 assert(
-  css.includes("margin-block-start: 0") && css.includes("gap: 0.5rem"),
-  "phone copy gap is 0.5rem with no extra start margin",
+  land.includes("bb-land-sky") &&
+    land.includes("bb-land-panel") &&
+    css.includes(".bb-land-sky") &&
+    css.includes(".bb-land-panel") &&
+    css.includes("border-top: 2px solid #2dd4bf") &&
+    css.includes("background: #050a0c"),
+  "R3 two-zone is sky + solid #050A0C panel with 2px teal edge",
 );
-assert(css.includes("padding: 5.25rem 1.25rem 0.35rem"), "phone arc keeps overlay top pad");
+assert(
+  css.includes("font-size: 1.875rem") &&
+    css.includes("letter-spacing: -0.04em") &&
+    css.includes("text-wrap: balance"),
+  "R3 H1 is 30px / 600 / -0.04em / balance",
+);
+assert(!land.includes("bb-land-arc"), "R3 fold has no arc rail");
+assert(!land.includes("bb-land-rule"), "R3 fold has no D1 teal rule");
+assert(!land.includes("LAND_ARC_SRC"), "R3 fold does not mount the arc asset");
+assert(!css.includes(".bb-land-arc"), "R3 CSS dropped the arc rail");
+assert(!css.includes(".bb-land-rule"), "R3 CSS dropped the D1 hairline rule");
+assert(
+  land.includes("bb-mark-hero") &&
+    css.includes(".bb-mark-hero") &&
+    css.includes("width: 148px") &&
+    css.includes("height: 148px"),
+  "R3 sky mark is the oversized 148px soft-spine",
+);
+assert(
+  land.includes("LAND_SKY_MARK_SRC") &&
+    brand.includes(
+      'LAND_SKY_MARK_SRC =\n  "/brand/logo-soft-spine/botbuyer-mark-reverse.svg"',
+    ),
+  "R3 sky mark is the locked soft-spine reverse",
+);
+assert(
+  land.indexOf("bb-land-sky") < land.indexOf("bb-land-panel") &&
+    land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
+    land.indexOf("bb-land-support") < land.indexOf("bb-land-cta"),
+  "R3 fold order is sky → panel H1 → support → CTA",
+);
+assert(
+  css.includes("margin-block-start: 0") &&
+    css.includes("justify-content: center") &&
+    css.includes("padding: 28px 24px"),
+  "phone R3 panel uses the locked 28/24/48 pad",
+);
+assert(
+  existsSync(join(root, "land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md")) &&
+    read("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md").includes("READY-TO-SHIP") &&
+    read("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md").includes("bb-land-panel"),
+  "R3 designer INSTALL is READY-TO-SHIP",
+);
+assert(
+  read("land/INSTALL.md").includes("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md"),
+  "land INSTALL points at R3 kit SoT",
+);
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
 assert(
   read("land/assets/02-deals.svg").includes('aria-label="BotBuyer brings deals"'),
@@ -847,9 +892,9 @@ assert(lockup.includes("onDark"), "BrandLockup can render reverse on dark");
 assert(lockup.includes("219") && lockup.includes("46"), "land reverse lockup intrinsic ~219×46");
 assert(
   css.includes(".bb-land-lockup") &&
-    css.includes("height: 2.375rem") &&
+    css.includes("height: 1.75rem") &&
     css.includes("height: 2.875rem"),
-  "land overlay lockup reads ~38px phone / ~46px desk on navy",
+  "land overlay lockup reads 28px phone / ~46px desk on navy",
 );
 assert(lockup.includes('alt="BotBuyer"'), "BrandLockup accessible alt");
 assert(shell.includes("BrandLockup"), "app shell soft-spine header lockup");
@@ -1396,7 +1441,7 @@ if (failures.length) {
 
 console.log("craft-smoke PASS");
 console.log(" - g-techlux light #F7F8FA · teal #2DD4BF / #042F2E ≥4.5:1");
-console.log(" - land coming soon · navy richer-mesh · no launch doors");
+console.log(" - land R3 lower-panel · sky + Quiet Capital panel · equal doors");
 console.log(" - land/meta one-liner payment method lock · no Vault it");
 console.log(" - go-live Run BotBuyer present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
