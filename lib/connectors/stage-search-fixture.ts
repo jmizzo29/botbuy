@@ -64,9 +64,10 @@ export function intentRequestsStageSearchFixture(
 }
 
 /**
- * Explicit fixture only. Empty stubs stay Searching.
- * Preview / STAGE_SEARCH_FIXTURE alone do not invent candidates.
- * Tokens: qa-needs-you · fixture-candidates · STAGE_QA (`?fixture=1` appends the token).
+ * Opt-in fixture only. Empty stubs stay Searching.
+ * VERCEL_ENV=preview alone does not invent candidates.
+ * Enable with qa-needs-you / fixture-candidates / STAGE_QA (`?fixture=1`
+ * appends the token), and/or explicit STAGE_SEARCH_FIXTURE=1.
  * Never production / main.
  */
 export function isStageSearchFixtureEnabled(
@@ -74,7 +75,10 @@ export function isStageSearchFixtureEnabled(
   env: StageSearchFixtureEnv = process.env,
 ): boolean {
   if (isProductionSearchEnv(env)) return false;
-  return intentRequestsStageSearchFixture(input);
+  return (
+    isStageSearchFixtureEnvEnabled(env) ||
+    intentRequestsStageSearchFixture(input)
+  );
 }
 
 export function stageSearchFixtureEventId(dealId: string) {

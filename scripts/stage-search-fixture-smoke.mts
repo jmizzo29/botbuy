@@ -79,19 +79,26 @@ if (isProductionSearchEnv({ VERCEL_ENV: "preview" })) {
 }
 if (
   isStageSearchFixtureEnabled(null, {
+    VERCEL_ENV: "preview",
+  })
+) {
+  throw new Error("VERCEL_ENV=preview alone must not enable the fixture");
+}
+if (
+  !isStageSearchFixtureEnabled(null, {
     STAGE_SEARCH_FIXTURE: "1",
     VERCEL_ENV: "preview",
   })
 ) {
-  throw new Error("preview + STAGE_SEARCH_FIXTURE=1 must not invent candidates without a keyword");
+  throw new Error("STAGE_SEARCH_FIXTURE=1 must remain an explicit opt-in");
 }
 if (
   isStageSearchFixtureEnabled(
     { summary: "Find a used Honda Civic in Austin." },
-    { STAGE_SEARCH_FIXTURE: "1", VERCEL_ENV: "preview" },
+    { VERCEL_ENV: "preview" },
   )
 ) {
-  throw new Error("car free-text must not enable the fixture without a keyword");
+  throw new Error("car free-text on preview must not enable the fixture without a token or env flag");
 }
 if (
   !isStageSearchFixtureEnabled(
@@ -167,7 +174,7 @@ if (controlDeal.status !== "Searching") {
 }
 assertSoftHold(controlDeal);
 
-setEnv({ STAGE_SEARCH_FIXTURE: "1", VERCEL_ENV: "preview" });
+setEnv({ VERCEL_ENV: "preview" });
 const previewCarIntent = addIntent(
   {
     summary: `Find a used Honda Civic in Austin for CPO empty-stub smoke ${stamp}.`,
@@ -249,6 +256,25 @@ const previewGeneralDeal = await createSearchingDealFromIntent(
 if (previewGeneralDeal.status !== "Searching") {
   throw new Error("general free-text stub must stay Searching without a fixture keyword");
 }
+
+setEnv({ STAGE_SEARCH_FIXTURE: "1" });
+const envFlagIntent = addIntent(
+  {
+    summary: `Find software we can buy across vendor checkout for fixture env ${stamp}.`,
+    categories: ["software"],
+    maxPriceUsd: 50,
+  },
+  QA_USER,
+);
+const envFlagDeal = await createSearchingDealFromIntent(
+  envFlagIntent,
+  QA_USER,
+  "stage-qa@example.com",
+);
+if (envFlagDeal.status !== "Needs you") {
+  throw new Error("STAGE_SEARCH_FIXTURE=1 must hand off Searching → Needs you");
+}
+assertSoftHold(envFlagDeal);
 
 setEnv({ VERCEL_ENV: "preview" });
 const envIntent = addIntent(
@@ -434,6 +460,7 @@ console.log(` - ${previewCarDeal.id} car free-text stayed Searching`);
 console.log(` - ${previewHouseDeal.id} house free-text stayed Searching`);
 console.log(` - ${previewGoodsDeal.id} product free-text stayed Searching`);
 console.log(` - ${previewGeneralDeal.id} general free-text stayed Searching`);
+console.log(` - ${envFlagDeal.id} STAGE_SEARCH_FIXTURE=1 → Needs you · live:false`);
 console.log(` - ${envDeal.id} car + ${STAGE_SEARCH_FIXTURE_TOKEN} → Needs you · live:false`);
 console.log(` - ${tokenDeal.id} ${STAGE_SEARCH_FIXTURE_TOKEN} token → Needs you`);
 console.log(` - ${unmappedDeal.id} unmapped stub + token → Needs you`);
