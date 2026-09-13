@@ -26,6 +26,8 @@ Locked:
 
 Email sign-up. 2FA is phase-2. After sign-up → `/onboarding/intent`.
 
+Canonical route is `/signup` (also accept `/sign-up` → `/signup`).
+
 ## Sign in `/signin`
 
 Label **Sign in**. Canonical route is `/signin` (also accept `/login` and `/sign-in` → `/signin`).

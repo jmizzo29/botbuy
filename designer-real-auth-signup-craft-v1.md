@@ -2,7 +2,7 @@
 
 John LOCK · 2026-09-12 · Soft-signal HOLD  
 IA SoT: `cpo-real-auth-signup-ia-v1.md`. CPO IA wins if craft and IA disagree.  
-Scope: `/signup` · `/signin` (and `/login` / `/sign-in` aliases) only.
+Scope: `/signup` · `/signin` (and `/login` / `/sign-in` / `/sign-up` aliases) only.
 
 When Clerk is live, this door is a real account — not a POC persist.
 

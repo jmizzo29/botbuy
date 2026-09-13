@@ -338,6 +338,13 @@ assert(css.includes(".bb-auth-card") && css.includes("overflow: hidden"), "auth 
 assert(css.includes(".bb-auth-shell") && css.includes("#0b1f3a"), "auth page bg is Quiet Capital navy");
 assert(css.includes("vercel-live-feedback") && nextConfig.includes("x-vercel-skip-toolbar"), "auth routes hide stage toolbar");
 assert(
+  nextConfig.includes('source: "/sign-up"') &&
+    nextConfig.includes('destination: "/signup"') &&
+    nextConfig.includes('source: "/sign-in"') &&
+    nextConfig.includes('destination: "/signin"'),
+  "hyphenated Clerk aliases redirect to canonical /signup and /signin",
+);
+assert(
   read("lib/site-pages.ts").includes("AUTH_LEGAL_LINKS") &&
     read("components/site-footer.tsx").includes("legalOnly"),
   "auth footer is legal-only",

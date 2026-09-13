@@ -37,7 +37,7 @@ No seven-figure claims in product UI. No paid Stripe/Issuing.
 | Route | What |
 | --- | --- |
 | `/` | Land — G Techlux light · locked one-liner `BotBuyer finds it and handles the chase. You approve before it pays.` + `POC · Demo · not live` + trust line + techlux-air + veil + How it works 3-card rail + empty ProofStrip. Vault is logo only. Soft-signal HOLD |
-| `/signup` | Clerk email sign-up → onboarding |
+| `/signup` | Clerk email sign-up → onboarding (`/sign-up` redirects here) |
 | `/signin` | Clerk email sign-in → My deals (`/login` and `/sign-in` redirect here) |
 | `/onboarding/intent` | What should BotBuyer find? — select or describe → **Start search** |
 | `/onboarding/spend` | Set spend (optional; not required to start a search) |
