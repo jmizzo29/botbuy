@@ -179,6 +179,9 @@ const houseSearch = listDealEvents(houseDeal.id).find((event) =>
 if (houseSearch?.detail.includes("shopify")) {
   throw new Error("house search must not map to Shopify");
 }
+if (houseDeal.status !== "Searching") {
+  throw new Error("house stub must stay Searching without invented candidates");
+}
 
 const goods = addIntent(
   {
@@ -197,6 +200,25 @@ const goodsSearch = listDealEvents(goodsDeal.id).find((event) =>
 );
 if (goodsSearch?.detail.includes("shopify")) {
   throw new Error("consumer product search must not map to Shopify");
+}
+if (goodsDeal.status !== "Searching") {
+  throw new Error("consumer product stub must stay Searching without invented candidates");
+}
+
+const general = addIntent(
+  {
+    summary: `Buy anything useful for the studio for category smoke ${stamp}.`,
+    categories: ["general"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const generalDeal = await createSearchingDealFromIntent(general, SEED_OWNER.id);
+if (generalDeal.status !== "Searching") {
+  throw new Error("general stub must stay Searching without invented candidates");
+}
+if (listDealEvents(generalDeal.id).some((event) => event.id.endsWith("_search_act"))) {
+  throw new Error("general stub must not attach a Needs you handoff");
 }
 
 if (officialSearchProvider("shopify") !== "shopify") {
@@ -354,5 +376,6 @@ console.log(` - http_json ${catalogDeal.id} official JSON search live:false`);
 console.log(` - car ${carDeal.id} accepted stub live:false`);
 console.log(` - house ${houseDeal.id} accepted stub live:false`);
 console.log(` - product ${goodsDeal.id} accepted stub live:false`);
+console.log(` - general ${generalDeal.id} accepted stub live:false`);
 console.log(` - ${reviewed.id} candidates → Needs you · buy still fail-closed`);
 console.log(" - Needs you → Buying still required before spend / authorized-buy");

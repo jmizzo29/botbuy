@@ -1520,7 +1520,18 @@ assert(existsSync(join(root, "components/deal-candidates.tsx")), "deal candidate
 const stageFixture = read("lib/connectors/stage-search-fixture.ts");
 assert(stageFixture.includes("qa-needs-you"), "stage fixture token qa-needs-you");
 assert(stageFixture.includes("isProductionSearchEnv"), "stage fixture refuses production/main");
-assert(stageFixture.includes('VERCEL_ENV') && stageFixture.includes("preview"), "preview enables stage fixture");
+assert(
+  stageFixture.includes("intentRequestsStageSearchFixture"),
+  "stage fixture requires an explicit intent token",
+);
+assert(
+  stageFixture.includes("Empty stubs stay Searching"),
+  "empty stubs stay Searching without an explicit fixture",
+);
+assert(
+  stageFixture.includes("Preview / STAGE_SEARCH_FIXTURE alone do not invent candidates"),
+  "preview and STAGE_SEARCH_FIXTURE alone do not invent candidates",
+);
 assert(!stageFixture.includes("priceVerified: true"), "stage fixture invents no verified prices");
 assert(johnIntentForm.includes("stageFixture"), "intent form accepts stage fixture toggle");
 assert(johnIntentForm.includes("STAGE_SEARCH_FIXTURE_TOKEN"), "intent form sends qa-needs-you when ?fixture=1");

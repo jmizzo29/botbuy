@@ -63,17 +63,18 @@ export function intentRequestsStageSearchFixture(
   return TOKEN_RE.test(text);
 }
 
-/** Staging/preview, explicit env, or STAGE_QA intent token. Never production. */
+/**
+ * Explicit fixture only. Empty stubs stay Searching.
+ * Preview / STAGE_SEARCH_FIXTURE alone do not invent candidates.
+ * Tokens: qa-needs-you · fixture-candidates · STAGE_QA (`?fixture=1` appends the token).
+ * Never production / main.
+ */
 export function isStageSearchFixtureEnabled(
   input?: StageSearchFixtureIntent | null,
   env: StageSearchFixtureEnv = process.env,
 ): boolean {
   if (isProductionSearchEnv(env)) return false;
-  return (
-    isStageSearchFixtureEnvEnabled(env) ||
-    isPreviewSearchEnv(env) ||
-    intentRequestsStageSearchFixture(input)
-  );
+  return intentRequestsStageSearchFixture(input);
 }
 
 export function stageSearchFixtureEventId(dealId: string) {
