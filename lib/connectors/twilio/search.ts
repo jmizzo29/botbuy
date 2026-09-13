@@ -1,3 +1,4 @@
+import { twilioKeysConfigured } from "@/lib/connectors/keys";
 import { resolveTwilioCreds, twilioRequest } from "@/lib/connectors/twilio/client";
 import type { ConnectorToolResult, VaultSecretPayload } from "@/lib/connectors/types";
 
@@ -36,6 +37,7 @@ export async function searchTwilioNumbers(input: {
   const country = (input.country ?? "US").toUpperCase();
   const query = (input.query ?? "").trim();
   const creds = resolveTwilioCreds(input.vault);
+  const keysConfigured = twilioKeysConfigured(input.vault);
   if (creds) {
     const path = `/AvailablePhoneNumbers/${country}/Local.json${
       query ? `?Contains=${encodeURIComponent(query)}` : ""
@@ -54,6 +56,7 @@ export async function searchTwilioNumbers(input: {
         data: {
           country,
           query,
+          keysConfigured: true,
           httpStatus: http.status,
           available: parsed.available,
           candidates: parsed.candidates,
@@ -69,10 +72,13 @@ export async function searchTwilioNumbers(input: {
     tool: "search",
     dealId: null,
     result: "stub",
-    reason: "Twilio number search stub. Not live.",
+    reason: keysConfigured
+      ? "Twilio keys present but search stayed a stub. Official API path only. Not live."
+      : "Twilio number search stub. keysConfigured=false · official API only · not live.",
     data: {
       country,
       query,
+      keysConfigured,
       available: [],
       candidates: [],
       amountStatus: "unverified",

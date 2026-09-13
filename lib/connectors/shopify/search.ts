@@ -1,3 +1,4 @@
+import { shopifyKeysConfigured } from "@/lib/connectors/keys";
 import {
   resolveShopifyCreds,
   shopifyAdminRequest,
@@ -30,6 +31,7 @@ export async function searchShopifyProducts(input: {
 }): Promise<ConnectorToolResult> {
   const query = (input.query ?? input.product ?? "").trim();
   const creds = resolveShopifyCreds(input.vault);
+  const keysConfigured = shopifyKeysConfigured(input.vault);
   if (creds) {
     const path = `/products.json?limit=5${
       query ? `&title=${encodeURIComponent(query)}` : ""
@@ -47,6 +49,7 @@ export async function searchShopifyProducts(input: {
         reason: "Shopify product search returned. POC · not live — not a public connector.",
         data: {
           query,
+          keysConfigured: true,
           shopDomain: creds.shopDomain,
           httpStatus: http.status,
           products: candidates,
@@ -63,7 +66,15 @@ export async function searchShopifyProducts(input: {
     tool: "search",
     dealId: null,
     result: "stub",
-    reason: "Shopify product search stub. Official Admin API only. Not live.",
-    data: { query, products: [], candidates: [], amountStatus: "unverified" },
+    reason: keysConfigured
+      ? "Shopify keys present but search stayed a stub. Official Admin API only. Not live."
+      : "Shopify product search stub. keysConfigured=false · official Admin API only · not live.",
+    data: {
+      query,
+      keysConfigured,
+      products: [],
+      candidates: [],
+      amountStatus: "unverified",
+    },
   };
 }

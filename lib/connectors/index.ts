@@ -7,6 +7,12 @@ export {
   CONNECT_ACCOUNTS_ANCHOR,
 } from "@/lib/connectors/copy";
 export { invokeConnectorTool } from "@/lib/connectors/runtime";
+export {
+  listConnectorReadiness,
+  CONNECTOR_PREVIEW_ENV,
+  CONNECTOR_LIVE_LOCK_NOTE,
+} from "@/lib/connectors/keys";
+export { smokeConnectorSearch, CONNECTOR_SMOKE_NOTE } from "@/lib/connectors/smoke";
 export { assertConnectorSpendAllowed } from "@/lib/connectors/approve-gate";
 export {
   applyDealSearchPipeline,

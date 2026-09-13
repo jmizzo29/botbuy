@@ -66,6 +66,27 @@ if (consumer.kind === "shopify") {
   throw new Error("consumer products must not wedge onto Shopify");
 }
 
+const carReady = routeIntentToSearch({
+  summary: "Find a used Honda Civic in Austin.",
+  categories: ["vehicle"],
+  httpJsonReady: true,
+});
+if (carReady.kind !== "http_json" || carReady.provider !== "http_json") {
+  throw new Error("car intent with HTTP JSON keys should use the MCP catalog");
+}
+if (carReady.kind === "shopify") {
+  throw new Error("car + httpJsonReady must not wedge onto Shopify");
+}
+
+const houseReady = routeIntentToSearch({
+  summary: "Find a 3-bed house in Denver.",
+  categories: ["property"],
+  httpJsonReady: true,
+});
+if (houseReady.kind !== "http_json" || houseReady.accepted !== true) {
+  throw new Error("house intent with HTTP JSON keys should use the MCP catalog");
+}
+
 const httpJson = routeIntentToSearch({
   summary: "Query the official JSON API catalog.",
   categories: ["http_json"],

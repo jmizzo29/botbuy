@@ -4,6 +4,7 @@ import { connectProvider } from "@/lib/connectors/connect";
 import { CONNECT_ACCOUNTS_HONESTY } from "@/lib/connectors/copy";
 import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/http";
 import { isVaultKeyConfigured } from "@/lib/connectors/crypto";
+import { listConnectorReadiness } from "@/lib/connectors/keys";
 import { ConnectorError } from "@/lib/connectors/types";
 import { isConnectorProvider, listPublicConnectorStatus } from "@/lib/connectors/vault";
 import { z } from "zod";
@@ -15,6 +16,7 @@ export async function GET() {
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
   });
+  const readiness = await listConnectorReadiness(gated.user.id);
   return NextResponse.json({
     honesty: CONNECT_ACCOUNTS_HONESTY,
     live: false,
@@ -22,6 +24,7 @@ export async function GET() {
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
     providers,
+    readiness,
   });
 }
 
@@ -68,12 +71,14 @@ export async function POST(request: Request) {
       twilioOauthAvailable: twilioOauthConfigured(),
       shopifyOauthAvailable: shopifyOauthConfigured(),
     });
+    const readiness = await listConnectorReadiness(gated.user.id);
     return NextResponse.json({
       honesty: CONNECT_ACCOUNTS_HONESTY,
       live: false,
       status: result.status,
       needsSetup: result.needsSetup,
       providers,
+      readiness,
     });
   } catch (error) {
     if (error instanceof ConnectorError) {

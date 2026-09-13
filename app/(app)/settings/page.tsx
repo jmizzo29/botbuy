@@ -8,6 +8,7 @@ import { requireUser } from "@/lib/auth";
 import { CONNECT_ACCOUNTS_HREF } from "@/lib/connectors/copy";
 import { isVaultKeyConfigured } from "@/lib/connectors/crypto";
 import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/http";
+import { listConnectorReadiness } from "@/lib/connectors/keys";
 import { listPublicConnectorStatus } from "@/lib/connectors/vault";
 import {
   SETTINGS_PROFILE_HREF,
@@ -41,6 +42,7 @@ export default async function SettingsPage() {
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
   });
+  const readiness = await listConnectorReadiness(user.id);
 
   return (
     <div className="space-y-8">
@@ -58,6 +60,7 @@ export default async function SettingsPage() {
         vaultKeyConfigured={isVaultKeyConfigured()}
         twilioOauthAvailable={twilioOauthConfigured()}
         shopifyOauthAvailable={shopifyOauthConfigured()}
+        readiness={readiness}
       />
       <p className="text-xs text-muted">
         <Link

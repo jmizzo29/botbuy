@@ -46,6 +46,9 @@ if (!softwareSearch.detail.includes("live:false")) {
 if (!softwareSearch.detail.includes("shopify")) {
   throw new Error("software search should attempt Shopify official API");
 }
+if (!softwareSearch.detail.includes("keysConfigured")) {
+  throw new Error("software search must report keysConfigured");
+}
 if (softwareDeal.status !== "Searching") {
   throw new Error("software Shopify stub must stay Searching without invented candidates");
 }
@@ -77,6 +80,9 @@ if (!domainSearch.detail.includes("live:false")) {
 if (!domainSearch.detail.includes("namecheap")) {
   throw new Error("domain search should attempt Namecheap");
 }
+if (!domainSearch.detail.includes("keysConfigured")) {
+  throw new Error("domain search must report keysConfigured");
+}
 if (domainDeal.priceUsd !== 0 || domainDeal.amountVerified) {
   throw new Error("domain deal must not invent verified spend");
 }
@@ -98,6 +104,9 @@ if (!phoneSearch?.detail.includes("twilio")) {
 }
 if (!phoneSearch.detail.includes("live:false")) {
   throw new Error("phone search event must include live:false");
+}
+if (!phoneSearch.detail.includes("keysConfigured")) {
+  throw new Error("phone search must report keysConfigured");
 }
 
 const catalog = addIntent(

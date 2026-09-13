@@ -1,3 +1,4 @@
+import { twilioKeysConfigured } from "@/lib/connectors/keys";
 import type { ConnectorToolResult, VaultSecretPayload } from "@/lib/connectors/types";
 
 export async function quoteTwilioNumber(input: {
@@ -5,6 +6,7 @@ export async function quoteTwilioNumber(input: {
   country?: string;
   vault: VaultSecretPayload | null;
 }): Promise<ConnectorToolResult> {
+  const keysConfigured = twilioKeysConfigured(input.vault);
   return {
     ok: true,
     live: false,
@@ -16,6 +18,7 @@ export async function quoteTwilioNumber(input: {
     data: {
       phoneNumber: input.phoneNumber ?? null,
       country: input.country ?? "US",
+      keysConfigured,
       listedUsd: null,
       amountStatus: "unverified",
     },

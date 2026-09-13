@@ -311,6 +311,7 @@ assert(!/puppeteer|playwright|selenium/i.test(intentRouteSrc), "intent route has
 assert(intentRouteSrc.includes("vehicleOrProperty"), "intent route refuses software wedge for cars/houses");
 assert(intentRouteSrc.includes("consumerish"), "intent route refuses software wedge for consumer products");
 assert(intentRouteSrc.includes("accepted: true"), "intent route never rejects a category");
+assert(intentRouteSrc.includes("httpJsonReady"), "intent route can use HTTP JSON MCP when keys are ready");
 const categoriesSrc = readFileSync(join(root, "lib/intent-categories.ts"), "utf8");
 assert(categoriesSrc.includes("DEFAULT_DEAL_CATEGORY"), "deal category default is general, not software");
 
@@ -363,6 +364,46 @@ assert(httpSearch.includes("keysConfigured"), "HTTP JSON stub reports keysConfig
 assert(httpSearch.includes("categoryAgnostic"), "HTTP JSON catalog is category-agnostic");
 assert(httpSearch.includes("vin") && httpSearch.includes("address"), "HTTP JSON parses listing fields");
 
+const keysSrc = readFileSync(join(root, "lib/connectors/keys.ts"), "utf8");
+assert(keysSrc.includes("keysConfigured"), "shared keysConfigured helper");
+assert(keysSrc.includes("searchHttpReady"), "shared searchHttpReady helper");
+assert(keysSrc.includes("NAMECHEAP_CLIENT_IP"), "keys helper names Namecheap client IP");
+assert(keysSrc.includes("live: false"), "keys readiness stays live:false");
+assert(!keysSrc.includes("live: true"), "keys helper never claims live:true");
+
+const smokeSrc = readFileSync(join(root, "lib/connectors/smoke.ts"), "utf8");
+assert(smokeSrc.includes('CONNECTOR_SMOKE_TOOL = "search"'), "connector smoke is search only");
+assert(!smokeSrc.includes('"register"') && !smokeSrc.includes('"buy"'), "connector smoke never spend");
+assert(smokeSrc.includes("live: false"), "connector smoke stays live:false");
+
+const smokeRoute = readFileSync(join(root, "app/api/connectors/smoke/route.ts"), "utf8");
+assert(smokeRoute.includes("smokeConnectorSearch"), "smoke API uses read-only helper");
+assert(smokeRoute.includes("spend: false"), "smoke API spend:false");
+
+const namecheapSearch = readFileSync(join(root, "lib/connectors/namecheap/search.ts"), "utf8");
+assert(namecheapSearch.includes("keysConfigured"), "Namecheap search reports keysConfigured");
+const namecheapQuote = readFileSync(join(root, "lib/connectors/namecheap/quote.ts"), "utf8");
+assert(namecheapQuote.includes("namecheap.users.getPricing"), "Namecheap quote uses official getPricing");
+assert(namecheapQuote.includes("amountStatus"), "Namecheap quote stays unverified");
+assert(namecheapQuote.includes("live: false"), "Namecheap quote stays live:false");
+const namecheapXml = readFileSync(join(root, "lib/connectors/namecheap/xml.ts"), "utf8");
+assert(namecheapXml.includes("parseNamecheapPricing"), "Namecheap XML pricing parser");
+assert(namecheapXml.includes("Status=\"OK\""), "Namecheap XML fail-closed on Status");
+const twilioSearch = readFileSync(join(root, "lib/connectors/twilio/search.ts"), "utf8");
+assert(twilioSearch.includes("keysConfigured"), "Twilio search reports keysConfigured");
+const shopifySearch = readFileSync(join(root, "lib/connectors/shopify/search.ts"), "utf8");
+assert(shopifySearch.includes("keysConfigured"), "Shopify search reports keysConfigured");
+
+const keysRuntime = spawnSync(
+  process.execPath,
+  [join(root, "node_modules/.bin/tsx"), join(root, "scripts/connector-keys-smoke.mts")],
+  { encoding: "utf8" },
+);
+assert(
+  keysRuntime.status === 0,
+  `connector keys smoke${keysRuntime.stderr ? `: ${keysRuntime.stderr.trim()}` : keysRuntime.stdout ? `: ${keysRuntime.stdout.trim()}` : ""}`,
+);
+
 const pipeline = spawnSync(
   process.execPath,
   [join(root, "node_modules/.bin/tsx"), join(root, "scripts/deal-search-runtime.mts")],
@@ -398,3 +439,4 @@ console.log(" - deal search pipeline is search/quote only · MCP-first · no bro
 console.log(" - candidates attach structured handoff · Searching → Found → Needs you");
 console.log(" - empty stubs stay Searching; qa-needs-you still Needs you · production refused");
 console.log(" - Approve sheet Needs you → Buying still required before spend");
+console.log(" - keysConfigured honesty on all four providers · read-only smoke · live:false");

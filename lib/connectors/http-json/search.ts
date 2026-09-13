@@ -1,9 +1,11 @@
-import { httpJsonEnvPresent } from "@/lib/connectors/http";
 import {
   httpJsonRequest,
   resolveHttpJsonCreds,
 } from "@/lib/connectors/http-json/client";
+import { httpJsonKeysConfigured } from "@/lib/connectors/keys";
 import type { ConnectorToolResult, VaultSecretPayload } from "@/lib/connectors/types";
+
+export { httpJsonKeysConfigured };
 
 function stringField(row: Record<string, unknown>, key: string) {
   const value = row[key];
@@ -98,10 +100,6 @@ export function parseHttpJsonCandidates(body: string): HttpJsonCandidate[] {
   } catch {
     return [];
   }
-}
-
-export function httpJsonKeysConfigured(vault: VaultSecretPayload | null) {
-  return Boolean(resolveHttpJsonCreds(vault) || httpJsonEnvPresent());
 }
 
 function honestyData(input: {
