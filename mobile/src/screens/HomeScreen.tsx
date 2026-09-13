@@ -113,7 +113,7 @@ export function HomeScreen({ auth }: { auth: HomeAuth }) {
         </View>
 
         <Text style={styles.h1}>{PRODUCT_H1}</Text>
-        <Text style={styles.support}>{PRODUCT_SUPPORT}</Text>
+        <Text style={styles.supportMuted}>{PRODUCT_SUPPORT}</Text>
         <Text style={styles.oneLiner}>{ONE_LINER}</Text>
 
         <View style={styles.flagRow}>
@@ -276,6 +276,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 26,
     fontWeight: "600",
+  },
+  supportMuted: {
+    color: COLORS.muted,
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: "500",
   },
   oneLiner: {
     color: COLORS.muted,
