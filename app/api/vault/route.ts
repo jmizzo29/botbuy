@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { requireApiUser } from "@/lib/api-auth";
+import { authorizedBuyVaultStatus } from "@/lib/authorized-buy";
 import {
+  VAULT_AUTHORIZED_BUY_NOTE,
   VAULT_FUND_IN_RAILS,
   VAULT_H1,
   VAULT_HOLD_NOTE,
@@ -24,5 +26,9 @@ export async function GET() {
     vaultReadyCopy: vaultReadyCopy(ready),
     addPaymentMethod: true,
     note: VAULT_HOLD_NOTE,
+    authorizedBuy: {
+      ...authorizedBuyVaultStatus(),
+      note: VAULT_AUTHORIZED_BUY_NOTE,
+    },
   });
 }

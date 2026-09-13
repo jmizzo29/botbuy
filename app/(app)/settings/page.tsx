@@ -114,7 +114,8 @@ export default async function SettingsPage() {
           </p>
           <p>
             Vault is multi-rail. Card Available (Stripe/Link is one path). Bank,
-            X Money / cash, and Bitcoin Coming. No rail is live.
+            X Money / cash, and Bitcoin Coming. No rail is live. Authorized-buy
+            Checkout Session prep stays not live without BOTBUY_STRIPE_* keys.
           </p>
           <p>
             Signed in with Clerk. Session cookies are HttpOnly. 2FA is phase-2.

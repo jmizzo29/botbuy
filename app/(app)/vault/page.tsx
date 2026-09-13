@@ -10,7 +10,12 @@ import {
   listVaultRefs,
   verifiedSpendUsd,
 } from "@/lib/store";
-import { VAULT_H1, VAULT_SUB, VAULT_TRUST } from "@/lib/vault-rails";
+import {
+  VAULT_AUTHORIZED_BUY_NOTE,
+  VAULT_H1,
+  VAULT_SUB,
+  VAULT_TRUST,
+} from "@/lib/vault-rails";
 
 export const metadata = {
   title: VAULT_H1,
@@ -41,6 +46,18 @@ export default async function VaultPage() {
         </CardHeader>
         <CardContent>
           <VaultRails cardBrand={card?.brand} cardLast4={card?.last4} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Authorized buy</CardTitle>
+          <p className="mt-1 text-sm text-muted">{VAULT_AUTHORIZED_BUY_NOTE}</p>
+        </CardHeader>
+        <CardContent className="space-y-2 text-sm text-muted">
+          <p>Stripe/Link Checkout Session prep uses official APIs only.</p>
+          <p>Needs you → Approve → Buying is required. Auto-approve stays OFF.</p>
+          <p>Without BOTBUY_STRIPE_* keys the rail stays honest: not live.</p>
         </CardContent>
       </Card>
 

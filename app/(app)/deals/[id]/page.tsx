@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AuthorizedBuyPrep } from "@/components/authorized-buy-prep";
 import { DealApproveActions } from "@/components/deal-approve-actions";
 import { DealBadges } from "@/components/deal-badges";
 import { DealAmount } from "@/components/money";
@@ -116,6 +117,7 @@ export default async function DealDetailPage({
                 remaining={`Remaining ${remaining}`}
                 payment={payment}
               />
+              <AuthorizedBuyPrep dealId={deal.id} status={deal.status} />
             </div>
           </div>
           <div>

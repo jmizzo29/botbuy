@@ -20,7 +20,7 @@ export const APPROVE_REVIEW_LABEL = "Review" as const;
 export const AUTO_APPROVE_OFF = "Auto-approve OFF" as const;
 export const SPEND_LIMIT_PILL = "Your spend limit" as const;
 
-/** Needs you → Buying continues the deal after a human gate. */
+/** Needs you → Buying continues the deal after a human gate. Authorized-buy prep requires this trail. */
 export const APPROVE_STATUS = "Buying" as const;
 /** Needs you → Failed is the honest reject. */
 export const REJECT_STATUS = "Failed" as const;

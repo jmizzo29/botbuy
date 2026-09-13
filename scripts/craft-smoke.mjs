@@ -1413,7 +1413,17 @@ assert(connectMiddleware.includes("/api/connectors"), "middleware protects conne
 assert(!connectUi.includes("Autofleeto") && !connectPage.includes("Autofleeto"), "UI never Autofleeto");
 assert(!connectCopy.includes("password vault") || connectCopy.includes("never a password vault"), "no password vault product");
 assert(read("lib/connectors/sanitize.ts").includes("looksLikeSecretKey"), "never-log sanitizer");
+assert(read("lib/connectors/sanitize.ts").includes("looksLikePan"), "never-log PAN sanitizer");
 assert(read("lib/connectors/audit.ts").includes("dealId") && read("lib/connectors/audit.ts").includes("provider"), "connector audit row shape");
+assert(envExample.includes("BOTBUY_STRIPE_SECRET_KEY="), "env example names BotBuy Stripe secret");
+assert(envExample.includes("BOTBUY_STRIPE_LIVE=false"), "env example Stripe live stays false");
+assert(!/^STRIPE_SECRET_KEY=/m.test(envExample), "env example has no generic Stripe secret");
+assert(read("docs/authorized-buy-rails.md").includes("BOTBUY_STRIPE_SECRET_KEY"), "authorized-buy docs");
+assert(read("lib/authorized-buy.ts").includes("assertAuthorizedBuyAllowed"), "authorized-buy uses approve gate");
+assert(read("lib/authorized-buy.ts").includes("live: false"), "authorized-buy live false");
+assert(read("app/api/deals/[id]/authorized-buy/route.ts").includes("prepareAuthorizedBuy"), "authorized-buy deal API");
+assert(read("app/(app)/deals/[id]/page.tsx").includes("AuthorizedBuyPrep"), "Buying surface hosts prep");
+assert(approveGate.includes("assertAuthorizedBuyAllowed"), "approve gate covers Checkout prep");
 
 if (failures.length) {
   console.error("craft-smoke FAIL");
