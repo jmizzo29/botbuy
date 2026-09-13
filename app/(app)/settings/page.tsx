@@ -9,7 +9,11 @@ import { SignOutButtonPrimary } from "@/components/auth-session";
 import { requireUser } from "@/lib/auth";
 import { CONNECT_ACCOUNTS_HREF } from "@/lib/connectors/copy";
 import { isVaultKeyConfigured } from "@/lib/connectors/crypto";
-import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/http";
+import {
+  githubOauthConfigured,
+  shopifyOauthConfigured,
+  twilioOauthConfigured,
+} from "@/lib/connectors/http";
 import { listConnectorReadiness } from "@/lib/connectors/keys";
 import { listPublicConnectorStatus } from "@/lib/connectors/vault";
 import {
@@ -46,6 +50,7 @@ export default async function SettingsPage() {
   const connectors = await listPublicConnectorStatus(user.id, {
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
+    githubOauthAvailable: githubOauthConfigured(),
   });
   const readiness = await listConnectorReadiness(user.id);
 
@@ -79,6 +84,7 @@ export default async function SettingsPage() {
         vaultKeyConfigured={isVaultKeyConfigured()}
         twilioOauthAvailable={twilioOauthConfigured()}
         shopifyOauthAvailable={shopifyOauthConfigured()}
+        githubOauthAvailable={githubOauthConfigured()}
         readiness={readiness}
       />
       <p className="text-xs text-muted">

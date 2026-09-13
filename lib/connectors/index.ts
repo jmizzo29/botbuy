@@ -50,4 +50,5 @@ export {
   oauthStartGate,
   twilioOauthStartReady,
   shopifyOauthStartReady,
+  githubOauthStartReady,
 } from "@/lib/connectors/oauth";

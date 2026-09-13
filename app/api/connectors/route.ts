@@ -3,6 +3,8 @@ import { requireApiUser } from "@/lib/api-auth";
 import { connectProvider } from "@/lib/connectors/connect";
 import { CONNECT_ACCOUNTS_HONESTY } from "@/lib/connectors/copy";
 import {
+  githubOauthConfigured,
+  githubOauthExchangeReady,
   shopifyOauthConfigured,
   shopifyOauthExchangeReady,
   twilioOauthConfigured,
@@ -20,6 +22,7 @@ export async function GET() {
   const providers = await listPublicConnectorStatus(gated.user.id, {
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
+    githubOauthAvailable: githubOauthConfigured(),
   });
   const readiness = await listConnectorReadiness(gated.user.id);
   return NextResponse.json({
@@ -29,8 +32,10 @@ export async function GET() {
     vaultKeyConfigured: isVaultKeyConfigured(),
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
+    githubOauthAvailable: githubOauthConfigured(),
     twilioOauthExchangeReady: twilioOauthExchangeReady(),
     shopifyOauthExchangeReady: shopifyOauthExchangeReady(),
+    githubOauthExchangeReady: githubOauthExchangeReady(),
     autoApprove: false,
     keysConfigured: readiness.providers.some((row) => row.keysConfigured),
     providers,
@@ -80,6 +85,7 @@ export async function POST(request: Request) {
     const providers = await listPublicConnectorStatus(gated.user.id, {
       twilioOauthAvailable: twilioOauthConfigured(),
       shopifyOauthAvailable: shopifyOauthConfigured(),
+      githubOauthAvailable: githubOauthConfigured(),
     });
     const readiness = await listConnectorReadiness(gated.user.id);
     return NextResponse.json({

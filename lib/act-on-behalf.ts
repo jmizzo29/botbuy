@@ -18,6 +18,7 @@ import { connectorsLiveEnabled } from "@/lib/connectors/http";
 import {
   DIGITALOCEAN_CATEGORIES,
   DOMAIN_CATEGORIES,
+  GITHUB_CATEGORIES,
   HTTP_JSON_CATEGORIES,
   PHONE_CATEGORIES,
   SOFTWARE_CATEGORIES,
@@ -154,6 +155,7 @@ function inferRegisterProvider(
   if (PHONE_CATEGORIES.has(category)) return "twilio";
   if (SOFTWARE_CATEGORIES.has(category)) return "shopify";
   if (DIGITALOCEAN_CATEGORIES.has(category)) return "digitalocean";
+  if (GITHUB_CATEGORIES.has(category)) return "github";
   if (HTTP_JSON_CATEGORIES.has(category)) return "http_json";
   return "http_json";
 }

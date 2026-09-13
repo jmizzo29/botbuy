@@ -3,7 +3,11 @@ import { z } from "zod";
 import { requireApiUser } from "@/lib/api-auth";
 import { revokeProvider } from "@/lib/connectors/connect";
 import { CONNECT_ACCOUNTS_HONESTY } from "@/lib/connectors/copy";
-import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/http";
+import {
+  githubOauthConfigured,
+  shopifyOauthConfigured,
+  twilioOauthConfigured,
+} from "@/lib/connectors/http";
 import { ConnectorError } from "@/lib/connectors/types";
 import { isConnectorProvider, listPublicConnectorStatus } from "@/lib/connectors/vault";
 
@@ -26,6 +30,7 @@ export async function POST(request: Request) {
     const providers = await listPublicConnectorStatus(gated.user.id, {
       twilioOauthAvailable: twilioOauthConfigured(),
       shopifyOauthAvailable: shopifyOauthConfigured(),
+      githubOauthAvailable: githubOauthConfigured(),
     });
     return NextResponse.json({
       honesty: CONNECT_ACCOUNTS_HONESTY,

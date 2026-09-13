@@ -3,6 +3,7 @@ export const CONNECTOR_PROVIDERS = [
   "twilio",
   "shopify",
   "digitalocean",
+  "github",
   "http_json",
 ] as const;
 export type ConnectorProvider = (typeof CONNECTOR_PROVIDERS)[number];
@@ -56,6 +57,7 @@ export interface VaultSecretPayload {
   /** Official HTTPS JSON API base URL (http_json) */
   baseUrl?: string;
   /** DigitalOcean personal access token lives in apiKey */
+  /** GitHub PAT lives in apiKey; OAuth access token in oauthAccess */
 }
 
 export interface ConnectedAccountRecord {

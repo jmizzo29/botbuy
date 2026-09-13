@@ -56,6 +56,22 @@ export function digitalOceanEnvPresent() {
   );
 }
 
+export function githubOauthConfigured() {
+  return Boolean(process.env.GITHUB_OAUTH_CLIENT_ID?.trim());
+}
+
+export function githubOauthSecretConfigured() {
+  return Boolean(process.env.GITHUB_OAUTH_CLIENT_SECRET?.trim());
+}
+
+export function githubOauthExchangeReady() {
+  return githubOauthConfigured() && githubOauthSecretConfigured();
+}
+
+export function githubEnvPresent() {
+  return Boolean(process.env.GITHUB_TOKEN?.trim());
+}
+
 export function httpJsonEnvPresent() {
   return Boolean(process.env.HTTP_JSON_BASE_URL?.trim());
 }

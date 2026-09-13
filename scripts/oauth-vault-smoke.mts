@@ -29,6 +29,8 @@ delete process.env.TWILIO_OAUTH_CLIENT_ID;
 delete process.env.TWILIO_OAUTH_CLIENT_SECRET;
 delete process.env.SHOPIFY_OAUTH_CLIENT_ID;
 delete process.env.SHOPIFY_OAUTH_CLIENT_SECRET;
+delete process.env.GITHUB_OAUTH_CLIENT_ID;
+delete process.env.GITHUB_OAUTH_CLIENT_SECRET;
 
 assert(!isVaultKeyConfigured(), "vault key starts unset");
 
@@ -42,6 +44,11 @@ const shopifyVaultMiss = oauthStartGate("shopify");
 assert(
   !shopifyVaultMiss.ok && shopifyVaultMiss.result === "vault_key",
   "Shopify start fail-closed without vault key",
+);
+const githubVaultMissEarly = oauthStartGate("github");
+assert(
+  !githubVaultMissEarly.ok && githubVaultMissEarly.result === "vault_key",
+  "GitHub start fail-closed without vault key",
 );
 
 try {
@@ -96,6 +103,12 @@ assert(
   "Shopify start Needs setup without OAuth env",
 );
 
+const githubNoOauth = oauthStartGate("github");
+assert(
+  !githubNoOauth.ok && githubNoOauth.result === "needs_setup",
+  "GitHub start Needs setup without OAuth env",
+);
+
 const honesty = oauthHonesty();
 assert(honesty.live === false, "oauth honesty live:false");
 assert(honesty.spend === false, "oauth honesty spend=false");
@@ -138,16 +151,20 @@ assert(
 
 const twilioStart = read("app/api/connectors/oauth/twilio/route.ts");
 const shopifyStart = read("app/api/connectors/oauth/shopify/route.ts");
+const githubStart = read("app/api/connectors/oauth/github/route.ts");
 const twilioCb = read("app/api/connectors/oauth/twilio/callback/route.ts");
 const shopifyCb = read("app/api/connectors/oauth/shopify/callback/route.ts");
+const githubCb = read("app/api/connectors/oauth/github/callback/route.ts");
 const oauthLib = read("lib/connectors/oauth.ts");
 const connectUi = read("components/connected-accounts.tsx");
 const vault = read("lib/connectors/vault.ts");
 
 assert(twilioStart.includes("startConnectorOauth"), "Twilio start uses vault shell");
 assert(shopifyStart.includes("startConnectorOauth"), "Shopify start uses vault shell");
+assert(githubStart.includes("startConnectorOauth"), "GitHub start uses vault shell");
 assert(twilioCb.includes("completeConnectorOauth"), "Twilio callback uses vault shell");
 assert(shopifyCb.includes("completeConnectorOauth"), "Shopify callback uses vault shell");
+assert(githubCb.includes("completeConnectorOauth"), "GitHub callback uses vault shell");
 assert(oauthLib.includes("encryptSecret") || vault.includes("encryptSecret"), "encrypt path exists");
 assert(oauthLib.includes("connectProvider"), "callback stores via connectProvider");
 assert(oauthLib.includes("requireVaultKey") || oauthLib.includes("isVaultKeyConfigured"), "oauth requires vault key");
@@ -158,6 +175,7 @@ assert(connectUi.includes("OAUTH_VAULT_KEY_REQUIRED"), "UI fail-closed without v
 assert(connectUi.includes("OAUTH_ENV_NEEDS_SETUP"), "UI Needs setup when OAuth env absent");
 assert(connectUi.includes('data-cta="twilio-oauth"'), "Twilio OAuth CTA stays");
 assert(connectUi.includes('data-cta="shopify-oauth"'), "Shopify OAuth CTA stays");
+assert(connectUi.includes('data-cta="github-oauth"'), "GitHub OAuth CTA stays");
 assert(!connectUi.includes("Autofleeto"), "UI never Autofleeto");
 assert(!oauthLib.includes("Autofleeto"), "oauth lib never Autofleeto");
 

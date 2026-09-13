@@ -17,6 +17,12 @@ import {
   DIGITALOCEAN_NEEDS_SETUP_COPY,
   DIGITALOCEAN_TOKEN_DISCLOSURE,
   DIGITALOCEAN_TOKEN_LABEL,
+  GITHUB_ADVANCED_CREDENTIALS,
+  GITHUB_NEEDS_SETUP_COPY,
+  GITHUB_OAUTH_CTA,
+  GITHUB_OAUTH_PREFERRED,
+  GITHUB_TOKEN_DISCLOSURE,
+  GITHUB_TOKEN_LABEL,
   CONNECT_KEYS_STRIP,
   CONNECT_SEARCH_ONLY,
   CONNECT_SMOKE_CTA,
@@ -98,6 +104,7 @@ export function ConnectedAccountsPanel({
   vaultKeyConfigured,
   twilioOauthAvailable,
   shopifyOauthAvailable = false,
+  githubOauthAvailable = false,
   readiness,
   heading = "h2",
   oauthReturn,
@@ -106,6 +113,7 @@ export function ConnectedAccountsPanel({
   vaultKeyConfigured: boolean;
   twilioOauthAvailable: boolean;
   shopifyOauthAvailable?: boolean;
+  githubOauthAvailable?: boolean;
   readiness?: ConnectorPlatformReadiness;
   heading?: "h1" | "h2";
   oauthReturn?: { provider?: string; result?: string } | null;
@@ -169,6 +177,7 @@ export function ConnectedAccountsPanel({
               vaultKeyConfigured={vaultKeyConfigured}
               twilioOauthAvailable={twilioOauthAvailable}
               shopifyOauthAvailable={shopifyOauthAvailable}
+              githubOauthAvailable={githubOauthAvailable}
               readiness={readiness?.providers.find(
                 (item) => item.provider === row.provider,
               )}
@@ -217,12 +226,14 @@ function ProviderRow({
   vaultKeyConfigured,
   twilioOauthAvailable,
   shopifyOauthAvailable,
+  githubOauthAvailable,
   readiness,
 }: {
   row: ConnectorPublicStatus;
   vaultKeyConfigured: boolean;
   twilioOauthAvailable: boolean;
   shopifyOauthAvailable: boolean;
+  githubOauthAvailable: boolean;
   readiness?: ConnectorProviderReadiness;
 }) {
   const router = useRouter();
@@ -361,6 +372,9 @@ function ProviderRow({
       {row.provider === "digitalocean" && row.status !== "connected" ? (
         <DigitalOceanNeedsSetup />
       ) : null}
+      {row.provider === "github" && row.status !== "connected" ? (
+        <GithubNeedsSetup />
+      ) : null}
       {row.provider === "http_json" && row.status !== "connected" ? (
         <HttpJsonNeedsSetup />
       ) : null}
@@ -429,6 +443,19 @@ function ProviderRow({
           ) : row.provider === "digitalocean" ? (
             <DigitalOceanConnectForm
               disabled={!vaultKeyConfigured}
+              pending={pending === "connect"}
+              onDone={() => {
+                setSheet(null);
+                router.refresh();
+              }}
+              onError={setError}
+              onPending={(value) => setPending(value ? "connect" : null)}
+            />
+          ) : row.provider === "github" ? (
+            <GithubConnectForm
+              disabled={!vaultKeyConfigured}
+              oauthAvailable={githubOauthAvailable}
+              oauthExchangeReady={Boolean(readiness?.oauthExchangeReady)}
               pending={pending === "connect"}
               onDone={() => {
                 setSheet(null);
@@ -541,6 +568,15 @@ function DigitalOceanNeedsSetup() {
     <NeedsSetupBlock surface="digitalocean-needs-setup">
       <p>{DIGITALOCEAN_NEEDS_SETUP_COPY}</p>
       <p>{DIGITALOCEAN_TOKEN_DISCLOSURE}</p>
+    </NeedsSetupBlock>
+  );
+}
+
+function GithubNeedsSetup() {
+  return (
+    <NeedsSetupBlock surface="github-needs-setup">
+      <p>{GITHUB_NEEDS_SETUP_COPY}</p>
+      <p>{GITHUB_OAUTH_PREFERRED}</p>
     </NeedsSetupBlock>
   );
 }
@@ -965,6 +1001,107 @@ function DigitalOceanConnectForm({
       <Button type="submit" className="min-h-11" disabled={disabled || pending}>
         {pending ? "…" : "Save DigitalOcean API"}
       </Button>
+    </form>
+  );
+}
+
+function GithubConnectForm({
+  disabled,
+  oauthAvailable,
+  oauthExchangeReady = false,
+  pending,
+  onDone,
+  onError,
+  onPending,
+}: {
+  disabled: boolean;
+  oauthAvailable: boolean;
+  oauthExchangeReady?: boolean;
+  pending: boolean;
+  onDone: () => void;
+  onError: (message: string | null) => void;
+  onPending: (value: boolean) => void;
+}) {
+  const [advanced, setAdvanced] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [officialApiAck, setOfficialApiAck] = useState(false);
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    onPending(true);
+    onError(null);
+    const response = await fetch("/api/connectors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        provider: "github",
+        apiKey,
+        officialApiAck,
+      }),
+    });
+    const body = (await response.json().catch(() => null)) as { error?: string } | null;
+    onPending(false);
+    if (!response.ok) {
+      onError(body?.error ?? "Connect failed.");
+      return;
+    }
+    setApiKey("");
+    onDone();
+  }
+
+  return (
+    <form data-flow="github-connect" onSubmit={(event) => void submit(event)} className="space-y-3">
+      <p className="text-sm text-muted">{GITHUB_OAUTH_PREFERRED}</p>
+      {oauthExchangeReady && !disabled ? (
+        <Button asChild className="min-h-11 w-full" data-cta="github-oauth">
+          <a href="/api/connectors/oauth/github">{GITHUB_OAUTH_CTA}</a>
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          className="min-h-11 w-full"
+          data-cta="github-oauth"
+          onClick={() =>
+            onError(
+              disabled
+                ? OAUTH_VAULT_KEY_REQUIRED
+                : oauthAvailable
+                  ? "GitHub OAuth client is incomplete. Add GITHUB_OAUTH_CLIENT_SECRET. Tokens are not stored. Needs setup — not connected live."
+                  : OAUTH_ENV_NEEDS_SETUP,
+            )
+          }
+        >
+          {GITHUB_OAUTH_CTA}
+        </Button>
+      )}
+      <button
+        type="button"
+        className="text-sm text-muted underline-offset-2 hover:underline"
+        data-cta="github-advanced"
+        onClick={() => setAdvanced((value) => !value)}
+      >
+        {GITHUB_ADVANCED_CREDENTIALS}
+      </button>
+      {advanced ? (
+        <div className="space-y-3" data-surface="github-advanced">
+          <p className="text-xs leading-relaxed text-muted">{GITHUB_TOKEN_DISCLOSURE}</p>
+          <Field
+            label={GITHUB_TOKEN_LABEL}
+            value={apiKey}
+            onChange={setApiKey}
+            type="password"
+            autoComplete="new-password"
+          />
+          <Ack
+            checked={officialApiAck}
+            onChange={setOfficialApiAck}
+            label="This is an official GitHub personal access token. Not a password. Not an HTML login."
+          />
+          <Button type="submit" variant="secondary" className="min-h-11" disabled={disabled || pending}>
+            {pending ? "…" : "Save GitHub token"}
+          </Button>
+        </div>
+      ) : null}
     </form>
   );
 }

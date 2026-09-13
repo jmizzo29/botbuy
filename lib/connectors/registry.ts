@@ -6,6 +6,8 @@ import {
   CONNECTOR_LABEL,
   DIGITALOCEAN_NEEDS_SETUP_COPY,
   DIGITALOCEAN_TOKEN_DISCLOSURE,
+  GITHUB_NEEDS_SETUP_COPY,
+  GITHUB_TOKEN_DISCLOSURE,
   HTTP_JSON_HOST_COPY,
   HTTP_JSON_NEEDS_SETUP_COPY,
   NAMECHEAP_ELIGIBILITY_COPY,
@@ -67,6 +69,14 @@ export const CONNECTOR_REGISTRY: Record<
     authModes: ["api_key"],
     tools: ["search", "quote", "buy"],
     needsSetup: [DIGITALOCEAN_NEEDS_SETUP_COPY, DIGITALOCEAN_TOKEN_DISCLOSURE],
+  },
+  github: {
+    id: "github",
+    label: CONNECTOR_LABEL.github,
+    kind: "saas",
+    authModes: ["oauth", "api_key"],
+    tools: ["search", "quote", "buy"],
+    needsSetup: [GITHUB_NEEDS_SETUP_COPY, GITHUB_TOKEN_DISCLOSURE],
   },
   http_json: {
     id: "http_json",
