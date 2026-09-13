@@ -1,10 +1,10 @@
-# Land kit — R3 lower-panel (LIVE)
+# Land kit — U1 mesh-continuous (LIVE)
 
-John / CEO LOCKED **R3 lower-panel**. Soft-signal HOLD · land promote HOLD.
+John / CEO LOCKED **U1 mesh-continuous** hotfix on the R3 lower-panel skeleton. Soft-signal HOLD · land promote HOLD.
 
-Replaces failed **D1 center stack**. Do **not** densify D1. No arc rail. No R1/R2.
+Replaces R3 two-tone (solid `#050A0C` slab + teal page divider). Keeps R3 50/50 sky + panel structure. Do **not** densify D1. No arc rail. No R1/R2.
 
-Craft SoT (phone fold): `land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md`.
+Craft parent: `land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md`. U1 deltas: `land/mobile-rebuild-v2/r3-unify-bg/INSTALL.md`.
 
 Do **not** merge to `main` or ship production `botbuyer.ai` from this kit. Do **not** touch the prod Coming soon gate.
 
@@ -28,11 +28,11 @@ Sky mark is the locked soft-spine reverse: `/brand/logo-soft-spine/botbuyer-mark
 
 ## Product locks
 
-- No light header / banners. Two-zone navy sky + Quiet Capital panel. Overlay reverse lockup (`/brand/logo-soft-spine/botbuyer-logo-header.svg`, 28px) + About word link only (visible phone + desktop). No Private beta in the top row. No pill chrome in the top row. Sign in lives in the fold CTA cluster.
-- Upper sky: A1 richer-mesh-deep only. Centered oversized soft-spine (~148px).
-- Edge: 2px solid teal `#2DD4BF` = panel top border.
-- Lower panel: solid `#050A0C` (not translucent mesh). Square full-bleed viewport (no inset card / no 20/28 radius)
-- Sign up = teal primary → `/signup`; Sign in = ghost peer in the same fold cluster. No Install on land.
+- No light header / banners. Continuous A1 richer-mesh-deep field behind the whole fold. Overlay reverse lockup (`/brand/logo-soft-spine/botbuyer-logo-header.svg`, 28px, no teal tip) + About word link only (15px / 0.90). No Private beta in the top row. No pill chrome in the top row. Sign in lives in the fold CTA cluster.
+- Upper sky: transparent over full-bleed A1. Centered oversized soft-spine (~148px, no teal tip).
+- Edge: NONE. No teal page divider / hairline between sky and copy.
+- Lower panel: same-hue scrim ≤0.40 over the mesh (not a solid `#050A0C` slab). Square full-bleed viewport (no inset card / no 20/28 radius)
+- Sign up = teal fill `#2DD4BF` / `#042F2E`; Sign in = matched teal outline peer. No Install on land.
 - Signed-in: redirect off land (never My deals as land primary)
 - Soft-signal HOLD — no Demo / $1k / under-CTA trio / under-CTA Private beta chip
 - No CSS invert · no orphan teal trailing jewelry · no Vault/O1 · no land footer
@@ -42,9 +42,9 @@ Sky mark is the locked soft-spine reverse: `/brand/logo-soft-spine/botbuyer-mark
 - H1: `Your AI agent for buying.`
 - Support: `Acts for you. Spends only with your OK.`
 
-## Layout (R3 phone · same architecture desktop)
+## Layout (U1 phone · same architecture desktop)
 
-- Phone (`max-width: 1023px`): true two-zone. Sky ~50dvh + panel ~50dvh. Overlay lockup (28px) + About only. No footer dump on fold.
-- Desktop: same hard edge + panel. 50/50 vertical stack. Do not revert to D1 center stack.
+- Phone (`max-width: 1023px`): R3 50/50 skeleton on one continuous mesh. Sky ~50dvh + scrim panel ~50dvh. Overlay lockup (28px) + About only. No footer dump on fold.
+- Desktop: same continuous field + 50/50 vertical stack. Do not revert to D1 center stack. Do not restore the teal divider.
 
 Strings live in `lib/brand.ts`.

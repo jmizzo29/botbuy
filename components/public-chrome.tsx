@@ -71,7 +71,7 @@ async function PublicNav({ land }: { land: boolean }) {
   return (
     <div className={land ? "bb-land-nav" : "flex items-center gap-3 text-sm"}>
       {land ? (
-        <Link href="/about" className={link()} data-nav="about">
+        <Link href="/about" className={link("about")} data-nav="about">
           About
         </Link>
       ) : null}

@@ -31,9 +31,10 @@ export default async function LandPage() {
     <PublicChrome land>
       <section data-surface="land-stage" className="bb-land-stage">
         <div
-          data-zone="sky"
-          className="bb-land-sky bb-atm-richer-mesh-deep"
-        >
+          className="bb-land-atm atm bb-atm-richer-mesh-deep"
+          aria-hidden="true"
+        />
+        <div data-zone="sky" className="bb-land-sky">
           <Image
             src={LAND_SKY_MARK_SRC}
             alt=""
