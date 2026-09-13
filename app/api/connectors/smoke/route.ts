@@ -13,9 +13,10 @@ export async function GET() {
   const readiness = await listConnectorReadiness(gated.user.id);
   return NextResponse.json({
     honesty: CONNECT_ACCOUNTS_HONESTY,
-    spend: false,
     tool: "search",
     ...readiness,
+    spend: false,
+    live: false,
   });
 }
 
