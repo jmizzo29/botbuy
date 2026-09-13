@@ -28,13 +28,23 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files — never commit real secrets (.env.example is the only exception)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.preview
+.env*
 !.env.example
+!**/.env.example
+
+# Stage / ops QA secrets — never commit (README in these dirs is OK)
+ops/stage-qa-auth/CREDENTIALS.json
+ops/stage-qa-auth/.env.preview
+ops/stage-qa-auth/.env*
+ops/**/CREDENTIALS.json
+!ops/stage-qa-auth/.env.example
 
 # vercel
 .vercel
