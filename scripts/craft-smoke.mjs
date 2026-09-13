@@ -1337,6 +1337,7 @@ assert(johnIntentForm.includes("Textarea"), "intent form textarea always availab
 assert(johnIntentForm.includes("startSearch: true"), "Start search creates Searching deal");
 assert(johnIntentsApi.includes("startSearch") && johnIntentsApi.includes("createSearchingDealFromIntent"), "intents API starts search");
 assert(store.includes("createSearchingDealFromIntent"), "store opens Searching from intent");
+assert(store.includes("thickenEngineDealSearch") && store.includes("applyDealSearchPipeline"), "intent/run deals thicken connector search");
 assert(store.includes('autoApprove: false'), "store autoApprove stays false");
 assert(johnTemplates.includes('id: "software"') && johnTemplates.includes('id: "domain"'), "templates software-first + domain wedge");
 assert(
@@ -1464,6 +1465,20 @@ assert(read("lib/authorized-buy.ts").includes("live: false"), "authorized-buy li
 assert(read("app/api/deals/[id]/authorized-buy/route.ts").includes("prepareAuthorizedBuy"), "authorized-buy deal API");
 assert(read("app/(app)/deals/[id]/page.tsx").includes("AuthorizedBuyPrep"), "Buying surface hosts prep");
 assert(approveGate.includes("assertAuthorizedBuyAllowed"), "approve gate covers Checkout prep");
+const intentRoute = read("lib/connectors/intent-route.ts");
+const dealSearch = read("lib/connectors/deal-search.ts");
+assert(existsSync(join(root, "lib/connectors/intent-route.ts")), "intent→connector mapper");
+assert(existsSync(join(root, "lib/connectors/deal-search.ts")), "deal search pipeline");
+assert(intentRoute.includes("namecheap") && intentRoute.includes("twilio") && intentRoute.includes("stub"), "mapper covers domain/phone/stub");
+assert(dealSearch.includes("invokeConnectorTool"), "pipeline uses connector tools");
+assert(dealSearch.includes("assertConnectorSpendAllowed") || dealSearch.includes("invokeConnectorTool"), "pipeline stays behind tools/gate");
+assert(dealSearch.includes("live: false") || dealSearch.includes("live:false"), "pipeline search events stay live:false");
+assert(dealSearch.includes('transitionDeal(deal.id, "Found"'), "candidates advance Searching → Found");
+assert(!dealSearch.includes("tool: \"register\"") && !dealSearch.includes("tool: \"buy\""), "pipeline never auto-buys");
+assert(!dealSearch.includes("autoApprove: true"), "pipeline never enables auto-approve");
+assert(!dealSearch.includes("priceVerified: true") && !dealSearch.includes("amountVerified: true"), "pipeline invents no verified prices");
+assert(connectDocs.includes("Intent → search"), "POC docs cover intent search pipeline");
+assert(dealDetail.includes("deal.status === \"Searching\"") && dealDetail.includes("PersistRunDeal"), "Found deals do not re-open Run");
 
 if (failures.length) {
   console.error("craft-smoke FAIL");

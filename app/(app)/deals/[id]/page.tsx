@@ -71,7 +71,9 @@ export default async function DealDetailPage({
 
   return (
     <div className="space-y-6">
-      {deal.source === "engine" ? <PersistRunDeal dealId={deal.id} /> : null}
+      {deal.source === "engine" && deal.status === "Searching" ? (
+        <PersistRunDeal dealId={deal.id} />
+      ) : null}
       <div>
         <p className="text-xs text-muted">
           <Link href={MY_DEALS_HREF} className="hover:text-foreground">

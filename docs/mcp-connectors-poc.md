@@ -16,6 +16,10 @@ Amazon Product Advertising is **not** in this POC — PA-API signing + associate
 
 Register / buy **must** pass the existing deal approve gate (`Needs you` → Approve → `Buying`). Fail-closed if that trail is missing. Search / quote are non-spend.
 
+## Intent → search (stage M1)
+
+`POST /api/intents` with `startSearch: true` (and go-live Run) opens a Searching deal, then maps category/summary to a connector **search**: Namecheap for domain-ish, Twilio for phone/SMS/number-ish. Unmapped intents keep a typed stub event (`live:false`, no invented results). Search/quote persist as `deal_events` + notes. If a provider returns candidates, the deal moves Searching → Found for human review. Not bought. Auto-approve stays OFF. Not a public live-connector claim.
+
 ## Routes
 
 - `/settings#connected-accounts` — section on Settings

@@ -3,6 +3,7 @@
  * Connector POC smoke: AES vault roundtrip + fail-closed approve-gate source lock.
  * Does not call Namecheap or Twilio. Does not print secrets.
  */
+import { spawnSync } from "node:child_process";
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -186,6 +187,65 @@ assert(blockedHost("169.254.169.254"), "reject metadata IP");
 assert(blockedHost("192.168.1.8"), "reject RFC1918");
 assert(!blockedHost("api.example.com"), "allow public hostname");
 
+function evaluateIntentRoute({ summary = "", categories = [], mustInclude = "" }) {
+  const text = `${summary} ${mustInclude}`;
+  const domainish =
+    categories.some((item) => ["domain", "domains", "registrar"].includes(item)) ||
+    /\b(domains?|registrar|tld|whois)\b/i.test(text) ||
+    /\b(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,24}\b/i.test(text);
+  const phoneish =
+    categories.some((item) => ["phone", "sms", "number", "numbers", "twilio"].includes(item)) ||
+    /\b(phone|sms|twilio|did|text(?:ing)?)\b/i.test(text);
+  if (domainish) return "namecheap";
+  if (phoneish) return "twilio";
+  return "stub";
+}
+
+assert(
+  evaluateIntentRoute({
+    summary: "Secure botbuyer.ai on a multi-year term.",
+    categories: ["domain"],
+  }) === "namecheap",
+  "domain intent maps to Namecheap",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Find a Twilio SMS number in 415",
+    categories: ["phone"],
+  }) === "twilio",
+  "phone intent maps to Twilio",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Find software we can buy across vendor checkout.",
+    categories: ["software"],
+  }) === "stub",
+  "software intent stays an honest stub",
+);
+assert(
+  !evaluateSpendGate({
+    tool: "buy",
+    autoApproveAllowed: false,
+    autoApprove: true,
+    deal: { status: "Found" },
+    events: [],
+  }).ok,
+  "Found deal cannot spend without Needs you → Buying",
+);
+
+const dealSearch = readFileSync(join(root, "lib/connectors/deal-search.ts"), "utf8");
+assert(dealSearch.includes("invokeConnectorTool"), "deal search uses tools runtime");
+assert(dealSearch.includes('tool: "search"'), "deal search calls search");
+assert(!dealSearch.includes('tool: "register"') && !dealSearch.includes('tool: "buy"'), "deal search never register/buy");
+assert(dealSearch.includes("assertRunDealSoftHold"), "deal search keeps run deals $0/unverified");
+
+const mapped = spawnSync(
+  process.execPath,
+  ["--experimental-strip-types", "--no-warnings", join(root, "scripts/intent-route-smoke.mts")],
+  { encoding: "utf8" },
+);
+assert(mapped.status === 0, `intent-route runtime smoke${mapped.stderr ? `: ${mapped.stderr.trim()}` : ""}`);
+
 if (failures.length) {
   console.error("connector-smoke FAIL");
   for (const item of failures) console.error(" -", item);
@@ -196,3 +256,5 @@ console.log(" - AES-256-GCM roundtrip");
 console.log(" - approve gate Needs you → Buying · auto-approve OFF");
 console.log(" - register/buy fail closed without deal, auto-approve, or approve trail");
 console.log(" - M2 registry: shopify + http_json · live:false · spend gated");
+console.log(" - intent maps domain→Namecheap, phone→Twilio, else honest stub");
+console.log(" - deal search pipeline is search/quote only");
