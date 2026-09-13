@@ -111,18 +111,22 @@ export async function readCookieJournal(): Promise<EngineJournal> {
   }
 }
 
-export async function writeCookieJournal(journal: EngineJournal) {
-  if (typeof window !== "undefined") return false;
-  const encoded = encodeJournal(journal);
-  if (encoded.length > COOKIE_JOURNAL_MAX_CHARS) {
-    console.warn(
-      `[engine-journal] skip ${ENGINE_JOURNAL_COOKIE}: ${encoded.length} chars exceeds ${COOKIE_JOURNAL_MAX_CHARS}`,
-    );
-    return false;
-  }
+export type CookieWriteResult = "ok" | "too_large" | "unavailable";
+
+export async function writeCookieJournal(
+  journal: EngineJournal,
+): Promise<CookieWriteResult> {
+  if (typeof window !== "undefined") return "unavailable";
   try {
     const { cookies } = await import("next/headers");
     const jar = await cookies();
+    const encoded = encodeJournal(journal);
+    if (encoded.length > COOKIE_JOURNAL_MAX_CHARS) {
+      console.warn(
+        `[engine-journal] skip ${ENGINE_JOURNAL_COOKIE}: ${encoded.length} chars exceeds ${COOKIE_JOURNAL_MAX_CHARS}`,
+      );
+      return "too_large";
+    }
     jar.set(ENGINE_JOURNAL_COOKIE, encoded, {
       httpOnly: true,
       sameSite: "lax",
@@ -130,10 +134,10 @@ export async function writeCookieJournal(journal: EngineJournal) {
       maxAge: 60 * 60 * 24 * 180,
       secure: process.env.NODE_ENV === "production",
     });
-    return true;
+    return "ok";
   } catch {
     // Readable in RSC; writable from server actions / route handlers.
-    return false;
+    return "unavailable";
   }
 }
 
@@ -170,9 +174,11 @@ export async function writeDurableJournal(journal: EngineJournal) {
     if (wrote) return;
   }
 
-  const cookieOk = await writeCookieJournal(journal);
-  if (cookieOk) return;
-  throw new Error(
-    "Engine journal could not be persisted. Set DATABASE_URL for Neon, or use a smaller cookie fallback.",
-  );
+  const cookie = await writeCookieJournal(journal);
+  if (cookie === "ok") return;
+  if (cookie === "too_large") {
+    throw new Error(
+      "Engine journal could not be persisted. Cookie fallback exceeds size cap. Set DATABASE_URL.",
+    );
+  }
 }

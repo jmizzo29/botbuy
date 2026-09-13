@@ -89,7 +89,10 @@ async function hydrateRole() {
 }
 
 function runChild(role: string, journalPath: string, self: string) {
-  const env = { ...process.env, BOTBUY_ENGINE_JOURNAL_PATH: journalPath };
+  const env: NodeJS.ProcessEnv = {
+    ...process.env,
+    BOTBUY_ENGINE_JOURNAL_PATH: journalPath,
+  };
   delete env.DATABASE_URL;
   const args = process.execArgv.length
     ? [...process.execArgv, self, role]
@@ -140,10 +143,19 @@ async function orchestrate() {
   }
 }
 
-if (ROLE === "create") {
-  await createRole();
-} else if (ROLE === "hydrate") {
-  await hydrateRole();
-} else {
+async function main() {
+  if (ROLE === "create") {
+    await createRole();
+    return;
+  }
+  if (ROLE === "hydrate") {
+    await hydrateRole();
+    return;
+  }
   await orchestrate();
 }
+
+void main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exit(1);
+});
