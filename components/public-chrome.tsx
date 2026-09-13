@@ -56,7 +56,11 @@ export function PublicChrome({
           }
         >
           <Link href="/" className="flex items-center" aria-label="BotBuyer">
-            <BrandLockup priority onDark={land || auth} />
+            {auth ? (
+              <BrandLockup priority onDark />
+            ) : (
+              <BrandLockup priority onDark={land} />
+            )}
           </Link>
           {auth ? null : <PublicNav land={land} />}
         </header>

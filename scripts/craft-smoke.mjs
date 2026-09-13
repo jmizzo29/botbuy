@@ -329,6 +329,21 @@ assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
 assert(signIn.includes("<SignIn"), "sign-in uses Clerk SignIn");
 assert(signIn.includes("SIGN_IN_H1"), "sign-in H1 is Sign in");
+const nextConfig = read("next.config.ts");
+assert(
+  nextConfig.includes('source: "/sign-up"') &&
+    nextConfig.includes('destination: "/signup"') &&
+    nextConfig.includes('source: "/sign-up/:path*"') &&
+    nextConfig.includes('destination: "/signup/:path*"'),
+  "Clerk /sign-up and /sign-up/:path* redirect to /signup",
+);
+assert(
+  nextConfig.includes('source: "/sign-in"') &&
+    nextConfig.includes('destination: "/signin"') &&
+    nextConfig.includes('source: "/sign-in/:path*"') &&
+    nextConfig.includes('destination: "/signin/:path*"'),
+  "Clerk /sign-in and /sign-in/:path* redirect to /signin",
+);
 assert(signup.includes("Sign in"), "signup offers Sign in");
 assert(!signup.includes("in-memory session"), "signup scrubbed in-memory copy");
 assert(!signup.includes("not a live account"), "signup scrubbed POC persist copy");
