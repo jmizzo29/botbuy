@@ -54,6 +54,7 @@ import {
   SHOPIFY_CUSTOM_APP_COPY,
   SHOPIFY_NEEDS_SETUP_COPY,
   SHOPIFY_OAUTH_CTA,
+  SHOPIFY_OAUTH_INCOMPLETE,
   SHOPIFY_OAUTH_PREFERRED,
   SHOPIFY_SHOP_LABEL,
   SHOPIFY_TOKEN_LABEL,
@@ -558,6 +559,7 @@ function ShopifyNeedsSetup() {
   return (
     <NeedsSetupBlock surface="shopify-needs-setup">
       <p>{SHOPIFY_NEEDS_SETUP_COPY}</p>
+      <p>{SHOPIFY_OAUTH_PREFERRED}</p>
       <p>{SHOPIFY_CUSTOM_APP_COPY}</p>
     </NeedsSetupBlock>
   );
@@ -898,7 +900,7 @@ function ShopifyConnectForm({
                 : !shopDomain.trim()
                   ? "A *.myshopify.com shop domain is required to start Shopify OAuth. Tokens are not stored."
                   : oauthAvailable
-                    ? "Shopify OAuth client is incomplete. Add SHOPIFY_OAUTH_CLIENT_SECRET. Tokens are not stored. Needs setup — not connected live."
+                    ? SHOPIFY_OAUTH_INCOMPLETE
                     : OAUTH_ENV_NEEDS_SETUP,
             )
           }

@@ -25,14 +25,15 @@ John/CEO tech lock (Soft HOLD): **MCP-first · APIs-first**. Prefer the connecto
 - domain-ish → Namecheap official API (scaffold)
 - phone / SMS / number-ish → Twilio official API (scaffold)
 - software / SaaS / Shopify / license-ish → Shopify Admin API (scaffold)
+- buy-anything **consumer products** → Shopify Admin API search stub (empty stubs stay Searching; no invented catalog)
 - droplet / volume / VPS / DigitalOcean-ish → DigitalOcean official API (scaffold)
 - GitHub / gist / GitHub marketplace-ish → GitHub official API repo search (SaaS MCP scaffold — not a registrar)
 - HTTP/JSON / OpenAPI / official catalog → `http_json` official HTTPS JSON (category-agnostic)
-- cars, houses, consumer products, and anything else → HTTP JSON MCP catalog **when** `keysConfigured` (vault or `HTTP_JSON_BASE_URL`); otherwise typed stub (`live:false`, category accepted, not rejected, no invented results). Never a Shopify wedge.
+- cars, houses, and anything else → HTTP JSON MCP catalog **when** `keysConfigured` (vault or `HTTP_JSON_BASE_URL`); otherwise typed stub (`live:false`, category accepted, not rejected, no invented results). Cars/houses never wedge onto Shopify.
 
-John LOCK: intent + deal model stay **category-agnostic**. Cars, houses, consumer products, and broader are valid searches. Software/domains may ship first as scaffolds. Routing must not assume software-only or reject other categories.
+John LOCK: intent + deal model stay **category-agnostic**. Cars, houses, consumer products, and broader are valid searches. Consumer products may use the Shopify Admin stub. Software/domains may ship first as scaffolds. Routing must not assume software-only or reject other categories. Cars/houses never wedge onto Shopify.
 
-Search/quote persist as `deal_events` + notes. Shopify Admin API, DigitalOcean, GitHub, and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. Every provider search/quote reports `keysConfigured` and `live:false`. HTTP JSON accepts listing-shaped rows (title, vin, address, make/model) without inventing prices. GitHub search uses official `api.github.com` repository search when a vault token or `GITHUB_TOKEN` is present — empty stubs invent no results. Namecheap quote calls official `namecheap.users.getPricing` when keys + `NAMECHEAP_CLIENT_IP` are present — listed amounts stay `amountStatus=unverified`. Without keys or IP, quote stays a stub. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
+Search/quote persist as `deal_events` + notes. Shopify Admin API, DigitalOcean, GitHub, and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. Every provider search/quote reports `keysConfigured` and `live:false`. HTTP JSON accepts listing-shaped rows (title, vin, address, make/model) without inventing prices. GitHub search uses official `api.github.com` repository search when a vault token or `GITHUB_TOKEN` is present — empty stubs invent no results. Shopify Admin search uses official `*.myshopify.com/admin` products when a vault token or Admin token is present — consumer-product and software intents route here; empty stubs stay Searching and invent no catalog. Shopify buy stays a stub even after Approve + `BOTBUY_CONNECTORS_LIVE` — no live Admin API draft order. Namecheap quote calls official `namecheap.users.getPricing` when keys + `NAMECHEAP_CLIENT_IP` are present — listed amounts stay `amountStatus=unverified`. Without keys or IP, quote stays a stub. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
 
 ### Stage search fixture (CHO-honest)
 
@@ -70,7 +71,7 @@ Settings → Connected accounts shows literal HonestyFlags `live=false` · `spen
 | --- | --- | --- | --- | --- |
 | `namecheap` | domains | search / quote | register | ApiUser / ApiKey + IP whitelist |
 | `twilio` | phone | search / quote | buy | OAuth preferred · API advanced |
-| `shopify` | merchant | search / quote | buy (draft order stub) | OAuth preferred · Admin API token + `*.myshopify.com` |
+| `shopify` | merchant | search / quote | buy (stays stub — no live Admin API draft order) | OAuth preferred (`SHOPIFY_OAUTH_CLIENT_ID` / secret / redirect). Admin API token + `*.myshopify.com` advanced. Absent OAuth env → Needs setup. |
 | `digitalocean` | saas | search / quote | buy (create stays stub — no invented region/size/image) | Personal access token. Official `api.digitalocean.com` only. |
 | `github` | saas | search / quote | buy (create stays stub — no invented owner/name/visibility) | OAuth preferred · PAT (`GITHUB_TOKEN`) advanced. Official `api.github.com` repo search. Not a registrar. |
 | `http_json` | mcp_http | search / quote | buy | Official HTTPS base URL + optional bearer. Private/loopback hosts rejected. |

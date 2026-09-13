@@ -29,6 +29,7 @@ delete process.env.TWILIO_OAUTH_CLIENT_ID;
 delete process.env.TWILIO_OAUTH_CLIENT_SECRET;
 delete process.env.SHOPIFY_OAUTH_CLIENT_ID;
 delete process.env.SHOPIFY_OAUTH_CLIENT_SECRET;
+delete process.env.SHOPIFY_OAUTH_REDIRECT_URL;
 delete process.env.GITHUB_OAUTH_CLIENT_ID;
 delete process.env.GITHUB_OAUTH_CLIENT_SECRET;
 
@@ -102,6 +103,32 @@ assert(
   !shopifyNoOauth.ok && shopifyNoOauth.result === "needs_setup",
   "Shopify start Needs setup without OAuth env",
 );
+assert(
+  shopifyNoOauth.error.includes("SHOPIFY_OAUTH_CLIENT_ID") &&
+    shopifyNoOauth.error.includes("SHOPIFY_OAUTH_CLIENT_SECRET") &&
+    shopifyNoOauth.error.includes("SHOPIFY_OAUTH_REDIRECT_URL"),
+  "Shopify Needs setup names client id, secret, and redirect",
+);
+
+process.env.SHOPIFY_OAUTH_CLIENT_ID = "shopify-app-id";
+const shopifyIdOnly = oauthStartGate("shopify");
+assert(
+  !shopifyIdOnly.ok && shopifyIdOnly.result === "needs_setup",
+  "Shopify start Needs setup with client id only",
+);
+process.env.SHOPIFY_OAUTH_CLIENT_SECRET = "shopify-app-secret";
+const shopifyNoRedirect = oauthStartGate("shopify");
+assert(
+  !shopifyNoRedirect.ok && shopifyNoRedirect.result === "needs_setup",
+  "Shopify start Needs setup without redirect",
+);
+process.env.SHOPIFY_OAUTH_REDIRECT_URL =
+  "https://botbuyer.ai/api/connectors/oauth/shopify/callback";
+const shopifyReady = oauthStartGate("shopify");
+assert(shopifyReady.ok, "Shopify start ready when vault key + id + secret + redirect");
+delete process.env.SHOPIFY_OAUTH_CLIENT_ID;
+delete process.env.SHOPIFY_OAUTH_CLIENT_SECRET;
+delete process.env.SHOPIFY_OAUTH_REDIRECT_URL;
 
 const githubNoOauth = oauthStartGate("github");
 assert(
@@ -175,6 +202,8 @@ assert(connectUi.includes("OAUTH_VAULT_KEY_REQUIRED"), "UI fail-closed without v
 assert(connectUi.includes("OAUTH_ENV_NEEDS_SETUP"), "UI Needs setup when OAuth env absent");
 assert(connectUi.includes('data-cta="twilio-oauth"'), "Twilio OAuth CTA stays");
 assert(connectUi.includes('data-cta="shopify-oauth"'), "Shopify OAuth CTA stays");
+assert(connectUi.includes("shopify-needs-setup"), "Shopify Needs setup surface");
+assert(connectUi.includes("SHOPIFY_OAUTH_INCOMPLETE"), "Shopify incomplete OAuth copy");
 assert(connectUi.includes('data-cta="github-oauth"'), "GitHub OAuth CTA stays");
 assert(!connectUi.includes("Autofleeto"), "UI never Autofleeto");
 assert(!oauthLib.includes("Autofleeto"), "oauth lib never Autofleeto");
@@ -182,4 +211,5 @@ assert(!oauthLib.includes("Autofleeto"), "oauth lib never Autofleeto");
 console.log("oauth-vault-smoke PASS");
 console.log(" - fail-closed without BOTBUY_VAULT_KEY · no plaintext store");
 console.log(" - OAuth env absent → Needs setup · live:false · spend=false");
+console.log(" - Shopify start Needs setup without client id / secret / redirect");
 console.log(" - encrypt path used when vault key is present");
