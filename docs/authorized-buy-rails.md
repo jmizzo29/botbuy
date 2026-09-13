@@ -12,17 +12,17 @@ Least-privilege: official **Checkout Sessions** API (`mode=payment`, hosted Chec
 
 Prep is allowed only after the existing human Approve trail: **Needs you → Buying**. Auto-approve is **OFF**. Fail-closed.
 
-This scaffold **prepares** Checkout Session params. It does not create a Stripe session, confirm a PaymentIntent, or capture. `sessionCreated: false`, `charged: false`, `live: false` always.
+This scaffold **prepares** Checkout Session params. It does not create a Stripe session, confirm a PaymentIntent, or capture. `sessionCreated: false`, `charged: false`, `spend: false`, `live: false` always.
 
 ## Routes
 
-- `GET /api/vault` — includes `authorizedBuy` honesty (`live: false`, `keysConfigured`)
+- `GET /api/vault` — includes `authorizedBuy` honesty (`live: false`, `spend: false`, `keysConfigured`)
 - `GET /api/deals/[id]/authorized-buy` — deal + trail + key status. Does not prepare.
 - `POST /api/deals/[id]/authorized-buy` — Checkout Session prep after Approve. 409 without the trail.
 
 Deal detail shows **Prepare Checkout Session** only in **Buying**. GET loads honesty (`keysConfigured`, `publishableConfigured`, `webhookConfigured`, `amountCents`, `amountVerified`) before POST. POST appends a `Checkout Session prep` deal event. Vault `/vault` prints the same key status.
 
-Zero-amount / unverified deals stay fail-closed: `prepared: false`, `sessionCreated: false`, `charged: false`, `live: false`. Do not invent verified amounts. When `BOTBUY_STRIPE_SECRET_KEY` appears later, GET/POST flip `keysConfigured` and may prepare params — still not live pay.
+Zero-amount / unverified deals stay fail-closed: `prepared: false`, `sessionCreated: false`, `charged: false`, `spend: false`, `live: false`. Do not invent verified amounts. When `BOTBUY_STRIPE_SECRET_KEY` appears later, GET/POST flip `keysConfigured` and may prepare params — still not live pay. Fail-closed POST errors include the same honesty (`keysConfigured`, `spend=false`, Auto-approve OFF).
 
 ## Env vars (names only)
 
@@ -36,13 +36,13 @@ Dedicated BotBuy Stripe/Link. Never Autofleeto. Never `STRIPE_SECRET_KEY`.
 | `BOTBUY_STRIPE_LIVE` | Must stay `false`. Even if set `true`, responses stay `live: false` until wiring is proven. |
 | `NEXT_PUBLIC_STRIPE_LIVE` | Existing public flag. Stay `false`. |
 
-Without `BOTBUY_STRIPE_SECRET_KEY`, POST returns honest not-live (`prepared: false`, `keysConfigured: false`).
+Without `BOTBUY_STRIPE_SECRET_KEY`, POST returns honest not-live (`prepared: false`, `keysConfigured: false`, `spend: false`).
 
 Do not commit values. Prefer a [restricted API key](https://docs.stripe.com/keys/restricted-api-keys.md).
 
 ## Honesty
 
-- Auto-approve OFF always.
+- Auto-approve OFF always. Settings and Vault render `spend=false` · `autoApprove=false` HonestyFlags.
 - No card PAN, CVV, or Issuing in the app, logs, or chat. Vault refs + last4 only.
-- Encrypted connector tokens stay on `BOTBUY_VAULT_KEY`. Stripe keys are env-only.
-- Available ≠ live.
+- Encrypted connector tokens stay on `BOTBUY_VAULT_KEY`. Stripe keys are env-only. Never Autofleeto / `STRIPE_SECRET_KEY`.
+- Available ≠ live. `live:false` is structural until CHO wiring is proven.

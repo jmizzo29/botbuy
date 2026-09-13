@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { HonestyFlag, HonestyFlagStrip } from "@/components/honesty-flag";
 import {
   CONNECT_ACCOUNTS_H1,
   CONNECT_ACCOUNTS_HONESTY,
@@ -51,7 +52,9 @@ import {
   TWILIO_OAUTH_CTA,
   TWILIO_OAUTH_PREFERRED,
 } from "@/lib/connectors/copy";
+import { AUTO_APPROVE_OFF } from "@/lib/cpo-techlux";
 import type { ConnectorPlatformReadiness, ConnectorProviderReadiness } from "@/lib/connectors/keys";
+import { honestyToken } from "@/lib/honesty-flags";
 import type { ConnectorProvider, ConnectorPublicStatus } from "@/lib/connectors/types";
 import { DEMO_PILL_CLASS, SURFACE_RING_CLASS } from "@/lib/ui-tokens";
 import { cn } from "@/lib/utils";
@@ -153,45 +156,29 @@ export function ConnectedAccountsPanel({
   );
 }
 
-function HonestyFlag({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <span className="rounded-full bg-black/[0.04] px-2 py-0.5 text-[11px] font-medium text-muted ring-1 ring-[var(--bb-line)]">
-      {label}={value}
-    </span>
-  );
-}
-
 function ReadinessStrip({ readiness }: { readiness: ConnectorPlatformReadiness }) {
   return (
     <div
       data-surface="connector-readiness"
       className="space-y-2 rounded-[var(--bb-radius)] bg-black/[0.02] px-4 py-3"
     >
-      <div className="flex flex-wrap gap-1.5">
-        <HonestyFlag label="live" value="false" />
-        <HonestyFlag
-          label="keysConfigured"
-          value={String(readiness.providers.some((row) => row.keysConfigured))}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <HonestyFlagStrip
+          surface="connector-readiness-flags"
+          flags={[
+            "live=false",
+            honestyToken(
+              "keysConfigured",
+              readiness.providers.some((row) => row.keysConfigured),
+            ),
+            honestyToken("vaultKeyConfigured", readiness.vaultKeyConfigured),
+            honestyToken("databaseConfigured", readiness.databaseConfigured),
+            "spend=false",
+            honestyToken("mutationsLiveEnabled", readiness.mutationsLiveEnabled),
+            "autoApprove=false",
+          ]}
         />
-        <HonestyFlag
-          label="vaultKeyConfigured"
-          value={String(readiness.vaultKeyConfigured)}
-        />
-        <HonestyFlag
-          label="databaseConfigured"
-          value={String(readiness.databaseConfigured)}
-        />
-        <HonestyFlag label="spend" value="false" />
-        <HonestyFlag
-          label="mutationsLiveEnabled"
-          value={String(readiness.mutationsLiveEnabled)}
-        />
+        <Badge className={DEMO_PILL_CLASS}>{AUTO_APPROVE_OFF}</Badge>
       </div>
       <p className="text-xs leading-relaxed text-muted">{CONNECT_KEYS_STRIP}</p>
       {!readiness.mutationsLiveEnabled ? (
@@ -283,13 +270,12 @@ function ProviderRow({
             {readiness ? (
               <>
                 <HonestyFlag
-                  label="keysConfigured"
-                  value={String(readiness.keysConfigured)}
+                  token={honestyToken("keysConfigured", readiness.keysConfigured)}
                 />
                 <HonestyFlag
-                  label="searchHttpReady"
-                  value={String(readiness.searchHttpReady)}
+                  token={honestyToken("searchHttpReady", readiness.searchHttpReady)}
                 />
+                <HonestyFlag token="spend=false" />
               </>
             ) : null}
           </div>
@@ -357,13 +343,14 @@ function ProviderRow({
           className="space-y-1 rounded-[var(--bb-radius)] bg-black/[0.02] px-4 py-3 text-xs leading-relaxed text-muted"
         >
           <div className="flex flex-wrap gap-1.5">
-            <HonestyFlag label="live" value="false" />
-            <HonestyFlag label="spend" value="false" />
-            <HonestyFlag label="result" value={smoke.result} />
+            <HonestyFlag token="live=false" />
+            <HonestyFlag token="spend=false" />
+            <HonestyFlag token="autoApprove=false" />
+            <HonestyFlag token={honestyToken("result", smoke.result)} />
             <HonestyFlag
-              label="keysConfigured"
-              value={String(smoke.keysConfigured)}
+              token={honestyToken("keysConfigured", smoke.keysConfigured)}
             />
+            <Badge className={DEMO_PILL_CLASS}>{AUTO_APPROVE_OFF}</Badge>
           </div>
           <p>{smoke.reason}</p>
           <p>{CONNECT_SMOKE_NOTE}</p>

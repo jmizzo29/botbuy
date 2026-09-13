@@ -20,6 +20,11 @@ import {
   recordAuditLog,
 } from "@/lib/store";
 import { sanitizeAuditMetadata } from "@/lib/connectors/sanitize";
+import {
+  AUTHORIZED_BUY_STRUCTURAL_HONESTY,
+  HONESTY_SPEND_FALSE,
+  authorizedBuyHonestyFlags,
+} from "@/lib/honesty-flags";
 import { isWithinHardGate, SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
 import type { Deal, DealStatus } from "@/lib/types";
 
@@ -33,13 +38,13 @@ export const AUTHORIZED_BUY_SUB =
   "After you Approve, BotBuyer can prepare a Stripe/Link Checkout Session for pay-at-purchase. We don’t charge from this screen.";
 
 export const AUTHORIZED_BUY_NOTE =
-  "Card Available ≠ live. Checkout Session prep is not live pay. Auto-approve OFF. Fail-closed.";
+  "Card Available ≠ live. Checkout Session prep is not live pay. live=false · spend=false · charged=false. Auto-approve OFF. Fail-closed without BOTBUY_STRIPE_*.";
 
 export const AUTHORIZED_BUY_KEYS_MISSING =
-  "BOTBUY_STRIPE_SECRET_KEY is not configured. Card rail Available ≠ live. keysConfigured=false · prepared=false · sessionCreated=false. Not live pay.";
+  "BOTBUY_STRIPE_SECRET_KEY is not configured. Card rail Available ≠ live. keysConfigured=false · prepared=false · sessionCreated=false · spend=false · charged=false. Auto-approve OFF. Not live pay.";
 
 export const AUTHORIZED_BUY_KEYS_PRESENT =
-  "BOTBUY_STRIPE_* present. Checkout Session params prepared. keysConfigured=true · sessionCreated=false · charged=false. Not live pay until CHO wiring proven.";
+  "BOTBUY_STRIPE_* present. Checkout Session params prepared. keysConfigured=true · sessionCreated=false · charged=false · spend=false. Auto-approve OFF. Not live pay until CHO wiring proven.";
 
 export function authorizedBuyPrepEventId(dealId: string) {
   return `evt_${dealId}_authorized_buy_prep`;
@@ -77,6 +82,7 @@ export interface CheckoutSessionPrepParams {
     autoApprove: "false";
     live: "false";
     charged: "false";
+    spend: "false";
   };
   payment_intent_data: {
     capture_method: "manual";
@@ -84,12 +90,14 @@ export interface CheckoutSessionPrepParams {
       dealId: string;
       autoApprove: "false";
       live: "false";
+      spend: "false";
     };
   };
 }
 
 export interface AuthorizedBuyPrep {
   live: false;
+  spend: false;
   charged: false;
   sessionCreated: false;
   autoApprove: false;
@@ -106,6 +114,7 @@ export interface AuthorizedBuyPrep {
   trail: "needs_you_to_buying" | "missing";
   amountCents: number | null;
   amountVerified: boolean;
+  honestyFlags: string[];
   reason: string;
   checkoutSession: CheckoutSessionPrepParams | null;
 }
@@ -193,6 +202,7 @@ export function buildCheckoutSessionPrep(deal: Deal): CheckoutSessionPrepParams 
       autoApprove: "false",
       live: "false",
       charged: "false",
+      spend: "false",
     },
     payment_intent_data: {
       capture_method: "manual",
@@ -200,16 +210,30 @@ export function buildCheckoutSessionPrep(deal: Deal): CheckoutSessionPrepParams 
         dealId: deal.id,
         autoApprove: "false",
         live: "false",
+        spend: "false",
       },
     },
   };
 }
 
 function honestResult(
-  partial: Omit<AuthorizedBuyPrep, "live" | "charged" | "sessionCreated" | "autoApprove" | "failClosed" | "path" | "ui" | "rail">,
+  partial: Omit<
+    AuthorizedBuyPrep,
+    | "live"
+    | "spend"
+    | "charged"
+    | "sessionCreated"
+    | "autoApprove"
+    | "failClosed"
+    | "path"
+    | "ui"
+    | "rail"
+    | "honestyFlags"
+  >,
 ): AuthorizedBuyPrep {
   return {
     live: false,
+    spend: false,
     charged: false,
     sessionCreated: false,
     autoApprove: false,
@@ -217,13 +241,82 @@ function honestResult(
     path: AUTHORIZED_BUY_PATH,
     ui: AUTHORIZED_BUY_UI,
     rail: AUTHORIZED_BUY_RAIL,
+    honestyFlags: authorizedBuyHonestyFlags({
+      keysConfigured: partial.keysConfigured,
+      publishableConfigured: partial.publishableConfigured,
+      webhookConfigured: partial.webhookConfigured,
+      prepared: partial.prepared,
+    }),
     ...partial,
+  };
+}
+
+/** Fail-closed Checkout prep payload. Never claims live spend or a charge. */
+export function authorizedBuyFailClosed(partial: {
+  reason: string;
+  dealId?: string | null;
+  dealStatus?: DealStatus | null;
+  trail?: "needs_you_to_buying" | "missing";
+  prepared?: boolean;
+  amountCents?: number | null;
+  amountVerified?: boolean;
+}): Pick<
+  AuthorizedBuyPrep,
+  | "live"
+  | "spend"
+  | "charged"
+  | "sessionCreated"
+  | "autoApprove"
+  | "failClosed"
+  | "prepared"
+  | "keysConfigured"
+  | "publishableConfigured"
+  | "webhookConfigured"
+  | "honestyFlags"
+  | "reason"
+  | "checkoutSession"
+> & {
+  dealId: string | null;
+  dealStatus: DealStatus | null;
+  trail: "needs_you_to_buying" | "missing";
+  amountCents: number | null;
+  amountVerified: boolean;
+} {
+  const keysConfigured = botbuyStripeSecretConfigured();
+  const publishableConfigured = botbuyStripePublishableConfigured();
+  const webhookConfigured = botbuyStripeWebhookConfigured();
+  const prepared = false;
+  return {
+    live: false,
+    spend: false,
+    charged: false,
+    sessionCreated: false,
+    autoApprove: false,
+    failClosed: true,
+    prepared,
+    keysConfigured,
+    publishableConfigured,
+    webhookConfigured,
+    dealId: partial.dealId ?? null,
+    dealStatus: partial.dealStatus ?? null,
+    trail: partial.trail ?? "missing",
+    amountCents: partial.amountCents ?? null,
+    amountVerified: partial.amountVerified ?? false,
+    honestyFlags: authorizedBuyHonestyFlags({
+      keysConfigured,
+      publishableConfigured,
+      webhookConfigured,
+      prepared,
+    }),
+    reason: partial.reason,
+    checkoutSession: null,
   };
 }
 
 export function authorizedBuyVaultStatus(): Pick<
   AuthorizedBuyPrep,
   | "live"
+  | "spend"
   | "charged"
   | "sessionCreated"
   | "autoApprove"
@@ -234,21 +327,31 @@ export function authorizedBuyVaultStatus(): Pick<
   | "path"
   | "ui"
   | "rail"
+  | "honestyFlags"
   | "reason"
 > {
   const keysConfigured = botbuyStripeSecretConfigured();
+  const publishableConfigured = botbuyStripePublishableConfigured();
+  const webhookConfigured = botbuyStripeWebhookConfigured();
   return {
     live: false,
+    spend: false,
     charged: false,
     sessionCreated: false,
     autoApprove: false,
     failClosed: true,
     keysConfigured,
-    publishableConfigured: botbuyStripePublishableConfigured(),
-    webhookConfigured: botbuyStripeWebhookConfigured(),
+    publishableConfigured,
+    webhookConfigured,
     path: AUTHORIZED_BUY_PATH,
     ui: AUTHORIZED_BUY_UI,
     rail: AUTHORIZED_BUY_RAIL,
+    honestyFlags: authorizedBuyHonestyFlags({
+      keysConfigured,
+      publishableConfigured,
+      webhookConfigured,
+      prepared: false,
+    }),
     reason: keysConfigured ? AUTHORIZED_BUY_KEYS_PRESENT : AUTHORIZED_BUY_KEYS_MISSING,
   };
 }
@@ -296,6 +399,8 @@ export function prepareAuthorizedBuy(input: {
     return result;
   }
 
+  // Fail-closed: never prepare Checkout Session params without BOTBUY_STRIPE_*.
+  // Do not read Autofleeto / generic STRIPE_SECRET_KEY. Do not charge.
   const checkoutSession = keysConfigured ? buildCheckoutSessionPrep(deal) : null;
   const result = honestResult({
     prepared: keysConfigured,
@@ -323,16 +428,19 @@ function persistAuthorizedBuyDealEvent(userId: string, result: AuthorizedBuyPrep
   if (listDealEvents(deal.id).some((event) => event.id === id)) return;
   const at = new Date().toISOString();
   const detail = [
-    "live:false",
+    "live=false",
+    HONESTY_SPEND_FALSE,
     `charged=${String(result.charged)}`,
     `sessionCreated=${String(result.sessionCreated)}`,
     `prepared=${String(result.prepared)}`,
     `keysConfigured=${String(result.keysConfigured)}`,
     `publishableConfigured=${String(result.publishableConfigured)}`,
     `webhookConfigured=${String(result.webhookConfigured)}`,
+    `autoApprove=${String(result.autoApprove)}`,
     `amountCents=${String(result.amountCents)}`,
     `amountVerified=${String(result.amountVerified)}`,
     `trail=${result.trail}`,
+    ...AUTHORIZED_BUY_STRUCTURAL_HONESTY,
     result.reason,
   ].join(" · ");
   appendDealEvent({
@@ -347,6 +455,7 @@ function persistAuthorizedBuyDealEvent(userId: string, result: AuthorizedBuyPrep
     actor: "engine",
     metadata: sanitizeAuditMetadata({
       live: false,
+      spend: false,
       charged: false,
       sessionCreated: false,
       autoApprove: false,
@@ -376,6 +485,7 @@ function recordAuthorizedBuyAudit(userId: string, result: AuthorizedBuyPrep) {
     entityId: result.dealId ?? "missing",
     metadata: sanitizeAuditMetadata({
       live: false,
+      spend: false,
       charged: false,
       sessionCreated: false,
       autoApprove: false,

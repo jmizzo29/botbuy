@@ -404,6 +404,8 @@ assert(smokeSrc.includes("live: false"), "connector smoke stays live:false");
 const smokeRoute = readFileSync(join(root, "app/api/connectors/smoke/route.ts"), "utf8");
 assert(smokeRoute.includes("smokeConnectorSearch"), "smoke API uses read-only helper");
 assert(smokeRoute.includes("spend: false"), "smoke API spend:false");
+assert(smokeRoute.includes("honestyFlags") || smokeRoute.includes("settingsHonestyFlags"), "smoke API honestyFlags");
+assert(smokeSrc.includes("spend=false") || smokeSrc.includes("HONESTY_SPEND_FALSE"), "smoke copy spend=false");
 
 const namecheapSearch = readFileSync(join(root, "lib/connectors/namecheap/search.ts"), "utf8");
 assert(namecheapSearch.includes("keysConfigured"), "Namecheap search reports keysConfigured");

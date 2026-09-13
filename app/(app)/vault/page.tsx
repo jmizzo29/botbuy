@@ -1,10 +1,14 @@
+import { HonestyFlag } from "@/components/honesty-flag";
 import { LimitsForm } from "@/components/limits-form";
 import { VaultRails } from "@/components/vault-rails";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { authorizedBuyVaultStatus } from "@/lib/authorized-buy";
 import { requireUser } from "@/lib/auth";
+import { AUTO_APPROVE_OFF } from "@/lib/cpo-techlux";
 import { formatUsd } from "@/lib/money";
 import { SPEND_HARD_GATE_USD, SPEND_POLICY_LABEL } from "@/lib/spend-policy";
+import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import {
   getSpendLimits,
   listedUnverifiedUsd,
@@ -59,24 +63,28 @@ export default async function VaultPage() {
         <CardContent className="space-y-3 text-sm text-muted">
           <p>Stripe/Link Checkout Session prep uses official APIs only.</p>
           <p>Needs you → Approve → Buying is required. Auto-approve stays OFF.</p>
-          <dl className="space-y-1 text-xs" data-surface="vault-authorized-buy-status">
-            <StatusRow label="live" value="false" />
-            <StatusRow label="charged" value="false" />
-            <StatusRow label="sessionCreated" value="false" />
-            <StatusRow
-              label="keysConfigured"
-              value={String(authorizedBuy.keysConfigured)}
-            />
-            <StatusRow
-              label="publishableConfigured"
-              value={String(authorizedBuy.publishableConfigured)}
-            />
-            <StatusRow
-              label="webhookConfigured"
-              value={String(authorizedBuy.webhookConfigured)}
-            />
-            <StatusRow label="reason" value={authorizedBuy.reason} />
-          </dl>
+          <div
+            className="space-y-2 text-xs"
+            data-surface="vault-authorized-buy-status"
+          >
+            <div className="flex flex-wrap items-center gap-1.5">
+              <HonestyFlag token="live=false" />
+              <HonestyFlag token="spend=false" />
+              <HonestyFlag token="charged=false" />
+              <HonestyFlag token="autoApprove=false" />
+              <HonestyFlag
+                token={`keysConfigured=${String(authorizedBuy.keysConfigured)}`}
+              />
+              <HonestyFlag
+                token={`publishableConfigured=${String(authorizedBuy.publishableConfigured)}`}
+              />
+              <HonestyFlag
+                token={`webhookConfigured=${String(authorizedBuy.webhookConfigured)}`}
+              />
+              <Badge className={DEMO_PILL_CLASS}>{AUTO_APPROVE_OFF}</Badge>
+            </div>
+            <p className="leading-relaxed">{authorizedBuy.reason}</p>
+          </div>
         </CardContent>
       </Card>
 
@@ -98,15 +106,6 @@ export default async function VaultPage() {
           <LimitsForm limits={limits} />
         </CardContent>
       </Card>
-    </div>
-  );
-}
-
-function StatusRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex justify-between gap-4">
-      <dt>{label}</dt>
-      <dd className="text-right text-foreground/80">{value}</dd>
     </div>
   );
 }

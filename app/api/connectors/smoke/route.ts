@@ -6,6 +6,13 @@ import { listConnectorReadiness } from "@/lib/connectors/keys";
 import { smokeConnectorSearch } from "@/lib/connectors/smoke";
 import { ConnectorError } from "@/lib/connectors/types";
 import { isConnectorProvider } from "@/lib/connectors/vault";
+import {
+  HONESTY_AUTO_APPROVE_FALSE,
+  HONESTY_LIVE_FALSE,
+  HONESTY_SPEND_FALSE,
+  honestyToken,
+  settingsHonestyFlags,
+} from "@/lib/honesty-flags";
 
 export async function GET() {
   const gated = await requireApiUser();
@@ -17,6 +24,13 @@ export async function GET() {
     ...readiness,
     spend: false,
     live: false,
+    autoApprove: false,
+    honestyFlags: settingsHonestyFlags({
+      keysConfigured: readiness.providers.some((row) => row.keysConfigured),
+      vaultKeyConfigured: readiness.vaultKeyConfigured,
+      databaseConfigured: readiness.databaseConfigured,
+      mutationsLiveEnabled: readiness.mutationsLiveEnabled,
+    }),
   });
 }
 
@@ -31,7 +45,14 @@ export async function POST(request: Request) {
   const parsed = bodySchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success || !isConnectorProvider(parsed.data.provider)) {
     return NextResponse.json(
-      { ok: false, live: false, spend: false, error: "Invalid connector smoke" },
+      {
+        ok: false,
+        live: false,
+        spend: false,
+        autoApprove: false,
+        honestyFlags: [HONESTY_LIVE_FALSE, HONESTY_SPEND_FALSE, HONESTY_AUTO_APPROVE_FALSE],
+        error: "Invalid connector smoke",
+      },
       { status: 400 },
     );
   }
@@ -50,6 +71,13 @@ export async function POST(request: Request) {
           ok: false,
           live: false,
           spend: false,
+          autoApprove: false,
+          honestyFlags: [
+            HONESTY_LIVE_FALSE,
+            HONESTY_SPEND_FALSE,
+            HONESTY_AUTO_APPROVE_FALSE,
+            honestyToken("result", "blocked"),
+          ],
           result: "blocked",
           reason: error.message,
         },
@@ -61,6 +89,13 @@ export async function POST(request: Request) {
         ok: false,
         live: false,
         spend: false,
+        autoApprove: false,
+        honestyFlags: [
+          HONESTY_LIVE_FALSE,
+          HONESTY_SPEND_FALSE,
+          HONESTY_AUTO_APPROVE_FALSE,
+          honestyToken("result", "error"),
+        ],
         result: "error",
         reason: "Read-only smoke failed closed.",
       },

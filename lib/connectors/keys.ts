@@ -163,6 +163,7 @@ export interface ConnectorProviderReadiness {
 export interface ConnectorPlatformReadiness {
   live: false;
   spend: false;
+  autoApprove: false;
   mutationsLiveEnabled: boolean;
   vaultKeyConfigured: boolean;
   databaseConfigured: boolean;
@@ -222,6 +223,7 @@ export async function listConnectorReadiness(
   return {
     live: false,
     spend: false,
+    autoApprove: false,
     mutationsLiveEnabled: connectorsLiveEnabled(),
     vaultKeyConfigured: isVaultKeyConfigured(),
     databaseConfigured: connectorDatabaseConfigured(),

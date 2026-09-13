@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { HonestyFlag, HonestyFlagStrip } from "@/components/honesty-flag";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,17 +10,21 @@ import {
   AUTHORIZED_BUY_SUB,
 } from "@/lib/authorized-buy";
 import { AUTO_APPROVE_OFF } from "@/lib/cpo-techlux";
+import { honestyToken } from "@/lib/honesty-flags";
 import type { DealStatus } from "@/lib/types";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
 type PrepResponse = {
   live?: boolean;
+  spend?: boolean;
   charged?: boolean;
   prepared?: boolean;
   sessionCreated?: boolean;
+  autoApprove?: boolean;
   keysConfigured?: boolean;
   publishableConfigured?: boolean;
   webhookConfigured?: boolean;
+  honestyFlags?: string[];
   trail?: string;
   amountCents?: number | null;
   amountVerified?: boolean;
@@ -84,52 +89,52 @@ export function AuthorizedBuyPrep({
         {pending ? "Preparing…" : "Prepare Checkout Session"}
       </Button>
       {result ? (
-        <dl className="space-y-1 text-xs leading-relaxed text-muted" data-surface="authorized-buy-status">
-          <Row label="live" value={String(result.live ?? false)} />
-          <Row label="charged" value={String(result.charged ?? false)} />
-          <Row label="prepared" value={String(result.prepared ?? false)} />
-          <Row
-            label="sessionCreated"
-            value={String(result.sessionCreated ?? false)}
+        <div
+          className="space-y-2 text-xs leading-relaxed text-muted"
+          data-surface="authorized-buy-status"
+        >
+          <div className="flex flex-wrap items-center gap-1.5">
+            <HonestyFlag token="live=false" />
+            <HonestyFlag token="spend=false" />
+            <HonestyFlag token="charged=false" />
+            <HonestyFlag token="autoApprove=false" />
+          </div>
+          <HonestyFlagStrip
+            surface="authorized-buy-flags"
+            flags={
+              result.honestyFlags ?? [
+                honestyToken("prepared", result.prepared ?? false),
+                honestyToken("sessionCreated", result.sessionCreated ?? false),
+                honestyToken("keysConfigured", result.keysConfigured ?? false),
+                honestyToken(
+                  "publishableConfigured",
+                  result.publishableConfigured ?? false,
+                ),
+                honestyToken(
+                  "webhookConfigured",
+                  result.webhookConfigured ?? false,
+                ),
+              ]
+            }
           />
-          <Row
-            label="keysConfigured"
-            value={String(result.keysConfigured ?? false)}
-          />
-          <Row
-            label="publishableConfigured"
-            value={String(result.publishableConfigured ?? false)}
-          />
-          <Row
-            label="webhookConfigured"
-            value={String(result.webhookConfigured ?? false)}
-          />
-          <Row label="trail" value={result.trail ?? "missing"} />
-          <Row
-            label="amountCents"
-            value={result.amountCents == null ? "null" : String(result.amountCents)}
-          />
-          <Row
-            label="amountVerified"
-            value={String(result.amountVerified ?? false)}
-          />
-          <Row
-            label="reason"
-            value={result.reason ?? result.error ?? AUTHORIZED_BUY_NOTE}
-          />
-        </dl>
+          <p>
+            trail={result.trail ?? "missing"} · amountCents=
+            {result.amountCents == null ? "null" : String(result.amountCents)} ·
+            amountVerified={String(result.amountVerified ?? false)}
+          </p>
+          <p>{result.reason ?? result.error ?? AUTHORIZED_BUY_NOTE}</p>
+        </div>
       ) : (
-        <p className="text-xs leading-relaxed text-muted">{AUTHORIZED_BUY_NOTE}</p>
+        <div className="space-y-2">
+          <div className="flex flex-wrap gap-1.5">
+            <HonestyFlag token="live=false" />
+            <HonestyFlag token="spend=false" />
+            <HonestyFlag token="charged=false" />
+            <HonestyFlag token="autoApprove=false" />
+          </div>
+          <p className="text-xs leading-relaxed text-muted">{AUTHORIZED_BUY_NOTE}</p>
+        </div>
       )}
-    </div>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex justify-between gap-4">
-      <dt>{label}</dt>
-      <dd className="text-right text-foreground/80">{value}</dd>
     </div>
   );
 }

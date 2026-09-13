@@ -4,6 +4,7 @@ import {
   AUTHORIZED_BUY_NOTE,
   AUTHORIZED_BUY_NO_CHARGE,
   amountToCents,
+  authorizedBuyFailClosed,
   authorizedBuyVaultStatus,
   prepareAuthorizedBuy,
 } from "@/lib/authorized-buy";
@@ -62,28 +63,24 @@ export async function POST(
       const status = error.code === "approve" ? 409 : 400;
       return NextResponse.json(
         {
-          live: false,
-          charged: false,
-          sessionCreated: false,
-          autoApprove: false,
-          failClosed: true,
-          prepared: false,
-          dealId: id,
-          checkoutSession: null,
-          reason: error.message,
+          ...authorizedBuyFailClosed({
+            reason: error.message,
+            dealId: id,
+          }),
+          note: AUTHORIZED_BUY_NOTE,
+          noCharge: AUTHORIZED_BUY_NO_CHARGE,
         },
         { status },
       );
     }
     return NextResponse.json(
       {
-        live: false,
-        charged: false,
-        sessionCreated: false,
-        autoApprove: false,
-        failClosed: true,
-        prepared: false,
-        reason: "Checkout Session prep failed closed. Not live pay.",
+        ...authorizedBuyFailClosed({
+          reason: "Checkout Session prep failed closed. Not live pay.",
+          dealId: id,
+        }),
+        note: AUTHORIZED_BUY_NOTE,
+        noCharge: AUTHORIZED_BUY_NO_CHARGE,
       },
       { status: 500 },
     );
