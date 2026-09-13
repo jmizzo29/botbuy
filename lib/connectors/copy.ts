@@ -13,6 +13,15 @@ export const CONNECT_ACCOUNTS_ANCHOR = "/settings#connected-accounts" as const;
 
 export const NAMECHEAP_LABEL = "Namecheap" as const;
 export const TWILIO_LABEL = "Twilio" as const;
+export const SHOPIFY_LABEL = "Shopify" as const;
+export const HTTP_JSON_LABEL = "HTTP JSON" as const;
+
+export const CONNECTOR_LABEL = {
+  namecheap: NAMECHEAP_LABEL,
+  twilio: TWILIO_LABEL,
+  shopify: SHOPIFY_LABEL,
+  http_json: HTTP_JSON_LABEL,
+} as const;
 
 export const CONNECTOR_STATUS_LABEL = {
   disconnected: "Disconnected",
@@ -54,3 +63,25 @@ export const CONNECTOR_APPROVE_LOCK =
 
 export const CONNECTOR_NO_PASSWORD =
   "BotBuyer never asks for a registrar or carrier password." as const;
+
+export const SHOPIFY_NEEDS_SETUP_COPY =
+  "Shopify Admin API. Connect a custom-app Admin API token and the shop's *.myshopify.com host. Official API only — never a Shopify password or HTML login." as const;
+export const SHOPIFY_CUSTOM_APP_COPY =
+  "Custom app / partner access. Production Admin API access is not automatic. The shop must have a custom app (or OAuth app) before BotBuyer can call it." as const;
+export const SHOPIFY_OAUTH_PREFERRED =
+  "OAuth is preferred when a Shopify app client is configured." as const;
+export const SHOPIFY_OAUTH_CTA = "Continue with Shopify" as const;
+export const SHOPIFY_ADVANCED_CREDENTIALS = "Use Admin API token" as const;
+export const SHOPIFY_API_TOKEN_DISCLOSURE =
+  "Admin API token connect is OK for this POC. Tokens are encrypted and never logged. This is not a live public connector." as const;
+export const SHOPIFY_SHOP_LABEL = "Shop domain" as const;
+export const SHOPIFY_TOKEN_LABEL = "Admin API access token" as const;
+
+export const HTTP_JSON_NEEDS_SETUP_COPY =
+  "Official HTTPS JSON API only. Paste a documented public API base URL. Never a password. Never a browser farm." as const;
+export const HTTP_JSON_HOST_COPY =
+  "Host allowlist. BotBuyer only calls the HTTPS host you save. Private, loopback, and metadata hosts are rejected." as const;
+export const HTTP_JSON_BASE_URL_LABEL = "HTTPS base URL" as const;
+export const HTTP_JSON_BEARER_LABEL = "Bearer token" as const;
+export const HTTP_JSON_TOKEN_DISCLOSURE =
+  "Optional bearer token. Encrypted at rest, never logged. Official APIs only. POC · not live." as const;

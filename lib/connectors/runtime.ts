@@ -1,11 +1,18 @@
 import { hydrateStore } from "@/lib/store";
 import { assertConnectorSpendAllowed } from "@/lib/connectors/approve-gate";
 import { recordConnectorAudit } from "@/lib/connectors/audit";
+import { buyHttpJson, quoteHttpJson, searchHttpJson } from "@/lib/connectors/http-json";
 import {
   quoteNamecheapDomain,
   registerNamecheapDomain,
   searchNamecheapDomains,
 } from "@/lib/connectors/namecheap";
+import { providerSupportsTool } from "@/lib/connectors/registry";
+import {
+  buyShopifyProduct,
+  quoteShopifyProduct,
+  searchShopifyProducts,
+} from "@/lib/connectors/shopify";
 import {
   buyTwilioNumber,
   quoteTwilioNumber,
@@ -33,6 +40,12 @@ export async function invokeConnectorTool(input: {
   payload?: ConnectorToolInput;
 }): Promise<ConnectorToolResult> {
   await hydrateStore();
+  if (!providerSupportsTool(input.provider, input.tool)) {
+    throw new ConnectorError(
+      "This tool is not registered for that connector. Fail-closed.",
+      "validation",
+    );
+  }
   const gate = assertConnectorSpendAllowed({
     tool: input.tool,
     userId: input.userId,
@@ -40,51 +53,96 @@ export async function invokeConnectorTool(input: {
   });
   const vault = await readVaultSecret(input.userId, input.provider);
   const dealId = gate.deal?.id ?? input.dealId ?? null;
+  const query = input.payload?.query ?? input.payload?.product ?? input.payload?.domain;
 
   let result: ConnectorToolResult;
   try {
     if (input.provider === "namecheap") {
       if (input.tool === "search") {
         result = await searchNamecheapDomains({
-          query: input.payload?.query ?? input.payload?.domain,
+          query,
           vault,
         });
       } else if (input.tool === "quote") {
         result = await quoteNamecheapDomain({
-          domain: input.payload?.domain ?? input.payload?.query,
+          domain: input.payload?.domain ?? query,
           years: input.payload?.years,
           vault,
         });
-      } else if (input.tool === "register") {
+      } else {
         result = await registerNamecheapDomain({
-          domain: input.payload?.domain ?? input.payload?.query,
+          domain: input.payload?.domain ?? query,
           years: input.payload?.years,
           dealId: dealId ?? "",
           vault,
         });
-      } else {
-        throw new ConnectorError("Twilio-only tool on Namecheap. Fail-closed.", "validation");
       }
-    } else if (input.tool === "search") {
-      result = await searchTwilioNumbers({
-        query: input.payload?.query,
-        country: input.payload?.country,
-        vault,
-      });
-    } else if (input.tool === "quote") {
-      result = await quoteTwilioNumber({
-        phoneNumber: input.payload?.phoneNumber ?? input.payload?.query,
-        country: input.payload?.country,
-        vault,
-      });
-    } else if (input.tool === "buy") {
-      result = await buyTwilioNumber({
-        phoneNumber: input.payload?.phoneNumber ?? input.payload?.query,
-        dealId: dealId ?? "",
-        vault,
-      });
+    } else if (input.provider === "twilio") {
+      if (input.tool === "search") {
+        result = await searchTwilioNumbers({
+          query: input.payload?.query,
+          country: input.payload?.country,
+          vault,
+        });
+      } else if (input.tool === "quote") {
+        result = await quoteTwilioNumber({
+          phoneNumber: input.payload?.phoneNumber ?? input.payload?.query,
+          country: input.payload?.country,
+          vault,
+        });
+      } else {
+        result = await buyTwilioNumber({
+          phoneNumber: input.payload?.phoneNumber ?? input.payload?.query,
+          dealId: dealId ?? "",
+          vault,
+        });
+      }
+    } else if (input.provider === "shopify") {
+      if (input.tool === "search") {
+        result = await searchShopifyProducts({
+          query,
+          product: input.payload?.product,
+          vault,
+        });
+      } else if (input.tool === "quote") {
+        result = await quoteShopifyProduct({
+          query,
+          product: input.payload?.product,
+          sku: input.payload?.sku,
+          vault,
+        });
+      } else {
+        result = await buyShopifyProduct({
+          query,
+          product: input.payload?.product,
+          sku: input.payload?.sku,
+          dealId: dealId ?? "",
+          vault,
+        });
+      }
+    } else if (input.provider === "http_json") {
+      if (input.tool === "search") {
+        result = await searchHttpJson({
+          query,
+          product: input.payload?.product,
+          vault,
+        });
+      } else if (input.tool === "quote") {
+        result = await quoteHttpJson({
+          query,
+          product: input.payload?.product,
+          vault,
+        });
+      } else {
+        result = await buyHttpJson({
+          query,
+          product: input.payload?.product,
+          dealId: dealId ?? "",
+          vault,
+        });
+      }
     } else {
-      throw new ConnectorError("Namecheap-only tool on Twilio. Fail-closed.", "validation");
+      throw new ConnectorError("Unknown connector. Fail-closed.", "validation");
     }
   } catch (error) {
     if (error instanceof ConnectorError) throw error;
