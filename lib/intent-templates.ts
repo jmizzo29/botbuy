@@ -49,6 +49,14 @@ export const JOHN_INTENT_TEMPLATES = [
     categories: ["http_json"],
     primary: false,
   },
+  {
+    id: "droplet",
+    label: "Droplet",
+    summary:
+      "Find a DigitalOcean droplet or volume we can buy through the official API.",
+    categories: ["digitalocean"],
+    primary: false,
+  },
 ] as const;
 
 export const DEFAULT_INTENT_TEMPLATE = JOHN_INTENT_TEMPLATES[0];

@@ -1,5 +1,7 @@
 import { recordConnectorAccountAudit } from "@/lib/connectors/audit";
 import {
+  DIGITALOCEAN_NEEDS_SETUP_COPY,
+  DIGITALOCEAN_TOKEN_DISCLOSURE,
   HTTP_JSON_HOST_COPY,
   HTTP_JSON_NEEDS_SETUP_COPY,
   NAMECHEAP_ELIGIBILITY_COPY,
@@ -17,6 +19,7 @@ import {
   type VaultSecretPayload,
 } from "@/lib/connectors/types";
 import {
+  digitalOceanNeedsSetupReasons,
   httpJsonNeedsSetupReasons,
   namecheapNeedsSetupReasons,
   revokeConnectedAccount,
@@ -45,6 +48,10 @@ export interface ConnectInput {
 
 function hintFor(input: ConnectInput) {
   if (input.provider === "namecheap") return input.apiUser?.trim() || null;
+  if (input.provider === "digitalocean") {
+    const token = input.apiKey?.trim();
+    return token ? `token · ${token.slice(-4)}` : null;
+  }
   if (input.provider === "shopify") {
     return normalizeShopifyShop(input.shopDomain) ?? null;
   }
@@ -196,6 +203,46 @@ async function connectShopify(input: ConnectInput) {
   };
 }
 
+async function connectDigitalOcean(input: ConnectInput) {
+  const apiKey = input.apiKey?.trim();
+  if (!apiKey) {
+    throw new ConnectorError(
+      "A DigitalOcean personal access token is required. Never a password.",
+      "validation",
+    );
+  }
+  const needs = digitalOceanNeedsSetupReasons({
+    officialApiAck: input.officialApiAck,
+    hasToken: true,
+  });
+  const status: ConnectorStatus = needs.length ? "needs_setup" : "connected";
+  const secret: VaultSecretPayload = {
+    provider: "digitalocean",
+    authMode: "api_key",
+    apiKey,
+  };
+  const row = await upsertConnectedAccount({
+    userId: input.userId,
+    clerkUserId: input.clerkUserId,
+    provider: "digitalocean",
+    secret,
+    status,
+    hint: hintFor(input),
+  });
+  recordConnectorAccountAudit({
+    userId: input.userId,
+    provider: "digitalocean",
+    tool: "connect",
+    result: status,
+  });
+  return {
+    row,
+    status,
+    needsSetup: needs,
+    setupCopy: [DIGITALOCEAN_NEEDS_SETUP_COPY, DIGITALOCEAN_TOKEN_DISCLOSURE],
+  };
+}
+
 async function connectHttpJson(input: ConnectInput) {
   const rawUrl = input.baseUrl?.trim();
   if (!rawUrl) {
@@ -242,6 +289,7 @@ export async function connectProvider(input: ConnectInput) {
   if (input.provider === "namecheap") return connectNamecheap(input);
   if (input.provider === "twilio") return connectTwilio(input);
   if (input.provider === "shopify") return connectShopify(input);
+  if (input.provider === "digitalocean") return connectDigitalOcean(input);
   if (input.provider === "http_json") return connectHttpJson(input);
   throw new ConnectorError("Unknown connector. Fail-closed.", "validation");
 }

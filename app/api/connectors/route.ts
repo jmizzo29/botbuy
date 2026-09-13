@@ -20,6 +20,7 @@ export async function GET() {
   return NextResponse.json({
     honesty: CONNECT_ACCOUNTS_HONESTY,
     live: false,
+    spend: false,
     vaultKeyConfigured: isVaultKeyConfigured(),
     twilioOauthAvailable: twilioOauthConfigured(),
     shopifyOauthAvailable: shopifyOauthConfigured(),
@@ -75,6 +76,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       honesty: CONNECT_ACCOUNTS_HONESTY,
       live: false,
+      spend: false,
       status: result.status,
       needsSetup: result.needsSetup,
       providers,

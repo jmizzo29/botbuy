@@ -20,7 +20,7 @@ export function sanitizeAuditMetadata(
     if (looksLikeSecretKey(key)) continue;
     if (
       typeof value === "string" &&
-      (/bearer\s+|sk_|rk_|pk_|whsec_|api[_-]?key/i.test(value) || looksLikePan(value))
+      (/bearer\s+|sk_|rk_|pk_|whsec_|dop_v1_|api[_-]?key/i.test(value) || looksLikePan(value))
     ) {
       continue;
     }
@@ -32,7 +32,7 @@ export function sanitizeAuditMetadata(
 export function assertNoSecretsLogged(value: unknown) {
   const blob = JSON.stringify(value ?? {});
   if (
-    /BOTBUY_VAULT_KEY|ApiKey=|AuthToken=|Bearer\s+[A-Za-z0-9._-]+|(?:sk|rk|pk|whsec)_[A-Za-z0-9]+/i.test(
+    /BOTBUY_VAULT_KEY|ApiKey=|AuthToken=|Bearer\s+[A-Za-z0-9._-]+|(?:sk|rk|pk|whsec|dop_v1)_[A-Za-z0-9]+/i.test(
       blob,
     )
   ) {

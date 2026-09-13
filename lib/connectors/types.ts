@@ -2,6 +2,7 @@ export const CONNECTOR_PROVIDERS = [
   "namecheap",
   "twilio",
   "shopify",
+  "digitalocean",
   "http_json",
 ] as const;
 export type ConnectorProvider = (typeof CONNECTOR_PROVIDERS)[number];
@@ -54,6 +55,7 @@ export interface VaultSecretPayload {
   shopDomain?: string;
   /** Official HTTPS JSON API base URL (http_json) */
   baseUrl?: string;
+  /** DigitalOcean personal access token lives in apiKey */}
 }
 
 export interface ConnectedAccountRecord {

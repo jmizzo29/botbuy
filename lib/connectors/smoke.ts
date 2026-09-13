@@ -18,6 +18,7 @@ const SMOKE_QUERY: Record<ConnectorProvider, string> = {
   namecheap: "example.com",
   twilio: "415",
   shopify: "",
+  digitalocean: "droplet",
   http_json: "smoke",
 };
 

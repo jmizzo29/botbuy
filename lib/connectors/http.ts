@@ -33,6 +33,13 @@ export function shopifyEnvPresent() {
   );
 }
 
+export function digitalOceanEnvPresent() {
+  return Boolean(
+    process.env.DIGITALOCEAN_ACCESS_TOKEN?.trim() ||
+      process.env.DIGITALOCEAN_API_TOKEN?.trim(),
+  );
+}
+
 export function httpJsonEnvPresent() {
   return Boolean(process.env.HTTP_JSON_BASE_URL?.trim());
 }

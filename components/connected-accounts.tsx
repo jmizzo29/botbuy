@@ -13,7 +13,11 @@ import {
   CONNECT_ACCOUNTS_HONESTY,
   CONNECT_ACCOUNTS_LEGAL,
   CONNECT_ACCOUNTS_SUB,
+  DIGITALOCEAN_NEEDS_SETUP_COPY,
+  DIGITALOCEAN_TOKEN_DISCLOSURE,
+  DIGITALOCEAN_TOKEN_LABEL,
   CONNECT_KEYS_STRIP,
+  CONNECT_SEARCH_ONLY,
   CONNECT_SMOKE_CTA,
   CONNECT_SMOKE_NOTE,
   CONNECTOR_APPROVE_LOCK,
@@ -183,12 +187,16 @@ function ReadinessStrip({ readiness }: { readiness: ConnectorPlatformReadiness }
           label="databaseConfigured"
           value={String(readiness.databaseConfigured)}
         />
+        <HonestyFlag label="spend" value="false" />
         <HonestyFlag
           label="mutationsLiveEnabled"
           value={String(readiness.mutationsLiveEnabled)}
         />
       </div>
       <p className="text-xs leading-relaxed text-muted">{CONNECT_KEYS_STRIP}</p>
+      {!readiness.mutationsLiveEnabled ? (
+        <p className="text-xs leading-relaxed text-muted">{CONNECT_SEARCH_ONLY}</p>
+      ) : null}
     </div>
   );
 }
@@ -337,6 +345,9 @@ function ProviderRow({
       {row.provider === "shopify" && row.status !== "connected" ? (
         <ShopifyNeedsSetup />
       ) : null}
+      {row.provider === "digitalocean" && row.status !== "connected" ? (
+        <DigitalOceanNeedsSetup />
+      ) : null}
       {row.provider === "http_json" && row.status !== "connected" ? (
         <HttpJsonNeedsSetup />
       ) : null}
@@ -347,6 +358,7 @@ function ProviderRow({
         >
           <div className="flex flex-wrap gap-1.5">
             <HonestyFlag label="live" value="false" />
+            <HonestyFlag label="spend" value="false" />
             <HonestyFlag label="result" value={smoke.result} />
             <HonestyFlag
               label="keysConfigured"
@@ -390,6 +402,17 @@ function ProviderRow({
             <ShopifyConnectForm
               disabled={!vaultKeyConfigured}
               oauthAvailable={shopifyOauthAvailable}
+              pending={pending === "connect"}
+              onDone={() => {
+                setSheet(null);
+                router.refresh();
+              }}
+              onError={setError}
+              onPending={(value) => setPending(value ? "connect" : null)}
+            />
+          ) : row.provider === "digitalocean" ? (
+            <DigitalOceanConnectForm
+              disabled={!vaultKeyConfigured}
               pending={pending === "connect"}
               onDone={() => {
                 setSheet(null);
@@ -484,6 +507,15 @@ function ShopifyNeedsSetup() {
     <NeedsSetupBlock surface="shopify-needs-setup">
       <p>{SHOPIFY_NEEDS_SETUP_COPY}</p>
       <p>{SHOPIFY_CUSTOM_APP_COPY}</p>
+    </NeedsSetupBlock>
+  );
+}
+
+function DigitalOceanNeedsSetup() {
+  return (
+    <NeedsSetupBlock surface="digitalocean-needs-setup">
+      <p>{DIGITALOCEAN_NEEDS_SETUP_COPY}</p>
+      <p>{DIGITALOCEAN_TOKEN_DISCLOSURE}</p>
     </NeedsSetupBlock>
   );
 }
@@ -834,6 +866,68 @@ function ShopifyConnectForm({
           </Button>
         </div>
       ) : null}
+    </form>
+  );
+}
+
+function DigitalOceanConnectForm({
+  disabled,
+  pending,
+  onDone,
+  onError,
+  onPending,
+}: {
+  disabled: boolean;
+  pending: boolean;
+  onDone: () => void;
+  onError: (message: string | null) => void;
+  onPending: (value: boolean) => void;
+}) {
+  const [apiKey, setApiKey] = useState("");
+  const [officialApiAck, setOfficialApiAck] = useState(false);
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    onPending(true);
+    onError(null);
+    const response = await fetch("/api/connectors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        provider: "digitalocean",
+        apiKey,
+        officialApiAck,
+      }),
+    });
+    const body = (await response.json().catch(() => null)) as { error?: string } | null;
+    onPending(false);
+    if (!response.ok) {
+      onError(body?.error ?? "Connect failed.");
+      return;
+    }
+    setApiKey("");
+    onDone();
+  }
+
+  return (
+    <form data-flow="digitalocean-connect" onSubmit={(event) => void submit(event)} className="space-y-3">
+      <p className="text-sm text-muted">{DIGITALOCEAN_NEEDS_SETUP_COPY}</p>
+      <Field
+        label={DIGITALOCEAN_TOKEN_LABEL}
+        value={apiKey}
+        onChange={setApiKey}
+        type="password"
+        autoComplete="new-password"
+      />
+      <p className="text-xs leading-relaxed text-muted">{DIGITALOCEAN_TOKEN_DISCLOSURE}</p>
+      <Ack
+        checked={officialApiAck}
+        onChange={setOfficialApiAck}
+        label="This is an official DigitalOcean personal access token. Not a password. Not an HTML login."
+      />
+      <Button type="submit" className="min-h-11" disabled={disabled || pending}>
+        {pending ? "…" : "Save DigitalOcean API"}
+      </Button>
     </form>
   );
 }

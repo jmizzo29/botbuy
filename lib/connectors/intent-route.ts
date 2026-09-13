@@ -1,6 +1,7 @@
 /** Map an intent onto a connector search. Official APIs only. No invented matches. */
 
 import {
+  DIGITALOCEAN_CATEGORIES,
   DOMAIN_CATEGORIES,
   HTTP_JSON_CATEGORIES,
   PHONE_CATEGORIES,
@@ -20,6 +21,7 @@ export type IntentSearchKind =
   | "namecheap"
   | "twilio"
   | "shopify"
+  | "digitalocean"
   | "http_json"
   | "stub";
 
@@ -40,6 +42,8 @@ const DOMAIN_WORD_RE = /\b(domains?|registrar|tld|whois)\b/i;
 const PHONE_WORD_RE = /\b(phone|sms|twilio|did|text(?:ing)?)\b/i;
 const SOFTWARE_WORD_RE =
   /\b(software|saas|shopify|license|storefront)\b/i;
+const DIGITALOCEAN_WORD_RE =
+  /\b(digitalocean|digital ocean|droplets?|block storage|vps|cloud servers?)\b/i;
 const HTTP_JSON_WORD_RE =
   /\b(http json|openapi|official api|json api|official catalog)\b/i;
 const COUNTRY_RE =
@@ -113,6 +117,9 @@ export function routeIntentToSearch(input: {
   const softwareish =
     categories.some((item) => SOFTWARE_CATEGORIES.has(item)) ||
     SOFTWARE_WORD_RE.test(text);
+  const digitaloceanish =
+    categories.some((item) => DIGITALOCEAN_CATEGORIES.has(item)) ||
+    DIGITALOCEAN_WORD_RE.test(text);
   const httpJsonish =
     categories.some((item) => HTTP_JSON_CATEGORIES.has(item)) ||
     HTTP_JSON_WORD_RE.test(text);
@@ -150,6 +157,23 @@ export function routeIntentToSearch(input: {
         category,
         accepted: true,
         reason: "Phone/SMS/number-ish intent mapped to Twilio official API search.",
+      };
+    }
+  }
+
+  /** Droplets/volumes — official DigitalOcean API. Never a Namecheap duplicate. */
+  if (digitaloceanish && !vehicleOrProperty && !consumerish) {
+    const provider = officialSearchProvider("digitalocean");
+    if (provider) {
+      return {
+        kind: "digitalocean",
+        provider,
+        query: (input.summary ?? "").trim(),
+        domain: null,
+        country: "US",
+        category,
+        accepted: true,
+        reason: `DigitalOcean droplets/volumes mapped to official API search via MCP registry. ${CONNECTOR_TECH_LOCK_NOTE}`,
       };
     }
   }

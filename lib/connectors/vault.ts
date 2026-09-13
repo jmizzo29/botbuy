@@ -14,6 +14,8 @@ import { decryptSecret, encryptSecret, isVaultKeyConfigured } from "@/lib/connec
 import {
   CONNECTOR_LABEL,
   CONNECTOR_STATUS_LABEL,
+  DIGITALOCEAN_NEEDS_SETUP_COPY,
+  DIGITALOCEAN_TOKEN_DISCLOSURE,
   HTTP_JSON_HOST_COPY,
   HTTP_JSON_NEEDS_SETUP_COPY,
   NAMECHEAP_ELIGIBILITY_COPY,
@@ -286,6 +288,16 @@ export function shopifyNeedsSetupReasons(input: {
   return [...new Set(reasons)];
 }
 
+export function digitalOceanNeedsSetupReasons(input: {
+  officialApiAck?: boolean;
+  hasToken?: boolean;
+}) {
+  const reasons: string[] = [];
+  if (!input.hasToken) reasons.push(DIGITALOCEAN_NEEDS_SETUP_COPY);
+  if (!input.officialApiAck) reasons.push(DIGITALOCEAN_TOKEN_DISCLOSURE);
+  return reasons;
+}
+
 export function httpJsonNeedsSetupReasons(input: {
   officialApiAck?: boolean;
   baseUrl?: string | null;
@@ -358,6 +370,11 @@ export async function listPublicConnectorStatus(
         officialApiAck: connected,
         customAppAck: connected,
         shopDomain: connected ? row?.hint : null,
+      });
+    } else if (provider === "digitalocean") {
+      needsSetup = digitalOceanNeedsSetupReasons({
+        officialApiAck: connected,
+        hasToken: connected,
       });
     } else if (provider === "http_json") {
       needsSetup = httpJsonNeedsSetupReasons({

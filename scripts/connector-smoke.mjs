@@ -41,16 +41,17 @@ const register = readFileSync(join(root, "lib/connectors/runtime.ts"), "utf8");
 assert(register.includes("assertConnectorSpendAllowed"), "runtime uses approve gate");
 assert(register.includes("recordConnectorAudit"), "runtime writes audit");
 assert(register.includes('"shopify"') && register.includes("buyShopifyProduct"), "runtime routes Shopify");
+assert(register.includes("buyDigitalOcean") && register.includes("searchDigitalOcean"), "runtime routes DigitalOcean");
 assert(register.includes("buyHttpJson") && register.includes("searchHttpJson"), "runtime routes HTTP JSON");
 assert(register.includes("providerSupportsTool"), "runtime checks registry tools");
 
 const types = readFileSync(join(root, "lib/connectors/types.ts"), "utf8");
-assert(types.includes('"shopify"') && types.includes('"http_json"'), "provider types include M2 shells");
+assert(types.includes('"shopify"') && types.includes('"digitalocean"') && types.includes('"http_json"'), "provider types include M2 shells");
 assert(types.includes("live: false"), "public status live stays false");
 
 const registry = readFileSync(join(root, "lib/connectors/registry.ts"), "utf8");
-assert(registry.includes("kind: \"merchant\"") && registry.includes("kind: \"mcp_http\""), "registry kinds");
-assert(registry.includes('id: "shopify"') && registry.includes('id: "http_json"'), "registry entries");
+assert(registry.includes("kind: \"merchant\"") && registry.includes("kind: \"saas\"") && registry.includes("kind: \"mcp_http\""), "registry kinds");
+assert(registry.includes('id: "shopify"') && registry.includes('id: "digitalocean"') && registry.includes('id: "http_json"'), "registry entries");
 
 const shopifyBuy = readFileSync(join(root, "lib/connectors/shopify/buy.ts"), "utf8");
 assert(shopifyBuy.includes("connectorsLiveEnabled"), "Shopify buy not live by default");
@@ -59,6 +60,10 @@ assert(shopifyBuy.includes("live: false"), "Shopify buy CHO-honest live:false");
 const httpBuy = readFileSync(join(root, "lib/connectors/http-json/buy.ts"), "utf8");
 assert(httpBuy.includes("connectorsLiveEnabled"), "HTTP JSON buy not live by default");
 assert(httpBuy.includes("live: false"), "HTTP JSON buy CHO-honest live:false");
+const digitalOceanBuy = readFileSync(join(root, "lib/connectors/digitalocean/buy.ts"), "utf8");
+assert(digitalOceanBuy.includes("connectorsLiveEnabled"), "DigitalOcean buy not live by default");
+assert(digitalOceanBuy.includes("live: false"), "DigitalOcean buy CHO-honest live:false");
+assert(!digitalOceanBuy.includes("regions[0]") && !digitalOceanBuy.includes("nyc1"), "DigitalOcean buy invents no region");
 
 const safeUrl = readFileSync(join(root, "lib/connectors/safe-url.ts"), "utf8");
 assert(safeUrl.includes("https:"), "HTTP JSON requires HTTPS");
@@ -199,6 +204,11 @@ function evaluateIntentRoute({ summary = "", categories = [], mustInclude = "" }
   const softwareish =
     categories.some((item) => ["software", "saas", "shopify", "license"].includes(item)) ||
     /\b(software|saas|shopify|license|storefront)\b/i.test(text);
+  const digitaloceanish =
+    categories.some((item) =>
+      ["digitalocean", "droplet", "droplets", "volume", "volumes", "vps", "cloud"].includes(item),
+    ) ||
+    /\b(digitalocean|digital ocean|droplets?|block storage|vps|cloud servers?)\b/i.test(text);
   const httpJsonish =
     categories.some((item) => ["http_json", "http", "json", "api", "catalog"].includes(item)) ||
     /\b(http json|openapi|official api|json api|official catalog)\b/i.test(text);
@@ -214,6 +224,7 @@ function evaluateIntentRoute({ summary = "", categories = [], mustInclude = "" }
     /\b(consumer products?|household|appliances?)\b/i.test(text);
   if (domainish) return "namecheap";
   if (phoneish) return "twilio";
+  if (digitaloceanish && !vehicleOrProperty && !consumerish) return "digitalocean";
   if (softwareish && !vehicleOrProperty && !consumerish) return "shopify";
   if (httpJsonish) return "http_json";
   return "stub";
@@ -246,6 +257,20 @@ assert(
     categories: ["http_json"],
   }) === "http_json",
   "HTTP JSON intent maps to official HTTPS JSON",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Find a DigitalOcean droplet in nyc3.",
+    categories: ["digitalocean"],
+  }) === "digitalocean",
+  "droplet intent maps to DigitalOcean official API",
+);
+assert(
+  evaluateIntentRoute({
+    summary: "Find a used Honda Civic in Austin.",
+    categories: ["vehicle"],
+  }) !== "digitalocean",
+  "car intent does not wedge onto DigitalOcean",
 );
 assert(
   evaluateIntentRoute({
@@ -393,6 +418,9 @@ const twilioSearch = readFileSync(join(root, "lib/connectors/twilio/search.ts"),
 assert(twilioSearch.includes("keysConfigured"), "Twilio search reports keysConfigured");
 const shopifySearch = readFileSync(join(root, "lib/connectors/shopify/search.ts"), "utf8");
 assert(shopifySearch.includes("keysConfigured"), "Shopify search reports keysConfigured");
+const digitalOceanSearch = readFileSync(join(root, "lib/connectors/digitalocean/search.ts"), "utf8");
+assert(digitalOceanSearch.includes("keysConfigured"), "DigitalOcean search reports keysConfigured");
+assert(digitalOceanSearch.includes("api.digitalocean.com") || readFileSync(join(root, "lib/connectors/digitalocean/client.ts"), "utf8").includes("api.digitalocean.com"), "DigitalOcean client is official API host");
 
 const keysRuntime = spawnSync(
   process.execPath,
@@ -433,10 +461,10 @@ console.log("connector-smoke PASS");
 console.log(" - AES-256-GCM roundtrip");
 console.log(" - approve gate Needs you → Buying · auto-approve OFF");
 console.log(" - register/buy fail closed without deal, auto-approve, or approve trail");
-console.log(" - M2 registry: shopify + http_json · live:false · spend gated");
-console.log(" - intent maps domain→Namecheap, phone→Twilio, software→Shopify, HTTP JSON; cars/houses stay accepted stubs");
+console.log(" - M2 registry: shopify + digitalocean + http_json · live:false · spend gated");
+console.log(" - intent maps domain→Namecheap, phone→Twilio, droplet→DigitalOcean, software→Shopify, HTTP JSON; cars/houses stay accepted stubs");
 console.log(" - deal search pipeline is search/quote only · MCP-first · no browser farms");
 console.log(" - candidates attach structured handoff · Searching → Found → Needs you");
 console.log(" - empty stubs stay Searching; qa-needs-you still Needs you · production refused");
 console.log(" - Approve sheet Needs you → Buying still required before spend");
-console.log(" - keysConfigured honesty on all four providers · read-only smoke · live:false");
+console.log(" - keysConfigured honesty on all five providers · read-only smoke · live:false");
