@@ -13,10 +13,16 @@ export const APPROVE_MICRO = "BotBuyer only moves when you approve." as const;
 export const AUTO_APPROVE_OFF = "Auto-approve OFF" as const;
 export const SIGNAL_HOLD = "Soft-signal HOLD" as const;
 export const FOOTER_HOLD = "POC on botbuyer.ai · not an announced launch" as const;
+export const STORE_TARGETS =
+  "App Store + Play Store targets. Native Expo iOS + Android is the product client." as const;
 export const SAME_PRODUCT =
-  "Native App Store + Play Store client of BotBuyer — same APIs. Not a second product." as const;
+  "Same BotBuyer APIs — not a second product." as const;
+export const BLOCK_PWA =
+  "BLOCK PWA-as-product. Add to Home Screen is not the shipped client." as const;
 export const NO_LIVE_BUY =
-  "No live spend. No fake live-buy. PWA is not this client." as const;
+  "No live spend. No fake live-buy." as const;
+export const STORE_HOLD =
+  "Soft HOLD until TestFlight / Play internal. No store listing claims." as const;
 
 export const HONESTY_LIVE_FALSE = "live=false" as const;
 export const HONESTY_SPEND_FALSE = "spend=false" as const;

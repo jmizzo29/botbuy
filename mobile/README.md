@@ -1,17 +1,19 @@
 # BotBuyer native client (M0)
 
-Expo / React Native **iPhone + Android** client of **BotBuyer** — same product, same HTTP APIs. Not a second app. PWA / Add to Home Screen is not this client.
+**Product client:** native Expo / React Native for **App Store (iPhone) + Play Store (Android)** — same BotBuyer APIs. Not a second product.
 
-John LOCK 2026-09-13: native App Store **and** Play Store clients are required. Soft HOLD full product claims.
+**CHO LOCK: BLOCK PWA-as-product.** Add to Home Screen / installable PWA is **not** the shipped client. Soft HOLD until TestFlight / Play internal are real. No store listing claims in M0.
+
+John LOCK 2026-09-13: native App Store **and** Play Store clients are required. PWA is not good enough.
 
 | | |
 |---|---|
 | Folder | `mobile/` (sibling of the Next.js web app — not a second product repo) |
 | Display name | **BotBuyer** |
-| Platforms | iOS (`ios/`) + Android (`android/`) — one Expo codebase |
+| Targets | **App Store + Play Store** · one Expo codebase · `ios/` + `android/` first-class |
 | API | Existing BotBuyer stage HTTP (`EXPO_PUBLIC_API_BASE`) |
 | Auth | Clerk Expo scaffold · fail-closed when keys missing |
-| Hold | `live:false` · `spend=false` · Auto-approve OFF · no fake live-buy |
+| Hold | `live:false` · `spend=false` · Auto-approve OFF · no fake live-buy · no PWA-as-product |
 
 Web land / auth routes / `globals.css` land styles are **out of scope**. Do not edit them from this app. The root Next.js `tsconfig.json` and ESLint config **exclude** `mobile/` so Vercel web builds do not typecheck Expo.
 
@@ -24,7 +26,7 @@ Home copy matches web brand locks:
 - Honesty flags: `live=false` · `spend=false` · `autoApprove=false`
 - Auto-approve OFF. Every deal needs approval. No invented MRR / fake metrics.
 
-This scaffold does **not** spend, vault-mutate, or claim a live buy.
+This scaffold does **not** spend, vault-mutate, or claim a live buy. It does **not** claim a shipped App Store / Play listing. Expo Go / simulators are development — not the product. **BLOCK PWA-as-product.**
 
 ## Env vars
 

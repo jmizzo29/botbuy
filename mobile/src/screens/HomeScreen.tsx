@@ -19,6 +19,7 @@ import { apiBase } from "../config";
 import {
   APPROVE_MICRO,
   AUTO_APPROVE_OFF,
+  BLOCK_PWA,
   CLERK_KEYS_MISSING,
   CLERK_KEYS_READY,
   FOOTER_HOLD,
@@ -31,6 +32,8 @@ import {
   PRODUCT_SUPPORT,
   SAME_PRODUCT,
   SIGNAL_HOLD,
+  STORE_HOLD,
+  STORE_TARGETS,
   TRUST_LINE,
 } from "../copy";
 import { COLORS } from "../theme";
@@ -125,8 +128,11 @@ export function HomeScreen({ auth }: { auth: HomeAuth }) {
         </View>
 
         <Text style={styles.hold}>{SIGNAL_HOLD}</Text>
+        <Text style={styles.support}>{STORE_TARGETS}</Text>
         <Text style={styles.micro}>{APPROVE_MICRO}</Text>
         <Text style={styles.micro}>{TRUST_LINE}</Text>
+        <Text style={styles.muted}>{BLOCK_PWA}</Text>
+        <Text style={styles.muted}>{STORE_HOLD}</Text>
         <Text style={styles.muted}>{NO_LIVE_BUY}</Text>
         <Text style={styles.muted}>{SAME_PRODUCT}</Text>
 
