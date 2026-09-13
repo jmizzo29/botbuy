@@ -3,6 +3,7 @@ import { requireApiUser } from "@/lib/api-auth";
 import {
   AUTHORIZED_BUY_NOTE,
   AUTHORIZED_BUY_NO_CHARGE,
+  amountToCents,
   authorizedBuyVaultStatus,
   prepareAuthorizedBuy,
 } from "@/lib/authorized-buy";
@@ -30,7 +31,7 @@ export async function GET(
     dealStatus: deal.status,
     trail,
     prepared: false,
-    amountCents: null,
+    amountCents: amountToCents(deal.priceUsd),
     amountVerified: deal.amountVerified && deal.priceVerified,
     checkoutSession: null,
     note: AUTHORIZED_BUY_NOTE,

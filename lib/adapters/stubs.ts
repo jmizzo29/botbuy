@@ -45,6 +45,9 @@ export function seedMarketplaceAdapters() {
     stubAdapter("license_store", "License stores", ["license_store"]),
   );
   registerAdapter(stubAdapter("domain", "Domains", ["domain"]));
+  registerAdapter(stubAdapter("vehicle", "Vehicles", ["vehicle"]));
+  registerAdapter(stubAdapter("property", "Property", ["property"]));
+  registerAdapter(stubAdapter("catalog", "Official catalog", ["catalog"]));
   seeded = true;
 }
 

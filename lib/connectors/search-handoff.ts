@@ -5,7 +5,12 @@ import type { DealEvent } from "@/lib/types";
 
 export const SEARCH_ACT_HANDOFF_KIND = "search_act_handoff" as const;
 
-export type SearchActCandidateKind = "domain" | "phone" | "product" | "result";
+export type SearchActCandidateKind =
+  | "domain"
+  | "phone"
+  | "product"
+  | "listing"
+  | "result";
 
 export interface SearchActCandidate {
   label: string;
@@ -20,6 +25,9 @@ export interface SearchActCandidate {
   title?: string;
   handle?: string;
   sku?: string;
+  listingId?: string;
+  vin?: string;
+  address?: string;
 }
 
 export interface SearchActQuote {
@@ -82,7 +90,13 @@ function collectCandidateRows(
 ): Record<string, unknown>[] {
   if (!data) return [];
   const rows: Record<string, unknown>[] = [];
-  const pools = [data.candidates, data.products, data.results, data.items];
+  const pools = [
+    data.candidates,
+    data.products,
+    data.results,
+    data.items,
+    data.listings,
+  ];
   for (const pool of pools) {
     if (!Array.isArray(pool)) continue;
     for (const row of pool) {
@@ -120,18 +134,38 @@ export function normalizeSearchCandidates(
     const sku = stringField(row, "sku");
     const name = stringField(row, "name");
     const id = stringField(row, "id");
-    const label = title || handle || sku || domain || phoneNumber || name || id;
+    const listingId = stringField(row, "listingId");
+    const vin = stringField(row, "vin");
+    const address = stringField(row, "address") || stringField(row, "location");
+    const make = stringField(row, "make");
+    const model = stringField(row, "model");
+    const vehicle = [make, model].filter(Boolean).join(" ");
+    const label =
+      title ||
+      handle ||
+      sku ||
+      domain ||
+      phoneNumber ||
+      address ||
+      vehicle ||
+      vin ||
+      listingId ||
+      name ||
+      id;
     if (!label) continue;
     const key = label.toLowerCase();
     if (seen.has(key)) continue;
     seen.add(key);
+    const listing = Boolean(listingId || vin || address || vehicle);
     const kind: SearchActCandidateKind = domain
       ? "domain"
       : phoneNumber
         ? "phone"
-        : title || handle || sku
-          ? "product"
-          : "result";
+        : listing
+          ? "listing"
+          : title || handle || sku
+            ? "product"
+            : "result";
     out.push({
       label,
       kind,
@@ -146,6 +180,9 @@ export function normalizeSearchCandidates(
       title,
       handle,
       sku,
+      listingId,
+      vin,
+      address,
     });
     if (out.length >= 8) break;
   }
@@ -228,6 +265,9 @@ export function readSearchActHandoff(
         title: typeof row.title === "string" ? row.title : undefined,
         handle: typeof row.handle === "string" ? row.handle : undefined,
         sku: typeof row.sku === "string" ? row.sku : undefined,
+        listingId: typeof row.listingId === "string" ? row.listingId : undefined,
+        vin: typeof row.vin === "string" ? row.vin : undefined,
+        address: typeof row.address === "string" ? row.address : undefined,
       }))
       .filter((row) => row.label);
     if (!rows.length) continue;

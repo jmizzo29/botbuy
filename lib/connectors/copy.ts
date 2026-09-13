@@ -78,7 +78,7 @@ export const SHOPIFY_SHOP_LABEL = "Shop domain" as const;
 export const SHOPIFY_TOKEN_LABEL = "Admin API access token" as const;
 
 export const HTTP_JSON_NEEDS_SETUP_COPY =
-  "Official HTTPS JSON API only. Paste a documented public API base URL. Never a password. Never a browser farm." as const;
+  "Official HTTPS JSON catalog. Category-agnostic — cars, houses, software, or anything the API lists. Paste a documented public API base URL. Never a password. Never a browser farm." as const;
 export const HTTP_JSON_HOST_COPY =
   "Host allowlist. BotBuyer only calls the HTTPS host you save. Private, loopback, and metadata hosts are rejected." as const;
 export const HTTP_JSON_BASE_URL_LABEL = "HTTPS base URL" as const;

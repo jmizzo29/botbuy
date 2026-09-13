@@ -28,6 +28,33 @@ if (software.kind !== "shopify" || software.provider !== "shopify") {
   throw new Error("software intent should map to Shopify Admin API search");
 }
 
+const car = routeIntentToSearch({
+  summary: "Find a used Honda Civic in Austin.",
+  categories: ["vehicle"],
+});
+if (car.kind !== "stub" || car.provider !== null || car.category !== "vehicle") {
+  throw new Error("car intent must stay an accepted stub, not Shopify");
+}
+if (car.accepted !== true) {
+  throw new Error("car intent must be accepted");
+}
+
+const house = routeIntentToSearch({
+  summary: "Find a 3-bed house in Denver.",
+  categories: ["property"],
+});
+if (house.kind !== "stub" || house.category !== "property" || house.accepted !== true) {
+  throw new Error("house intent must stay an accepted stub");
+}
+
+const carShopWording = routeIntentToSearch({
+  summary: "Find a car at a shop near Austin.",
+  categories: ["vehicle"],
+});
+if (carShopWording.kind === "shopify") {
+  throw new Error("vehicle wording must not wedge onto Shopify");
+}
+
 const httpJson = routeIntentToSearch({
   summary: "Query the official JSON API catalog.",
   categories: ["http_json"],

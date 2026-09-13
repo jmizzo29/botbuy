@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiUser } from "@/lib/api-auth";
 import { persistFailureResponse } from "@/lib/api-persist";
+import { inferIntentCategories } from "@/lib/intent-categories";
 import {
   addIntent,
   createSearchingDealFromIntent,
@@ -14,7 +15,8 @@ import {
 const createIntent = z.object({
   summary: z.string().min(3).max(280),
   categories: z.array(z.string().min(1)).max(8).default([]),
-  maxPriceUsd: z.number().positive().max(1000).optional(),
+  /** Search hint only — not a spend. Spend hard gate stays $1,000. */
+  maxPriceUsd: z.number().positive().max(50_000_000).optional(),
   mustInclude: z.string().max(280).optional(),
   avoid: z.string().max(280).optional(),
   templateId: z.string().max(64).optional(),
@@ -44,9 +46,12 @@ export async function POST(request: Request) {
   const intent = addIntent(
     {
       summary: parsed.data.summary,
-      categories: parsed.data.categories.length
-        ? parsed.data.categories
-        : ["software"],
+      categories: inferIntentCategories({
+        summary: parsed.data.summary,
+        mustInclude: parsed.data.mustInclude,
+        avoid: parsed.data.avoid,
+        explicit: parsed.data.categories,
+      }),
       maxPriceUsd: parsed.data.maxPriceUsd ?? limits.perDealLimitUsd,
       mustInclude: parsed.data.mustInclude,
       avoid: parsed.data.avoid,

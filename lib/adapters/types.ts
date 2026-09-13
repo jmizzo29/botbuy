@@ -1,7 +1,7 @@
 /**
- * Search/purchase scope: all software products across all channels.
- * Architecture is pluggable marketplace adapters — not a merchant allowlist.
- * Issuing MCC may bias software. Domains remain OK. Not domains-only.
+ * Search/purchase scope: category-agnostic. Cars, houses, software,
+ * domains, and broader. Pluggable adapters — not a merchant allowlist.
+ * Issuing MCC must not reject non-software categories.
  */
 export const PURCHASE_CHANNELS = [
   "vendor_checkout",
@@ -9,11 +9,14 @@ export const PURCHASE_CHANNELS = [
   "marketplace",
   "license_store",
   "domain",
+  "vehicle",
+  "property",
+  "catalog",
 ] as const;
 
 export type PurchaseChannel = (typeof PURCHASE_CHANNELS)[number];
 
-export const MCC_BIAS = "software";
+export const MCC_BIAS = "none";
 
 export interface AdapterSearch {
   query: string;

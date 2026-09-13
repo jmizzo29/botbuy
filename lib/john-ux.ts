@@ -9,7 +9,7 @@ export const INTENT_SUB = "Pick a starter or describe it yourself." as const;
 export const INTENT_CTA = "Start search" as const;
 export const INTENT_TEXTAREA_LABEL = "Describe what you want" as const;
 export const INTENT_TEXTAREA_PLACEHOLDER =
-  "A SaaS tool, a software license, or a product plus its domain." as const;
+  "A car, a house, software, a domain — or anything else you want to buy." as const;
 export const INTENT_HELPERS_LABEL = "Optional details" as const;
 export const INTENT_MAX_PRICE_LABEL = "Max price" as const;
 export const INTENT_MUST_INCLUDE_LABEL = "Must include" as const;

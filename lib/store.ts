@@ -205,12 +205,16 @@ function materializeRunDeal(
   return deal;
 }
 
+const softwareTemplate =
+  JOHN_INTENT_TEMPLATES.find((item) => item.id === "software") ??
+  JOHN_INTENT_TEMPLATES[0];
+
 const intents: Intent[] = [
   {
     id: "intent_software",
     userId: SEED_OWNER.id,
-    summary: JOHN_INTENT_TEMPLATES[0].summary,
-    categories: [...JOHN_INTENT_TEMPLATES[0].categories],
+    summary: softwareTemplate.summary,
+    categories: [...softwareTemplate.categories],
     maxPriceUsd: SPEND_HARD_GATE_USD,
     status: "active",
     createdAt: "2026-09-04T18:00:00Z",
@@ -218,8 +222,8 @@ const intents: Intent[] = [
   {
     id: "intent_software_domain",
     userId: SEED_OWNER.id,
-    summary: JOHN_INTENT_TEMPLATES.find((item) => item.id === "software_domain")
-      ?.summary ?? JOHN_INTENT_TEMPLATES[0].summary,
+    summary:
+      "Find a software product and a transferable domain that matches it.",
     categories: ["software", "domain"],
     maxPriceUsd: SPEND_HARD_GATE_USD,
     status: "active",

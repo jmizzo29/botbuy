@@ -12,7 +12,13 @@
  */
 import { assertAuthorizedBuyAllowed } from "@/lib/connectors/approve-gate";
 import { ConnectorError } from "@/lib/connectors/types";
-import { recordAuditLog } from "@/lib/store";
+import {
+  appendDealEvent,
+  getDeal,
+  listDealEvents,
+  persistEngineStore,
+  recordAuditLog,
+} from "@/lib/store";
 import { sanitizeAuditMetadata } from "@/lib/connectors/sanitize";
 import { isWithinHardGate, SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
 import type { Deal, DealStatus } from "@/lib/types";
@@ -30,10 +36,14 @@ export const AUTHORIZED_BUY_NOTE =
   "Card Available ≠ live. Checkout Session prep is not live pay. Auto-approve OFF. Fail-closed.";
 
 export const AUTHORIZED_BUY_KEYS_MISSING =
-  "BOTBUY_STRIPE_SECRET_KEY is not configured. Card rail Available ≠ live. Not live pay.";
+  "BOTBUY_STRIPE_SECRET_KEY is not configured. Card rail Available ≠ live. keysConfigured=false · prepared=false · sessionCreated=false. Not live pay.";
 
 export const AUTHORIZED_BUY_KEYS_PRESENT =
-  "BOTBUY_STRIPE_* present. Checkout Session params prepared. Session not created. Not live pay until CHO wiring proven.";
+  "BOTBUY_STRIPE_* present. Checkout Session params prepared. keysConfigured=true · sessionCreated=false · charged=false. Not live pay until CHO wiring proven.";
+
+export function authorizedBuyPrepEventId(dealId: string) {
+  return `evt_${dealId}_authorized_buy_prep`;
+}
 
 export const AUTHORIZED_BUY_NO_CHARGE =
   "This scaffold never confirms a PaymentIntent, never captures, and never claims live pay.";
@@ -282,6 +292,7 @@ export function prepareAuthorizedBuy(input: {
       checkoutSession: null,
     });
     recordAuthorizedBuyAudit(input.userId, result);
+    persistAuthorizedBuyDealEvent(input.userId, result);
     return result;
   }
 
@@ -300,7 +311,61 @@ export function prepareAuthorizedBuy(input: {
     checkoutSession,
   });
   recordAuthorizedBuyAudit(input.userId, result);
+  persistAuthorizedBuyDealEvent(input.userId, result);
   return result;
+}
+
+function persistAuthorizedBuyDealEvent(userId: string, result: AuthorizedBuyPrep) {
+  if (!result.dealId) return;
+  const deal = getDeal(result.dealId, userId);
+  if (!deal) return;
+  const id = authorizedBuyPrepEventId(deal.id);
+  if (listDealEvents(deal.id).some((event) => event.id === id)) return;
+  const at = new Date().toISOString();
+  const detail = [
+    "live:false",
+    `charged=${String(result.charged)}`,
+    `sessionCreated=${String(result.sessionCreated)}`,
+    `prepared=${String(result.prepared)}`,
+    `keysConfigured=${String(result.keysConfigured)}`,
+    `publishableConfigured=${String(result.publishableConfigured)}`,
+    `webhookConfigured=${String(result.webhookConfigured)}`,
+    `amountCents=${String(result.amountCents)}`,
+    `amountVerified=${String(result.amountVerified)}`,
+    `trail=${result.trail}`,
+    result.reason,
+  ].join(" · ");
+  appendDealEvent({
+    id,
+    dealId: deal.id,
+    type: "note",
+    stage: "purchase",
+    title: "Checkout Session prep",
+    detail,
+    at,
+    status: "done",
+    actor: "engine",
+    metadata: sanitizeAuditMetadata({
+      live: false,
+      charged: false,
+      sessionCreated: false,
+      autoApprove: false,
+      prepared: result.prepared,
+      keysConfigured: result.keysConfigured,
+      publishableConfigured: result.publishableConfigured,
+      webhookConfigured: result.webhookConfigured,
+      amountCents: result.amountCents,
+      amountVerified: result.amountVerified,
+      trail: result.trail,
+      path: result.path,
+    }),
+  });
+  void persistEngineStore().catch((error) => {
+    console.error(
+      "[authorized-buy] persist after prep failed",
+      error instanceof Error ? error.message : error,
+    );
+  });
 }
 
 function recordAuthorizedBuyAudit(userId: string, result: AuthorizedBuyPrep) {

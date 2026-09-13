@@ -7,6 +7,7 @@ import {
   INTENT_SUB,
   hasReachableEmail,
 } from "@/lib/john-ux";
+import { formatIntentCategories } from "@/lib/intent-categories";
 import { formatUsd } from "@/lib/money";
 import { listIntents } from "@/lib/store";
 import { formatDate } from "@/lib/utils";
@@ -54,7 +55,7 @@ export default async function IntentPage({
                   <div>
                     <p className="text-[15px] font-medium">{intent.summary}</p>
                     <p className="mt-1 text-sm text-muted">
-                      {intent.categories.join(" · ") || "software"} ·{" "}
+                      {formatIntentCategories(intent.categories)} ·{" "}
                       {formatDate(intent.createdAt)}
                     </p>
                   </div>

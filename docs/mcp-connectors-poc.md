@@ -22,13 +22,15 @@ John/CEO tech lock (Soft HOLD): **MCP-first · APIs-first**. Prefer the connecto
 
 `POST /api/intents` with `startSearch: true` (and go-live Run) opens a Searching deal, then maps category/summary to a connector **search**:
 
-- domain-ish → Namecheap official API
-- phone / SMS / number-ish → Twilio official API
-- software / SaaS / merchant-ish → Shopify Admin API
-- HTTP/JSON / OpenAPI-ish → `http_json` official HTTPS JSON
-- otherwise → typed stub event (`live:false`, no invented results)
+- domain-ish → Namecheap official API (scaffold)
+- phone / SMS / number-ish → Twilio official API (scaffold)
+- software / SaaS / Shopify / license-ish → Shopify Admin API (scaffold)
+- HTTP/JSON / OpenAPI / official catalog → `http_json` official HTTPS JSON (category-agnostic)
+- cars, houses, and anything else → typed stub event (`live:false`, category accepted, not rejected, no invented results)
 
-Search/quote persist as `deal_events` + notes. Shopify Admin API and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
+John LOCK: intent + deal model stay **category-agnostic**. Cars, houses, and broader are valid searches. Software/domains may ship first as scaffolds. Routing must not assume software-only or reject other categories.
+
+Search/quote persist as `deal_events` + notes. Shopify Admin API and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. HTTP JSON stubs report `keysConfigured` and accept listing-shaped rows (title, vin, address, make/model) without inventing prices. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
 
 ### Stage search fixture (CHO-honest)
 

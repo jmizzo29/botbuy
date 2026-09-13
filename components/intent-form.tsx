@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { inferIntentCategories } from "@/lib/intent-categories";
 import {
   DEFAULT_INTENT_TEMPLATE,
   JOHN_INTENT_TEMPLATES,
@@ -70,9 +71,12 @@ export function IntentForm({
     }
     setPending(true);
     setError(null);
-    const categories = selected
-      ? [...selected.categories]
-      : DEFAULT_INTENT_TEMPLATE.categories.slice();
+    const categories = inferIntentCategories({
+      summary: nextSummary,
+      mustInclude: mustInclude.trim() || undefined,
+      avoid: avoid.trim() || undefined,
+      explicit: selected?.categories,
+    });
     const response = await fetch("/api/intents", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

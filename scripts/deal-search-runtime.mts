@@ -1,3 +1,4 @@
+import { prepareAuthorizedBuy } from "../lib/authorized-buy.ts";
 import { SEED_OWNER } from "../lib/auth-owner.ts";
 import {
   assertAuthorizedBuyAllowed,
@@ -124,6 +125,60 @@ if (!catalogSearch.detail.includes("live:false")) {
 if (catalogDeal.status !== "Searching") {
   throw new Error("HTTP JSON stub must stay Searching without invented candidates");
 }
+if (!catalogSearch.detail.includes("keysConfigured")) {
+  throw new Error("HTTP JSON search must report keysConfigured");
+}
+
+const car = addIntent(
+  {
+    summary: `Find a used Honda Civic in Austin for category smoke ${stamp}.`,
+    categories: ["vehicle"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const carDeal = await createSearchingDealFromIntent(
+  car,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+if (carDeal.category !== "vehicle") {
+  throw new Error("car deal must keep vehicle category");
+}
+const carSearch = listDealEvents(carDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!carSearch?.detail.includes("accepted=true") && !carSearch?.detail.includes("accepted")) {
+  throw new Error("car search must record accepted category");
+}
+if (carSearch.detail.includes("shopify")) {
+  throw new Error("car search must not map to Shopify");
+}
+if (carDeal.status !== "Searching") {
+  throw new Error("car stub must stay Searching without invented candidates");
+}
+if (carDeal.priceUsd !== 0 || carDeal.amountVerified) {
+  throw new Error("car deal must stay $0 unverified");
+}
+
+const house = addIntent(
+  {
+    summary: `Find a 3-bed house in Denver for category smoke ${stamp}.`,
+    categories: ["property"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const houseDeal = await createSearchingDealFromIntent(house, SEED_OWNER.id);
+if (houseDeal.category !== "property") {
+  throw new Error("house deal must keep property category");
+}
+const houseSearch = listDealEvents(houseDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (houseSearch?.detail.includes("shopify")) {
+  throw new Error("house search must not map to Shopify");
+}
 
 if (officialSearchProvider("shopify") !== "shopify") {
   throw new Error("Shopify search must resolve from MCP registry");
@@ -139,6 +194,18 @@ const parsedJson = parseHttpJsonCandidates(
 );
 if (parsedJson.length !== 1 || parsedJson[0].title !== "Catalog license") {
   throw new Error("HTTP JSON search must map official JSON rows into candidates");
+}
+const parsedListing = parseHttpJsonCandidates(
+  JSON.stringify({
+    listings: [{ make: "Honda", model: "Civic", vin: "1HGBH41JXMN109186", city: "Austin" }],
+  }),
+);
+if (
+  parsedListing.length !== 1 ||
+  !parsedListing[0].title.includes("Honda") ||
+  parsedListing[0].vin !== "1HGBH41JXMN109186"
+) {
+  throw new Error("HTTP JSON search must map vehicle listing rows without inventing prices");
 }
 
 if (connectorResultHasCandidates({ available: null, candidates: [] })) {
@@ -231,6 +298,22 @@ assertAuthorizedBuyAllowed({
   userId: SEED_OWNER.id,
   dealId: buying.id,
 });
+const prep = prepareAuthorizedBuy({
+  userId: SEED_OWNER.id,
+  dealId: buying.id,
+});
+if (prep.live !== false || prep.charged !== false || prep.sessionCreated !== false) {
+  throw new Error("authorized-buy prep must stay not-live");
+}
+if (prep.keysConfigured !== false || prep.prepared !== false) {
+  throw new Error("authorized-buy without keys must stay unprepared");
+}
+if (prep.amountCents !== 0 || prep.amountVerified !== false) {
+  throw new Error("authorized-buy must not invent verified amounts");
+}
+if (!listDealEvents(buying.id).some((event) => event.id.endsWith("_authorized_buy_prep"))) {
+  throw new Error("authorized-buy prep must persist a deal event");
+}
 
 const replayHandoff = applySearchActHandoff({
   deal: buying,
@@ -249,5 +332,7 @@ console.log(` - software ${softwareDeal.id} Shopify search live:false`);
 console.log(` - domain ${domainDeal.id} Namecheap search live:false`);
 console.log(` - phone ${phoneDeal.id} Twilio search live:false`);
 console.log(` - http_json ${catalogDeal.id} official JSON search live:false`);
+console.log(` - car ${carDeal.id} accepted stub live:false`);
+console.log(` - house ${houseDeal.id} accepted stub live:false`);
 console.log(` - ${reviewed.id} candidates → Needs you · buy still fail-closed`);
 console.log(" - Needs you → Buying still required before spend / authorized-buy");
