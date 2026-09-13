@@ -337,6 +337,11 @@ assert(!signup.includes("persistSignupAction"), "signup is not in-memory persist
 assert(middleware.includes("clerkMiddleware"), "middleware uses Clerk");
 assert(middleware.includes("isClerkConfigured"), "middleware skips Clerk when keys missing");
 assert(middleware.includes("/home"), "middleware protects /home");
+assert(
+  middleware.includes("NextResponse.redirect") && middleware.includes("CLERK_SIGN_IN_URL"),
+  "unauth app pages 3xx to /signin",
+);
+assert(!middleware.includes("auth.protect("), "unauth pages are not Clerk protect-rewrite 404");
 assert(schema.includes("clerkUserId"), "users.clerkUserId column");
 assert(schema.includes('autoApprove: boolean("auto_approve").notNull().default(false)'), "autoApprove default false");
 assert(authLib.includes("resolveOrCreateAppUser"), "Clerk session resolves Neon user");
@@ -745,7 +750,7 @@ assert(
   "Sign in is a ghost/outline pill",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
-assert(land.includes('data-fold="d1-bold-h1-first"'), "land fold is D1 bold-h1-first");
+assert(!land.includes("data-fold"), "land production DOM has no data-fold debug tag");
 assert(
   land.includes("bb-land-rule") &&
     css.includes(".bb-land-rule") &&

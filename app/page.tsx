@@ -32,7 +32,6 @@ export default async function LandPage() {
     <PublicChrome land>
       <section
         data-surface="land-stage"
-        data-fold="d1-bold-h1-first"
         className="bb-land-stage bb-atm-richer-mesh-deep"
       >
         <div className="bb-land-stage-grid">
