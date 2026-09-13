@@ -1393,6 +1393,13 @@ assert(settingsPageSrc.includes("ConnectedAccountsPanel"), "Settings hosts Conne
 assert(settingsPageSrc.includes('id="connected-accounts"') || connectUi.includes('id="connected-accounts"'), "connected-accounts anchor");
 assert(connectPage.includes("ConnectedAccountsPanel"), "connected-accounts route");
 assert(connectUi.includes("Namecheap") && connectUi.includes("Twilio"), "Namecheap + Twilio rows");
+assert(connectUi.includes("Shopify") && connectUi.includes("HTTP JSON"), "M2 Shopify + HTTP JSON rows");
+assert(connectUi.includes("shopify-needs-setup") && connectUi.includes("http-json-needs-setup"), "M2 Needs setup honesty");
+assert(connectUi.includes("data-cta=\"shopify-oauth\""), "Shopify OAuth is preferred CTA");
+assert(connectUi.includes("data-flow=\"http-json-connect\""), "HTTP JSON connect hook");
+assert(connectDocs.includes("shopify") && connectDocs.includes("http_json"), "POC docs list M2 shells");
+assert(envExample.includes("SHOPIFY_ADMIN_TOKEN=") && envExample.includes("HTTP_JSON_BASE_URL="), "env names M2 keys");
+assert(!/SHOPIFY_ADMIN_TOKEN=\S+/.test(envExample.split("\n").find((line) => line.startsWith("SHOPIFY_ADMIN_TOKEN=")) ?? ""), "env example has no Shopify secret");
 assert(connectUi.includes("Connect") && connectUi.includes("Revoke"), "Connect / Revoke actions");
 assert(connectUi.includes("data-cta=\"twilio-oauth\""), "Twilio OAuth is primary CTA");
 assert(connectUi.includes("TWILIO_ADVANCED_CREDENTIALS") || connectUi.includes("Use API credentials"), "Twilio API is advanced");

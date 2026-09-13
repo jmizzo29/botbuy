@@ -1,9 +1,15 @@
 import { recordConnectorAccountAudit } from "@/lib/connectors/audit";
 import {
+  HTTP_JSON_HOST_COPY,
+  HTTP_JSON_NEEDS_SETUP_COPY,
   NAMECHEAP_ELIGIBILITY_COPY,
   NAMECHEAP_IP_WHITELIST_COPY,
+  SHOPIFY_CUSTOM_APP_COPY,
+  SHOPIFY_NEEDS_SETUP_COPY,
 } from "@/lib/connectors/copy";
-import { twilioOauthConfigured } from "@/lib/connectors/http";
+import { shopifyOauthConfigured, twilioOauthConfigured } from "@/lib/connectors/http";
+import { hostnameHint, parseOfficialHttpsUrl } from "@/lib/connectors/safe-url";
+import { normalizeShopifyShop } from "@/lib/connectors/shopify";
 import {
   ConnectorError,
   type ConnectorProvider,
@@ -11,8 +17,10 @@ import {
   type VaultSecretPayload,
 } from "@/lib/connectors/types";
 import {
+  httpJsonNeedsSetupReasons,
   namecheapNeedsSetupReasons,
   revokeConnectedAccount,
+  shopifyNeedsSetupReasons,
   upsertConnectedAccount,
 } from "@/lib/connectors/vault";
 
@@ -29,59 +37,69 @@ export interface ConnectInput {
   ipWhitelistAck?: boolean;
   oauthAccess?: string;
   oauthRefresh?: string;
+  shopDomain?: string;
+  baseUrl?: string;
+  officialApiAck?: boolean;
+  customAppAck?: boolean;
 }
 
 function hintFor(input: ConnectInput) {
   if (input.provider === "namecheap") return input.apiUser?.trim() || null;
+  if (input.provider === "shopify") {
+    return normalizeShopifyShop(input.shopDomain) ?? null;
+  }
+  if (input.provider === "http_json") {
+    return input.baseUrl ? hostnameHint(input.baseUrl) : null;
+  }
   const sid = input.accountSid?.trim();
   if (!sid) return input.apiKeySid ? "Twilio API key" : null;
   return `SID · ${sid.slice(-4)}`;
 }
 
-export async function connectProvider(input: ConnectInput) {
-  if (input.provider === "namecheap") {
-    const apiUser = input.apiUser?.trim();
-    const apiKey = input.apiKey?.trim();
-    if (!apiUser || !apiKey) {
-      throw new ConnectorError(
-        "Namecheap API user and API key are required. Never a password.",
-        "validation",
-      );
-    }
-    const needs = namecheapNeedsSetupReasons({
-      productionEligible: input.productionEligible,
-      ipWhitelistAck: input.ipWhitelistAck,
-    });
-    const status: ConnectorStatus = needs.length ? "needs_setup" : "connected";
-    const secret: VaultSecretPayload = {
-      provider: "namecheap",
-      authMode: "api_key",
-      apiUser,
-      apiKey,
-      username: input.username?.trim() || apiUser,
-    };
-    const row = await upsertConnectedAccount({
-      userId: input.userId,
-      clerkUserId: input.clerkUserId,
-      provider: "namecheap",
-      secret,
-      status,
-      hint: hintFor(input),
-    });
-    recordConnectorAccountAudit({
-      userId: input.userId,
-      provider: "namecheap",
-      tool: "connect",
-      result: status,
-    });
-    return {
-      row,
-      status,
-      needsSetup: needs,
-      setupCopy: [NAMECHEAP_ELIGIBILITY_COPY, NAMECHEAP_IP_WHITELIST_COPY],
-    };
+async function connectNamecheap(input: ConnectInput) {
+  const apiUser = input.apiUser?.trim();
+  const apiKey = input.apiKey?.trim();
+  if (!apiUser || !apiKey) {
+    throw new ConnectorError(
+      "Namecheap API user and API key are required. Never a password.",
+      "validation",
+    );
   }
+  const needs = namecheapNeedsSetupReasons({
+    productionEligible: input.productionEligible,
+    ipWhitelistAck: input.ipWhitelistAck,
+  });
+  const status: ConnectorStatus = needs.length ? "needs_setup" : "connected";
+  const secret: VaultSecretPayload = {
+    provider: "namecheap",
+    authMode: "api_key",
+    apiUser,
+    apiKey,
+    username: input.username?.trim() || apiUser,
+  };
+  const row = await upsertConnectedAccount({
+    userId: input.userId,
+    clerkUserId: input.clerkUserId,
+    provider: "namecheap",
+    secret,
+    status,
+    hint: hintFor(input),
+  });
+  recordConnectorAccountAudit({
+    userId: input.userId,
+    provider: "namecheap",
+    tool: "connect",
+    result: status,
+  });
+  return {
+    row,
+    status,
+    needsSetup: needs,
+    setupCopy: [NAMECHEAP_ELIGIBILITY_COPY, NAMECHEAP_IP_WHITELIST_COPY],
+  };
+}
 
+async function connectTwilio(input: ConnectInput) {
   const accountSid = input.accountSid?.trim();
   const apiKey = input.apiKey?.trim();
   const apiKeySid = input.apiKeySid?.trim();
@@ -120,6 +138,112 @@ export async function connectProvider(input: ConnectInput) {
     result: "connected",
   });
   return { row, status: "connected" as const, needsSetup: [] as string[] };
+}
+
+async function connectShopify(input: ConnectInput) {
+  const shopDomain = normalizeShopifyShop(input.shopDomain);
+  const apiKey = input.apiKey?.trim();
+  const oauthAccess = input.oauthAccess?.trim();
+
+  if (!shopDomain) {
+    throw new ConnectorError(
+      "A *.myshopify.com shop domain is required. Official Admin API only.",
+      "validation",
+    );
+  }
+  if (!oauthAccess && !apiKey) {
+    throw new ConnectorError(
+      shopifyOauthConfigured()
+        ? "Shopify OAuth or an Admin API access token is required. Never a password."
+        : "A Shopify Admin API access token is required. OAuth is preferred when a Shopify app client is configured. Never a password.",
+      "validation",
+    );
+  }
+
+  const needs = shopifyNeedsSetupReasons({
+    officialApiAck: input.officialApiAck,
+    customAppAck: input.customAppAck,
+    shopDomain,
+  });
+  const status: ConnectorStatus = needs.length ? "needs_setup" : "connected";
+  const secret: VaultSecretPayload = {
+    provider: "shopify",
+    authMode: oauthAccess ? "oauth" : "api_key",
+    shopDomain,
+    apiKey,
+    oauthAccess,
+    oauthRefresh: input.oauthRefresh?.trim(),
+  };
+  const row = await upsertConnectedAccount({
+    userId: input.userId,
+    clerkUserId: input.clerkUserId,
+    provider: "shopify",
+    secret,
+    status,
+    hint: hintFor({ ...input, shopDomain }),
+  });
+  recordConnectorAccountAudit({
+    userId: input.userId,
+    provider: "shopify",
+    tool: "connect",
+    result: status,
+  });
+  return {
+    row,
+    status,
+    needsSetup: needs,
+    setupCopy: [SHOPIFY_NEEDS_SETUP_COPY, SHOPIFY_CUSTOM_APP_COPY],
+  };
+}
+
+async function connectHttpJson(input: ConnectInput) {
+  const rawUrl = input.baseUrl?.trim();
+  if (!rawUrl) {
+    throw new ConnectorError(
+      "An official HTTPS JSON base URL is required. Never a password.",
+      "validation",
+    );
+  }
+  const url = parseOfficialHttpsUrl(rawUrl);
+  const needs = httpJsonNeedsSetupReasons({
+    officialApiAck: input.officialApiAck,
+    baseUrl: url.toString(),
+  });
+  const status: ConnectorStatus = needs.length ? "needs_setup" : "connected";
+  const secret: VaultSecretPayload = {
+    provider: "http_json",
+    authMode: input.apiKey?.trim() ? "api_key" : "none",
+    baseUrl: `${url.origin}${url.pathname.replace(/\/$/, "")}/`,
+    apiKey: input.apiKey?.trim(),
+  };
+  const row = await upsertConnectedAccount({
+    userId: input.userId,
+    clerkUserId: input.clerkUserId,
+    provider: "http_json",
+    secret,
+    status,
+    hint: url.hostname,
+  });
+  recordConnectorAccountAudit({
+    userId: input.userId,
+    provider: "http_json",
+    tool: "connect",
+    result: status,
+  });
+  return {
+    row,
+    status,
+    needsSetup: needs,
+    setupCopy: [HTTP_JSON_NEEDS_SETUP_COPY, HTTP_JSON_HOST_COPY],
+  };
+}
+
+export async function connectProvider(input: ConnectInput) {
+  if (input.provider === "namecheap") return connectNamecheap(input);
+  if (input.provider === "twilio") return connectTwilio(input);
+  if (input.provider === "shopify") return connectShopify(input);
+  if (input.provider === "http_json") return connectHttpJson(input);
+  throw new ConnectorError("Unknown connector. Fail-closed.", "validation");
 }
 
 export async function revokeProvider(input: {

@@ -14,6 +14,11 @@ import {
   CONNECT_ACCOUNTS_LEGAL,
   CONNECT_ACCOUNTS_SUB,
   CONNECTOR_APPROVE_LOCK,
+  HTTP_JSON_BASE_URL_LABEL,
+  HTTP_JSON_BEARER_LABEL,
+  HTTP_JSON_HOST_COPY,
+  HTTP_JSON_NEEDS_SETUP_COPY,
+  HTTP_JSON_TOKEN_DISCLOSURE,
   NAMECHEAP_APIKEY_LABEL,
   NAMECHEAP_APIUSER_LABEL,
   NAMECHEAP_EGRESS_IP_NOTE,
@@ -26,6 +31,14 @@ import {
   REVOKE_CONFIRM_LABEL,
   REVOKE_SHEET_LEAD,
   REVOKE_SHEET_TITLE,
+  SHOPIFY_ADVANCED_CREDENTIALS,
+  SHOPIFY_API_TOKEN_DISCLOSURE,
+  SHOPIFY_CUSTOM_APP_COPY,
+  SHOPIFY_NEEDS_SETUP_COPY,
+  SHOPIFY_OAUTH_CTA,
+  SHOPIFY_OAUTH_PREFERRED,
+  SHOPIFY_SHOP_LABEL,
+  SHOPIFY_TOKEN_LABEL,
   TWILIO_ADVANCED_CREDENTIALS,
   TWILIO_API_KEY_DISCLOSURE,
   TWILIO_OAUTH_CTA,
@@ -61,11 +74,13 @@ export function ConnectedAccountsPanel({
   providers,
   vaultKeyConfigured,
   twilioOauthAvailable,
+  shopifyOauthAvailable = false,
   heading = "h2",
 }: {
   providers: ConnectorPublicStatus[];
   vaultKeyConfigured: boolean;
   twilioOauthAvailable: boolean;
+  shopifyOauthAvailable?: boolean;
   heading?: "h1" | "h2";
 }) {
   return (
@@ -115,6 +130,7 @@ export function ConnectedAccountsPanel({
               row={row}
               vaultKeyConfigured={vaultKeyConfigured}
               twilioOauthAvailable={twilioOauthAvailable}
+              shopifyOauthAvailable={shopifyOauthAvailable}
             />
           ))}
         </CardContent>
@@ -127,10 +143,12 @@ function ProviderRow({
   row,
   vaultKeyConfigured,
   twilioOauthAvailable,
+  shopifyOauthAvailable,
 }: {
   row: ConnectorPublicStatus;
   vaultKeyConfigured: boolean;
   twilioOauthAvailable: boolean;
+  shopifyOauthAvailable: boolean;
 }) {
   const router = useRouter();
   const [sheet, setSheet] = useState<"connect" | "revoke" | null>(null);
@@ -201,6 +219,12 @@ function ProviderRow({
       {row.provider === "namecheap" && row.status !== "connected" ? (
         <NamecheapNeedsSetup />
       ) : null}
+      {row.provider === "shopify" && row.status !== "connected" ? (
+        <ShopifyNeedsSetup />
+      ) : null}
+      {row.provider === "http_json" && row.status !== "connected" ? (
+        <HttpJsonNeedsSetup />
+      ) : null}
       {error && !sheet ? <p className="text-sm text-demo">{error}</p> : null}
       {sheet === "connect" ? (
         <ConnectorSheet
@@ -218,10 +242,33 @@ function ProviderRow({
               onError={setError}
               onPending={(value) => setPending(value ? "connect" : null)}
             />
-          ) : (
+          ) : row.provider === "twilio" ? (
             <TwilioConnectForm
               disabled={!vaultKeyConfigured}
               oauthAvailable={twilioOauthAvailable}
+              pending={pending === "connect"}
+              onDone={() => {
+                setSheet(null);
+                router.refresh();
+              }}
+              onError={setError}
+              onPending={(value) => setPending(value ? "connect" : null)}
+            />
+          ) : row.provider === "shopify" ? (
+            <ShopifyConnectForm
+              disabled={!vaultKeyConfigured}
+              oauthAvailable={shopifyOauthAvailable}
+              pending={pending === "connect"}
+              onDone={() => {
+                setSheet(null);
+                router.refresh();
+              }}
+              onError={setError}
+              onPending={(value) => setPending(value ? "connect" : null)}
+            />
+          ) : (
+            <HttpJsonConnectForm
+              disabled={!vaultKeyConfigured}
               pending={pending === "connect"}
               onDone={() => {
                 setSheet(null);
@@ -269,19 +316,52 @@ function ProviderRow({
   );
 }
 
-function NamecheapNeedsSetup() {
+function NeedsSetupBlock({
+  children,
+  surface,
+}: {
+  children: React.ReactNode;
+  surface: string;
+}) {
   return (
     <div
       data-state="needs-setup"
+      data-surface={surface}
       className="space-y-2 rounded-[var(--bb-radius)] bg-black/[0.02] px-4 py-3 text-sm leading-relaxed text-muted"
     >
       <p className="text-xs font-medium uppercase tracking-[0.14em] text-demo">
         {NAMECHEAP_NEEDS_SETUP_TITLE}
       </p>
+      {children}
+    </div>
+  );
+}
+
+function NamecheapNeedsSetup() {
+  return (
+    <NeedsSetupBlock surface="namecheap-needs-setup">
       <p>{NAMECHEAP_ELIGIBILITY_COPY}</p>
       <p>{NAMECHEAP_IP_WHITELIST_COPY}</p>
       <EgressIpRows />
-    </div>
+    </NeedsSetupBlock>
+  );
+}
+
+function ShopifyNeedsSetup() {
+  return (
+    <NeedsSetupBlock surface="shopify-needs-setup">
+      <p>{SHOPIFY_NEEDS_SETUP_COPY}</p>
+      <p>{SHOPIFY_CUSTOM_APP_COPY}</p>
+    </NeedsSetupBlock>
+  );
+}
+
+function HttpJsonNeedsSetup() {
+  return (
+    <NeedsSetupBlock surface="http-json-needs-setup">
+      <p>{HTTP_JSON_NEEDS_SETUP_COPY}</p>
+      <p>{HTTP_JSON_HOST_COPY}</p>
+    </NeedsSetupBlock>
   );
 }
 
@@ -507,6 +587,192 @@ function TwilioConnectForm({
           </Button>
         </div>
       ) : null}
+    </form>
+  );
+}
+
+function ShopifyConnectForm({
+  disabled,
+  oauthAvailable,
+  pending,
+  onDone,
+  onError,
+  onPending,
+}: {
+  disabled: boolean;
+  oauthAvailable: boolean;
+  pending: boolean;
+  onDone: () => void;
+  onError: (message: string | null) => void;
+  onPending: (value: boolean) => void;
+}) {
+  const [advanced, setAdvanced] = useState(false);
+  const [shopDomain, setShopDomain] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [officialApiAck, setOfficialApiAck] = useState(false);
+  const [customAppAck, setCustomAppAck] = useState(false);
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    onPending(true);
+    onError(null);
+    const response = await fetch("/api/connectors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        provider: "shopify",
+        shopDomain,
+        apiKey,
+        officialApiAck,
+        customAppAck,
+      }),
+    });
+    const body = (await response.json().catch(() => null)) as { error?: string } | null;
+    onPending(false);
+    if (!response.ok) {
+      onError(body?.error ?? "Connect failed.");
+      return;
+    }
+    setApiKey("");
+    onDone();
+  }
+
+  return (
+    <form data-flow="shopify-connect" onSubmit={(event) => void submit(event)} className="space-y-3">
+      <p className="text-sm text-muted">{SHOPIFY_OAUTH_PREFERRED}</p>
+      {oauthAvailable ? (
+        <Button asChild className="min-h-11 w-full" data-cta="shopify-oauth">
+          <a
+            href={`/api/connectors/oauth/shopify?shop=${encodeURIComponent(shopDomain)}`}
+          >
+            {SHOPIFY_OAUTH_CTA}
+          </a>
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          className="min-h-11 w-full"
+          data-cta="shopify-oauth"
+          disabled={disabled}
+          onClick={() =>
+            onError(
+              "Shopify OAuth is the preferred path and is not configured on this POC. Use an Admin API token (advanced) or add SHOPIFY_OAUTH_CLIENT_ID.",
+            )
+          }
+        >
+          {SHOPIFY_OAUTH_CTA}
+        </Button>
+      )}
+      <button
+        type="button"
+        className="text-sm text-muted underline-offset-2 hover:underline"
+        data-cta="shopify-advanced"
+        onClick={() => setAdvanced((value) => !value)}
+      >
+        {SHOPIFY_ADVANCED_CREDENTIALS}
+      </button>
+      {advanced ? (
+        <div className="space-y-3" data-surface="shopify-advanced">
+          <p className="text-xs leading-relaxed text-muted">{SHOPIFY_API_TOKEN_DISCLOSURE}</p>
+          <Field
+            label={SHOPIFY_SHOP_LABEL}
+            value={shopDomain}
+            onChange={setShopDomain}
+            autoComplete="off"
+          />
+          <Field
+            label={SHOPIFY_TOKEN_LABEL}
+            value={apiKey}
+            onChange={setApiKey}
+            type="password"
+            autoComplete="new-password"
+          />
+          <Ack
+            checked={officialApiAck}
+            onChange={setOfficialApiAck}
+            label="This is an official Shopify Admin API token. Not a password. Not an HTML login."
+          />
+          <Ack
+            checked={customAppAck}
+            onChange={setCustomAppAck}
+            label="This shop has a custom app or OAuth app eligible for the Admin API."
+          />
+          <Button type="submit" variant="secondary" className="min-h-11" disabled={disabled || pending}>
+            {pending ? "…" : "Save Shopify Admin API"}
+          </Button>
+        </div>
+      ) : null}
+    </form>
+  );
+}
+
+function HttpJsonConnectForm({
+  disabled,
+  pending,
+  onDone,
+  onError,
+  onPending,
+}: {
+  disabled: boolean;
+  pending: boolean;
+  onDone: () => void;
+  onError: (message: string | null) => void;
+  onPending: (value: boolean) => void;
+}) {
+  const [baseUrl, setBaseUrl] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [officialApiAck, setOfficialApiAck] = useState(false);
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    onPending(true);
+    onError(null);
+    const response = await fetch("/api/connectors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        provider: "http_json",
+        baseUrl,
+        apiKey,
+        officialApiAck,
+      }),
+    });
+    const body = (await response.json().catch(() => null)) as { error?: string } | null;
+    onPending(false);
+    if (!response.ok) {
+      onError(body?.error ?? "Connect failed.");
+      return;
+    }
+    setApiKey("");
+    onDone();
+  }
+
+  return (
+    <form data-flow="http-json-connect" onSubmit={(event) => void submit(event)} className="space-y-3">
+      <p className="text-sm text-muted">{HTTP_JSON_NEEDS_SETUP_COPY}</p>
+      <Field
+        label={HTTP_JSON_BASE_URL_LABEL}
+        value={baseUrl}
+        onChange={setBaseUrl}
+        autoComplete="off"
+      />
+      <Field
+        label={HTTP_JSON_BEARER_LABEL}
+        value={apiKey}
+        onChange={setApiKey}
+        type="password"
+        autoComplete="new-password"
+        optional
+      />
+      <p className="text-xs leading-relaxed text-muted">{HTTP_JSON_TOKEN_DISCLOSURE}</p>
+      <Ack
+        checked={officialApiAck}
+        onChange={setOfficialApiAck}
+        label="This is a documented official HTTPS JSON API. I will not paste a password or scrape HTML."
+      />
+      <Button type="submit" className="min-h-11" disabled={disabled || pending}>
+        {pending ? "…" : "Save HTTP JSON API"}
+      </Button>
     </form>
   );
 }

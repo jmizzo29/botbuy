@@ -38,6 +38,32 @@ assert(!gate.includes("autoApprove: true"), "gate never enables auto-approve");
 const register = readFileSync(join(root, "lib/connectors/runtime.ts"), "utf8");
 assert(register.includes("assertConnectorSpendAllowed"), "runtime uses approve gate");
 assert(register.includes("recordConnectorAudit"), "runtime writes audit");
+assert(register.includes('"shopify"') && register.includes("buyShopifyProduct"), "runtime routes Shopify");
+assert(register.includes("buyHttpJson") && register.includes("searchHttpJson"), "runtime routes HTTP JSON");
+assert(register.includes("providerSupportsTool"), "runtime checks registry tools");
+
+const types = readFileSync(join(root, "lib/connectors/types.ts"), "utf8");
+assert(types.includes('"shopify"') && types.includes('"http_json"'), "provider types include M2 shells");
+assert(types.includes("live: false"), "public status live stays false");
+
+const registry = readFileSync(join(root, "lib/connectors/registry.ts"), "utf8");
+assert(registry.includes("kind: \"merchant\"") && registry.includes("kind: \"mcp_http\""), "registry kinds");
+assert(registry.includes('id: "shopify"') && registry.includes('id: "http_json"'), "registry entries");
+
+const shopifyBuy = readFileSync(join(root, "lib/connectors/shopify/buy.ts"), "utf8");
+assert(shopifyBuy.includes("connectorsLiveEnabled"), "Shopify buy not live by default");
+assert(shopifyBuy.includes("live: false"), "Shopify buy CHO-honest live:false");
+
+const httpBuy = readFileSync(join(root, "lib/connectors/http-json/buy.ts"), "utf8");
+assert(httpBuy.includes("connectorsLiveEnabled"), "HTTP JSON buy not live by default");
+assert(httpBuy.includes("live: false"), "HTTP JSON buy CHO-honest live:false");
+
+const safeUrl = readFileSync(join(root, "lib/connectors/safe-url.ts"), "utf8");
+assert(safeUrl.includes("https:"), "HTTP JSON requires HTTPS");
+assert(
+  safeUrl.includes("localhost") && safeUrl.includes("169\\.254"),
+  "HTTP JSON rejects private hosts",
+);
 
 function evaluateSpendGate({ tool, autoApproveAllowed, autoApprove, deal, events }) {
   if (tool === "search" || tool === "quote") return { ok: true };
@@ -120,3 +146,4 @@ console.log("connector-smoke PASS");
 console.log(" - AES-256-GCM roundtrip");
 console.log(" - approve gate Needs you → Buying · auto-approve OFF");
 console.log(" - register/buy fail closed without deal, auto-approve, or approve trail");
+console.log(" - M2 registry: shopify + http_json · live:false · spend gated");

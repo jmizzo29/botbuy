@@ -22,6 +22,21 @@ export function twilioEnvPresent() {
   );
 }
 
+export function shopifyOauthConfigured() {
+  return Boolean(process.env.SHOPIFY_OAUTH_CLIENT_ID?.trim());
+}
+
+export function shopifyEnvPresent() {
+  return Boolean(
+    process.env.SHOPIFY_SHOP_DOMAIN?.trim() &&
+      process.env.SHOPIFY_ADMIN_TOKEN?.trim(),
+  );
+}
+
+export function httpJsonEnvPresent() {
+  return Boolean(process.env.HTTP_JSON_BASE_URL?.trim());
+}
+
 export async function safeProviderFetch(
   url: string,
   init: RequestInit,

@@ -9,6 +9,10 @@ export {
 export { invokeConnectorTool } from "@/lib/connectors/runtime";
 export { assertConnectorSpendAllowed } from "@/lib/connectors/approve-gate";
 export {
+  listConnectorRegistry,
+  CONNECTOR_REGISTRY,
+} from "@/lib/connectors/registry";
+export {
   listPublicConnectorStatus,
   upsertConnectedAccount,
   revokeConnectedAccount,

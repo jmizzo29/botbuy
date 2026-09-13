@@ -2,7 +2,9 @@
 
 Soft-signal HOLD. BotBuy-dedicated. Not a public live-connector claim.
 
-Internal-first tool layer for **Namecheap** (domains) and **Twilio** (phone numbers). Settings → Connected accounts is the buyer surface. Auto-approve stays **OFF**.
+Internal-first tool layer for **Namecheap** (domains) and **Twilio** (phone numbers), plus M2 merchant/search shells: **Shopify** (Admin API) and **HTTP JSON** (generic official HTTPS JSON registry). Settings → Connected accounts is the buyer surface. Auto-approve stays **OFF**.
+
+Amazon Product Advertising is **not** in this POC — PA-API signing + associate-tag terms are not a clean official-API shell. Stripe rails stay vault **M3**.
 
 ## Constraints
 
@@ -22,6 +24,20 @@ Register / buy **must** pass the existing deal approve gate (`Needs you` → App
 - `POST /api/connectors/revoke`
 - `POST /api/connectors/tools` — search / quote / register / buy
 - `GET /api/connectors/oauth/twilio` — OAuth start (not live unless Twilio OAuth env is set)
+- `GET /api/connectors/oauth/shopify` — OAuth start (not live unless Shopify OAuth env + `?shop=` are set)
+
+## M2 registry (additive)
+
+`lib/connectors/registry.ts` is the MCP-style catalog. Each entry declares kind, auth modes, tools, and Needs setup copy.
+
+| Provider | Kind | Search (read) | Spend (approve-gated) | Connect |
+| --- | --- | --- | --- | --- |
+| `namecheap` | domains | search / quote | register | ApiUser / ApiKey + IP whitelist |
+| `twilio` | phone | search / quote | buy | OAuth preferred · API advanced |
+| `shopify` | merchant | search / quote | buy (draft order stub) | OAuth preferred · Admin API token + `*.myshopify.com` |
+| `http_json` | mcp_http | search / quote | buy | Official HTTPS base URL + optional bearer. Private/loopback hosts rejected. |
+
+M2 shells follow Legal shortlist **spirit** (official APIs, encrypt tokens, revoke wipes ciphertext, never log secrets, `live: false`). They are **not** a new Legal PASS and not a public live claim. CPO IA v1 still describes the original Namecheap + Twilio rows.
 
 ## Env vars (names only)
 
@@ -49,6 +65,13 @@ Optional (real HTTP). If absent, tools return typed stubs + `live: false`:
 - `TWILIO_OAUTH_CLIENT_ID`
 - `TWILIO_OAUTH_CLIENT_SECRET`
 - `TWILIO_OAUTH_REDIRECT_URL`
+- `SHOPIFY_SHOP_DOMAIN` — `*.myshopify.com` only
+- `SHOPIFY_ADMIN_TOKEN`
+- `SHOPIFY_OAUTH_CLIENT_ID`
+- `SHOPIFY_OAUTH_CLIENT_SECRET`
+- `SHOPIFY_OAUTH_REDIRECT_URL`
+- `HTTP_JSON_BASE_URL` — official HTTPS JSON API only
+- `HTTP_JSON_BEARER_TOKEN`
 
 Buyer-connected credentials are encrypted in `connected_accounts` and preferred over platform env at call time. Env is a fallback for CHO-honest HTTP experiments — still not a public live connector.
 
