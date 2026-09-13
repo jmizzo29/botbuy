@@ -1,31 +1,7 @@
 import { namecheapKeysConfigured } from "@/lib/connectors/keys";
 import { namecheapCommand, resolveNamecheapCreds } from "@/lib/connectors/namecheap/client";
+import { parseNamecheapAvailability } from "@/lib/connectors/namecheap/xml";
 import type { ConnectorToolResult, VaultSecretPayload } from "@/lib/connectors/types";
-
-function parseNamecheapAvailability(body: string, domain: string) {
-  const escaped = domain.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const scoped =
-    body.match(
-      new RegExp(`Domain="${escaped}"[^>]*Available="(true|false)"`, "i"),
-    ) ?? body.match(/Available="(true|false)"/i);
-  if (!scoped) {
-    return {
-      available: null as boolean | null,
-      candidates: [] as {
-        domain: string;
-        available: true;
-        amountStatus: "unverified";
-      }[],
-    };
-  }
-  const available = scoped[1].toLowerCase() === "true";
-  return {
-    available,
-    candidates: available
-      ? [{ domain, available: true as const, amountStatus: "unverified" as const }]
-      : [],
-  };
-}
 
 export async function searchNamecheapDomains(input: {
   query?: string;
@@ -53,8 +29,11 @@ export async function searchNamecheapDomains(input: {
           keysConfigured: true,
           httpStatus: http.status,
           available: parsed.available,
+          premium: parsed.premium,
+          listedUsd: parsed.listedUsd,
           candidates: parsed.candidates,
           amountStatus: "unverified",
+          verified: false,
         },
       };
     }
@@ -75,6 +54,7 @@ export async function searchNamecheapDomains(input: {
       available: null,
       candidates: [],
       amountStatus: "unverified",
+      verified: false,
     },
   };
 }

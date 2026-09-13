@@ -17,7 +17,14 @@ import {
   smokeQueryFor,
 } from "../lib/connectors/smoke.ts";
 import { CONNECTOR_PROVIDERS } from "../lib/connectors/types.ts";
+import { quoteNamecheapDomain } from "../lib/connectors/namecheap/quote.ts";
 import { searchNamecheapDomains } from "../lib/connectors/namecheap/search.ts";
+import {
+  namecheapTld,
+  parseNamecheapAvailability,
+  parseNamecheapPricing,
+} from "../lib/connectors/namecheap/xml.ts";
+import { routeIntentToSearch } from "../lib/connectors/intent-route.ts";
 import { searchTwilioNumbers } from "../lib/connectors/twilio/search.ts";
 import { searchShopifyProducts } from "../lib/connectors/shopify/search.ts";
 import { searchHttpJson } from "../lib/connectors/http-json/search.ts";
@@ -124,7 +131,39 @@ const catalog = await searchHttpJson({ vault: null, query: "smoke" });
 assert(catalog.live === false && catalog.result === "stub", "HTTP JSON search stub live:false");
 assert(catalog.data?.keysConfigured === false, "HTTP JSON search keysConfigured=false");
 
+const quote = await quoteNamecheapDomain({ vault: null, domain: "botbuyer.ai" });
+assert(quote.live === false && quote.result === "stub", "Namecheap quote stub without keys");
+assert(quote.data?.keysConfigured === false, "Namecheap quote keysConfigured=false");
+assert(quote.data?.listedUsd == null, "Namecheap quote invents no listedUsd without HTTP");
+assert(quote.data?.amountStatus === "unverified", "Namecheap quote stays unverified");
+
+assert(namecheapTld("botbuyer.ai") === "AI", "Namecheap TLD from domain");
+const checkXml =
+  '<ApiResponse Status="OK"><DomainCheckResult Domain="botbuyer.ai" Available="true" IsPremiumName="false" /></ApiResponse>';
+const parsed = parseNamecheapAvailability(checkXml, "botbuyer.ai");
+assert(parsed.available === true && parsed.candidates.length === 1, "Namecheap check XML maps available");
+assert(parsed.candidates[0]?.amountStatus === "unverified", "Namecheap check amounts stay unverified");
+
+const pricingXml =
+  '<ApiResponse Status="OK"><Price Duration="1" DurationType="YEAR" Price="12.98" YourPrice="10.48" Currency="USD" /></ApiResponse>';
+assert(parseNamecheapPricing(pricingXml, 1) === 10.48, "Namecheap getPricing prefers YourPrice");
+assert(parseNamecheapPricing('<ApiResponse Status="ERROR" />', 1) == null, "Namecheap pricing fail-closed");
+
+const carReady = routeIntentToSearch({
+  summary: "Find a used Honda Civic in Austin.",
+  categories: ["vehicle"],
+  httpJsonReady: true,
+});
+assert(carReady.kind === "http_json", "category-agnostic MCP when HTTP JSON keys are ready");
+assert(carReady.kind !== "shopify", "MCP catalog is not a Shopify wedge");
+const carStub = routeIntentToSearch({
+  summary: "Find a used Honda Civic in Austin.",
+  categories: ["vehicle"],
+});
+assert(carStub.kind === "stub", "empty car stub without HTTP JSON keys");
+
 console.log("connector-keys-smoke PASS");
 console.log(" - keysConfigured=false without vault/env for all four providers");
 console.log(" - Namecheap searchHttpReady stays false without NAMECHEAP_CLIENT_IP");
 console.log(" - read-only smoke is search-only · live:false");
+console.log(" - Namecheap getPricing parse · category-agnostic HTTP JSON MCP when keys ready");

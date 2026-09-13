@@ -26,11 +26,11 @@ John/CEO tech lock (Soft HOLD): **MCP-first · APIs-first**. Prefer the connecto
 - phone / SMS / number-ish → Twilio official API (scaffold)
 - software / SaaS / Shopify / license-ish → Shopify Admin API (scaffold)
 - HTTP/JSON / OpenAPI / official catalog → `http_json` official HTTPS JSON (category-agnostic)
-- cars, houses, consumer products, and anything else → typed stub event (`live:false`, category accepted, not rejected, no invented results)
+- cars, houses, consumer products, and anything else → HTTP JSON MCP catalog **when** `keysConfigured` (vault or `HTTP_JSON_BASE_URL`); otherwise typed stub (`live:false`, category accepted, not rejected, no invented results). Never a Shopify wedge.
 
 John LOCK: intent + deal model stay **category-agnostic**. Cars, houses, consumer products, and broader are valid searches. Software/domains may ship first as scaffolds. Routing must not assume software-only or reject other categories.
 
-Search/quote persist as `deal_events` + notes. Shopify Admin API and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. Every provider search/quote reports `keysConfigured` and `live:false`. HTTP JSON accepts listing-shaped rows (title, vin, address, make/model) without inventing prices. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
+Search/quote persist as `deal_events` + notes. Shopify Admin API and HTTP JSON search use the same MCP-registry mapper as Namecheap/Twilio. Every provider search/quote reports `keysConfigured` and `live:false`. HTTP JSON accepts listing-shaped rows (title, vin, address, make/model) without inventing prices. Namecheap quote calls official `namecheap.users.getPricing` when keys + `NAMECHEAP_CLIENT_IP` are present — listed amounts stay `amountStatus=unverified`. Without keys or IP, quote stays a stub. If a provider returns candidates, structured candidates + quote attach to the deal timeline, then status moves Searching → Found → **Needs you** for the designated-holder Approve sheet. Listed amounts stay unverified. Not bought. Auto-approve OFF always. STAGE-ONLY — never promote land to main. Not a public live-connector claim.
 
 ### Stage search fixture (CHO-honest)
 

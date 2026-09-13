@@ -3,6 +3,8 @@ import {
   officialSearchProvider,
   routeIntentToSearch,
 } from "@/lib/connectors/intent-route";
+import { httpJsonKeysConfigured } from "@/lib/connectors/keys";
+import { readVaultSecret } from "@/lib/connectors/vault";
 import { providerSupportsTool } from "@/lib/connectors/registry";
 import { invokeConnectorTool } from "@/lib/connectors/runtime";
 import {
@@ -179,12 +181,19 @@ export async function applyDealSearchPipeline(input: {
     mustInclude: input.intent?.mustInclude,
     avoid: input.intent?.avoid,
   };
+  let httpJsonVault = null;
+  try {
+    httpJsonVault = await readVaultSecret(input.userId, "http_json");
+  } catch {
+    httpJsonVault = null;
+  }
   const route = routeIntentToSearch({
     summary: intentForFixture.summary,
     categories: input.intent?.categories ?? [deal.category],
     mustInclude: intentForFixture.mustInclude,
     avoid: intentForFixture.avoid,
     category: deal.category,
+    httpJsonReady: httpJsonKeysConfigured(httpJsonVault),
   });
 
   if (dealHasConnectorSearchAttempt(deal.id)) {
@@ -342,6 +351,7 @@ export async function applyDealSearchPipeline(input: {
         reason: quote.reason,
         domain: domain ?? null,
         product: product ?? null,
+        keysConfigured: quote.data?.keysConfigured ?? null,
         listedUsd: quote.data?.listedUsd ?? null,
         amountStatus: quote.data?.amountStatus ?? "unverified",
         verified: false,
@@ -373,7 +383,7 @@ export async function applyDealSearchPipeline(input: {
       );
       appendSearchNote(
         deal,
-        `${route.provider} quote stub · listedUsd=${String(quote.data?.listedUsd ?? "null")} · unverified · not a verified price.`,
+        `${route.provider} quote ${quote.result} · listedUsd=${String(quote.data?.listedUsd ?? "null")} · unverified · not a verified price · live:false.`,
       );
     }
   }

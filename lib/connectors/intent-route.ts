@@ -90,6 +90,8 @@ export function routeIntentToSearch(input: {
   mustInclude?: string | null;
   avoid?: string | null;
   category?: string | null;
+  /** When true, unmapped cars/houses/products/general use the HTTP JSON MCP catalog. */
+  httpJsonReady?: boolean;
 }): IntentSearchRoute {
   const categories = inferIntentCategories({
     summary: input.summary,
@@ -169,7 +171,7 @@ export function routeIntentToSearch(input: {
     }
   }
 
-  if (httpJsonish) {
+  if (httpJsonish || input.httpJsonReady) {
     const provider = officialSearchProvider("http_json");
     if (provider) {
       return {
@@ -180,7 +182,9 @@ export function routeIntentToSearch(input: {
         country: "US",
         category,
         accepted: true,
-        reason: `Official HTTPS JSON catalog search via MCP registry. Category-agnostic. ${CONNECTOR_TECH_LOCK_NOTE}`,
+        reason: httpJsonish
+          ? `Official HTTPS JSON catalog search via MCP registry. Category-agnostic. ${CONNECTOR_TECH_LOCK_NOTE}`
+          : `Category-agnostic MCP HTTP JSON catalog (keysConfigured). Not a Shopify wedge. ${CONNECTOR_TECH_LOCK_NOTE}`,
       };
     }
   }

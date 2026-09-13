@@ -311,6 +311,7 @@ assert(!/puppeteer|playwright|selenium/i.test(intentRouteSrc), "intent route has
 assert(intentRouteSrc.includes("vehicleOrProperty"), "intent route refuses software wedge for cars/houses");
 assert(intentRouteSrc.includes("consumerish"), "intent route refuses software wedge for consumer products");
 assert(intentRouteSrc.includes("accepted: true"), "intent route never rejects a category");
+assert(intentRouteSrc.includes("httpJsonReady"), "intent route can use HTTP JSON MCP when keys are ready");
 const categoriesSrc = readFileSync(join(root, "lib/intent-categories.ts"), "utf8");
 assert(categoriesSrc.includes("DEFAULT_DEAL_CATEGORY"), "deal category default is general, not software");
 
@@ -381,6 +382,13 @@ assert(smokeRoute.includes("spend: false"), "smoke API spend:false");
 
 const namecheapSearch = readFileSync(join(root, "lib/connectors/namecheap/search.ts"), "utf8");
 assert(namecheapSearch.includes("keysConfigured"), "Namecheap search reports keysConfigured");
+const namecheapQuote = readFileSync(join(root, "lib/connectors/namecheap/quote.ts"), "utf8");
+assert(namecheapQuote.includes("namecheap.users.getPricing"), "Namecheap quote uses official getPricing");
+assert(namecheapQuote.includes("amountStatus"), "Namecheap quote stays unverified");
+assert(namecheapQuote.includes("live: false"), "Namecheap quote stays live:false");
+const namecheapXml = readFileSync(join(root, "lib/connectors/namecheap/xml.ts"), "utf8");
+assert(namecheapXml.includes("parseNamecheapPricing"), "Namecheap XML pricing parser");
+assert(namecheapXml.includes("Status=\"OK\""), "Namecheap XML fail-closed on Status");
 const twilioSearch = readFileSync(join(root, "lib/connectors/twilio/search.ts"), "utf8");
 assert(twilioSearch.includes("keysConfigured"), "Twilio search reports keysConfigured");
 const shopifySearch = readFileSync(join(root, "lib/connectors/shopify/search.ts"), "utf8");
