@@ -28,7 +28,7 @@ function assert(ok: unknown, message: string) {
 
 assert(CONNECTOR_SMOKE_TOOL === "search", "smoke tool is search only");
 assert(connectorSmokeIsReadOnly(), "smoke is read-only");
-assert(!CONNECTOR_SMOKE_NOTE.toLowerCase().includes("register"), "smoke copy never register");
+assert(CONNECTOR_SMOKE_NOTE.toLowerCase().includes("never register"), "smoke copy forbids register");
 assert(CONNECTOR_SMOKE_NOTE.includes("live:false"), "smoke copy stays live:false");
 assert(CONNECTOR_LIVE_LOCK_NOTE.includes("live:false is structural"), "live lock note");
 assert(
