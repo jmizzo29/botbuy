@@ -1,7 +1,9 @@
 /** Map an intent onto a connector search. Official APIs only. No invented matches. */
 
+import { providerSupportsTool } from "./registry";
 import { CONNECTOR_TECH_LOCK_NOTE } from "./tech-lock";
 import type { ConnectorProvider } from "./types";
+import { CONNECTOR_PROVIDERS } from "./types";
 
 export type IntentSearchKind =
   | "namecheap"
@@ -77,6 +79,16 @@ export function extractCountry(text: string): string {
   return token.slice(0, 2);
 }
 
+/** MCP registry first — only map to a provider that already lists search. */
+export function officialSearchProvider(
+  kind: IntentSearchKind,
+): ConnectorProvider | null {
+  if (kind === "stub") return null;
+  if (!(CONNECTOR_PROVIDERS as readonly string[]).includes(kind)) return null;
+  if (!providerSupportsTool(kind, "search")) return null;
+  return kind;
+}
+
 export function routeIntentToSearch(input: {
   summary?: string | null;
   categories?: string[] | null;
@@ -105,49 +117,61 @@ export function routeIntentToSearch(input: {
     HTTP_JSON_WORD_RE.test(text);
 
   if (domainish && (!phoneish || domain || domainCategory)) {
-    return {
-      kind: "namecheap",
-      provider: "namecheap",
-      query: domain ?? "",
-      domain,
-      country: "US",
-      reason: domain
-        ? "Domain candidate mapped to Namecheap official API search."
-        : "Domain-ish intent mapped to Namecheap official API search.",
-    };
+    const provider = officialSearchProvider("namecheap");
+    if (provider) {
+      return {
+        kind: "namecheap",
+        provider,
+        query: domain ?? "",
+        domain,
+        country: "US",
+        reason: domain
+          ? "Domain candidate mapped to Namecheap official API search."
+          : "Domain-ish intent mapped to Namecheap official API search.",
+      };
+    }
   }
 
   if (phoneish) {
-    return {
-      kind: "twilio",
-      provider: "twilio",
-      query: extractPhoneQuery(text),
-      domain: null,
-      country: extractCountry(text),
-      reason: "Phone/SMS/number-ish intent mapped to Twilio official API search.",
-    };
+    const provider = officialSearchProvider("twilio");
+    if (provider) {
+      return {
+        kind: "twilio",
+        provider,
+        query: extractPhoneQuery(text),
+        domain: null,
+        country: extractCountry(text),
+        reason: "Phone/SMS/number-ish intent mapped to Twilio official API search.",
+      };
+    }
   }
 
   if (merchantish) {
-    return {
-      kind: "shopify",
-      provider: "shopify",
-      query: (input.summary ?? "").trim(),
-      domain: null,
-      country: "US",
-      reason: `Software/merchant intent mapped to Shopify Admin API search. ${CONNECTOR_TECH_LOCK_NOTE}`,
-    };
+    const provider = officialSearchProvider("shopify");
+    if (provider) {
+      return {
+        kind: "shopify",
+        provider,
+        query: (input.summary ?? "").trim(),
+        domain: null,
+        country: "US",
+        reason: `Software/merchant intent mapped to Shopify Admin API search via MCP registry. ${CONNECTOR_TECH_LOCK_NOTE}`,
+      };
+    }
   }
 
   if (httpJsonish) {
-    return {
-      kind: "http_json",
-      provider: "http_json",
-      query: (input.summary ?? "").trim(),
-      domain: null,
-      country: "US",
-      reason: `HTTP/JSON intent mapped to official HTTPS JSON search. ${CONNECTOR_TECH_LOCK_NOTE}`,
-    };
+    const provider = officialSearchProvider("http_json");
+    if (provider) {
+      return {
+        kind: "http_json",
+        provider,
+        query: (input.summary ?? "").trim(),
+        domain: null,
+        country: "US",
+        reason: `HTTP/JSON intent mapped to official HTTPS JSON search via MCP registry. ${CONNECTOR_TECH_LOCK_NOTE}`,
+      };
+    }
   }
 
   return {
