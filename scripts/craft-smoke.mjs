@@ -1008,8 +1008,8 @@ assert(lockup.includes("219") && lockup.includes("46"), "land reverse lockup int
 assert(
   css.includes(".bb-land-lockup") &&
     css.includes("height: 1.75rem") &&
-    css.includes("height: 2.875rem"),
-  "land overlay lockup reads 28px phone / ~46px desk on navy",
+    !css.includes("height: 2.875rem"),
+  "land chrome lockup is 28px reverse on navy",
 );
 assert(lockup.includes('alt="BotBuyer"'), "BrandLockup accessible alt");
 assert(shell.includes("BrandLockup"), "app shell soft-spine header lockup");
@@ -1556,7 +1556,7 @@ if (failures.length) {
 
 console.log("craft-smoke PASS");
 console.log(" - g-techlux light #F7F8FA · teal #2DD4BF / #042F2E ≥4.5:1");
-console.log(" - land R3 lower-panel · sky + Quiet Capital panel · equal doors");
+console.log(" - land Q1 institutional-folio · flat navy · Sign up 8px · Sign in text · Soft HOLD");
 console.log(" - land/meta one-liner payment method lock · no Vault it");
 console.log(" - go-live Run BotBuyer present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
