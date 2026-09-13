@@ -1,6 +1,7 @@
 /**
- * Search/purchase scope: category-agnostic. Cars, houses, software,
- * domains, and broader. Pluggable adapters — not a merchant allowlist.
+ * Search/purchase scope: category-agnostic. Cars, houses, consumer
+ * products, software, domains, and broader. Pluggable adapters — not a
+ * merchant allowlist.
  * Issuing MCC must not reject non-software categories.
  */
 export const PURCHASE_CHANNELS = [

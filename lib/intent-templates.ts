@@ -8,7 +8,7 @@ export const JOHN_INTENT_TEMPLATES = [
     id: "anything",
     label: "Anything",
     summary:
-      "Find what I want to buy — search, act, and wait for my approve.",
+      "Find what I want to buy — a car, a house, a consumer product, or anything else. Search, act, and wait for my approve.",
     categories: [] as string[],
     primary: true,
   },

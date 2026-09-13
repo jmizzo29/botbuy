@@ -35,7 +35,7 @@ Route: `/onboarding/intent` (Clerk after-sign-up). In-app: `/intent`.
 | Helpers trigger | `Optional details` |
 | Helpers | Max price · Must include · Avoid |
 
-- Template chips: category-agnostic (Anything, Car, House, plus software/domain/catalog scaffolds). Load from `JOHN_INTENT_TEMPLATES` (4–6 honest starters).
+- Template chips: category-agnostic (Anything, Car, House, plus software/domain/catalog scaffolds). Consumer products are in scope via Anything / free text — not a new wedge. Load from `JOHN_INTENT_TEMPLATES` (4–6 honest starters).
 - Free-text textarea is always available. A chip fills it; the buyer can edit.
 - Helpers stay collapsed. Max price is optional — do not prefill or label a public $1,000 gate.
 - `Start search` saves the intent, opens a **Searching** deal, and goes to **My deals** (`/home`).

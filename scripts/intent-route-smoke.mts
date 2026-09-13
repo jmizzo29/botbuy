@@ -55,6 +55,17 @@ if (carShopWording.kind === "shopify") {
   throw new Error("vehicle wording must not wedge onto Shopify");
 }
 
+const consumer = routeIntentToSearch({
+  summary: "Find household appliances for the kitchen.",
+  categories: ["product"],
+});
+if (consumer.kind !== "stub" || consumer.accepted !== true) {
+  throw new Error("consumer products must stay an accepted stub");
+}
+if (consumer.kind === "shopify") {
+  throw new Error("consumer products must not wedge onto Shopify");
+}
+
 const httpJson = routeIntentToSearch({
   summary: "Query the official JSON API catalog.",
   categories: ["http_json"],

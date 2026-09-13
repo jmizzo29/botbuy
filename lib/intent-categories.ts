@@ -52,6 +52,14 @@ export const HTTP_JSON_CATEGORIES = new Set([
   "catalog",
 ]);
 
+export const CONSUMER_CATEGORIES = new Set([
+  "product",
+  "products",
+  "consumer",
+  "goods",
+  "retail",
+]);
+
 const VEHICLE_WORD_RE =
   /\b(cars?|vehicles?|trucks?|suvs?|vans?|motorcycles?|automobiles?|vins?)\b/i;
 const PROPERTY_WORD_RE =
@@ -62,6 +70,8 @@ const SOFTWARE_WORD_RE =
   /\b(software|saas|shopify|license|storefront)\b/i;
 const HTTP_JSON_WORD_RE =
   /\b(http json|openapi|official api|json api|official catalog)\b/i;
+const CONSUMER_WORD_RE =
+  /\b(consumer products?|household|appliances?|furniture|headphones?|retail goods)\b/i;
 
 export function normalizeCategories(values?: string[] | null): string[] {
   const seen = new Set<string>();
@@ -96,6 +106,7 @@ export function inferIntentCategories(input: {
   if (PHONE_WORD_RE.test(text)) inferred.push("phone");
   if (SOFTWARE_WORD_RE.test(text)) inferred.push("software");
   if (HTTP_JSON_WORD_RE.test(text)) inferred.push("http_json");
+  if (CONSUMER_WORD_RE.test(text)) inferred.push("product");
 
   /** Cars/houses win over a leftover software chip. */
   if (inferred.some((item) => item === "vehicle" || item === "property")) {
@@ -118,6 +129,10 @@ export function isVehicleCategory(value: string) {
 
 export function isPropertyCategory(value: string) {
   return PROPERTY_CATEGORIES.has(value.trim().toLowerCase());
+}
+
+export function isConsumerCategory(value: string) {
+  return CONSUMER_CATEGORIES.has(value.trim().toLowerCase());
 }
 
 export function formatIntentCategories(categories?: string[] | null): string {

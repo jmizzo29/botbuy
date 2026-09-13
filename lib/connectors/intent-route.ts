@@ -6,6 +6,7 @@ import {
   PHONE_CATEGORIES,
   SOFTWARE_CATEGORIES,
   inferIntentCategories,
+  isConsumerCategory,
   isPropertyCategory,
   isVehicleCategory,
   primaryDealCategory,
@@ -115,6 +116,7 @@ export function routeIntentToSearch(input: {
     HTTP_JSON_WORD_RE.test(text);
   const vehicleOrProperty =
     categories.some((item) => isVehicleCategory(item) || isPropertyCategory(item));
+  const consumerish = categories.some((item) => isConsumerCategory(item));
 
   if (domainish && (!phoneish || domain || domainCategory)) {
     const provider = officialSearchProvider("namecheap");
@@ -150,8 +152,8 @@ export function routeIntentToSearch(input: {
     }
   }
 
-  /** Cars/houses never wedge onto the software Shopify scaffold. */
-  if (softwareish && !vehicleOrProperty) {
+  /** Cars/houses/consumer products never wedge onto the software Shopify scaffold. */
+  if (softwareish && !vehicleOrProperty && !consumerish) {
     const provider = officialSearchProvider("shopify");
     if (provider) {
       return {

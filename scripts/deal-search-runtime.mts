@@ -180,6 +180,25 @@ if (houseSearch?.detail.includes("shopify")) {
   throw new Error("house search must not map to Shopify");
 }
 
+const goods = addIntent(
+  {
+    summary: `Find household appliances for the kitchen for category smoke ${stamp}.`,
+    categories: ["product"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const goodsDeal = await createSearchingDealFromIntent(goods, SEED_OWNER.id);
+if (goodsDeal.category !== "product") {
+  throw new Error("consumer product deal must keep product category");
+}
+const goodsSearch = listDealEvents(goodsDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (goodsSearch?.detail.includes("shopify")) {
+  throw new Error("consumer product search must not map to Shopify");
+}
+
 if (officialSearchProvider("shopify") !== "shopify") {
   throw new Error("Shopify search must resolve from MCP registry");
 }
@@ -334,5 +353,6 @@ console.log(` - phone ${phoneDeal.id} Twilio search live:false`);
 console.log(` - http_json ${catalogDeal.id} official JSON search live:false`);
 console.log(` - car ${carDeal.id} accepted stub live:false`);
 console.log(` - house ${houseDeal.id} accepted stub live:false`);
+console.log(` - product ${goodsDeal.id} accepted stub live:false`);
 console.log(` - ${reviewed.id} candidates → Needs you · buy still fail-closed`);
 console.log(" - Needs you → Buying still required before spend / authorized-buy");

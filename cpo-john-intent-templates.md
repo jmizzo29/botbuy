@@ -1,6 +1,6 @@
 # CPO John intent templates v1
 
-John LOCK 2026-09-13: **category-agnostic**. Cars + houses + broader.
+John LOCK 2026-09-13: **category-agnostic**. Cars + houses + consumer products + broader.
 Software / domain / official catalog remain scaffolds — not the product.
 
 Runtime source: `lib/intent-templates.ts` (`JOHN_INTENT_TEMPLATES`).

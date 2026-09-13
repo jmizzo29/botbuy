@@ -31,7 +31,7 @@ export const BRAND = {
     "The automated agent that searches, purchases, and closes — within your limit.",
   easeMicro: "Three inputs, zero babysitting.",
   channelMicro:
-    "Anything you want to buy. Cars, houses, software, domains — you approve before it pays.",
+    "Anything you want to buy. Cars, houses, consumer products, software, domains — you approve before it pays.",
   primaryCta: "Sign up",
   /** In-app / A2HS label — not a land fold CTA. */
   installLink: "Install",
