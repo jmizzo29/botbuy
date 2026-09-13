@@ -25,6 +25,12 @@ export const STORE_HOLD =
   "Soft HOLD until TestFlight / Play internal. No store listing claims." as const;
 export const STAGE_APPS_FIRST =
   "Stage iPhone + Android apps first. BLOCK prod App Store / Play submit until internal tracks exist and Design/CPO/CHO smoke PASS." as const;
+export const CLIENTS_FIRST_CLASS =
+  "Expo iOS + Android and web are first-class. PWA is not the product." as const;
+export const NO_STORE_LIVE =
+  "No App Store / Play live. No fake metrics." as const;
+export const M0_SCAFFOLD_ONLY =
+  "M0 Soft HOLD scaffold — welcome honesty only. Full journey is later." as const;
 
 export const HONESTY_LIVE_FALSE = "live=false" as const;
 export const HONESTY_SPEND_FALSE = "spend=false" as const;

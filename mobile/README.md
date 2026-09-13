@@ -1,6 +1,8 @@
 # BotBuyer native client (M0)
 
-**Product client:** native Expo / React Native for **App Store (iPhone) + Play Store (Android)** — same BotBuyer APIs. Not a second product.
+**Product truth:** Expo **iOS + Android** and **web** are first-class clients of the same BotBuyer. **PWA is not the product.**
+
+**Product client (stores):** native Expo / React Native for **App Store (iPhone) + Play Store (Android)** — same APIs. Not a second product.
 
 **CHO LOCK: BLOCK PWA-as-product.** Add to Home Screen / installable PWA is **not** the shipped client. Soft HOLD until TestFlight / Play internal are real. No store listing claims in M0.
 
@@ -26,7 +28,17 @@ Home copy matches web brand locks:
 - Honesty flags: `live=false` · `spend=false` · `autoApprove=false`
 - Auto-approve OFF. Every deal needs approval. No invented MRR / fake metrics.
 
-This scaffold does **not** spend, vault-mutate, or claim a live buy. It does **not** claim a shipped App Store / Play listing. Expo Go / simulators are development — not the product. **BLOCK PWA-as-product.**
+M0 home/welcome is honesty only — same promise as web. **Do not invent the full journey UI here.**
+
+This scaffold does **not** spend, vault-mutate, or claim a live buy. It does **not** claim App Store / Play live. Expo Go / simulators are development — not the product. No fake metrics. **BLOCK PWA-as-product.**
+
+## Journey north star (later milestones — not M0)
+
+Documented so later work matches CPO SoT. **Do not build these screens in M0.**
+
+Sign up → Intent + spend + vault → Run BotBuy → My deals → Needs you Approve/Reject → Deal detail → Settings
+
+M0 remains: navy shell + Clerk fail-closed scaffold + read-only stage API stub + this README + human-gate checklist (Apple/Google **Blocking=NO**) + stage-first (no prod store submit).
 
 **CEO LOCK:** stage apps for **iPhone AND Android** before any prod/store push. **BLOCK** App Store / Play **production** submit until stage/internal builds exist **and** Design / CPO / CHO smoke PASS.
 
