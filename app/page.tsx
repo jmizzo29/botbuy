@@ -48,20 +48,16 @@ export default async function LandPage() {
   return (
     <PublicChrome land>
       <section data-surface="land-stage" className="bb-land-stage">
-        <div
-          className="bb-land-atm atm bb-atm-richer-mesh-deep"
-          aria-hidden="true"
-        />
-        <div data-zone="sky" className="bb-land-sky">
+        <div data-zone="watermark" className="bb-land-watermark" aria-hidden="true">
           <Image
             src={LAND_SKY_MARK_SRC}
             alt=""
-            width={148}
-            height={148}
+            width={280}
+            height={280}
             unoptimized
             preload
             aria-hidden="true"
-            className="bb-mark-hero"
+            className="bb-mark-watermark"
           />
         </div>
         <div data-zone="panel" className="bb-land-panel">
