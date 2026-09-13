@@ -366,6 +366,18 @@ export async function readNeonJournal(): Promise<EngineJournal | null> {
 export async function writeNeonJournal(journal: EngineJournal): Promise<boolean> {
   const db = getDb();
   if (!db) return false;
+  try {
+    return await writeNeonJournalUnlocked(db, journal);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Neon write failed";
+    throw new Error(`Neon journal write failed: ${message}`);
+  }
+}
+
+async function writeNeonJournalUnlocked(
+  db: NonNullable<ReturnType<typeof getDb>>,
+  journal: EngineJournal,
+): Promise<boolean> {
 
   const engineDeals = journal.deals.filter((deal) => deal.source === "engine");
   const userIds = new Set<string>();

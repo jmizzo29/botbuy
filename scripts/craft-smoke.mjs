@@ -37,6 +37,7 @@ const usage = read("lib/usage.ts");
 const store = read("lib/store.ts");
 const journal = read("lib/engine-journal.ts");
 const persistHttp = read("lib/api-persist.ts");
+const engineDb = read("lib/db/engine.ts");
 const dealDetail = read("app/(app)/deals/[id]/page.tsx");
 const usageUi = read("components/usage-meter.tsx");
 const brand = read("lib/brand.ts");
@@ -483,12 +484,14 @@ assert(journal.includes("COOKIE_JOURNAL_MAX_CHARS"), "cookie journal size-capped
 assert(journal.includes("EnginePersistError"), "typed persist error, not opaque 500");
 assert(journal.includes("missing_database"), "missing DATABASE_URL has a persist code");
 assert(journal.includes("export function persistErrorFromFallback"), "persist error helper exported");
+assert(engineDb.includes("Neon journal write failed"), "Neon SQL errors wrapped, not opaque");
+assert(engineDb.includes("writeNeonJournalUnlocked"), "Neon write isolated behind catch");
 assert(persistHttp.includes("persistFailureResponse"), "API maps persist errors");
 assert(persistHttp.includes("503"), "persist failure is 503 not opaque 500");
 assert(journal.includes("setDurableJournalIO"), "isolate test hook for durable journal");
 assert(
-  existsSync(join(root, "drizzle/0004_engine_core.sql")),
-  "engine core migration checked in",
+  existsSync(join(root, "drizzle/0000_engine_base.sql")),
+  "engine base migration checked in",
 );
 assert(store.includes("durable.intents"), "hydrate restores persisted intents");
 assert(store.includes("intents: intents.slice()"), "persist writes intents with engine journal");

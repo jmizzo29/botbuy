@@ -72,7 +72,7 @@ Identity is Clerk. `getCurrentUser()` resolves the session to a Neon `users` row
 
 `bb_signup` is not identity. Missing Clerk keys: build still completes; app routes fail closed (no DEMO_USER).
 
-John must add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `DATABASE_URL` in Vercel (Preview + Development for staging). Optional: `CLERK_WEBHOOK_SECRET` + Clerk webhook → `/api/webhooks/clerk`. Apply `drizzle/0004_engine_core.sql` (creates missing engine tables) or `npm run db:push` on the **BotBuy** Neon project — never Autofleeto. With `DATABASE_URL`, Start search persists engine deals / events / usage / intents in Neon so My deals survives Vercel isolates. Without it, Start search fails closed with a clear persist error instead of an opaque 500. The `bb_engine_journal` cookie is a size-capped fallback only.
+John must add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `DATABASE_URL` in Vercel (Preview + Development for staging). Optional: `CLERK_WEBHOOK_SECRET` + Clerk webhook → `/api/webhooks/clerk`. Apply `drizzle/0000_engine_base.sql` (base CREATE TABLEs) or `npm run db:push` on the **BotBuy** Neon project — never Autofleeto. With `DATABASE_URL`, Start search persists engine deals / events / usage / intents in Neon so My deals survives Vercel isolates. Without it, Start search fails closed with a clear persist error instead of an opaque 500. The `bb_engine_journal` cookie is a size-capped fallback only. Soft HOLD. Land promote HOLD.
 
 ## Local
 

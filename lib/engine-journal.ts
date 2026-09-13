@@ -170,7 +170,7 @@ export function isEnginePersistError(error: unknown): error is EnginePersistErro
 }
 
 const RECOVERY_SET_DATABASE_URL =
-  "Set DATABASE_URL on the Vercel botbuy project (Preview + Development) to the BotBuy-dedicated Neon project. Never Autofleeto. Then apply drizzle/0004_engine_core.sql.";
+  "BotBuy Neon write is required for Start search. Apply drizzle/0000_engine_base.sql on the BotBuy-dedicated project (never Autofleeto). Do not invent deals.";
 
 export function persistErrorFromFallback(input: {
   neonConfigured: boolean;

@@ -1,9 +1,11 @@
--- BotBuy engine core (users + deals + events + usage + intents + related).
+-- BotBuy engine BASE schema (users + deals + events + usage + intents + related).
+-- Documents the CREATE TABLEs so a future BotBuy Neon clone matches lib/db/schema.ts.
 -- Idempotent. Safe on a live Neon that already has Clerk users — no DROP, no wipe.
 -- Apply on the BotBuy-dedicated Neon only (never Autofleeto / fleetos-production):
---   psql "$DATABASE_URL" -f drizzle/0004_engine_core.sql
--- or `npx drizzle-kit push` from schema.ts.
+--   psql "$DATABASE_URL" -f drizzle/0000_engine_base.sql
+-- then 0001–0003 incrementals (also IF NOT EXISTS). Or `npx drizzle-kit push`.
 -- spend_limits.auto_approve must stay default false.
+-- Soft HOLD: Searching deals stay $0 unverified. Land promote HOLD.
 
 CREATE TABLE IF NOT EXISTS users (
   id text PRIMARY KEY,
