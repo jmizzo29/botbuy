@@ -18,6 +18,7 @@ export function InstallHint() {
   const pathname = usePathname();
   const { dismissed, hidden, howTo, install, dismiss, setHowTo } = useA2hs();
   const onLand = pathname === "/";
+  const onAbout = pathname === "/about" || pathname.startsWith("/about/");
   const onAuth =
     pathname === "/signin" ||
     pathname === "/signup" ||
@@ -25,6 +26,7 @@ export function InstallHint() {
     pathname.startsWith("/signup/");
 
   if (onLand) return null;
+  if (onAbout) return null;
   if (onAuth) return null;
 
   const open = !dismissed && !hidden;

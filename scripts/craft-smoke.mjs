@@ -338,6 +338,14 @@ assert(css.includes(".bb-auth-card") && css.includes("overflow: hidden"), "auth 
 assert(css.includes(".bb-auth-shell") && css.includes("#0b1f3a"), "auth page bg is Quiet Capital navy");
 assert(css.includes("vercel-live-feedback") && nextConfig.includes("x-vercel-skip-toolbar"), "auth routes hide stage toolbar");
 assert(
+  nextConfig.includes('source: "/"') && nextConfig.includes('source: "/about"'),
+  "land and about skip the stage toolbar header",
+);
+assert(
+  css.includes(".bb-land-shell") && css.includes('data-surface="about-story"'),
+  "land + about CSS hide the stage toolbar FAB",
+);
+assert(
   nextConfig.includes('source: "/sign-up"') &&
     nextConfig.includes('destination: "/signup"') &&
     nextConfig.includes('source: "/sign-in"') &&
@@ -667,6 +675,10 @@ assert(chrome.includes(") : land ? null : ("), "land nav has no signed-out Sign 
 assert(
   read("components/install-hint.tsx").includes("if (onLand) return null"),
   "InstallHint is already null on land",
+);
+assert(
+  read("components/install-hint.tsx").includes("if (onAbout) return null"),
+  "InstallHint is null on about",
 );
 assert(
   read("components/install-hint.tsx").includes("if (onAuth) return null"),
@@ -1265,6 +1277,15 @@ assert(aboutLib.includes('ABOUT_MARK_SRC = "/brand/logo-soft-spine/botbuyer-mark
 assert(aboutStory.includes("ABOUT_MARK_SRC"), "about story renders journey mark");
 assert(aboutStory.includes("ABOUT_STEPS"), "about story renders 3 panels");
 assert(aboutStory.includes("ABOUT_CONTROL"), "about story renders control caption");
+assert(
+  (aboutStory.match(/\{ABOUT_CONTROL\}/g) || []).length === 1,
+  "about control caption is one source of truth",
+);
+assert(
+  (aboutStory.match(/<ControlBlock/g) || []).length === 1,
+  "about renders one ControlBlock",
+);
+assert(aboutStory.includes('data-surface="about-control"'), "about control has a single surface");
 assert(aboutStory.includes('href={ABOUT_SIGNUP_HREF}'), "about CTA is /signup");
 assert(aboutStory.includes('data-cta="about-signup"'), "about Sign up marked");
 assert((aboutStory.match(/<Button/g) || []).length === 1, "about Sign up is sole primary");

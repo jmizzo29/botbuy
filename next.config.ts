@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const authToolbarSkip = [
+const toolbarSkip = [
   { key: "x-vercel-skip-toolbar", value: "1" },
 ] as const;
 
@@ -17,10 +17,12 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      { source: "/signin", headers: [...authToolbarSkip] },
-      { source: "/signin/:path*", headers: [...authToolbarSkip] },
-      { source: "/signup", headers: [...authToolbarSkip] },
-      { source: "/signup/:path*", headers: [...authToolbarSkip] },
+      { source: "/", headers: [...toolbarSkip] },
+      { source: "/about", headers: [...toolbarSkip] },
+      { source: "/signin", headers: [...toolbarSkip] },
+      { source: "/signin/:path*", headers: [...toolbarSkip] },
+      { source: "/signup", headers: [...toolbarSkip] },
+      { source: "/signup/:path*", headers: [...toolbarSkip] },
     ];
   },
   outputFileTracingIncludes: {
