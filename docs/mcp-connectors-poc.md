@@ -18,7 +18,17 @@ Register / buy **must** pass the existing deal approve gate (`Needs you` → App
 
 ## Intent → search (stage M1)
 
-`POST /api/intents` with `startSearch: true` (and go-live Run) opens a Searching deal, then maps category/summary to a connector **search**: Namecheap for domain-ish, Twilio for phone/SMS/number-ish. Unmapped intents keep a typed stub event (`live:false`, no invented results). Search/quote persist as `deal_events` + notes. If a provider returns candidates, the deal moves Searching → Found for human review. Not bought. Auto-approve stays OFF. Not a public live-connector claim.
+John/CEO tech lock (Soft HOLD): **MCP-first · APIs-first**. Prefer the connector registry / official APIs over browser farms or 3rd-party busywork. Never add captcha farms or HTML login automation. Latest app stack (Next App Router + current connector registry). Auto-approve stays **OFF**.
+
+`POST /api/intents` with `startSearch: true` (and go-live Run) opens a Searching deal, then maps category/summary to a connector **search**:
+
+- domain-ish → Namecheap official API
+- phone / SMS / number-ish → Twilio official API
+- software / SaaS / merchant-ish → Shopify Admin API
+- HTTP/JSON / OpenAPI-ish → `http_json` official HTTPS JSON
+- otherwise → typed stub event (`live:false`, no invented results)
+
+Search/quote persist as `deal_events` + notes. If a provider returns candidates, the deal moves Searching → Found for human review. Not bought. Not a public live-connector claim.
 
 ## Routes
 

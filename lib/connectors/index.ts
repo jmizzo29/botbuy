@@ -11,6 +11,10 @@ export { assertConnectorSpendAllowed } from "@/lib/connectors/approve-gate";
 export { applyDealSearchPipeline } from "@/lib/connectors/deal-search";
 export { routeIntentToSearch } from "@/lib/connectors/intent-route";
 export {
+  CONNECTOR_TECH_LOCK,
+  CONNECTOR_TECH_LOCK_NOTE,
+} from "@/lib/connectors/tech-lock";
+export {
   listConnectorRegistry,
   CONNECTOR_REGISTRY,
 } from "@/lib/connectors/registry";
