@@ -719,9 +719,11 @@ assert(
 );
 assert(
   css.includes("text-align: left") &&
-    css.includes("grid-template-columns: minmax(0, 1.28fr) minmax(18rem, 0.92fr)") &&
+    css.includes("grid-template-columns: minmax(20rem, 34rem) minmax(16rem, 20rem)") &&
+    css.includes("max-width: 56rem") &&
+    css.includes("justify-self: start") &&
     css.includes("justify-content: space-between"),
-  "desktop keeps left-copy / right-arc split and overlay spread",
+  "desktop binds copy+rail in one packed optical system; overlay stays spread",
 );
 assert(css.includes("@media (max-width: 1023px)"), "phone center axis is locked at max-lg");
 assert(css.includes(".bb-land-cta") && css.includes("flex-direction: row"), "fold CTA is a Sign up + Sign in row");
@@ -745,9 +747,9 @@ assert(
 );
 assert(
   css.includes('.bb-land-cta [data-cta="land-signin"]') &&
-    css.includes("border: 1.5px solid rgba(255, 255, 255, 0.55)") &&
+    css.includes("border: 1.5px solid rgba(255, 255, 255, 0.78)") &&
     css.includes("background: transparent"),
-  "Sign in is a ghost/outline pill",
+  "Sign in is a higher-contrast ghost/outline pill",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(!land.includes("data-fold"), "land production DOM has no data-fold debug tag");
@@ -798,6 +800,37 @@ assert(
 assert(
   read("land/INSTALL.md").includes("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md"),
   "land INSTALL points at D1 kit SoT",
+);
+assert(
+  existsSync(join(root, "land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md")) &&
+    read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md").includes("P1") &&
+    read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md").includes("staging"),
+  "D1 Quiet Capital harden INSTALL is committed",
+);
+assert(
+  existsSync(join(root, "land/mobile-rebuild-v1/d1-bold-h1-first/designer-d1-quiet-capital-harden-v1.md")),
+  "D1 Quiet Capital harden designer notes committed",
+);
+assert(
+  read("land/INSTALL.md").includes("INSTALL-harden-v1.md"),
+  "land INSTALL points at D1 harden kit",
+);
+assert(
+  css.includes("fractalNoise") &&
+    css.includes("stitchTiles='noStitch'") &&
+    css.includes("no-repeat"),
+  "A1 richer-mesh-deep includes non-repeating mesh/noise",
+);
+assert(
+  css.includes(".bb-land-link:focus-visible") &&
+    css.includes("text-decoration: underline") &&
+    css.includes("rgba(255, 255, 255, 0.9)"),
+  "About word link is clearer with hover/focus underline",
+);
+assert(chrome.includes('data-nav="about"'), "land About link is marked for chrome QA");
+assert(
+  read("public/land/assets/06-arc-reverse.svg").includes('opacity="0.55"'),
+  "reverse arc connectors sit at white opacity ~0.55",
 );
 assert(chrome.includes("{land ? null : <InstallHint />}"), "land chrome never mounts InstallHint");
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
@@ -874,9 +907,9 @@ assert(lockup.includes("onDark"), "BrandLockup can render reverse on dark");
 assert(lockup.includes("219") && lockup.includes("46"), "land reverse lockup intrinsic ~219×46");
 assert(
   css.includes(".bb-land-lockup") &&
-    css.includes("height: 2.375rem") &&
+    css.includes("height: 2.15rem") &&
     css.includes("height: 2.875rem"),
-  "land overlay lockup reads ~38px phone / ~46px desk on navy",
+  "land overlay lockup reads ~34px phone (−8–10%) / ~46px desk on navy",
 );
 assert(lockup.includes('alt="BotBuyer"'), "BrandLockup accessible alt");
 assert(shell.includes("BrandLockup"), "app shell soft-spine header lockup");

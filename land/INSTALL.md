@@ -3,6 +3,7 @@
 John LOCKED **D1 bold-h1-first** on phone. Soft-signal HOLD.
 
 Craft SoT (phone fold): `land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md`.
+Harden v1 (staging): `land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md`.
 Assets + desktop split: `land/full-bleed-hero/INSTALL.md`.
 
 ## Assets
@@ -37,8 +38,8 @@ Commit exact SVG bodies. Serve copies from `public/land/assets/`.
 
 ## Layout (D1 phone · B desktop)
 
-- Phone (`max-width: 1023px`, max-width ~22rem, center fold): H1 first (~40px / 600 / -0.045em / balance) → support (~15px muted) → teal hairline (28×1.5px `#2DD4BF`) → arc as secondary rail (~240px / 15rem, not above H1) → equal Sign up / Sign in pair. Overlay lockup + About only. No footer dump on fold.
-- Desktop: copy left + inverted arc right; overlay lockup left / About right; Sign up + Sign in pair. Hairline is phone-only.
+- Phone (`max-width: 1023px`, max-width ~22rem, center fold): H1 first (~40px / 600 / -0.045em / balance) → support (~15px muted) → teal hairline (28×1.5px `#2DD4BF`) → arc as secondary rail (~240px / 15rem, not above H1) → equal Sign up / Sign in pair. Overlay lockup (~34px, −8–10%) + About only (~12px, clearer, hover/focus underline). No footer dump on fold.
+- Desktop: packed copy+CTA+rail optical system (no orphan right-edge rail island); overlay lockup left / About right; Sign up + Sign in pair. Teal rule stays in the D1 stack.
 - Drop the light elevate how-stack from the fold
 
 Strings live in `lib/brand.ts`.

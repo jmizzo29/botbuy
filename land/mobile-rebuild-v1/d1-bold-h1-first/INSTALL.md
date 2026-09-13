@@ -6,6 +6,8 @@ Do **not** merge to `main` or ship production `botbuyer.ai` from this kit.
 
 Visual bar: 390×844 phone fold. Atmosphere **A1 richer-mesh-deep**. Chrome is soft-spine + BotBuyer.
 
+Harden v1 (staging): `INSTALL-harden-v1.md`.
+
 ## Phone structure (max-width ~22rem, center fold)
 
 1. Top chrome: soft-spine + BotBuyer wordmark · **About only** (no Private beta).

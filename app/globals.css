@@ -261,8 +261,8 @@ body {
 }
 
 .bb-land-lockup {
-  /* Overlay lockup ~38px phone / ~46px desk. Soft-spine reverse. Soft-signal HOLD. */
-  height: 2.375rem;
+  /* Overlay lockup ~34px phone (−8–10%) / ~46px desk. Soft-spine reverse. Soft-signal HOLD. */
+  height: 2.15rem;
   width: auto;
 }
 
@@ -277,16 +277,20 @@ body {
 .bb-land-link {
   font-size: 0.75rem;
   line-height: 1.2;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.9);
   background: none;
   border: 0;
   border-radius: 0;
   padding: 0;
   box-shadow: none;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
 }
 
-.bb-land-link:hover {
+.bb-land-link:hover,
+.bb-land-link:focus-visible {
   color: #ffffff;
+  text-decoration: underline;
 }
 
 .bb-land-main {
@@ -447,8 +451,8 @@ body {
 
 .bb-land-cta [data-cta="land-signin"] {
   background: transparent;
-  color: rgba(255, 255, 255, 0.92);
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.78);
 }
 
 .bb-land-signin:hover {
@@ -537,15 +541,17 @@ body {
 
   .bb-land-copy {
     display: grid;
-    grid-template-columns: minmax(0, 1.28fr) minmax(18rem, 0.92fr);
+    grid-template-columns: minmax(20rem, 34rem) minmax(16rem, 20rem);
     grid-template-areas:
       "h1 arc"
       "support arc"
+      "rule arc"
       "cta arc";
     align-items: center;
-    column-gap: 4rem;
-    width: 100%;
-    max-width: none;
+    justify-content: start;
+    column-gap: 3.25rem;
+    width: min(100%, 56rem);
+    max-width: 56rem;
     text-align: left;
   }
 
@@ -568,15 +574,24 @@ body {
   }
 
   .bb-land-rule {
-    display: none;
+    display: block;
+    grid-area: rule;
+    margin-top: 1.15rem;
+    margin-inline: 0;
   }
 
   .bb-land-arc {
     grid-area: arc;
     width: 100%;
     max-width: 20rem;
-    margin-top: 0;
-    justify-self: end;
+    margin: 0;
+    justify-self: start;
+    align-self: center;
+  }
+
+  .bb-land-arc img {
+    /* Stronger desktop rail stroke — no glow / drop-shadow. Soft-signal HOLD. */
+    filter: contrast(1.16);
   }
 
   .bb-land-cta {
@@ -615,7 +630,10 @@ body {
   z-index: 0;
 }
 .bb-atm-richer-mesh-deep::before {
+  pointer-events: none;
   background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'%3E%3Cfilter id='bbn' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' seed='7' stitchTiles='noStitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='1600' height='900' filter='url(%23bbn)' opacity='0.16'/%3E%3Cg fill='none' stroke='rgb(255,255,255)' stroke-width='0.55' opacity='0.06'%3E%3Cpath d='M0 140 L1600 48'/%3E%3Cpath d='M0 380 L1600 270'/%3E%3Cpath d='M0 640 L1600 520'/%3E%3Cpath d='M220 900 L1040 0'/%3E%3Cpath d='M760 900 L1600 200'/%3E%3C/g%3E%3C/svg%3E")
+      center / cover no-repeat,
     radial-gradient(ellipse 62% 52% at 82% 18%, rgba(42,125,158,0.42), transparent 72%),
     radial-gradient(ellipse 55% 48% at 12% 32%, rgba(26,78,125,0.36), transparent 72%),
     radial-gradient(ellipse 58% 50% at 55% 52%, rgba(45,155,158,0.30), transparent 72%),
