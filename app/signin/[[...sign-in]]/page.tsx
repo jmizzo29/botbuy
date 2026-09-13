@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SignIn } from "@clerk/nextjs";
@@ -19,31 +20,23 @@ export const metadata = {
   title: "Sign in",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0B1F3A",
+};
+
 export default async function SignInPage() {
   if (await getCurrentUser()) {
     redirect(CLERK_AFTER_SIGN_IN_URL);
   }
 
   return (
-    <PublicChrome>
+    <PublicChrome auth>
       <AuthDoor
-        eyebrow={SIGN_IN_H1}
         title={SIGN_IN_H1}
         foot={
-          <>
-            <p className="text-sm text-muted">
-              New here?{" "}
-              <Link
-                href={CLERK_SIGN_UP_URL}
-                className="text-foreground underline-offset-2 hover:underline"
-              >
-                Sign up
-              </Link>
-            </p>
-            <Link href="/" className="inline-block text-xs text-muted hover:text-foreground">
-              ← Land
-            </Link>
-          </>
+          <p className="bb-auth-alt">
+            New here? <Link href={CLERK_SIGN_UP_URL}>Sign up</Link>
+          </p>
         }
       >
         {isClerkPublishableConfigured() ? (
@@ -54,12 +47,12 @@ export default async function SignInPage() {
           />
         ) : (
           <div className="grid gap-4">
-            <p className="text-sm leading-relaxed text-muted">
+            <p className="bb-auth-note">
               Clerk keys are not configured. Add{" "}
-              <code className="text-foreground">
+              <code className="text-white">
                 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
               </code>{" "}
-              and <code className="text-foreground">CLERK_SECRET_KEY</code> in
+              and <code className="text-white">CLERK_SECRET_KEY</code> in
               Vercel before production beta sign-in works.
             </p>
             <Button type="button" size="lg" className="w-full" disabled>
