@@ -59,7 +59,9 @@ assert(!rails.includes("checkout.sessions.create"), "scaffold does not create se
 assert(!rails.includes("paymentIntents.confirm"), "scaffold does not confirm intents");
 
 assert(dealApi.includes("prepareAuthorizedBuy"), "deal API preps after Approve");
+assert(dealApi.includes("authorizedBuyFailClosed"), "deal API uses fail-closed helper");
 assert(dealApi.includes("live: false"), "deal API live false");
+assert(dealApi.includes("spend: false"), "deal API spend false");
 assert(dealApi.includes("charged: false"), "deal API charged false");
 assert(vaultApi.includes("authorizedBuy"), "vault API exposes authorizedBuy");
 assert(vaultApi.includes("authorizedBuyVaultStatus"), "vault API uses honesty helper");
