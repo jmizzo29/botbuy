@@ -30,7 +30,7 @@ Marketplace adapters (`lib/adapters/*`) are **fail-closed stubs** (empty search,
 | Area | Paths |
 | --- | --- |
 | Land / legal | `/` `/about` `/beta` `/contact` `/privacy` `/terms` `/how` |
-| Auth | `/signup` `/signin` (Clerk). `/login` and `/sign-in` redirect. |
+| Auth | `/signup` `/signin` (Clerk). `/login` `/sign-in` → `/signin`. `/sign-up` → `/signup`. |
 | Onboarding | `/onboarding/intent` `/onboarding/spend` `/onboarding/vault` `/onboarding/go-live` |
 | App | `/home` `/deals` `/deals/[id]` `/intent` `/vault` `/settings` `/settings/profile` `/settings/connected-accounts` `/agents` `/admin` |
 

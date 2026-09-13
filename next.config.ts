@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
       { source: "/sign-in", destination: "/signin", permanent: false },
       { source: "/sign-in/:path*", destination: "/signin/:path*", permanent: false },
       { source: "/login", destination: "/signin", permanent: false },
+      { source: "/sign-up", destination: "/signup", permanent: false },
+      { source: "/sign-up/:path*", destination: "/signup/:path*", permanent: false },
     ];
   },
   async headers() {
