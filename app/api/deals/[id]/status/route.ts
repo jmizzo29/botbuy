@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { persistFailureResponse } from "@/lib/api-persist";
 import { requireApiUser } from "@/lib/api-auth";
 import { DEAL_STATUSES } from "@/lib/types";
 import { getDeal, hydrateStore, persistEngineStore, transitionDeal } from "@/lib/store";
+import { isEnginePersistError } from "@/lib/engine-journal";
 import { TransitionError } from "@/lib/status-engine";
 
 const bodySchema = z.object({
@@ -33,6 +35,9 @@ export async function POST(
     await persistEngineStore();
     return NextResponse.json({ deal });
   } catch (error) {
+    if (isEnginePersistError(error)) {
+      return persistFailureResponse(error, "Could not save deal status.");
+    }
     const message =
       error instanceof TransitionError ? error.message : "Transition rejected";
     return NextResponse.json({ error: message }, { status: 409 });

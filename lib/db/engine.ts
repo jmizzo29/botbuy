@@ -125,15 +125,26 @@ async function ensureUserRow(
     .limit(1);
   if (existing[0]) return;
   const token = userId.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 48) || "buyer";
+  const email = `engine+${token}@users.noreply.botbuyer.ai`;
   try {
     await db.insert(users).values({
       id: userId,
-      email: `engine+${token}@users.noreply.botbuyer.ai`,
+      email,
       name: "Buyer",
       role: "customer",
     });
-  } catch {
-    // Unique email or race — deal write still requires the users row.
+  } catch (error) {
+    const again = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    if (again[0]) return;
+    throw new Error(
+      `Could not ensure users row for ${userId}: ${
+        error instanceof Error ? error.message : "insert failed"
+      }`,
+    );
   }
 }
 

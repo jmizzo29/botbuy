@@ -147,6 +147,57 @@ export async function readDurableJournal(): Promise<EngineJournal> {
   return readCookieJournal();
 }
 
+export type EnginePersistCode =
+  | "missing_database"
+  | "neon_write_failed"
+  | "cookie_too_large"
+  | "unavailable";
+
+export class EnginePersistError extends Error {
+  readonly code: EnginePersistCode;
+  readonly recovery: string;
+
+  constructor(code: EnginePersistCode, message: string, recovery: string) {
+    super(message);
+    this.name = "EnginePersistError";
+    this.code = code;
+    this.recovery = recovery;
+  }
+}
+
+export function isEnginePersistError(error: unknown): error is EnginePersistError {
+  return error instanceof EnginePersistError;
+}
+
+const RECOVERY_SET_DATABASE_URL =
+  "Set DATABASE_URL on the Vercel botbuy project (Preview + Development) to the BotBuy-dedicated Neon project. Never Autofleeto. Then apply drizzle/0004_engine_core.sql.";
+
+export function persistErrorFromFallback(input: {
+  neonConfigured: boolean;
+  neonError?: string | null;
+  cookie: CookieWriteResult;
+}): EnginePersistError {
+  if (input.neonConfigured && input.neonError) {
+    return new EnginePersistError(
+      "neon_write_failed",
+      "Could not save this search. Database write failed.",
+      `${RECOVERY_SET_DATABASE_URL} Last Neon error: ${input.neonError}`,
+    );
+  }
+  if (input.cookie === "too_large") {
+    return new EnginePersistError(
+      input.neonConfigured ? "cookie_too_large" : "missing_database",
+      "Could not save this search. Staging needs a database so deals persist.",
+      RECOVERY_SET_DATABASE_URL,
+    );
+  }
+  return new EnginePersistError(
+    "unavailable",
+    "Could not save this search. Persistence is unavailable.",
+    RECOVERY_SET_DATABASE_URL,
+  );
+}
+
 export async function writeDurableJournal(journal: EngineJournal) {
   if (testDurableIO) {
     await testDurableIO.write(journal);
@@ -154,16 +205,33 @@ export async function writeDurableJournal(journal: EngineJournal) {
   }
 
   if (process.env.DATABASE_URL) {
-    const { writeNeonJournal } = await import("@/lib/db/engine");
-    const wrote = await writeNeonJournal(journal);
-    if (wrote) return;
+    try {
+      const { writeNeonJournal } = await import("@/lib/db/engine");
+      const wrote = await writeNeonJournal(journal);
+      if (wrote) return;
+      throw persistErrorFromFallback({
+        neonConfigured: true,
+        neonError: "Neon client was not ready (getDb returned null).",
+        cookie: "unavailable",
+      });
+    } catch (error) {
+      if (isEnginePersistError(error)) throw error;
+      const neonError = error instanceof Error ? error.message : "Neon write failed";
+      console.error("[engine-journal] Neon write failed", neonError);
+      throw persistErrorFromFallback({
+        neonConfigured: true,
+        neonError,
+        cookie: "unavailable",
+      });
+    }
   }
 
   const cookie = await writeCookieJournal(journal);
   if (cookie === "ok") return;
   if (cookie === "too_large") {
-    throw new Error(
-      "Engine journal could not be persisted. Cookie fallback exceeds size cap. Set DATABASE_URL.",
-    );
+    throw persistErrorFromFallback({
+      neonConfigured: false,
+      cookie,
+    });
   }
 }

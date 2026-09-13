@@ -12,6 +12,7 @@ import {
   decodeJournal,
   emptyJournal,
   encodeJournal,
+  persistErrorFromFallback,
   setDurableJournalIO,
 } from "@/lib/engine-journal";
 
@@ -141,6 +142,13 @@ function runChild(role: string, journalPath: string, self: string) {
 }
 
 async function orchestrate() {
+  const missing = persistErrorFromFallback({
+    neonConfigured: false,
+    cookie: "too_large",
+  });
+  if (missing.code !== "missing_database") {
+    throw new Error(`expected missing_database, got ${missing.code}`);
+  }
   const self = fileURLToPath(import.meta.url);
   const dir = mkdtempSync(join(tmpdir(), "bb-engine-"));
   const journalPath = join(dir, "journal.json");
