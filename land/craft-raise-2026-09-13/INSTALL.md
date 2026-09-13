@@ -20,6 +20,14 @@ Do **not** merge to `main` or ship production `botbuyer.ai` from this kit.
 8. About ~14–15px / ~0.90 white · chrome hairline bottom `rgba(255,255,255,0.10)`.
 9. Fold **top-weighted** — Sign up visible in first ~2s on 390.
 
+## Harden (6fdb02c Item 8)
+
+INSTALL-only. Do not invent craft.
+
+1. **Sign up width** — `width: 100%` of fold content column on phone. Keep 8px · `#2DD4BF` / `#042F2E`. Sign in stays text.
+2. **Fold rhythm** — tighten support gap so H1 ~109 / CTA ~225 on 390 (Linear/Stripe first ~2s).
+3. **Desktop chrome** — ~56px product-bar density. About 15px / 0.90 white.
+
 ## Kill
 
 Dual equal CTAs · giant hero · CTA carnival · page gradient · Install · Private beta · arc.

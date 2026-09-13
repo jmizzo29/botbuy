@@ -251,7 +251,8 @@ body {
   flex-wrap: wrap;
   gap: 0.85rem;
   width: 100%;
-  padding: max(0.85rem, env(safe-area-inset-top, 0px)) 1.25rem 0.75rem;
+  /* ~56px product-bar density: 14px + 28px lockup + 14px. Soft HOLD. */
+  padding: max(0.875rem, env(safe-area-inset-top, 0px)) 1.25rem 0.875rem;
   background: transparent;
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.10);
@@ -290,7 +291,7 @@ body {
   font-size: 15px;
   font-weight: 550;
   color: rgba(255, 255, 255, 0.9);
-  padding: 10px 6px;
+  padding: 0;
   letter-spacing: -0.01em;
   text-decoration: none;
 }
@@ -519,11 +520,24 @@ body {
     line-height: 1.12;
   }
 
+  /* H1 ~109 / CTA ~225 on 390 — denser first ~2s. Soft HOLD. */
+  .bb-land-support {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
   .bb-land-cta {
     margin-top: 0;
     justify-content: flex-start;
-    max-width: 22rem;
+    max-width: 13.75rem;
     margin-inline: 0;
+  }
+
+  /* Sign up = 100% of ~220px content stack. Sign in stays text. */
+  .bb-land-signup,
+  .bb-land-cta [data-cta="land-signup"] {
+    width: 100%;
+    min-width: 100%;
   }
 }
 
@@ -532,7 +546,7 @@ body {
     justify-content: space-between;
     flex-wrap: nowrap;
     gap: 0.9rem;
-    padding: max(1.15rem, env(safe-area-inset-top, 0px)) 5.5rem 1rem;
+    padding: max(0.875rem, env(safe-area-inset-top, 0px)) 5.5rem 0.875rem;
   }
 
   .bb-land-nav {

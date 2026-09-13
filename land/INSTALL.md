@@ -44,7 +44,7 @@ Sky / watermark mark is the locked soft-spine reverse: `/brand/logo-soft-spine/b
 
 ## Layout (Q1 phone · same architecture desktop)
 
-- Phone (`max-width: 1023px`): top-weighted folio on flat navy. Chrome 28px + About. Copy + one Sign up in the first fold. No footer dump on fold.
-- Desktop: same flat field + left folio. Do not restore U1 50/50, mesh bloom, or dual pills.
+- Phone (`max-width: 1023px`): top-weighted folio on flat navy. Chrome 28px + About. Copy + one Sign up (`width: 100%` of content column) in the first fold. Support gap lands CTA ~225 on 390. No footer dump on fold.
+- Desktop: same flat field + left folio. Chrome ~56px product-bar. Do not restore U1 50/50, mesh bloom, or dual pills.
 
 Strings live in `lib/brand.ts`.

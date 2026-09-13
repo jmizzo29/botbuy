@@ -872,6 +872,33 @@ assert(
   "phone Q1 panel is top-weighted left folio",
 );
 assert(
+  /@media \(max-width: 1023px\)[\s\S]*?\.bb-land-cta \{[\s\S]*?max-width: 13\.75rem/.test(
+    css,
+  ) &&
+    /@media \(max-width: 1023px\)[\s\S]*?\[data-cta="land-signup"\][\s\S]*?width:\s*100%/.test(
+      css,
+    ),
+  "phone Sign up is 100% of the ~220px content stack",
+);
+assert(
+  css.includes(
+    "padding: max(0.875rem, env(safe-area-inset-top, 0px)) 5.5rem 0.875rem",
+  ),
+  "desktop chrome is ~56px product-bar density",
+);
+assert(
+  !css.includes("padding: 10px 6px") &&
+    css.includes("font-size: 15px") &&
+    css.includes("color: rgba(255, 255, 255, 0.9)"),
+  "About stays 15px / 0.90 without inflating chrome",
+);
+assert(
+  /@media \(max-width: 1023px\)[\s\S]*?\.bb-land-support \{[\s\S]*?margin-bottom: 0\.5rem/.test(
+    css,
+  ),
+  "phone fold gap is tightened to ~225 CTA",
+);
+assert(
   existsSync(join(root, "land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md")) &&
     read("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md").includes("READY-TO-SHIP") &&
     read("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md").includes("bb-land-panel"),
@@ -886,7 +913,8 @@ assert(
 assert(
   existsSync(join(root, "land/craft-raise-2026-09-13/INSTALL.md")) &&
     read("land/craft-raise-2026-09-13/INSTALL.md").includes("READY-TO-SHIP") &&
-    read("land/craft-raise-2026-09-13/INSTALL.md").includes("institutional-folio"),
+    read("land/craft-raise-2026-09-13/INSTALL.md").includes("institutional-folio") &&
+    read("land/craft-raise-2026-09-13/INSTALL.md").includes("Harden (6fdb02c Item 8)"),
   "Q1 institutional-folio INSTALL is READY-TO-SHIP",
 );
 assert(
