@@ -28,6 +28,19 @@ Home copy matches web brand locks:
 
 This scaffold does **not** spend, vault-mutate, or claim a live buy. It does **not** claim a shipped App Store / Play listing. Expo Go / simulators are development — not the product. **BLOCK PWA-as-product.**
 
+**CEO LOCK:** stage apps for **iPhone AND Android** before any prod/store push. **BLOCK** App Store / Play **production** submit until stage/internal builds exist **and** Design / CPO / CHO smoke PASS.
+
+## Next milestone (not M0)
+
+**EAS / internal tracks** — Soft HOLD. Do **not** configure production store submit here.
+
+| Track | Platform | When |
+|---|---|---|
+| TestFlight **internal** | iPhone | After M0. Stage app. |
+| Play **internal** testing | Android | After M0. Stage app. |
+
+Both internal tracks must exist before any production store push. Apple Developer + Google Play Console stay **Blocking=NO** until TestFlight / internal is actually needed. M0 ships **no** `eas.json`, no EAS submit profile, no store credentials.
+
 ## Env vars
 
 Copy `.env.example` → `.env.local`. Do not invent secrets.
@@ -90,8 +103,9 @@ Do **not** treat Android as an afterthought. Do **not** claim either store is sh
 
 ## Out of scope M0
 
-- TestFlight / EAS submit / Apple certificates
-- Google Play Console / Play upload / signing keys
+- EAS project / `eas.json` / production submit profiles
+- TestFlight / Play **production** submit
+- Apple certificates / Play signing keys (escalate John only when internal tracks are needed)
 - Live spend / Link / vault mutations
 - Browser automation farms
 - Changing web land or auth craft
