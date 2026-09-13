@@ -2,16 +2,15 @@
 
 **Soft HOLD.** Dual-target **iOS + Android**. Stage / internal before any store. **BLOCK PWA-as-product.** **BLOCK prod store until smoke.**
 
-## `apps/mobile` — M0 in flight
+## `mobile/` — M0 scaffold (not `apps/mobile`)
 
-| Claim | Current truth (this tree tip `552aea5`) |
+| Claim | Current truth |
 | --- | --- |
-| Intended path | `apps/mobile` — Expo dual-target iOS + Android |
-| In this git tip | **Directory not present.** No `app.json` / Expo config / EAS project in-tree. |
-| Status | **M0 in flight** (CEO lock). Do not document a shipped binary, bundle id, or store listing. |
+| Path | **`mobile/`** — Expo SDK 57 dual-target iOS + Android. Sibling of the Next.js web app (not a monorepo `apps/` layout). |
+| In this git tip | Scaffold present: `app.json`, `ios/`, `android/`, display name **BotBuyer**. Same BotBuyer HTTP APIs. |
+| Status | **M0 scaffold only.** Soft HOLD. Do not document a shipped binary or store listing. No TestFlight / Play upload / EAS submit. |
 | Clients | Native apps are the product clients. Web App Router remains API + MCP host / stage QA surface. |
-
-Do **not** implement or modify `apps/mobile` from this data-room PR. Document the path only.
+| Web build | Root `tsconfig.json` + ESLint **exclude** `mobile/` so Vercel `next build` does not typecheck Expo. |
 
 ## Stage / internal before store
 
