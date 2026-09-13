@@ -16,7 +16,6 @@ Chips are honest starters — they fill the describe box. The buyer can edit or 
 | `software` | Software | software | Scaffold |
 | `domain` | Domain | domain | Scaffold |
 | `official_catalog` | Official catalog | http_json | Official HTTPS JSON |
-| `droplet` | Droplet | digitalocean | DigitalOcean official API scaffold |
 
 Do not invent merchant allowlists. Do not present software-only or domains-only as the default.
 Do not reject cars, houses, or other categories.
