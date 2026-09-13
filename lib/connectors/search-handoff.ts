@@ -33,6 +33,7 @@ export interface SearchActHandoff {
   kind: typeof SEARCH_ACT_HANDOFF_KIND;
   live: false;
   provider: string;
+  fixture?: boolean;
   candidates: SearchActCandidate[];
   quote: SearchActQuote | null;
 }
@@ -168,11 +169,13 @@ export function buildSearchActHandoff(input: {
   provider: string;
   searchData?: Record<string, unknown>;
   quoteData?: Record<string, unknown> | null;
+  fixture?: boolean;
 }): SearchActHandoff {
   return {
     kind: SEARCH_ACT_HANDOFF_KIND,
     live: false,
     provider: input.provider,
+    fixture: input.fixture === true,
     candidates: normalizeSearchCandidates(input.searchData, input.provider),
     quote: normalizeSearchQuote(input.quoteData ?? undefined, input.provider),
   };
@@ -186,6 +189,7 @@ export function formatSearchActDetail(handoff: SearchActHandoff): string {
       : String(handoff.quote.listedUsd);
   return [
     "live:false",
+    handoff.fixture ? "fixture=true" : null,
     `provider=${handoff.provider}`,
     `candidates=${handoff.candidates.length}`,
     `labels=${labels}`,
@@ -194,7 +198,9 @@ export function formatSearchActDetail(handoff: SearchActHandoff): string {
     "verified=false",
     "not a verified price",
     CONNECTOR_TECH_LOCK_NOTE,
-  ].join(" · ");
+  ]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 export function readSearchActHandoff(
@@ -230,6 +236,7 @@ export function readSearchActHandoff(
       kind: SEARCH_ACT_HANDOFF_KIND,
       live: false,
       provider: typeof meta.provider === "string" ? meta.provider : "none",
+      fixture: meta.fixture === true,
       candidates: rows,
       quote: quoteRecord
         ? {

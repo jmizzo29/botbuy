@@ -22,15 +22,19 @@ import {
   INTENT_TEXTAREA_PLACEHOLDER,
 } from "@/lib/john-ux";
 import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
+import { STAGE_SEARCH_FIXTURE_TOKEN } from "@/lib/connectors/stage-search-fixture";
 
 export function IntentForm({
   emailMissing = false,
   compact = false,
   initialSummary = "",
+  stageFixture = false,
 }: {
   emailMissing?: boolean;
   compact?: boolean;
   initialSummary?: string;
+  /** Stage-only toggle (`?fixture=1`). Server still refuses this on production. */
+  stageFixture?: boolean;
 }) {
   const router = useRouter();
   const [templateId, setTemplateId] = useState<string | null>(
@@ -76,7 +80,10 @@ export function IntentForm({
         summary: nextSummary,
         categories,
         maxPriceUsd: maxPriceUsd ? Number(maxPriceUsd) : undefined,
-        mustInclude: mustInclude.trim() || undefined,
+        mustInclude:
+          [mustInclude.trim(), stageFixture ? STAGE_SEARCH_FIXTURE_TOKEN : ""]
+            .filter(Boolean)
+            .join(" ") || undefined,
         avoid: avoid.trim() || undefined,
         templateId: templateId ?? undefined,
         startSearch: true,
@@ -172,6 +179,12 @@ export function IntentForm({
           </div>
         ) : null}
       </div>
+      {stageFixture ? (
+        <p className="text-sm leading-relaxed text-muted">
+          Stage fixture on · unverified candidate · live:false · not a live
+          connector. Auto-approve stays OFF.
+        </p>
+      ) : null}
       {emailMissing ? (
         <p className="text-sm leading-relaxed text-muted">{EMAIL_SOFT_GATE}</p>
       ) : null}

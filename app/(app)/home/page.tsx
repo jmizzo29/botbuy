@@ -22,6 +22,7 @@ import { hydrateStore, listDeals, listVaultRefs, verifiedSpendUsd } from "@/lib/
 import { formatUsd } from "@/lib/money";
 import { remainingAfterVerified } from "@/lib/spend-policy";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
+import { stageFixtureQueryEnabled } from "@/lib/connectors/stage-search-fixture";
 
 export const metadata = {
   title: "My deals",
@@ -29,9 +30,15 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ fixture?: string | string[] }>;
+}) {
   await hydrateStore();
   const user = await requireUser();
+  const params = searchParams ? await searchParams : undefined;
+  const stageFixture = stageFixtureQueryEnabled(params?.fixture);
   const deals = listDeals(user.id);
   const remaining = formatUsd(remainingAfterVerified(verifiedSpendUsd(user.id)));
   const vault = listVaultRefs(user.id)[0];
@@ -73,7 +80,11 @@ export default async function HomePage() {
           <p className="text-base font-medium tracking-tight">{MY_DEALS_EMPTY_TITLE}</p>
           <p className="mt-2 text-sm leading-relaxed text-muted">{MY_DEALS_EMPTY_BODY}</p>
           <div className="mt-5">
-            <IntentForm compact emailMissing={!hasReachableEmail(user)} />
+            <IntentForm
+              compact
+              emailMissing={!hasReachableEmail(user)}
+              stageFixture={stageFixture}
+            />
           </div>
         </Card>
       )}

@@ -285,8 +285,18 @@ assert(handoffSrc.includes("verified: false"), "handoff never marks verified");
 assert(!handoffSrc.includes("priceVerified: true"), "handoff invents no verified prices");
 
 assert(dealSearch.includes("applySearchActHandoff"), "pipeline uses search act handoff");
+assert(dealSearch.includes("applyStageSearchFixtureHandoff"), "pipeline has stage fixture handoff");
+assert(dealSearch.includes("isStageSearchFixtureEnabled"), "pipeline gates stage fixture");
 assert(dealSearch.includes('transitionDeal(found.id, "Needs you"'), "candidates advance Found → Needs you");
 assert(dealSearch.includes("connector_candidates"), "pipeline attaches structured candidates");
+assert(!dealSearch.includes("agentExecuted: true"), "pipeline never sets agentExecuted");
+
+const fixtureSrc = readFileSync(join(root, "lib/connectors/stage-search-fixture.ts"), "utf8");
+assert(fixtureSrc.includes("STAGE_QA"), "stage fixture token is STAGE_QA");
+assert(fixtureSrc.includes("isProductionSearchEnv"), "stage fixture refuses production");
+assert(fixtureSrc.includes('amountStatus: "unverified"'), "stage fixture amounts stay unverified");
+assert(fixtureSrc.includes("live: false"), "stage fixture stays live:false");
+assert(!fixtureSrc.includes("priceVerified: true"), "stage fixture invents no verified prices");
 
 const dealPage = readFileSync(join(root, "app/(app)/deals/[id]/page.tsx"), "utf8");
 assert(dealPage.includes("DealCandidates"), "deal detail shows candidates");
@@ -309,6 +319,16 @@ assert(
   `deal-search runtime smoke${pipeline.stderr ? `: ${pipeline.stderr.trim()}` : pipeline.stdout ? `: ${pipeline.stdout.trim()}` : ""}`,
 );
 
+const fixtureSmoke = spawnSync(
+  process.execPath,
+  [join(root, "node_modules/.bin/tsx"), join(root, "scripts/stage-search-fixture-smoke.mts")],
+  { encoding: "utf8" },
+);
+assert(
+  fixtureSmoke.status === 0,
+  `stage-search-fixture smoke${fixtureSmoke.stderr ? `: ${fixtureSmoke.stderr.trim()}` : fixtureSmoke.stdout ? `: ${fixtureSmoke.stdout.trim()}` : ""}`,
+);
+
 if (failures.length) {
   console.error("connector-smoke FAIL");
   for (const item of failures) console.error(" -", item);
@@ -322,4 +342,5 @@ console.log(" - M2 registry: shopify + http_json · live:false · spend gated");
 console.log(" - intent maps domain→Namecheap, phone→Twilio, software→Shopify, HTTP JSON, else official stub");
 console.log(" - deal search pipeline is search/quote only · MCP-first · no browser farms");
 console.log(" - candidates attach structured handoff · Searching → Found → Needs you");
+console.log(" - stage fixture Searching → Needs you for non-seed user · production refused");
 console.log(" - Approve sheet Needs you → Buying still required before spend");

@@ -11,6 +11,8 @@
 
 Stage mirrors current prod brand: soft-spine logo + BotBuyer. `x-robots-tag: noindex` on the git staging alias.
 
+**CPO Approve walk (stage only):** Start search on staging (`VERCEL_ENV=preview`) or add `STAGE_QA` / open `/intent?fixture=1`. Empty connector stubs then attach an unverified fixture candidate and move Searching → Needs you. Not a live connector. Auto-approve OFF. Production / main refuses this path.
+
 ## Workflow
 1. Land / marketing UI PRs target **`staging`** (not `main`).
 2. Designer QA against **stage URL**.

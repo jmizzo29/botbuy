@@ -11,7 +11,12 @@ export { assertConnectorSpendAllowed } from "@/lib/connectors/approve-gate";
 export {
   applyDealSearchPipeline,
   applySearchActHandoff,
+  applyStageSearchFixtureHandoff,
 } from "@/lib/connectors/deal-search";
+export {
+  STAGE_SEARCH_FIXTURE_TOKEN,
+  isStageSearchFixtureEnabled,
+} from "@/lib/connectors/stage-search-fixture";
 export { routeIntentToSearch } from "@/lib/connectors/intent-route";
 export {
   readSearchActHandoff,
