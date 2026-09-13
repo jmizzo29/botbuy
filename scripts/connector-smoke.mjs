@@ -337,6 +337,14 @@ assert(!dealSearch.includes("agentExecuted: true"), "pipeline never sets agentEx
 const fixtureSrc = readFileSync(join(root, "lib/connectors/stage-search-fixture.ts"), "utf8");
 assert(fixtureSrc.includes("qa-needs-you"), "stage fixture token is qa-needs-you");
 assert(fixtureSrc.includes("isProductionSearchEnv"), "stage fixture refuses production");
+assert(
+  fixtureSrc.includes("Empty stubs stay Searching"),
+  "empty stubs stay Searching without an explicit fixture",
+);
+assert(
+  fixtureSrc.includes("intentRequestsStageSearchFixture"),
+  "stage fixture requires an explicit intent token",
+);
 assert(fixtureSrc.includes('amountStatus: "unverified"'), "stage fixture amounts stay unverified");
 assert(fixtureSrc.includes("live: false"), "stage fixture stays live:false");
 assert(!fixtureSrc.includes("priceVerified: true"), "stage fixture invents no verified prices");
@@ -388,5 +396,5 @@ console.log(" - M2 registry: shopify + http_json · live:false · spend gated");
 console.log(" - intent maps domain→Namecheap, phone→Twilio, software→Shopify, HTTP JSON; cars/houses stay accepted stubs");
 console.log(" - deal search pipeline is search/quote only · MCP-first · no browser farms");
 console.log(" - candidates attach structured handoff · Searching → Found → Needs you");
-console.log(" - stage fixture Searching → Needs you for non-seed user · production refused");
+console.log(" - empty stubs stay Searching; qa-needs-you still Needs you · production refused");
 console.log(" - Approve sheet Needs you → Buying still required before spend");

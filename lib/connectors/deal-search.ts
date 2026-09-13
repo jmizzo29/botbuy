@@ -295,6 +295,8 @@ export async function applyDealSearchPipeline(input: {
         reason: route.reason,
       }),
     });
+    // Accepted stubs (cars/houses/products/general, provider=none) stay
+    // Searching unless an explicit fixture keyword is present.
     if (
       deal.status === "Searching" &&
       isStageSearchFixtureEnabled(intentForFixture)

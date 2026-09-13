@@ -34,16 +34,14 @@ Search/quote persist as `deal_events` + notes. Shopify Admin API and HTTP JSON s
 
 ### Stage search fixture (CHO-honest)
 
-Unmapped / empty connector stubs stay **Searching** with no invented live results. On **staging / preview only**, an explicit fixture can attach an unverified demo candidate (`live:false` · `amountStatus=unverified` · `verified=false` · `provider=stage_fixture`) and hand off Searching → Found → **Needs you** so CPO can walk Approve. It never marks `priceVerified`, `amountVerified`, or `agentExecuted`. Auto-approve stays OFF. Production / `main` refuses the fixture even if the env or token is set.
+Unmapped / empty connector stubs stay **Searching** with no invented live results. On **staging / preview only**, an **explicit** fixture can attach an unverified demo candidate (`live:false` · `amountStatus=unverified` · `verified=false` · `provider=stage_fixture`) and hand off Searching → Found → **Needs you** so CPO can walk Approve. Preview env and `STAGE_SEARCH_FIXTURE=1` alone do **not** invent candidates. It never marks `priceVerified`, `amountVerified`, or `agentExecuted`. Auto-approve stays OFF. Production / `main` refuses the fixture even if the env or token is set.
 
 Enable with any of:
 
-- `STAGE_SEARCH_FIXTURE=1` (server env on the staging deployment)
-- `VERCEL_ENV=preview` (git staging / PR previews)
 - Intent text containing **`qa-needs-you`** (preferred), or `fixture-candidates` / `STAGE_QA`
 - Query toggle `?fixture=1` on `/intent`, `/onboarding/intent`, or empty My deals (`/home?fixture=1`) — appends `qa-needs-you`
 
-CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) → Intent → include **`qa-needs-you`** (or Start search on preview, which auto-enables) → My deals shows **Needs you** → Approve sheet. Amounts stay $0 / unverified. Fixture/stub — not a live purchase.
+CPO walk: sign in as the stage-qa user on [stage](https://stage.botbuyer.ai) → Intent → include **`qa-needs-you`** (or `/intent?fixture=1`) → My deals shows **Needs you** → Approve sheet. A free-text car / house / product / general stub without that keyword stays **Searching**. Amounts stay $0 / unverified. Fixture/stub — not a live purchase.
 
 ## Routes
 

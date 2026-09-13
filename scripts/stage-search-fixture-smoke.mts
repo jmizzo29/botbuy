@@ -78,12 +78,28 @@ if (isProductionSearchEnv({ VERCEL_ENV: "preview" })) {
   throw new Error("preview must not be treated as production");
 }
 if (
-  !isStageSearchFixtureEnabled(null, {
+  isStageSearchFixtureEnabled(null, {
     STAGE_SEARCH_FIXTURE: "1",
     VERCEL_ENV: "preview",
   })
 ) {
-  throw new Error("preview + STAGE_SEARCH_FIXTURE=1 must enable fixture");
+  throw new Error("preview + STAGE_SEARCH_FIXTURE=1 must not invent candidates without a keyword");
+}
+if (
+  isStageSearchFixtureEnabled(
+    { summary: "Find a used Honda Civic in Austin." },
+    { STAGE_SEARCH_FIXTURE: "1", VERCEL_ENV: "preview" },
+  )
+) {
+  throw new Error("car free-text must not enable the fixture without a keyword");
+}
+if (
+  !isStageSearchFixtureEnabled(
+    { summary: `Find a used Honda Civic ${STAGE_SEARCH_FIXTURE_TOKEN}` },
+    { VERCEL_ENV: "preview" },
+  )
+) {
+  throw new Error("qa-needs-you on preview must still enable the fixture");
 }
 if (
   isStageSearchFixtureEnabled(
@@ -151,11 +167,94 @@ if (controlDeal.status !== "Searching") {
 }
 assertSoftHold(controlDeal);
 
-setEnv({ STAGE_SEARCH_FIXTURE: "1" });
+setEnv({ STAGE_SEARCH_FIXTURE: "1", VERCEL_ENV: "preview" });
+const previewCarIntent = addIntent(
+  {
+    summary: `Find a used Honda Civic in Austin for CPO empty-stub smoke ${stamp}.`,
+    categories: ["vehicle"],
+    maxPriceUsd: 50,
+  },
+  QA_USER,
+);
+const previewCarDeal = await createSearchingDealFromIntent(
+  previewCarIntent,
+  QA_USER,
+  "stage-qa@example.com",
+);
+if (previewCarDeal.userId !== QA_USER) {
+  throw new Error("preview car deal must belong to the non-seed user");
+}
+if (previewCarDeal.status !== "Searching") {
+  throw new Error("car free-text stub must stay Searching without a fixture keyword");
+}
+if (previewCarDeal.notes.includes(STAGE_SEARCH_FIXTURE_LABEL)) {
+  throw new Error("car free-text stub must not invent fixture candidates");
+}
+assertSoftHold(previewCarDeal);
+const previewCarEvents = listDealEvents(previewCarDeal.id);
+if (previewCarEvents.some((event) => event.id.endsWith("_search_act"))) {
+  throw new Error("car free-text stub must not write a Needs you handoff");
+}
+if (previewCarEvents.some((event) => event.id.endsWith("_stage_search_fixture"))) {
+  throw new Error("car free-text stub must not write a stage fixture event");
+}
+
+const previewHouseIntent = addIntent(
+  {
+    summary: `Find a 3-bed house in Denver for CPO empty-stub smoke ${stamp}.`,
+    categories: ["property"],
+    maxPriceUsd: 50,
+  },
+  QA_USER,
+);
+const previewHouseDeal = await createSearchingDealFromIntent(
+  previewHouseIntent,
+  QA_USER,
+  "stage-qa@example.com",
+);
+if (previewHouseDeal.status !== "Searching") {
+  throw new Error("house free-text stub must stay Searching without a fixture keyword");
+}
+
+const previewGoodsIntent = addIntent(
+  {
+    summary: `Find household appliances for the kitchen for CPO empty-stub smoke ${stamp}.`,
+    categories: ["product"],
+    maxPriceUsd: 50,
+  },
+  QA_USER,
+);
+const previewGoodsDeal = await createSearchingDealFromIntent(
+  previewGoodsIntent,
+  QA_USER,
+  "stage-qa@example.com",
+);
+if (previewGoodsDeal.status !== "Searching") {
+  throw new Error("product free-text stub must stay Searching without a fixture keyword");
+}
+
+const previewGeneralIntent = addIntent(
+  {
+    summary: `Buy anything useful for the studio for CPO empty-stub smoke ${stamp}.`,
+    categories: ["general"],
+    maxPriceUsd: 50,
+  },
+  QA_USER,
+);
+const previewGeneralDeal = await createSearchingDealFromIntent(
+  previewGeneralIntent,
+  QA_USER,
+  "stage-qa@example.com",
+);
+if (previewGeneralDeal.status !== "Searching") {
+  throw new Error("general free-text stub must stay Searching without a fixture keyword");
+}
+
+setEnv({ VERCEL_ENV: "preview" });
 const envIntent = addIntent(
   {
-    summary: `Find software we can buy across vendor checkout for fixture env ${stamp}.`,
-    categories: ["software"],
+    summary: `Buy a used Honda Civic ${STAGE_SEARCH_FIXTURE_TOKEN} for CPO walk ${stamp}.`,
+    categories: ["vehicle"],
     maxPriceUsd: 50,
   },
   QA_USER,
@@ -166,31 +265,31 @@ const envDeal = await createSearchingDealFromIntent(
   "stage-qa@example.com",
 );
 if (envDeal.userId !== QA_USER) {
-  throw new Error("env fixture deal must belong to the non-seed user");
+  throw new Error("qa-needs-you car deal must belong to the non-seed user");
 }
 if (envDeal.status !== "Needs you") {
-  throw new Error("STAGE_SEARCH_FIXTURE=1 must hand off Searching → Needs you");
+  throw new Error("qa-needs-you car stub must hand off Searching → Needs you");
 }
 assertSoftHold(envDeal);
 const envHandoff = readSearchActHandoff(listDealEvents(envDeal.id));
 if (!envHandoff?.fixture || envHandoff.live !== false) {
-  throw new Error("env fixture handoff must be fixture=true · live:false");
+  throw new Error("qa-needs-you handoff must be fixture=true · live:false");
 }
 if (envHandoff.provider !== STAGE_SEARCH_FIXTURE_PROVIDER) {
-  throw new Error("env fixture must not pretend a live connector succeeded");
+  throw new Error("qa-needs-you must not pretend a live connector succeeded");
 }
 if (envHandoff.candidates[0]?.label !== STAGE_SEARCH_FIXTURE_LABEL) {
-  throw new Error("env fixture must attach the labeled unverified candidate");
+  throw new Error("qa-needs-you must attach the labeled unverified candidate");
 }
 if (envHandoff.quote?.listedUsd != null || envHandoff.quote?.verified !== false) {
-  throw new Error("env fixture quote must stay null / unverified");
+  throw new Error("qa-needs-you quote must stay null / unverified");
 }
 const envEvents = listDealEvents(envDeal.id);
 if (!envEvents.some((event) => event.id.endsWith("_stage_search_fixture"))) {
-  throw new Error("env fixture must write a Stage search fixture event");
+  throw new Error("qa-needs-you must write a Stage search fixture event");
 }
 if (!envEvents.some((event) => event.id.endsWith("_search_act"))) {
-  throw new Error("env fixture must write the Needs you handoff event");
+  throw new Error("qa-needs-you must write the Needs you handoff event");
 }
 
 setEnv({});
@@ -268,8 +367,8 @@ const previewDeal = await createSearchingDealFromIntent(
   QA_USER,
   "stage-qa@example.com",
 );
-if (previewDeal.status !== "Needs you") {
-  throw new Error("VERCEL_ENV=preview must enable the stage fixture");
+if (previewDeal.status !== "Searching") {
+  throw new Error("VERCEL_ENV=preview alone must keep the honest empty stub");
 }
 assertSoftHold(previewDeal);
 
@@ -317,7 +416,7 @@ assertAuthorizedBuyAllowed({
   dealId: buying.id,
 });
 
-setEnv({ STAGE_SEARCH_FIXTURE: "1" });
+setEnv({ VERCEL_ENV: "preview" });
 const replay = await applyDealSearchPipeline({
   deal: envDeal,
   userId: QA_USER,
@@ -331,9 +430,13 @@ restoreEnv();
 
 console.log("stage-search-fixture-smoke PASS");
 console.log(` - non-seed ${QA_USER} control stayed Searching`);
-console.log(` - ${envDeal.id} STAGE_SEARCH_FIXTURE=1 → Needs you · live:false`);
+console.log(` - ${previewCarDeal.id} car free-text stayed Searching`);
+console.log(` - ${previewHouseDeal.id} house free-text stayed Searching`);
+console.log(` - ${previewGoodsDeal.id} product free-text stayed Searching`);
+console.log(` - ${previewGeneralDeal.id} general free-text stayed Searching`);
+console.log(` - ${envDeal.id} car + ${STAGE_SEARCH_FIXTURE_TOKEN} → Needs you · live:false`);
 console.log(` - ${tokenDeal.id} ${STAGE_SEARCH_FIXTURE_TOKEN} token → Needs you`);
 console.log(` - ${unmappedDeal.id} unmapped stub + token → Needs you`);
 console.log(` - ${prodDeal.id} production refused fixture`);
-console.log(` - ${previewDeal.id} VERCEL_ENV=preview → Needs you`);
+console.log(` - ${previewDeal.id} VERCEL_ENV=preview alone stayed Searching`);
 console.log(" - Approve sheet Needs you → Buying still required before spend");
