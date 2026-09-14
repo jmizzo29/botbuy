@@ -644,12 +644,14 @@ assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold
 assert(!land.includes("HowItWorksRail"), "land fold dropped elevate how-stack");
 assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy stage");
 assert(land.includes("bb-land-stage"), "land stage class is wired");
-assert(!land.includes("bb-atm-richer-mesh-deep"), "Q1 land has no richer-mesh-deep atmosphere");
-assert(!land.includes("bb-land-atm"), "Q1 land has no full-bleed atm layer");
-assert(!land.includes("bb-land-sky"), "Q1 land has no 50/50 sky zone");
-assert(!land.includes("bb-mark-hero"), "Q1 land has no giant hero mark");
+assert(!land.includes("bb-atm-richer-mesh-deep"), "L1 land has no richer-mesh-deep atmosphere");
+assert(!land.includes("bb-land-atm"), "L1 land has no full-bleed atm layer");
+assert(!land.includes("bb-land-sky"), "L1 land has no 50/50 sky zone");
+assert(!land.includes("bb-mark-hero"), "L1 land has no giant hero mark");
 assert(!land.includes("bb-atm-mesh-glow"), "land no longer wires unused mesh-glow");
-assert(land.includes("bb-land-watermark") && land.includes("bb-mark-watermark"), "Q1 faint watermark is wired");
+assert(!land.includes("bb-land-watermark") && !land.includes("bb-mark-watermark"), "L1 killed the Q1 watermark");
+assert(land.includes("bb-land-jewelry"), "L1 fold has thin teal jewelry");
+assert(land.includes("bb-land-story") && land.includes("LAND_STORY"), "L1 fold mounts the story strip");
 assert(land.includes("bb-land-h1") && land.includes("bb-land-support"), "land fold uses CSS type-scale classes");
 assert(!land.includes("bb-land-meta"), "land fold dropped meta one-liner");
 assert(chrome.includes("bb-land-main w-full"), "land main is unguttered full width");
@@ -765,11 +767,12 @@ assert(
 assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage tokens stay");
 assert(css.includes(".bb-atm-richer-mesh-deep::before"), "A1 richer-mesh-deep atmosphere CSS stays for auth");
 assert(css.includes("rgba(42,125,158,0.42)"), "A1 richer-mesh-deep teal blob stays for auth");
-assert(css.includes(".bb-land-watermark") && css.includes("opacity: 0.12"), "Q1 watermark opacity is ≤12%");
-assert(css.includes(".bb-land-panel") && css.includes("z-index: 1"), "panel stays above watermark");
-assert(css.includes("background: #0b1f3a"), "Q1 land stage is flat navy");
-assert(!css.includes("rgba(5, 10, 12, 0.38)"), "Q1 killed the #050A0C scrim slab");
-assert(!css.includes("width: 148px"), "Q1 killed the 148px hero mark");
+assert(!css.includes(".bb-land-watermark") && !css.includes(".bb-mark-watermark"), "L1 CSS dropped the watermark");
+assert(css.includes(".bb-land-jewelry") && css.includes("width: 24px") && css.includes("height: 2px"), "L1 jewelry is 24×2");
+assert(css.includes(".bb-land-panel") && css.includes("z-index: 1"), "panel stays above the navy field");
+assert(css.includes("background: #0b1f3a"), "L1 land stage is flat navy");
+assert(!css.includes("rgba(5, 10, 12, 0.38)"), "L1 killed the #050A0C scrim slab");
+assert(!css.includes("width: 148px"), "L1 killed the 148px hero mark");
 assert(!css.includes("bb-atm-grain-veil"), "do not ship grain-veil");
 assert(!css.includes("bb-atm-eclipse-whisper"), "do not ship eclipse-whisper");
 assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
@@ -784,7 +787,7 @@ assert(
 assert(css.includes("border-radius: 0"), "stage is square full-bleed");
 assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
 assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
-assert(css.includes(".bb-land-copy") && css.includes("text-align: left"), "Q1 land copy is left folio");
+assert(css.includes(".bb-land-copy") && css.includes("text-align: left"), "L1 land copy is left folio");
 assert(
   css.includes(".bb-land-header") &&
     css.includes("justify-content: space-between") &&
@@ -796,15 +799,15 @@ assert(
     css.includes(".bb-land-panel") &&
     css.includes("border-top: none") &&
     css.includes("rgba(255, 255, 255, 0.10)"),
-  "Q1 chrome is lockup + About with hairline; no teal divider",
+  "L1 chrome is lockup + About with hairline; no teal divider",
 );
 assert(css.includes("@media (max-width: 1023px)"), "phone axis is locked at max-lg");
 assert(css.includes(".bb-land-cta") && css.includes("flex-direction: column"), "fold CTA is Sign up over Sign in");
-assert(!css.includes("flex: 1 1 0%"), "Q1 killed dual equal CTA flex");
+assert(!css.includes("flex: 1 1 0%"), "L1 killed dual equal CTA flex");
 assert(
   !css.includes("min-width: calc((100% - 10px) / 2)") &&
     !css.includes("width: calc((100% - 10px) / 2)"),
-  "Q1 killed half-row dual CTAs",
+  "L1 killed half-row dual CTAs",
 );
 assert(css.includes("min-height: 48px") && css.includes("height: 48px"), "Sign up keeps 48px height");
 assert(css.includes("border-radius: 8px"), "Sign up radius is 8px");
@@ -824,61 +827,78 @@ assert(
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(!land.includes("data-fold"), "land production DOM has no data-fold debug tag");
 assert(
-  land.includes("bb-land-watermark") &&
+  land.includes("bb-land-jewelry") &&
     land.includes("bb-land-panel") &&
-    css.includes(".bb-land-watermark") &&
+    land.includes("bb-land-story") &&
+    css.includes(".bb-land-jewelry") &&
     css.includes(".bb-land-panel") &&
+    css.includes(".bb-land-story") &&
     css.includes("border-top: none") &&
     !css.includes("rgba(5, 10, 12, 0.38)") &&
     !css.includes("border-top: 2px solid #2dd4bf") &&
     !css.includes("background: #050a0c"),
-  "Q1 fold is flat navy folio with no mesh slab or teal edge",
+  "L1 fold is flat navy folio with jewelry + story and no mesh slab",
 );
 assert(
   css.includes("font-size: 1.875rem") &&
     css.includes("letter-spacing: -0.04em") &&
     css.includes("text-wrap: balance"),
-  "Q1 H1 is 30px / 600 / -0.04em / balance",
+  "L1 H1 is 30px / 600 / -0.04em / balance",
 );
-assert(!land.includes("bb-land-arc"), "Q1 fold has no arc rail");
-assert(!land.includes("bb-land-rule"), "Q1 fold has no D1 teal rule");
-assert(!land.includes("LAND_ARC_SRC"), "Q1 fold does not mount the arc asset");
-assert(!css.includes(".bb-land-arc"), "Q1 CSS dropped the arc rail");
-assert(!css.includes(".bb-land-rule"), "Q1 CSS dropped the D1 hairline rule");
+assert(!land.includes("bb-land-arc"), "L1 fold has no arc rail");
+assert(!land.includes("bb-land-rule"), "L1 fold has no D1 teal rule");
+assert(!land.includes("LAND_ARC_SRC"), "L1 fold does not mount the arc asset");
+assert(!css.includes(".bb-land-arc"), "L1 CSS dropped the arc rail");
+assert(!css.includes(".bb-land-rule"), "L1 CSS dropped the D1 hairline rule");
 assert(
   !land.includes("bb-mark-hero") &&
     !css.includes(".bb-mark-hero") &&
     !css.includes("width: 148px") &&
     !css.includes("height: 148px"),
-  "Q1 killed the oversized 148px hero mark",
+  "L1 killed the oversized 148px hero mark",
 );
 assert(
-  land.includes("LAND_SKY_MARK_SRC") &&
+  !land.includes("LAND_SKY_MARK_SRC") &&
     brand.includes(
       'LAND_SKY_MARK_SRC =\n  "/brand/logo-soft-spine/botbuyer-mark-reverse.svg"',
     ),
-  "Q1 watermark is the locked soft-spine reverse",
+  "L1 land fold does not mount the watermark mark",
 );
 assert(
-  land.indexOf("bb-land-watermark") < land.indexOf("bb-land-panel") &&
+  land.indexOf("bb-land-jewelry") < land.indexOf("bb-land-h1") &&
     land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
-    land.indexOf("bb-land-support") < land.indexOf("bb-land-cta"),
-  "Q1 fold order is watermark → panel H1 → support → CTA",
+    land.indexOf("bb-land-support") < land.indexOf("bb-land-cta") &&
+    land.indexOf("bb-land-cta") < land.indexOf("bb-land-story"),
+  "L1 fold order is jewelry → H1 → support → CTA → story",
 );
 assert(
   css.includes("margin-block-start: 0") &&
     css.includes("align-items: flex-start") &&
-    css.includes("padding: 48px 24px"),
-  "phone Q1 panel is top-weighted left folio",
+    css.includes("padding: 28px 24px"),
+  "phone L1 panel is dense top folio",
 );
 assert(
-  /@media \(max-width: 1023px\)[\s\S]*?\.bb-land-cta \{[\s\S]*?max-width: 13\.75rem/.test(
+  /@media \(max-width: 1023px\)[\s\S]*?\[data-cta="land-signup"\][\s\S]*?width:\s*100%/.test(
     css,
   ) &&
-    /@media \(max-width: 1023px\)[\s\S]*?\[data-cta="land-signup"\][\s\S]*?width:\s*100%/.test(
+    !/@media \(max-width: 1023px\)[\s\S]*?\.bb-land-cta \{[\s\S]*?max-width: 13\.75rem/.test(
       css,
     ),
-  "phone Sign up is 100% of the ~220px content stack",
+  "phone Sign up is 100% of the content column",
+);
+assert(
+  brand.includes("Tell it what to find") &&
+    brand.includes("One intent. BotBuyer runs the chase.") &&
+    brand.includes("Deals land for review") &&
+    brand.includes("Quiet queue — no spend until you say so.") &&
+    brand.includes("You approve. Then it buys.") &&
+    brand.includes("Every deal needs your OK."),
+  "L1 story strip copy is locked in brand",
+);
+assert(
+  !css.includes("margin-top: auto") ||
+    !/@media \(max-width: 1023px\)[\s\S]*?margin-top:\s*auto/.test(css),
+  "L1 story is dense — no margin-top:auto void",
 );
 assert(
   css.includes(
@@ -911,15 +931,26 @@ assert(
   "historical U1 unify-bg INSTALL stays committed",
 );
 assert(
+  existsSync(join(root, "land/craft-raise-v2-2026-09-14/INSTALL.md")) &&
+    read("land/craft-raise-v2-2026-09-14/INSTALL.md").includes("READY-TO-SHIP") &&
+    read("land/craft-raise-v2-2026-09-14/INSTALL.md").includes("capital-desk") &&
+    read("land/craft-raise-v2-2026-09-14/INSTALL.md").includes("Story strip"),
+  "L1 capital-desk INSTALL is READY-TO-SHIP",
+);
+assert(
   existsSync(join(root, "land/craft-raise-2026-09-13/INSTALL.md")) &&
     read("land/craft-raise-2026-09-13/INSTALL.md").includes("READY-TO-SHIP") &&
     read("land/craft-raise-2026-09-13/INSTALL.md").includes("institutional-folio") &&
     read("land/craft-raise-2026-09-13/INSTALL.md").includes("Harden (6fdb02c Item 8)"),
-  "Q1 institutional-folio INSTALL is READY-TO-SHIP",
+  "historical Q1 institutional-folio INSTALL stays committed",
+);
+assert(
+  read("land/INSTALL.md").includes("land/craft-raise-v2-2026-09-14/INSTALL.md"),
+  "land INSTALL points at L1 kit SoT",
 );
 assert(
   read("land/INSTALL.md").includes("land/craft-raise-2026-09-13/INSTALL.md"),
-  "land INSTALL points at Q1 kit SoT",
+  "land INSTALL records replaced Q1 kit",
 );
 assert(
   read("land/INSTALL.md").includes("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md"),
@@ -970,15 +1001,15 @@ assert(
   "U1 About chrome is 15px / 550",
 );
 assert(
-  css.includes(".bb-land-watermark") &&
-    css.includes("inset: 0") &&
-    css.includes("opacity: 0.12"),
-  "Q1 watermark is a faint full-bleed mark",
+  css.includes(".bb-land-jewelry") &&
+    css.includes("opacity: 0.7") &&
+    !css.includes("opacity: 0.12"),
+  "L1 jewelry is 70% teal — no 12% watermark",
 );
 assert(
   css.includes("rgba(255, 255, 255, 0.70)") &&
     css.includes(".bb-land-support"),
-  "Q1 support is muted white ~70%",
+  "L1 support is muted white ~70%",
 );
 assert(
   !read("public/brand/logo-soft-spine/botbuyer-mark-reverse.svg").includes(

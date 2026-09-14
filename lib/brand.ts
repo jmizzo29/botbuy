@@ -13,6 +13,22 @@ export const LAND_SKY_MARK_SRC =
 export const LAND_ARC_SRC = "/land/assets/06-arc-reverse.svg" as const;
 export const LAND_ARC_LABEL = "Find Decide Buy arc" as const;
 
+/** L1 capital-desk story strip. Soft-signal HOLD. */
+export const LAND_STORY = [
+  {
+    title: "Tell it what to find",
+    support: "One intent. BotBuyer runs the chase.",
+  },
+  {
+    title: "Deals land for review",
+    support: "Quiet queue — no spend until you say so.",
+  },
+  {
+    title: "You approve. Then it buys.",
+    support: "Every deal needs your OK.",
+  },
+] as const;
+
 /** Signup live door — CPO `cpo-real-auth-signup-ia-v1.md`. Soft-signal HOLD. */
 export const SIGNUP_H1 = "Create your BotBuyer account" as const;
 export const SIGNUP_SUB = LAND_META_LINE;
