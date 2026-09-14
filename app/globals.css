@@ -345,23 +345,6 @@ body {
   box-shadow: none;
 }
 
-.bb-land-watermark {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.bb-mark-watermark {
-  position: absolute;
-  top: 22%;
-  right: -6%;
-  width: min(72vw, 22rem);
-  height: auto;
-  opacity: 0.12;
-}
-
 .bb-land-panel {
   position: relative;
   z-index: 1;
@@ -372,7 +355,25 @@ body {
   min-height: 0;
   background: transparent;
   border-top: none;
-  padding: 48px 24px calc(48px + env(safe-area-inset-bottom, 0px));
+  padding: 28px 24px calc(32px + env(safe-area-inset-bottom, 0px));
+  gap: 1.75rem;
+}
+
+.bb-land-folio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 22rem;
+}
+
+.bb-land-jewelry {
+  width: 24px;
+  height: 2px;
+  margin: 0 0 1.25rem;
+  background: #2dd4bf;
+  opacity: 0.7;
+  border-radius: 0;
 }
 
 .bb-land-copy {
@@ -433,6 +434,65 @@ body {
   margin-top: 0;
 }
 
+.bb-land-story {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 22rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.bb-land-story-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.bb-land-story-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.bb-land-story-index {
+  flex: 0 0 auto;
+  min-width: 1.5rem;
+  font-size: 0.8125rem;
+  font-weight: 550;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.42);
+  font-variant-numeric: tabular-nums;
+}
+
+.bb-land-story-body {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.bb-land-story-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.bb-land-story-support {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.58);
+}
+
 .bb-land-cta > a,
 .bb-land-cta > button,
 .bb-land-cta [data-cta],
@@ -490,7 +550,7 @@ body {
   border: 0;
 }
 
-/* Phone / max-lg: Q1 institutional-folio. Soft-signal HOLD. */
+/* Phone / max-lg: L1 capital-desk. Soft-signal HOLD. */
 @media (max-width: 1023px) {
   .bb-land-header {
     justify-content: space-between;
@@ -502,7 +562,15 @@ body {
 
   .bb-land-panel {
     min-height: 0;
-    padding: 48px 24px calc(48px + env(safe-area-inset-bottom, 0px));
+    padding: 28px 24px calc(32px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .bb-land-folio,
+  .bb-land-copy,
+  .bb-land-cta,
+  .bb-land-story {
+    max-width: none;
+    width: 100%;
   }
 
   .bb-land-copy {
@@ -529,11 +597,11 @@ body {
   .bb-land-cta {
     margin-top: 0;
     justify-content: flex-start;
-    max-width: 13.75rem;
+    max-width: none;
     margin-inline: 0;
   }
 
-  /* Sign up = 100% of ~220px content stack. Sign in stays text. */
+  /* Sign up = 100% of content column. Sign in stays text. */
   .bb-land-signup,
   .bb-land-cta [data-cta="land-signup"] {
     width: 100%;
@@ -566,15 +634,17 @@ body {
     min-height: 100svh;
   }
 
-  .bb-land-watermark .bb-mark-watermark {
-    top: 18%;
-    right: 6%;
-    width: min(36vw, 26rem);
+  .bb-land-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 28rem);
+    align-items: start;
+    column-gap: 4rem;
+    min-height: 0;
+    padding: 3.25rem 5.5rem calc(3.5rem + env(safe-area-inset-bottom, 0px));
   }
 
-  .bb-land-panel {
-    min-height: 0;
-    padding: 4.5rem 5.5rem calc(3.5rem + env(safe-area-inset-bottom, 0px));
+  .bb-land-folio {
+    max-width: 32rem;
   }
 
   .bb-land-copy {
@@ -603,8 +673,34 @@ body {
   .bb-land-cta {
     justify-content: flex-start;
     max-width: 22rem;
+    width: auto;
     margin-inline: 0;
     margin-top: 0;
+  }
+
+  .bb-land-story {
+    max-width: none;
+    margin-top: 0.35rem;
+    padding: 0.15rem 1.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+  }
+
+  .bb-land-story-row {
+    padding: 1.05rem 0;
+  }
+
+  .bb-land-story-row:last-child {
+    padding-bottom: 1.05rem;
+  }
+
+  .bb-land-story-title {
+    font-size: 1rem;
+  }
+
+  .bb-land-story-support {
+    font-size: 0.875rem;
   }
 
   .bb-land-meta {
