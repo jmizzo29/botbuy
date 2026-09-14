@@ -2,13 +2,11 @@ import type { Viewport } from "next";
 import Link from "next/link";
 import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
-import { CLERK_SIGN_IN_URL } from "@/lib/auth-config";
 import {
   BRAND,
   LAND_PRODUCT_H1,
   LAND_PRODUCT_SUPPORT,
   LAND_STORY,
-  SIGN_IN_H1,
 } from "@/lib/brand";
 import { redirectSignedInFromLand } from "@/lib/land-gate";
 
@@ -31,7 +29,6 @@ export default async function LandPage() {
       <section data-surface="land-stage" className="bb-land-stage">
         <div data-zone="panel" className="bb-land-panel">
           <div className="bb-land-folio">
-            <div className="bb-land-jewelry" aria-hidden="true" />
             <div className="bb-land-copy">
               <h1 className="bb-land-h1">{LAND_PRODUCT_H1}</h1>
               <p className="bb-land-support">{LAND_PRODUCT_SUPPORT}</p>
@@ -42,13 +39,6 @@ export default async function LandPage() {
                   {BRAND.primaryCta}
                 </Link>
               </Button>
-              <Link
-                href={CLERK_SIGN_IN_URL}
-                data-cta="land-signin"
-                className="bb-land-signin"
-              >
-                {SIGN_IN_H1}
-              </Link>
             </div>
           </div>
           <ol className="bb-land-story">
