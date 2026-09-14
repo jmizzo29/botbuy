@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "eas-cli": "^24.3.0",
     "typescript": "~6.0.3"
   },
   "overrides": {
@@ -36,6 +37,8 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "smoke:api": "npx --yes tsx scripts/stage-api-smoke.ts",
-    "prebuild": "expo prebuild"
+    "prebuild": "expo prebuild",
+    "eas:build:ios:internal": "eas build -p ios --profile preview",
+    "eas:build:android:internal": "eas build -p android --profile preview"
   }
 }

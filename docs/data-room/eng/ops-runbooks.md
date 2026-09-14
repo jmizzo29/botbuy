@@ -8,7 +8,8 @@
 | --- | --- | --- |
 | Staging / land promote | [`../../ops/STAGE.md`](../../ops/STAGE.md) | Present. Stage URL, CPO smokes, Neon persist note, promote HOLD. |
 | Egress IP SoT | [`../../ops/egress-ip-sot-v1.md`](../../ops/egress-ip-sot-v1.md) | **EMPTY.** No published allowlist. Do not invent IPs. |
-| John human-gate checklist | [`../../ops/john-human-gate-checklist-v1.md`](../../ops/john-human-gate-checklist-v1.md) | Ops checklist home. Apple/Google Blocking=NO until TestFlight/internal. |
+| John human-gate checklist | [`../../ops/john-human-gate-checklist-v1.md`](../../ops/john-human-gate-checklist-v1.md) | Ops checklist home. Apple/Play **internal** Blocking=YES. Prod store still BLOCK. |
+| EAS internal tracks | [`../../ops/eas-internal-tracks-v1.md`](../../ops/eas-internal-tracks-v1.md) | M1 scaffold. Apple/Play **MISSING** (John NO). Soft HOLD upload. No binary claimed. |
 
 ## Related SoT (not ops/, still current-truth)
 

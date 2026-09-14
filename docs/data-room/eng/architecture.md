@@ -15,7 +15,7 @@ This is a Next.js app at repo root (`package.json` name `botbuy`, Next `16.3.4`)
 | Identity store | Neon `users.clerk_user_id` unique | `getCurrentUser()` resolves Clerk → Neon. `bb_signup` is not identity. |
 | Connectors | `lib/connectors/*` MCP-style registry | Official APIs only. `live:false` structural. |
 | Spend | `lib/spend-policy.ts` · `lib/authorized-buy.ts` · `lib/vault-rails.ts` | Auto-approve OFF. `$1,000` hard gate. Prep ≠ pay. |
-| Native | `apps/mobile/` Expo iOS+Android (SDK 57) | **M0 scaffold.** Soft HOLD. Stage-first. No store submit. **BLOCK PWA-as-product.** |
+| Native | `apps/mobile/` Expo iOS+Android (SDK 57) | **M0 UI + M1 EAS scaffold.** Soft HOLD. Stage-first. No prod store submit. **BLOCK PWA-as-product.** |
 
 ## API + MCP-first
 

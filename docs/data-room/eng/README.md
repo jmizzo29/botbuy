@@ -18,7 +18,7 @@ CFO master index (do not overwrite): [`../data-room-index-v1.md`](../data-room-i
 | Product surface | Full product on **staging**. **Land-only** on prod (`botbuyer.ai`). No wholesale `staging` → `main`. |
 | Connectors | Official-API scaffolds under `lib/connectors/*`. Default `keysConfigured=false` · `live:false` · `spend=false`. |
 | Spend | Auto-approve **OFF**. Fail-closed. Checkout Session **prep** ≠ live pay. |
-| Native | `apps/mobile/` **M0 scaffold** (dual-target iOS+Android). **BLOCK PWA-as-product.** **BLOCK prod store until smoke.** |
+| Native | `apps/mobile/` **M0 UI + M1 EAS scaffold** (dual-target iOS+Android). **BLOCK PWA-as-product.** **BLOCK prod store.** Soft HOLD store. |
 | Traction | Public ProofStrip empty. Personal imported ledger ≠ platform GMV. |
 | Egress SoT | **EMPTY** — [`../../ops/egress-ip-sot-v1.md`](../../ops/egress-ip-sot-v1.md). UI: `X.X.X.X` · `— CTO provides egress IPs —`. Do not invent IPs. |
 | Secrets | Names only in [`key-inventory.md`](key-inventory.md). Never Autofleeto. Never paste values. |
@@ -30,11 +30,11 @@ CFO master index (do not overwrite): [`../data-room-index-v1.md`](../data-room-i
 | [`architecture.md`](architecture.md) | Next.js App Router · Neon · Vercel · Clerk · API+MCP-first · Expo dual-target · fail-closed vault |
 | [`mcp-connectors.md`](mcp-connectors.md) | Connector inventory + honesty |
 | [`vault-spend-rails.md`](vault-spend-rails.md) | `BOTBUY_VAULT_KEY` fail-closed · `BOTBUY_STRIPE_*` · auto-approve OFF · authorized-buy |
-| [`expo-native.md`](expo-native.md) | `apps/mobile/` M0 scaffold · stage/internal before store · PWA block |
+| [`expo-native.md`](expo-native.md) | `apps/mobile/` M0 UI + M1 EAS scaffold · stage/internal before store · PWA block |
 | [`tip-map.md`](tip-map.md) | Stage / prod tip SHA map (diligence) |
 | [`key-inventory.md`](key-inventory.md) | Env **names** from `.env.example` only |
-| [`human-gates.md`](human-gates.md) | → `ops/john-human-gate-checklist-v1.md` · Apple/Google Blocking=NO |
-| [`ops-runbooks.md`](ops-runbooks.md) | → `ops/STAGE.md` · egress SoT (EMPTY) · human-gate checklist |
+| [`human-gates.md`](human-gates.md) | → `ops/john-human-gate-checklist-v1.md` · Apple/Play internal Blocking=YES |
+| [`ops-runbooks.md`](ops-runbooks.md) | → `ops/STAGE.md` · `ops/eas-internal-tracks-v1.md` · egress SoT (EMPTY) · human-gate checklist |
 
 ## Canonical chrome
 

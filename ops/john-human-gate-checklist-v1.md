@@ -1,6 +1,6 @@
 # John human-gate checklist v1
 
-**Soft HOLD.** Designated-holder Approve sheet. Auto-approve **OFF**.
+**Soft HOLD.** Designated-holder Approve sheet. Auto-approve **OFF.** Soft HOLD store · Soft HOLD soft-signal.
 
 Data-room pointer: [`../docs/data-room/eng/human-gates.md`](../docs/data-room/eng/human-gates.md).
 
@@ -13,12 +13,13 @@ Data-room pointer: [`../docs/data-room/eng/human-gates.md`](../docs/data-room/en
 
 ## Native / stores
 
-- [ ] Apple Developer / App Store **Blocking=NO** until TestFlight / internal is needed
-- [ ] Google Play **Blocking=NO** until Play internal is needed
+- [ ] Apple Developer / TestFlight **internal** — **Blocking=YES** (needed for EAS M1)
+- [ ] Google Play **internal** testing — **Blocking=YES** (needed for EAS M1)
+- [ ] Expo project `botbuyer` + `eas init` — **Blocking=YES** for a real binary (projectId still TODO)
 - [ ] **BLOCK** App Store / Play **production** submit until stage/internal builds exist for **iPhone AND Android** **and** Design / CPO / CHO smoke PASS
 - [ ] **BLOCK** PWA-as-product
 
-M0 path: **`apps/mobile/`** (Expo iOS+Android + web first-class · PWA not the product). Soft HOLD scaffold — welcome honesty only; full journey later. Next milestone: **EAS / TestFlight internal + Play internal**. No `eas.json` / production submit in M0. Apple/Google **Blocking=NO** until internal tracks are needed. **BLOCK PWA-as-product.** Stage-first.
+M1 path: **`apps/mobile/`** + [`eas-internal-tracks-v1.md`](eas-internal-tracks-v1.md). `eas.json` ships `development` / `preview` / `internal` only. **No** `production` submit profile. Apple Developer + Play Console are **MISSING** (John confirmed NO, 2026-09-14). Expo `projectId` still TODO. Soft HOLD TestFlight / Play **upload**. Do **not** claim binaries. **BLOCK PWA-as-product.** Stage-first.
 
 ## Egress
 
