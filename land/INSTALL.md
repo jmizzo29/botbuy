@@ -41,12 +41,12 @@ Chrome lockup is the locked soft-spine reverse: `/brand/logo-soft-spine/botbuyer
 
 ## Captions
 
-- H1: `Your AI agent for buying.`
+- H1: `Your AI agent for buying, almost anything!!!`
 - Support: `Acts for you. Spends only with your OK.`
 - Story:
   1. Tell it what to find · One intent. BotBuyer runs the chase.
-  2. Deals land for review · Quiet queue — no spend until you say so.
-  3. You approve. Then it buys. · Every deal needs your OK.
+  2. Searches land for review · Quiet queue — no spend until you say so.
+  3. You approve. Then it buys. · Every search needs your OK.
 
 ## Layout (L1 phone · capital-desk desktop)
 

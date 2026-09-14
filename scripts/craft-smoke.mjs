@@ -585,7 +585,12 @@ const LAND_META =
   "BotBuyer finds it and handles the chase. You approve before it pays.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
-assert(brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying."'), "land H1 lock");
+assert(
+  brand.includes(
+    'LAND_PRODUCT_H1 =\n  "Your AI agent for buying, almost anything!!!"',
+  ) || brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying, almost anything!!!"'),
+  "land H1 lock",
+);
 assert(
   brand.includes('LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK."'),
   "land support lock",
@@ -889,10 +894,10 @@ assert(
 assert(
   brand.includes("Tell it what to find") &&
     brand.includes("One intent. BotBuyer runs the chase.") &&
-    brand.includes("Deals land for review") &&
+    brand.includes("Searches land for review") &&
     brand.includes("Quiet queue — no spend until you say so.") &&
     brand.includes("You approve. Then it buys.") &&
-    brand.includes("Every deal needs your OK."),
+    brand.includes("Every search needs your OK."),
   "L1 story strip copy is locked in brand",
 );
 assert(
