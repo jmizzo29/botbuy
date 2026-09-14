@@ -3,7 +3,8 @@ export const LAND_META_LINE =
   "BotBuyer finds it and handles the chase. You approve before it pays.";
 
 /** Land H1 / support — CMO LOCKED ≤10s lead. Soft-signal HOLD. */
-export const LAND_PRODUCT_H1 = "Your AI agent for buying." as const;
+export const LAND_PRODUCT_H1 =
+  "Your AI agent for buying, almost anything!!!" as const;
 export const LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK." as const;
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
@@ -20,12 +21,12 @@ export const LAND_STORY = [
     support: "One intent. BotBuyer runs the chase.",
   },
   {
-    title: "Deals land for review",
+    title: "Searches land for review",
     support: "Quiet queue — no spend until you say so.",
   },
   {
     title: "You approve. Then it buys.",
-    support: "Every deal needs your OK.",
+    support: "Every search needs your OK.",
   },
 ] as const;
 

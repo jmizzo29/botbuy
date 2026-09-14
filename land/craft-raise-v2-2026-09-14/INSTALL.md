@@ -13,15 +13,15 @@ Do **not** merge to `main` or ship production `botbuyer.ai` from this kit.
 1. **Flat Quiet Capital navy** `#0B1F3A` — continuous. No page gradient. No mesh. **KILL** soft-spine watermark / giant hero.
 2. **Soft-spine chrome-only** 28px reverse white. No teal tip. Chrome product bar ~52–56px · hairline bottom `rgba(255,255,255,0.10)`.
 3. Fold dense top: thin teal jewelry **24×2 @0.70** (not watermark).
-4. Exact H1 `Your AI agent for buying.`
+4. Exact H1 `Your AI agent for buying, almost anything!!!`
 5. Support `Acts for you. Spends only with your OK.` · muted white ~70% (NOT teal).
 6. **One** primary Sign up teal fill `#2DD4BF` / `#042F2E` · **border-radius 8px** · min-height 48 · **full content-column width** on phone.
 7. Sign in = **text link under** (not second pill).
 8. About ~14–15px / ~0.90 white.
 9. **Story strip** 3 rows (dense — NOT `margin-top: auto` void):
    1. Tell it what to find · One intent. BotBuyer runs the chase.
-   2. Deals land for review · Quiet queue — no spend until you say so.
-   3. You approve. Then it buys. · Every deal needs your OK.
+   2. Searches land for review · Quiet queue — no spend until you say so.
+   3. You approve. Then it buys. · Every search needs your OK.
 
 ## Kill
 
