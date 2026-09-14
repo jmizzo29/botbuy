@@ -97,23 +97,32 @@ function landLinkClass(extra?: string) {
 }
 
 async function PublicNav({ land }: { land: boolean }) {
-  const session = await hasPublicSession();
   const link = land
     ? landLinkClass
     : (extra?: string) => cn("text-xs text-muted hover:text-foreground", extra);
 
-  return (
-    <div className={land ? "bb-land-nav" : "flex items-center gap-3 text-sm"}>
-      {land ? (
+  if (land) {
+    return (
+      <div className="bb-land-nav">
+        <Link href={CLERK_SIGN_IN_URL} className={link()} data-nav="signin">
+          Sign in
+        </Link>
         <Link href="/about" className={link("about")} data-nav="about">
           About
         </Link>
-      ) : null}
+      </div>
+    );
+  }
+
+  const session = await hasPublicSession();
+
+  return (
+    <div className="flex items-center gap-3 text-sm">
       {session ? (
-        <Link href={MY_DEALS_HREF} className={land ? link() : "text-muted hover:text-foreground"}>
+        <Link href={MY_DEALS_HREF} className="text-muted hover:text-foreground">
           {MY_DEALS_LABEL}
         </Link>
-      ) : land ? null : (
+      ) : (
         <>
           <Link href={CLERK_SIGN_IN_URL} className={link()}>
             Sign in

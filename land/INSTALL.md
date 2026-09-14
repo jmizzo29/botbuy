@@ -28,12 +28,12 @@ Chrome lockup is the locked soft-spine reverse: `/brand/logo-soft-spine/botbuyer
 
 ## Product locks
 
-- No light header / banners. Continuous flat navy `#0B1F3A` behind the whole fold. Overlay reverse lockup (`/brand/logo-soft-spine/botbuyer-logo-header.svg`, 28px, no teal tip) + About word link only (15px / 0.90). Chrome hairline `rgba(255,255,255,0.10)`. No Private beta in the top row. No pill chrome in the top row. Sign in lives as a text link under Sign up.
-- No giant ~148px hero. **No watermark.**
-- Thin teal jewelry 24×2 @0.70 at fold top (not a page divider).
+- No light header / banners. Continuous flat navy `#0B1F3A` behind the whole fold. Overlay reverse lockup (`/brand/logo-soft-spine/botbuyer-logo-header.svg`, 28px, no teal tip) + chrome right `Sign in` then `About` (14px / 0.90). **No chrome hairline.** No Private beta in the top row. No pill chrome in the top row. Sign in is chrome-only — not under Sign up.
+- No giant ~148px hero. **No watermark.** **No teal jewelry dash.**
+- HARDEN `HARDEN-l1-chrome-signin-2026-09-14.md` killed jewelry + header hairline + fold Sign in.
 - Edge: NONE. No teal page divider.
 - No `#050A0C` slab. Square full-bleed viewport (no inset card / no 20/28 radius).
-- Sign up = teal fill `#2DD4BF` / `#042F2E` · radius 8px · full content-column width on phone. Sign in = text under. No Install on land.
+- Sign up = teal fill `#2DD4BF` / `#042F2E` · radius 8px · full content-column width on phone. Fold CTA is Sign up only. No Install on land.
 - Story strip 3 locked rows (dense). Desktop capital-desk: folio left / story right.
 - Signed-in: redirect off land (never My deals as land primary)
 - Soft-signal HOLD — no Demo / $1k / under-CTA trio / under-CTA Private beta chip
@@ -50,7 +50,7 @@ Chrome lockup is the locked soft-spine reverse: `/brand/logo-soft-spine/botbuyer
 
 ## Layout (L1 phone · capital-desk desktop)
 
-- Phone (`max-width: 1023px`): dense top folio on flat navy. Chrome 28px + About. Jewelry + copy + one Sign up (`width: 100%` of content column) + Sign in + hairline story strip in the first fold. No footer dump on fold.
+- Phone (`max-width: 1023px`): dense top folio on flat navy. Chrome 28px + Sign in + About. Copy + one Sign up (`width: 100%` of content column) + hairline story strip in the first fold. No footer dump on fold.
 - Desktop: same flat field. Left folio + right story strip. Chrome ~56px product-bar. Do not restore Q1 watermark, U1 50/50, mesh bloom, or dual pills.
 
 Strings live in `lib/brand.ts`.
