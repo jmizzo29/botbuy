@@ -19,7 +19,7 @@ Data-room pointer: [`../docs/data-room/eng/human-gates.md`](../docs/data-room/en
 - [ ] **BLOCK** App Store / Play **production** submit until stage/internal builds exist for **iPhone AND Android** **and** Design / CPO / CHO smoke PASS
 - [ ] **BLOCK** PWA-as-product
 
-M1 path: **`apps/mobile/`** + [`eas-internal-tracks-v1.md`](eas-internal-tracks-v1.md). `eas.json` ships `development` / `preview` / `internal` only. **No** `production` submit profile. Accounts Expo / Apple / Play stay **UNKNOWN** until John confirms. Do **not** claim TestFlight or Play binaries until `eas build` succeeds. **BLOCK PWA-as-product.** Stage-first.
+M1 path: **`apps/mobile/`** + [`eas-internal-tracks-v1.md`](eas-internal-tracks-v1.md). `eas.json` ships `development` / `preview` / `internal` only. **No** `production` submit profile. Apple Developer + Play Console are **MISSING** (John confirmed NO, 2026-09-14). Expo `projectId` still TODO. Soft HOLD TestFlight / Play **upload**. Do **not** claim binaries. **BLOCK PWA-as-product.** Stage-first.
 
 ## Egress
 

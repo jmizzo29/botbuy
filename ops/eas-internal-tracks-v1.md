@@ -24,20 +24,20 @@ Path: **`apps/mobile/`** · bundle / package **`ai.botbuyer.app`**.
 
 **EAS `distribution: "internal"` ≠ TestFlight Internal Testing.** Expo internal = ad-hoc / enterprise IPA (registered UDIDs) or a shareable APK. TestFlight needs a store-signed IPA uploaded to App Store Connect. Play Console Internal testing needs an AAB on the **internal** track. Those John uploads are still **not** production store submit.
 
-**No binary is claimed.** `eas build` has not succeeded in this milestone. Missing accounts stay **UNKNOWN** until John confirms. Do not block Eng on waiting for John — this file is the handoff.
+**No binary is claimed.** `eas build` has not succeeded. **Soft HOLD TestFlight / Play upload** — do **not** run `eas submit` or store upload (no Apple / Play credentials). Do not block Eng on waiting for John — this file is the handoff.
 
 ## Accounts — EXIST vs MISSING
 
-Mark **UNKNOWN** until John confirms. Do not invent memberships, Team IDs, or service accounts.
+John confirmed **2026-09-14:** no Apple Developer account, no Google Play Console. Expo login / `projectId` still **UNKNOWN** until he (or Builder with his Expo token) runs `eas login` + `eas init`. Do not invent memberships, Team IDs, or service accounts.
 
 | Account | Why | Status | Notes |
 |---|---|---|---|
 | Expo (`expo.dev`) | `eas login` + `eas init` + EAS Build | **UNKNOWN** | Need an Expo org/user that can own project slug `botbuyer`. |
-| Apple Developer Program | Certificates, profiles, App Store Connect, TestFlight | **UNKNOWN** | $99/yr. Bundle `ai.botbuyer.app`. |
-| App Store Connect app | TestFlight internal testers | **UNKNOWN** | Create only after Apple membership is active. |
-| Google Play Console | Play app + Internal testing track | **UNKNOWN** | ~$25 one-time. Package `ai.botbuyer.app`. |
-| Expo ↔ Apple credentials | `eas credentials` iOS | **UNKNOWN** | John must accept Apple agreements. |
-| Expo ↔ Google credentials | `eas credentials` Android / Play service account | **UNKNOWN** | Do not invent a JSON key. |
+| Apple Developer Program | Certificates, profiles, App Store Connect, TestFlight | **MISSING** | John confirmed **NO**. Enroll: [developer.apple.com/programs/enroll](https://developer.apple.com/programs/enroll/) ($99/yr). Bundle `ai.botbuyer.app`. |
+| App Store Connect app | TestFlight internal testers | **MISSING** | Create only after Apple membership is active. |
+| Google Play Console | Play app + Internal testing track | **MISSING** | John confirmed **NO**. Signup: [play.google.com/console/signup](https://play.google.com/console/signup) (~$25). Package `ai.botbuyer.app`. |
+| Expo ↔ Apple credentials | `eas credentials` iOS | **MISSING** | John must enroll, then accept Apple agreements and invite Builder / grant EAS access. |
+| Expo ↔ Google credentials | `eas credentials` Android / Play service account | **MISSING** | John must open Play Console, then invite Builder / grant EAS. Do not invent a JSON key. |
 | Expo `projectId` | `extra.eas.projectId` | **MISSING** | Written only by `eas init`. |
 
 ## John human steps
@@ -102,6 +102,8 @@ npx eas-cli build -p android --profile preview
 ```
 
 Do **not** announce TestFlight or Play internal until those commands succeed and testers can install. This repo does **not** contain a build URL.
+
+**Soft HOLD upload:** do **not** run `eas submit`, TestFlight upload, or Play Console upload until Apple + Play accounts exist. `submit.preview` / `submit.internal` are profile **intent** only.
 
 ## Soft HOLD — do not
 

@@ -72,7 +72,7 @@ EAS `distribution: "internal"` is Expo ad-hoc / APK share — not the same as Te
 
 `eas-cli` is a **devDependency**. Fallback: `npx eas-cli build -p ios --profile preview`.
 
-These commands **will not succeed** until Expo project + Apple/Google credentials exist. That is expected. Missing accounts stay **UNKNOWN** until John confirms — see the runbook.
+These commands **will not succeed** until Expo project + Apple/Google credentials exist. That is expected. John confirmed Apple Developer + Play Console are **MISSING**. Expo `projectId` is still a TODO. Soft HOLD TestFlight / Play upload — see the runbook.
 
 Chrome mark is `apps/mobile/assets/mark.png` — kit reverse/white soft-spine (`brand/logo-soft-spine/botbuyer-mark-reverse.svg`) for the Quiet Capital `#0B1F3A` shell. Do not swap in the navy-on-white mark.
 

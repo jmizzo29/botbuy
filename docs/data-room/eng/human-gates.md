@@ -27,7 +27,7 @@ That file is the ops checklist home. This page is the data-room pointer + curren
 | Google Play **internal** testing | **YES** | EAS M1 — John Play Console + Internal testing track `ai.botbuyer.app` |
 | App Store / Play **production** submit | **BLOCK** | Stage/internal binaries exist **and** Design / CPO / CHO smoke PASS |
 
-**Blocking=YES** means missing Apple / Play accounts now block a real TestFlight / Play internal binary. It does **not** mean “ship to prod store.” Accounts remain **UNKNOWN** until John confirms — see [`../../ops/eas-internal-tracks-v1.md`](../../ops/eas-internal-tracks-v1.md). **CEO LOCK:** stage apps for **iPhone AND Android** first. **BLOCK** App Store / Play **production** submit. Soft HOLD store · Soft HOLD soft-signal. See [`expo-native.md`](expo-native.md).
+**Blocking=YES** means missing Apple / Play accounts now block a real TestFlight / Play internal binary. It does **not** mean “ship to prod store.” John confirmed **2026-09-14:** Apple Developer **MISSING** · Google Play Console **MISSING**. Expo `projectId` still TODO. Soft HOLD TestFlight / Play **upload** (no `eas submit`). See [`../../ops/eas-internal-tracks-v1.md`](../../ops/eas-internal-tracks-v1.md). **CEO LOCK:** stage apps for **iPhone AND Android** first. **BLOCK** App Store / Play **production** submit. Soft HOLD store · Soft HOLD soft-signal. See [`expo-native.md`](expo-native.md).
 
 ## Egress
 

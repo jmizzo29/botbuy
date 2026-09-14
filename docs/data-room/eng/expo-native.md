@@ -20,7 +20,7 @@
 
 1. Stage the **web** product on https://botbuy-git-staging-jmizzo29s-projects.vercel.app (full product Soft HOLD).
 2. **This milestone:** EAS M1 scaffold — TestFlight **internal** + Play **internal** intent. Runbook: [`../../ops/eas-internal-tracks-v1.md`](../../ops/eas-internal-tracks-v1.md).
-3. Apple Developer / TestFlight internal + Google Play internal are **Blocking=YES** — see [`human-gates.md`](human-gates.md). Accounts **UNKNOWN** until John confirms.
+3. Apple Developer / TestFlight internal + Google Play internal are **Blocking=YES** — see [`human-gates.md`](human-gates.md). John confirmed Apple + Play **MISSING**. Expo `projectId` still TODO. Soft HOLD TestFlight / Play upload.
 4. **BLOCK App Store / Play production submit** until stage/internal builds exist for **both** platforms **and** Design / CPO / CHO smoke PASS. No smoke → no prod store. Soft HOLD store · Soft HOLD soft-signal.
 
 ## BLOCK PWA-as-product
