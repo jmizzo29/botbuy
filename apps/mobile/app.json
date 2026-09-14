@@ -59,7 +59,8 @@
       "hold": "Soft HOLD",
       "live": false,
       "spend": false,
-      "autoApprove": false
+      "autoApprove": false,
+      "eas": {}
     }
   }
 }

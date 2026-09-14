@@ -77,7 +77,7 @@ John must add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `DATA
 
 ## Native clients (`apps/mobile/`)
 
-Monorepo path for the Expo / React Native **iPhone + Android** client — same BotBuyer APIs as this Next.js app. Display name **BotBuyer**. Soft HOLD scaffold (welcome honesty, Clerk fail-closed, read-only stage API). **BLOCK PWA-as-product.** Apple Developer + Google Play Console are **Blocking=NO** until TestFlight / internal tracks are needed. **CEO LOCK:** stage apps for both platforms before any production store submit. No `eas.json` / prod submit in M0. See [`apps/mobile/README.md`](apps/mobile/README.md) and [`ops/john-human-gate-checklist-v1.md`](ops/john-human-gate-checklist-v1.md).
+Monorepo path for the Expo / React Native **iPhone + Android** client — same BotBuyer APIs as this Next.js app. Display name **BotBuyer**. Soft HOLD scaffold (welcome honesty, Clerk fail-closed, read-only stage API). **BLOCK PWA-as-product.** M1 ships `apps/mobile/eas.json` (`development` / `preview` / `internal` only — **no** production submit). Apple Developer + Google Play Console are **Blocking=YES** for TestFlight / Play **internal**. **CEO LOCK:** stage apps for both platforms before any production store submit. Soft HOLD store · Soft HOLD soft-signal. See [`apps/mobile/README.md`](apps/mobile/README.md), [`ops/eas-internal-tracks-v1.md`](ops/eas-internal-tracks-v1.md), and [`ops/john-human-gate-checklist-v1.md`](ops/john-human-gate-checklist-v1.md).
 
 Root `tsconfig.json` + ESLint **exclude** `apps/mobile/` so Vercel `next build` does not typecheck Expo.
 

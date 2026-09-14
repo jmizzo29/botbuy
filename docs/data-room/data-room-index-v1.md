@@ -13,7 +13,7 @@ CFO owns this checklist. Eng / legal / gtm / product folders are sibling-owned �
 | 3 | Engineering | `docs/data-room/eng/` | **EXISTS** at tip `94407cc` (PR #92). Expo M0 **EXISTS** at **`apps/mobile/`** · Soft HOLD · no store prod · stage-first. |
 | 4 | Finance | `docs/data-room/finance/` | **EXISTS** — CHO-patched narrative · inventory · burn/spend pack · locks |
 | 5 | Legal | `docs/data-room/legal/` | **PARTIAL** — folder not on staging tip (`docs/legal/` drafts exist outside the room) |
-| 6 | Ops / John gate | `docs/data-room/ops/` · `ops/` | **PARTIAL** — human-gate note + `ops/STAGE.md`; cash pool unnamed |
+| 6 | Ops / John gate | `docs/data-room/ops/` · `ops/` | **PARTIAL** — human-gate note + `ops/STAGE.md` + `ops/eas-internal-tracks-v1.md`; cash pool unnamed |
 | 7 | GTM | `docs/data-room/gtm/` | **PARTIAL** — folder not on staging tip |
 | — | Cash pool / runway | — | **PARTIAL** — undefined until John names the BotBuy cash pool |
 | — | Expo native | `apps/mobile/` | **EXISTS** · Soft HOLD · no store prod · stage-first |

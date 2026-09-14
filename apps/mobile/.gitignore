@@ -37,6 +37,10 @@ yarn-error.*
 .env
 .env*.local
 
+# EAS local credentials — never invent or commit signing material
+credentials.json
+google-service-account.json
+
 # typescript
 *.tsbuildinfo
 
