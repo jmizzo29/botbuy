@@ -15,6 +15,7 @@ const createIntent = z.object({
   mustInclude: z.string().max(280).optional(),
   avoid: z.string().max(280).optional(),
   templateId: z.string().max(64).optional(),
+  listingUrl: z.string().url().max(500).optional(),
   startSearch: z.boolean().optional(),
 });
 
@@ -46,6 +47,7 @@ export async function POST(request: Request) {
       mustInclude: parsed.data.mustInclude,
       avoid: parsed.data.avoid,
       templateId: parsed.data.templateId,
+      listingUrl: parsed.data.listingUrl,
     },
     gated.user.id,
   );
