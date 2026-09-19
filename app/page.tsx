@@ -1,6 +1,7 @@
 import type { Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { LandProductPreview } from "@/components/land-product-preview";
 import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
 import { CLERK_SIGN_IN_URL } from "@/lib/auth-config";
@@ -79,6 +80,7 @@ export default async function LandPage() {
               {SIGN_IN_H1}
             </Link>
           </div>
+          <LandProductPreview />
         </div>
       </section>
     </PublicChrome>
