@@ -40,8 +40,6 @@ function desktopActive(pathname: string, href: string) {
 }
 
 function mobileActive(pathname: string, href: string) {
-  // Settings / Intent / Vault are header-menu only. Never light a bottom tab
-  // (including Agents) on Account → Settings or Connected accounts.
   if (
     pathname.startsWith("/settings") ||
     pathname.startsWith("/intent") ||
@@ -74,6 +72,7 @@ export function AppShell({
     : desktopLinks;
   const phoneTabs = [
     { href: MY_DEALS_HREF, label: MY_DEALS_LABEL, icon: LayoutList, badge: needsYouCount },
+    { href: "/intent", label: "New", icon: Target, badge: 0 },
     { href: "/agents", label: PHONE_TAB_AGENTS, icon: Bot, badge: 0 },
     ...(isAdmin
       ? [{ href: "/admin", label: PHONE_TAB_ADMIN, icon: Shield, badge: 0 }]
@@ -81,10 +80,10 @@ export function AppShell({
   ];
 
   return (
-    <div className="relative min-h-dvh bg-background text-foreground">
+    <div className="bb-app-phone relative min-h-dvh bg-background text-foreground">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 border-r border-[var(--bb-line)] bg-surface px-4 py-6 md:flex md:flex-col">
         <Link href={MY_DEALS_HREF} className="flex items-center px-2" aria-label="BotBuyer">
-          <BrandLockup />
+          <BrandLockup onDark />
         </Link>
         <p className="mt-2 px-2 text-[11px] leading-relaxed text-muted">
           botbuyer.ai
@@ -123,7 +122,7 @@ export function AppShell({
       <div className="relative z-10 md:pl-60">
         <header className="sticky top-0 z-30 flex items-center justify-between overflow-visible border-b border-[var(--bb-line)] bg-surface/90 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden">
           <Link href={MY_DEALS_HREF} className="flex min-h-11 items-center" aria-label="BotBuyer">
-            <BrandLockup />
+            <BrandLockup onDark />
           </Link>
           <AppMoreMenu />
         </header>
@@ -139,7 +138,7 @@ export function AppShell({
           data-surface="phone-tabs"
           className={cn(
             "fixed inset-x-0 bottom-0 z-20 grid border-t border-[var(--bb-line)] bg-surface pl-[max(0.25rem,env(safe-area-inset-left))] pr-[max(0.25rem,env(safe-area-inset-right))] pt-1.5 pb-[max(0.45rem,env(safe-area-inset-bottom))] md:hidden",
-            phoneTabs.length === 3 ? "grid-cols-3" : "grid-cols-2",
+            phoneTabs.length === 3 ? "grid-cols-3" : phoneTabs.length === 4 ? "grid-cols-4" : "grid-cols-2",
           )}
         >
           {phoneTabs.map((link) => {
