@@ -5,6 +5,7 @@ import { PwaRegister } from "@/components/pwa-register";
 import { BRAND, LAND_PRODUCT_SUPPORT } from "@/lib/brand";
 import { THEME_BG } from "@/lib/ui-tokens";
 import "./globals.css";
+import "./phone-theme.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: BRAND.name,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
   },
   other: {
     "apple-mobile-web-app-capable": "yes",
