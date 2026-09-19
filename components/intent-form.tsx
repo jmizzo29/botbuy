@@ -13,6 +13,8 @@ import {
 import {
   EMAIL_SOFT_GATE,
   INTENT_AVOID_LABEL,
+  INTENT_LISTING_URL_HINT,
+  INTENT_LISTING_URL_LABEL,
   INTENT_CTA,
   INTENT_HELPERS_LABEL,
   INTENT_MAX_PRICE_HINT,
@@ -40,6 +42,7 @@ export function IntentForm({
   const [maxPriceUsd, setMaxPriceUsd] = useState("");
   const [mustInclude, setMustInclude] = useState("");
   const [avoid, setAvoid] = useState("");
+  const [listingUrl, setListingUrl] = useState("");
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +81,7 @@ export function IntentForm({
         maxPriceUsd: maxPriceUsd ? Number(maxPriceUsd) : undefined,
         mustInclude: mustInclude.trim() || undefined,
         avoid: avoid.trim() || undefined,
+        listingUrl: listingUrl.trim() || undefined,
         templateId: templateId ?? undefined,
         startSearch: true,
       }),
@@ -126,6 +130,18 @@ export function IntentForm({
           }}
           placeholder={INTENT_TEXTAREA_PLACEHOLDER}
         />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="intent-listing">{INTENT_LISTING_URL_LABEL}</Label>
+        <Input
+          id="intent-listing"
+          type="url"
+          inputMode="url"
+          value={listingUrl}
+          onChange={(event) => setListingUrl(event.target.value)}
+          placeholder="https://flippa.com/…"
+        />
+        <p className="text-xs text-muted">{INTENT_LISTING_URL_HINT}</p>
       </div>
       <div>
         <button
