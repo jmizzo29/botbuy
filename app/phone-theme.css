@@ -1,0 +1,37 @@
+/* Scoped dark phone chrome. Root tokens stay G Techlux light for craft-smoke. */
+
+.bb-app-phone {
+  --bb-bg: #0b1f3a;
+  --bb-surface: #163556;
+  --bb-text: #f7f8fa;
+  --bb-muted: #9bb0c7;
+  --bb-line: rgba(255, 255, 255, 0.12);
+  --bb-veil: rgba(11, 31, 58, 0.78);
+  background: #0b1f3a;
+  color: #f7f8fa;
+}
+
+.bb-app-phone .bg-surface,
+.bb-app-phone .bg-background,
+.bb-app-phone header,
+.bb-app-phone aside,
+.bb-app-phone [data-surface="phone-tabs"] {
+  background: #0b1f3a;
+  color: #f7f8fa;
+}
+
+.bb-app-phone .text-foreground {
+  color: #f7f8fa;
+}
+
+.bb-app-phone .text-muted {
+  color: #9bb0c7;
+}
+
+.bb-app-phone .bb-browser-only {
+  display: none;
+}
+
+.bb-land-preview {
+  max-width: 32rem;
+}
