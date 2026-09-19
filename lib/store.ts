@@ -10,6 +10,7 @@ import {
 } from "@/lib/demo-needs-you";
 import { isVerifiedAmount } from "@/lib/deal-ui";
 import "@/lib/adapters";
+import { fetchPublicListing } from "@/lib/adapters/listing-fetch";
 import {
   mergeJournals,
   readDurableJournal,
@@ -397,6 +398,9 @@ export async function createSearchingDealFromIntent(
   if (existing) {
     assertRunDealSoftHold(existing);
     ensureSearchingUsageStub(existing);
+    if (intent.listingUrl) {
+      await attachListingUrl(existing, intent.listingUrl, userId);
+    }
     await persistEngineStore();
     return existing;
   }
@@ -406,6 +410,9 @@ export async function createSearchingDealFromIntent(
   assertRunDealSoftHold(deal);
   rememberEngineDeal(deal, seedRunDealEvents(deal, email));
   ensureSearchingUsageStub(deal);
+  if (intent.listingUrl) {
+    await attachListingUrl(deal, intent.listingUrl, userId);
+  }
   auditLogs.unshift({
     id: `aud_${crypto.randomUUID().slice(0, 8)}`,
     userId,
@@ -413,15 +420,84 @@ export async function createSearchingDealFromIntent(
     entityType: "deal",
     entityId: deal.id,
     metadata: {
-      status: "Searching",
+      status: deal.status,
       intentId: intent.id,
       email: email ?? null,
       templateId: intent.templateId ?? null,
+      listingUrl: intent.listingUrl ?? null,
     },
     createdAt: deal.openedAt,
   });
   await persistEngineStore();
   return deal;
+}
+
+async function attachListingUrl(deal: Deal, listingUrl: string, userId: string) {
+  const fetched = await fetchPublicListing(listingUrl);
+  const at = new Date().toISOString();
+  if (!fetched.ok) {
+    appendDealEvent({
+      dealId: deal.id,
+      type: "search",
+      stage: "search",
+      title: "Listing URL failed",
+      detail: fetched.error,
+      at,
+      status: "blocked",
+      actor: "engine",
+      toStatus: "Searching",
+    });
+    deal.blockers = [...deal.blockers, fetched.error];
+    deal.timeline = [
+      ...deal.timeline,
+      {
+        id: `ev_${deal.id}_url_fail`,
+        stage: "search",
+        title: "Could not read listing",
+        detail: fetched.error,
+        at,
+        status: "blocked",
+      },
+    ];
+    rememberEngineDeal(deal, []);
+    return;
+  }
+  const { listing } = fetched;
+  const listed = listing.listedUsd;
+  const overGate =
+    listed != null && listed > SPEND_HARD_GATE_USD
+      ? `Listed ask ${listed} is over the $1,000 spend gate. Unverified. Needs you before any chase spend.`
+      : null;
+  deal.marketplace = listing.boardId;
+  deal.title = listing.title.slice(0, 80);
+  deal.notes = [
+    deal.notes,
+    `Listing ${listing.url}`,
+    listed != null ? `Listed ask $${listed} · unverified · not booked as spend.` : null,
+    overGate,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  appendDealEvent({
+    dealId: deal.id,
+    type: "search",
+    stage: "search",
+    title: `Found on ${listing.boardLabel}`,
+    detail: `${listing.title}${listed != null ? ` · listed $${listed} unverified` : ""} · ${listing.url}`,
+    at,
+    status: "done",
+    actor: "engine",
+    fromStatus: "Searching",
+    toStatus: "Found",
+  });
+  try {
+    transitionDeal(deal.id, "Found", userId);
+  } catch {
+    /* stay Searching if transition rejected */
+  }
+  if (overGate) {
+    deal.blockers = [...deal.blockers, overGate];
+  }
 }
 
 export function listDirectoryUsers(): User[] {
@@ -549,6 +625,7 @@ export function addIntent(
     templateId: input.templateId ?? null,
     mustInclude: input.mustInclude ?? null,
     avoid: input.avoid ?? null,
+    listingUrl: input.listingUrl ?? null,
   };
   intents.unshift(intent);
   auditLogs.unshift({

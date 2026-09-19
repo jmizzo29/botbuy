@@ -1,4 +1,5 @@
 import "@/lib/adapters/stubs";
+import "@/lib/adapters/flippa";
 
 export {
   adapterCatalog,
