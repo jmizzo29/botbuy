@@ -200,6 +200,7 @@ export interface Intent {
   templateId?: string | null;
   mustInclude?: string | null;
   avoid?: string | null;
+  listingUrl?: string | null;
 }
 
 export interface SpendLimits {
