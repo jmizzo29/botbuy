@@ -111,13 +111,19 @@
 }
 
 .bb-auth-shell .cl-formFieldInput,
-.bb-auth-shell .cl-input {
-  background: #0a182c !important;
+.bb-auth-shell .cl-input,
+.bb-auth-shell input {
+  background: #163556 !important;
   color: #f7f8fa !important;
   border-radius: 12px !important;
   min-height: 48px !important;
   font-size: 16px !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28) !important;
+}
+
+.bb-auth-shell input:focus {
+  outline: none !important;
+  box-shadow: inset 0 0 0 2px #2dd4bf !important;
 }
 
 .bb-auth-shell .cl-formButtonPrimary {
@@ -132,14 +138,26 @@
 .bb-auth-shell .cl-socialButtonsBlockButton {
   border-radius: 12px !important;
   min-height: 48px !important;
-  background: #163556 !important;
-  color: #f7f8fa !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14) !important;
+  background: #f7f8fa !important;
+  color: #0b1f3a !important;
+  box-shadow: none !important;
 }
 
-.bb-auth-shell .cl-formFieldLabel,
+.bb-auth-shell .cl-socialButtonsBlockButtonText,
+.bb-auth-shell .cl-socialButtonsBlockButton span {
+  color: #0b1f3a !important;
+}
+
+.bb-auth-shell .cl-formFieldLabel {
+  color: rgba(247, 248, 250, 0.92) !important;
+}
+
+.bb-auth-shell .cl-dividerLine {
+  background: rgba(255, 255, 255, 0.28) !important;
+}
+
 .bb-auth-shell .cl-dividerText {
-  color: rgba(255, 255, 255, 0.62) !important;
+  color: rgba(247, 248, 250, 0.72) !important;
 }
 
 .bb-auth-alt a {
