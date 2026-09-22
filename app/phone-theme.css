@@ -203,3 +203,18 @@
   border-radius: 999px;
   min-height: 48px;
 }
+
+.bb-auth-shell input::placeholder {
+  color: rgba(247, 248, 250, 0.72) !important;
+  -webkit-text-fill-color: rgba(247, 248, 250, 0.72) !important;
+  opacity: 1 !important;
+}
+
+.bb-auth-shell .cl-formFieldInputShowPasswordButton,
+.bb-auth-shell .cl-formFieldInputShowPasswordIcon {
+  color: rgba(247, 248, 250, 0.85) !important;
+}
+
+.bb-auth-shell input[name="password"] {
+  padding-right: 44px !important;
+}
