@@ -1,3 +1,32 @@
+/* Stop the page sliding sideways on a phone. */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip !important;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+}
+
+.bb-land-shell,
+.bb-auth-shell,
+.bb-app-phone,
+.bb-land-content,
+.bb-auth-content,
+.bb-land-stage,
+.bb-auth-door {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.bb-auth-shell input,
+.bb-auth-shell button,
+.bb-auth-shell img,
+.bb-land-shell img {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 /* Hunts chrome. Root light tokens stay for craft checks. */
 
 .bb-land-watermark {
