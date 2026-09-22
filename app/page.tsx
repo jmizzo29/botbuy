@@ -62,6 +62,7 @@ export default async function LandPage() {
           />
         </div>
         <div data-zone="panel" className="bb-land-panel">
+          <LandProductPreview />
           <div className="bb-land-copy">
             <h1 className="bb-land-h1">{LAND_PRODUCT_H1}</h1>
             <p className="bb-land-support">{LAND_PRODUCT_SUPPORT}</p>
@@ -80,7 +81,6 @@ export default async function LandPage() {
               {SIGN_IN_H1}
             </Link>
           </div>
-          <LandProductPreview />
         </div>
       </section>
     </PublicChrome>

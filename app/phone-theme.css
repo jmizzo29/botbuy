@@ -1,4 +1,27 @@
-/* Scoped dark phone chrome. Root tokens stay G Techlux light for craft-smoke. */
+/* Hunts chrome. Root light tokens stay for craft checks. */
+
+.bb-land-watermark {
+  display: none !important;
+}
+
+.bb-land-copy,
+.bb-land-cta {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+
+.bb-land-panel {
+  padding-top: 12px !important;
+  max-width: 32rem;
+}
+
+.bb-land-preview {
+  max-width: 32rem;
+}
 
 .bb-app-phone {
   --bb-bg: #0b1f3a;
@@ -6,17 +29,21 @@
   --bb-text: #f7f8fa;
   --bb-muted: #9bb0c7;
   --bb-line: rgba(255, 255, 255, 0.12);
-  --bb-veil: rgba(11, 31, 58, 0.78);
   background: #0b1f3a;
   color: #f7f8fa;
 }
 
-.bb-app-phone .bg-surface,
-.bb-app-phone .bg-background,
 .bb-app-phone header,
 .bb-app-phone aside,
 .bb-app-phone [data-surface="phone-tabs"] {
   background: #0b1f3a;
+  color: #f7f8fa;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bb-app-phone .bg-surface,
+.bb-app-phone [data-surface="my-deals-empty"] {
+  background: #163556;
   color: #f7f8fa;
 }
 
@@ -28,10 +55,26 @@
   color: #9bb0c7;
 }
 
-.bb-app-phone .bb-browser-only {
+.bb-app-phone .bb-browser-only,
+.bb-app-phone footer {
   display: none;
 }
 
-.bb-land-preview {
+.bb-app-phone main {
   max-width: 32rem;
+  padding-top: 0.25rem;
+}
+
+.bb-app-phone input,
+.bb-app-phone textarea {
+  background: #0a182c;
+  color: #f7f8fa;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.bb-app-phone [data-surface="intent-capture"] button[type="submit"] {
+  background: #2dd4bf;
+  color: #042f2e;
+  border-radius: 999px;
+  min-height: 48px;
 }
