@@ -23,21 +23,6 @@ export const metadata = {
   title: "Hunts",
 };
 
-const SAMPLES = [
-  {
-    kicker: "Digital \u00b7 sample",
-    title: "Under $1k Flippa-style",
-    meta: "Cap $1k \u00b7 start a hunt",
-    lead: "Paste a Flippa link. BotBuyer reads it and chases.",
-  },
-  {
-    kicker: "Vehicle \u00b7 sample",
-    title: "A clean Tesla Model 3",
-    meta: "Cap set by you",
-    lead: "Same loop. Agent contacts the seller. You approve money.",
-  },
-] as const;
-
 export default async function HomePage() {
   await hydrateStore();
   const user = await requireUser();
@@ -72,50 +57,41 @@ export default async function HomePage() {
         Acts for you. Spends only with your OK. The agent contacts sellers. You approve money.
       </p>
 
-      <ul className="mt-5 grid list-none gap-3 p-0" data-surface="my-deals-empty">
-        {deals.length
-          ? deals.map((deal) => (
-              <li key={deal.id}>
-                <Link
-                  href={`/deals/${deal.id}`}
-                  className="flex items-start justify-between gap-3 rounded-xl border border-white/15 bg-[#163556] p-4"
-                >
-                  <div className="min-w-0">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55">
-                      {deal.status}
-                    </p>
-                    <p className="mt-1 text-xl font-semibold leading-tight tracking-tight text-white">
-                      {deal.title}
-                    </p>
-                    <p className="mt-2 font-mono text-sm text-white/60">
-                      {formatUsd(deal.priceUsd)} \u00b7 remaining {remaining}
-                    </p>
-                  </div>
-                  <ChevronRight className="mt-1 size-5 shrink-0 text-white/40" />
-                </Link>
-              </li>
-            ))
-          : SAMPLES.map((hunt) => (
-              <li key={hunt.title}>
-                <Link
-                  href="/intent"
-                  className="flex items-start justify-between gap-3 rounded-xl border border-white/15 bg-[#163556] p-4"
-                >
-                  <div className="min-w-0">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55">
-                      {hunt.kicker}
-                    </p>
-                    <p className="mt-1 text-xl font-semibold leading-tight tracking-tight text-white">
-                      {hunt.title}
-                    </p>
-                    <p className="mt-2 font-mono text-sm text-white/60">{hunt.meta}</p>
-                    <p className="mt-2 text-sm text-white/90">{hunt.lead}</p>
-                  </div>
-                  <ChevronRight className="mt-1 size-5 shrink-0 text-white/40" />
-                </Link>
-              </li>
-            ))}
-      </ul>
+      {deals.length ? (
+        <ul className="mt-5 grid list-none gap-3 p-0">
+          {deals.map((deal) => (
+            <li key={deal.id}>
+              <Link
+                href={`/deals/${deal.id}`}
+                className="flex items-start justify-between gap-3 rounded-xl border border-white/15 bg-[#163556] p-4"
+              >
+                <div className="min-w-0">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55">
+                    {deal.status}
+                  </p>
+                  <p className="mt-1 text-xl font-semibold leading-tight tracking-tight text-white">
+                    {deal.title}
+                  </p>
+                  <p className="mt-2 font-mono text-sm text-white/60">
+                    {formatUsd(deal.priceUsd)} · remaining {remaining}
+                  </p>
+                </div>
+                <ChevronRight className="mt-1 size-5 shrink-0 text-white/40" />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div
+          className="mt-5 rounded-xl border border-white/15 bg-[#163556] px-4 py-6"
+          data-surface="my-deals-empty"
+        >
+          <p className="text-lg font-semibold text-white">{MY_DEALS_EMPTY_TITLE}</p>
+          <p className="mt-2 text-sm leading-relaxed text-[#9bb0c7]">
+            {MY_DEALS_EMPTY_BODY}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
