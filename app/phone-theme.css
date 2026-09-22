@@ -312,3 +312,21 @@ body {
   min-height: 48px;
 }
 
+
+.bb-app-phone [data-surface="intent-capture"] .bb-hunt-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+}
+
+.bb-app-phone [data-surface="intent-capture"] .bb-hunt-actions button {
+  width: 100%;
+}
+
+.bb-app-phone [data-surface="intent-capture"] .bb-hunt-cancel {
+  background: transparent !important;
+  color: #f7f8fa !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35) !important;
+  border-radius: 999px !important;
+  min-height: 48px !important;
+}
