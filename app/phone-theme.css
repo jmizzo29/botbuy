@@ -45,22 +45,47 @@
   }
 }
 
-.bb-auth-mark {
-  display: none !important;
+.bb-auth-header {
+  justify-content: flex-start !important;
+}
+
+.bb-auth-header .bb-land-lockup {
+  height: 1.35rem !important;
+}
+
+.bb-auth-main {
+  padding-top: 0.25rem !important;
 }
 
 .bb-auth-h1 {
-  font-size: 1.75rem !important;
+  font-size: 1.6rem !important;
   font-weight: 600 !important;
   letter-spacing: -0.03em !important;
   line-height: 1.1 !important;
+  margin: 0 !important;
+}
+
+.bb-auth-lead,
+.bb-auth-legal,
+.bb-auth-note {
+  display: none !important;
 }
 
 .bb-auth-card {
-  margin-top: 1.1rem !important;
+  margin-top: 1.25rem !important;
   padding: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
+}
+
+.bb-auth-foot {
+  margin-top: 1.25rem !important;
+}
+
+.bb-auth-alt {
+  margin: 0 !important;
+  text-align: left;
+  font-size: 14px !important;
 }
 
 .bb-auth-shell .cl-rootBox,
@@ -68,12 +93,22 @@
 .bb-auth-shell .cl-card,
 .bb-auth-shell .cl-main,
 .bb-auth-shell .cl-scrollBox,
-.bb-auth-shell .cl-pageScrollBox {
+.bb-auth-shell .cl-pageScrollBox,
+.bb-auth-shell .cl-header,
+.bb-auth-shell .cl-footer,
+.bb-auth-shell .cl-badge {
   background: transparent !important;
   box-shadow: none !important;
   border: 0 !important;
   width: 100% !important;
   max-width: 100% !important;
+}
+
+.bb-auth-shell .cl-header,
+.bb-auth-shell .cl-footer,
+.bb-auth-shell .cl-badge,
+.bb-auth-shell [data-localization-key*="development"] {
+  display: none !important;
 }
 
 .bb-auth-shell .cl-formFieldInput,
@@ -82,6 +117,7 @@
   color: #f7f8fa !important;
   border-radius: 12px !important;
   min-height: 48px !important;
+  font-size: 16px !important;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14) !important;
 }
 
@@ -95,7 +131,7 @@
 }
 
 .bb-auth-shell .cl-socialButtonsBlockButton {
-  border-radius: 999px !important;
+  border-radius: 12px !important;
   min-height: 48px !important;
   background: #163556 !important;
   color: #f7f8fa !important;
