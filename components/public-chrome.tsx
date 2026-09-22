@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthFields } from "@/components/auth-fields";
 import { BrandLockup } from "@/components/brand-lockup";
 import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
@@ -47,6 +48,7 @@ export function PublicChrome({
           </Link>
           {auth ? null : <PublicNav land={land} />}
         </header>
+        {auth ? <AuthFields /> : null}
         {land || auth ? null : <InstallHint />}
         <main
           className={
