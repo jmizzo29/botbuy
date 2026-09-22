@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { CLERK_SIGN_UP_URL } from "@/lib/auth-config";
+import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from "@/lib/auth-config";
 
 const HUNTS = [
   {
@@ -17,10 +17,10 @@ const HUNTS = [
   },
 ] as const;
 
-/** Public land mock of the Hunts app. Not HowItWorksRail. */
+/** Public Hunts screen. Signup is the door. */
 export function LandProductPreview() {
   return (
-    <div className="mt-8 w-full max-w-lg" data-surface="land-preview">
+    <div className="w-full max-w-lg" data-surface="land-preview">
       <div className="flex items-end justify-between gap-3">
         <h2 className="text-[2rem] font-semibold tracking-tight text-white">Hunts</h2>
         <Link
@@ -31,6 +31,9 @@ export function LandProductPreview() {
           New hunt
         </Link>
       </div>
+      <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/65">
+        Acts for you. Spends only with your OK. The agent contacts sellers. You approve money.
+      </p>
       <ul className="mt-5 grid list-none gap-3 p-0">
         {HUNTS.map((hunt) => (
           <li key={hunt.title}>
@@ -53,6 +56,12 @@ export function LandProductPreview() {
           </li>
         ))}
       </ul>
+      <p className="mt-6 text-sm text-white/70">
+        Already in?{" "}
+        <Link href={CLERK_SIGN_IN_URL} className="text-white underline underline-offset-4">
+          Sign in
+        </Link>
+      </p>
     </div>
   );
 }
