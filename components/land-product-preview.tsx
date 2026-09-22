@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from "@/lib/auth-config";
+import { CLERK_SIGN_UP_URL } from "@/lib/auth-config";
 
 const HUNTS = [
   {
@@ -17,7 +17,7 @@ const HUNTS = [
   },
 ] as const;
 
-/** Public Hunts screen. Signup is the door. */
+/** Public Hunts screen. Signup is the door. Sign in lives in the header. */
 export function LandProductPreview() {
   return (
     <div className="w-full max-w-lg" data-surface="land-preview">
@@ -56,12 +56,6 @@ export function LandProductPreview() {
           </li>
         ))}
       </ul>
-      <p className="mt-6 text-sm text-white/70">
-        Already in?{" "}
-        <Link href={CLERK_SIGN_IN_URL} className="text-white underline underline-offset-4">
-          Sign in
-        </Link>
-      </p>
     </div>
   );
 }
