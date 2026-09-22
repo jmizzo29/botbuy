@@ -361,3 +361,40 @@ body {
   position: relative;
   z-index: 2;
 }
+
+.bb-auth-shell .cl-header,
+.bb-auth-shell .cl-headerTitle,
+.bb-auth-shell .cl-headerSubtitle,
+.bb-auth-shell .cl-logoBox,
+.bb-auth-shell .cl-logoImage {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.bb-auth-h1 {
+  margin: 0 0 1.35rem !important;
+}
+
+.bb-auth-card {
+  margin-top: 0 !important;
+  position: relative;
+  z-index: 1;
+}
+
+.bb-auth-shell .cl-socialButtonsBlockButton {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.bb-auth-shell .cl-socialButtonsProviderIcon,
+.bb-auth-shell .cl-socialButtonsProviderIcon svg {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  max-width: 18px !important;
+  flex: 0 0 18px !important;
+}
