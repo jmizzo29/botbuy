@@ -5,6 +5,7 @@ import {
   INTENT_SUB,
   hasReachableEmail,
 } from "@/lib/john-ux";
+import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
 import { formatUsd } from "@/lib/money";
 import { listIntents } from "@/lib/store";
 import { formatDate } from "@/lib/utils";
@@ -33,7 +34,7 @@ export default async function IntentPage() {
       </header>
 
       <div className="bb-hunt-form">
-        <IntentForm emailMissing={!hasReachableEmail(user)} />
+        <IntentForm emailMissing={!hasReachableEmail(user)} cancelHref={MY_DEALS_HREF} />
       </div>
 
       {intents.length ? (
