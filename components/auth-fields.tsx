@@ -18,7 +18,7 @@ export function AuthFields() {
         }
         if (name === "password") {
           const next =
-            input.autocomplete === "new-password" ? "15+ characters" : "Your password";
+            input.autocomplete === "new-password" ? "8+ characters" : "Your password";
           if (input.placeholder !== next) input.placeholder = next;
         }
       });
