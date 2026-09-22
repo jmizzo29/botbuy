@@ -10,6 +10,9 @@ import { isClerkConfigured } from "@/lib/auth-config";
  * Missing Clerk keys: do not invoke clerkMiddleware (it throws). Pass
  * through so CI/`next build`/`next start` complete. Protected routes then
  * fail closed in layouts and APIs (no DEMO_USER).
+ *
+ * `/start` stays public. The page sends a session to My deals and everyone
+ * else to the landing. Protecting it sent the home-screen icon to Sign in.
  */
 const isProtectedRoute = createRouteMatcher([
   "/home(.*)",
@@ -19,7 +22,6 @@ const isProtectedRoute = createRouteMatcher([
   "/vault(.*)",
   "/agents(.*)",
   "/onboarding(.*)",
-  "/start",
   "/intent(.*)",
   "/api/deals(.*)",
   "/api/intents(.*)",
