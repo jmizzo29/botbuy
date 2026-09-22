@@ -94,9 +94,14 @@ async function PublicNav({ land }: { land: boolean }) {
           {MY_DEALS_LABEL}
         </Link>
       ) : land ? (
-        <Link href={CLERK_SIGN_IN_URL} className={link()} data-nav="signin">
-          {SIGN_IN_H1}
-        </Link>
+        <>
+          <Link href={CLERK_SIGN_IN_URL} className={link()} data-nav="signin">
+            {SIGN_IN_H1}
+          </Link>
+          <Link href={CLERK_SIGN_UP_URL} className={link()} data-nav="signup">
+            Sign up
+          </Link>
+        </>
       ) : (
         <>
           <Link href={CLERK_SIGN_IN_URL} className={link()}>
