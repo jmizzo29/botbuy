@@ -34,9 +34,6 @@ export function LandProductPreview() {
       <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-white/80">
         It finds the thing, talks to the seller, and you approve before any money moves.
       </p>
-      <p className="mt-2 max-w-sm text-sm text-[#5EEAD4]">
-        Already bought a $450 business on Flippa.
-      </p>
       <ul className="mt-5 grid list-none gap-3 p-0">
         {HUNTS.map((hunt) => (
           <li key={hunt.title}>

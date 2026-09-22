@@ -59,6 +59,26 @@ body {
   text-decoration: none;
 }
 
+.bb-land-header [data-nav="signup"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: #2dd4bf;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: #042f2e;
+  text-decoration: none;
+}
+
+.bb-land-nav {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
 .bb-land-panel {
   padding-top: 12px !important;
   max-width: 32rem;
