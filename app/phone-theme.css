@@ -110,33 +110,68 @@
   display: none !important;
 }
 
+
+.bb-auth-shell {
+  color-scheme: dark;
+}
+
+.bb-auth-shell input,
+.bb-auth-shell button,
+.bb-auth-shell .cl-formFieldInput,
+.bb-auth-shell .cl-input,
+.bb-auth-shell .cl-socialButtonsBlockButton,
+.bb-auth-shell .cl-formButtonPrimary {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
 .bb-auth-shell .cl-formFieldInput,
 .bb-auth-shell .cl-input,
 .bb-auth-shell input {
-  background: #163556 !important;
-  color: #f7f8fa !important;
-  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: #0b1f3a !important;
+  -webkit-text-fill-color: #0b1f3a !important;
+  caret-color: #0b1f3a;
+  border: 1px solid #ffffff !important;
+  border-radius: 14px !important;
   min-height: 48px !important;
   font-size: 16px !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28) !important;
+  box-shadow: none !important;
+}
+
+.bb-auth-shell input::placeholder {
+  color: #5c6b80 !important;
+  -webkit-text-fill-color: #5c6b80 !important;
+  opacity: 1 !important;
 }
 
 .bb-auth-shell input:focus {
   outline: none !important;
-  box-shadow: inset 0 0 0 2px #2dd4bf !important;
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.45) !important;
+}
+
+.bb-auth-shell input:-webkit-autofill {
+  -webkit-text-fill-color: #0b1f3a !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
 }
 
 .bb-auth-shell .cl-formButtonPrimary {
   background: #2dd4bf !important;
   color: #042f2e !important;
-  border-radius: 999px !important;
+  -webkit-text-fill-color: #042f2e !important;
+  border-radius: 14px !important;
   min-height: 48px !important;
   font-weight: 650 !important;
   box-shadow: none !important;
 }
 
+.bb-auth-shell .cl-formButtonPrimary svg,
+.bb-auth-shell .cl-buttonArrow {
+  display: none !important;
+}
+
 .bb-auth-shell .cl-socialButtonsBlockButton {
-  border-radius: 12px !important;
+  border-radius: 14px !important;
   min-height: 48px !important;
   background: #f7f8fa !important;
   color: #0b1f3a !important;
@@ -146,10 +181,13 @@
 .bb-auth-shell .cl-socialButtonsBlockButtonText,
 .bb-auth-shell .cl-socialButtonsBlockButton span {
   color: #0b1f3a !important;
+  -webkit-text-fill-color: #0b1f3a !important;
 }
 
 .bb-auth-shell .cl-formFieldLabel {
-  color: rgba(247, 248, 250, 0.92) !important;
+  color: #f7f8fa !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
 }
 
 .bb-auth-shell .cl-dividerLine {
@@ -158,6 +196,16 @@
 
 .bb-auth-shell .cl-dividerText {
   color: rgba(247, 248, 250, 0.72) !important;
+  font-size: 13px !important;
+}
+
+.bb-auth-shell .cl-formFieldInputShowPasswordButton,
+.bb-auth-shell .cl-formFieldInputShowPasswordIcon {
+  color: #0b1f3a !important;
+}
+
+.bb-auth-shell input[name="password"] {
+  padding-right: 44px !important;
 }
 
 .bb-auth-alt a {
