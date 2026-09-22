@@ -350,3 +350,14 @@ body {
   border-radius: 999px !important;
   min-height: 48px !important;
 }
+
+/* Clerk parks the password field on top of Continue with Google until email is accepted. */
+.bb-auth-shell .cl-formFieldRow__password[aria-hidden="true"] {
+  display: none !important;
+}
+
+.bb-auth-shell .cl-socialButtonsRoot,
+.bb-auth-shell .cl-socialButtonsBlockButton {
+  position: relative;
+  z-index: 2;
+}
