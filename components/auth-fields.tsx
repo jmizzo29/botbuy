@@ -8,6 +8,13 @@ export function AuthFields() {
     function fix() {
       const root = document.querySelector(".bb-auth-shell");
       if (!root) return;
+      root.querySelectorAll(".cl-header, .cl-headerTitle, .cl-headerSubtitle, .cl-logoBox, .cl-logoImage").forEach((el) => {
+        const node = el as HTMLElement;
+        node.style.setProperty("display", "none", "important");
+        node.style.setProperty("height", "0", "important");
+        node.style.setProperty("overflow", "hidden", "important");
+        node.style.setProperty("visibility", "hidden", "important");
+      });
       root.querySelectorAll("input").forEach((node) => {
         const input = node as HTMLInputElement;
         const name = input.name;
