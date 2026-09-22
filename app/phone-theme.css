@@ -66,8 +66,7 @@
 }
 
 .bb-auth-lead,
-.bb-auth-legal,
-.bb-auth-note {
+.bb-auth-legal {
   display: none !important;
 }
 
