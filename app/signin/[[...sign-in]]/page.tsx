@@ -33,6 +33,7 @@ export default async function SignInPage() {
     <PublicChrome auth>
       <AuthDoor
         title={SIGN_IN_H1}
+        lead="Back to your hunts. You still approve the money."
         foot={
           <p className="bb-auth-alt">
             New here? <Link href={CLERK_SIGN_UP_URL}>Sign up</Link>
