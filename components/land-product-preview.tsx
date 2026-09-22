@@ -4,16 +4,16 @@ import { CLERK_SIGN_UP_URL } from "@/lib/auth-config";
 
 const HUNTS = [
   {
-    kicker: "Digital \u00b7 live",
+    kicker: "Example",
     title: "Under $1k Flippa-style",
-    meta: "Cap $1k \u00b7 3 scored \u00b7 2 in chase",
-    lead: "Lead 82 \u00b7 InboxTriage \u2014 Gmail label rules as a service",
+    meta: "What a hunt looks like",
+    lead: "A small software business. Agent reads the listing and chases the seller.",
   },
   {
-    kicker: "Vehicle \u00b7 live",
+    kicker: "Example",
     title: "A clean Tesla Model 3",
-    meta: "Cap $35k \u00b7 3 scored \u00b7 1 in chase",
-    lead: "Lead 74 \u00b7 2021 Model 3 Long Range \u2014 one owner",
+    meta: "Same loop, different asset",
+    lead: "You name the car. Agent contacts the seller. You approve before money moves.",
   },
 ] as const;
 
@@ -31,8 +31,11 @@ export function LandProductPreview() {
           New hunt
         </Link>
       </div>
-      <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/65">
-        Acts for you. Spends only with your OK. The agent contacts sellers. You approve money.
+      <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-white/80">
+        It finds the thing, talks to the seller, and you approve before any money moves.
+      </p>
+      <p className="mt-2 max-w-sm text-sm text-[#5EEAD4]">
+        Already bought a $450 business on Flippa.
       </p>
       <ul className="mt-5 grid list-none gap-3 p-0">
         {HUNTS.map((hunt) => (
@@ -49,7 +52,7 @@ export function LandProductPreview() {
                   {hunt.title}
                 </p>
                 <p className="mt-2 font-mono text-sm text-white/60">{hunt.meta}</p>
-                <p className="mt-2 truncate text-sm text-white/90">{hunt.lead}</p>
+                <p className="mt-2 text-sm text-white/90">{hunt.lead}</p>
               </div>
               <ChevronRight className="mt-1 size-5 shrink-0 text-white/40" />
             </Link>
