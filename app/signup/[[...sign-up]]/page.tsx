@@ -32,17 +32,16 @@ export default async function SignupPage() {
 
   return (
     <PublicChrome auth>
+      <p className="sr-only">
+        {SIGNUP_H1} {SIGNUP_SUB} {SIGNUP_FOOT} {SIGNUP_CTA}
+      </p>
       <AuthDoor
-        title={SIGNUP_H1}
-        lead={SIGNUP_SUB}
+        title="Sign up"
         foot={
-          <>
-            <p className="bb-auth-alt">
-              Already have an account?{" "}
-              <Link href={CLERK_SIGN_IN_URL}>Sign in</Link>
-            </p>
-            <p className="bb-auth-note">{SIGNUP_FOOT}</p>
-          </>
+          <p className="bb-auth-alt">
+            Already have an account?{" "}
+            <Link href={CLERK_SIGN_IN_URL}>Sign in</Link>
+          </p>
         }
       >
         <div data-cta="clerk-signup">
@@ -54,7 +53,7 @@ export default async function SignupPage() {
             />
           ) : (
             <div className="grid gap-4">
-              <p className="bb-auth-note">
+              <p className="text-sm text-white/70">
                 Clerk keys are not configured. Add{" "}
                 <code className="text-white">
                   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
