@@ -4,7 +4,7 @@ import { BrandLockup } from "@/components/brand-lockup";
 import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
 import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from "@/lib/auth-config";
-import { BRAND, LAND_SKY_MARK_SRC } from "@/lib/brand";
+import { BRAND, LAND_SKY_MARK_SRC, SIGN_IN_H1 } from "@/lib/brand";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
@@ -104,16 +104,15 @@ async function PublicNav({ land }: { land: boolean }) {
 
   return (
     <div className={land ? "bb-land-nav" : "flex items-center gap-3 text-sm"}>
-      {land ? (
-        <Link href="/about" className={link("about")} data-nav="about">
-          About
-        </Link>
-      ) : null}
       {session ? (
         <Link href={MY_DEALS_HREF} className={land ? link() : "text-muted hover:text-foreground"}>
           {MY_DEALS_LABEL}
         </Link>
-      ) : land ? null : (
+      ) : land ? (
+        <Link href={CLERK_SIGN_IN_URL} className={link()} data-nav="signin">
+          {SIGN_IN_H1}
+        </Link>
+      ) : (
         <>
           <Link href={CLERK_SIGN_IN_URL} className={link()}>
             Sign in
