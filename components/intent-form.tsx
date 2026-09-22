@@ -29,10 +29,12 @@ export function IntentForm({
   emailMissing = false,
   compact = false,
   initialSummary = "",
+  cancelHref,
 }: {
   emailMissing?: boolean;
   compact?: boolean;
   initialSummary?: string;
+  cancelHref?: string;
 }) {
   const router = useRouter();
   const [templateId, setTemplateId] = useState<string | null>(
@@ -192,7 +194,18 @@ export function IntentForm({
         <p className="text-sm leading-relaxed text-muted">{EMAIL_SOFT_GATE}</p>
       ) : null}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
-      <div>
+      <div className={cancelHref ? "bb-hunt-actions" : undefined}>
+        {cancelHref ? (
+          <Button
+            type="button"
+            variant="outline"
+            size={compact ? "sm" : "lg"}
+            className="bb-hunt-cancel"
+            onClick={() => router.push(cancelHref)}
+          >
+            Cancel
+          </Button>
+        ) : null}
         <Button type="submit" size={compact ? "sm" : "lg"} disabled={pending}>
           {pending ? "Starting…" : INTENT_CTA}
         </Button>
