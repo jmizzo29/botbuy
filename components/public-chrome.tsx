@@ -1,10 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand-lockup";
 import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
 import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from "@/lib/auth-config";
-import { BRAND, LAND_SKY_MARK_SRC, SIGN_IN_H1 } from "@/lib/brand";
+import { BRAND, SIGN_IN_H1 } from "@/lib/brand";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
@@ -29,18 +28,6 @@ export function PublicChrome({
       )}
       data-surface={auth ? "auth-shell" : land ? "land-shell" : "public-shell"}
     >
-      {auth ? (
-        <div className="bb-auth-field bb-atm-richer-mesh-deep" aria-hidden="true">
-          <Image
-            src={LAND_SKY_MARK_SRC}
-            alt=""
-            width={96}
-            height={96}
-            unoptimized
-            className="bb-auth-mark"
-          />
-        </div>
-      ) : null}
       <div
         className={
           land ? "bb-land-content" : auth ? "bb-auth-content" : undefined
@@ -72,11 +59,7 @@ export function PublicChrome({
         >
           {children}
         </main>
-        {land ? null : auth ? (
-          <footer className="bb-auth-legal">
-            <SiteFooter legalOnly onDark />
-          </footer>
-        ) : (
+        {land || auth ? null : (
           <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8">
             <div>
               <SiteFooter />
