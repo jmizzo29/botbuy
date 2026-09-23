@@ -1,6 +1,7 @@
 import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
 import { SEED_OWNER } from "@/lib/auth-owner";
 import { listPersistedUsers } from "@/lib/db/users";
+import { loadUserHunts, saveHuntEvent, saveOpenedHunt } from "@/lib/db/hunts";
 import { listMemoryUsers, rememberDirectoryUser } from "@/lib/user-directory";
 import {
   DEMO_NEEDS_YOU_DEAL,
@@ -139,7 +140,7 @@ function ensureDemoNeedsYou() {
   );
 }
 
-export async function hydrateStore() {
+export async function hydrateStore(userId?: string) {
   const engine = engineState();
   const durable = await readDurableJournal();
   replaceEngine(
@@ -148,6 +149,20 @@ export async function hydrateStore() {
       durable,
     ),
   );
+  if (userId) {
+    const saved = await loadUserHunts(userId);
+    if (saved) {
+      for (const deal of saved.deals) {
+        rememberEngineDeal(
+          deal,
+          saved.events.filter((event) => event.dealId === deal.id),
+        );
+      }
+      for (const intent of saved.intents) {
+        if (!intents.some((row) => row.id === intent.id)) intents.unshift(intent);
+      }
+    }
+  }
   ensureDemoNeedsYou();
   ensureEngineUsageStubs();
   const persisted = await listPersistedUsers();
@@ -387,7 +402,7 @@ export async function createSearchingDealFromIntent(
   userId = SEED_OWNER.id,
   email?: string | null,
 ): Promise<Deal> {
-  await hydrateStore();
+  await hydrateStore(userId);
   const title = intent.summary.slice(0, 80);
   const existing = engineState().deals.find(
     (deal) =>
@@ -403,6 +418,7 @@ export async function createSearchingDealFromIntent(
     }
     await ensureHuntThread(existing);
     await persistEngineStore();
+    await saveOpenedHunt(intent, existing, listDealEvents(existing.id));
     return existing;
   }
 
@@ -431,6 +447,7 @@ export async function createSearchingDealFromIntent(
     createdAt: deal.openedAt,
   });
   await persistEngineStore();
+  await saveOpenedHunt(intent, deal, listDealEvents(deal.id));
   return deal;
 }
 
@@ -529,7 +546,7 @@ export async function addUserHuntNote(
   text: string,
   asAdmin = false,
 ) {
-  await hydrateStore();
+  await hydrateStore(userId);
   const deal = getDeal(dealId, userId, asAdmin);
   if (!deal) return null;
   const event = appendDealEvent({
@@ -542,6 +559,7 @@ export async function addUserHuntNote(
     actor: "you",
   });
   await persistEngineStore();
+  await saveHuntEvent(event);
   return event;
 }
 
