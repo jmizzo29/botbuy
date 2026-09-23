@@ -585,3 +585,20 @@ html:has(.bb-app-phone) body {
 .bb-app-phone [data-surface="phone-tabs"] {
   background: #0b1f3a !important;
 }
+
+.bb-app-phone [data-surface="phone-tabs"] {
+  background-color: #0b1f3a !important;
+  box-shadow: 0 48px 0 48px #0b1f3a;
+}
+
+.bb-app-phone::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: max(34px, env(safe-area-inset-bottom));
+  background: #0b1f3a;
+  z-index: 19;
+  pointer-events: none;
+}
