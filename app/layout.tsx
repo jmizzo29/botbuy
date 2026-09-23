@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkAppProvider } from "@/components/clerk-app-provider";
 import { PwaRegister } from "@/components/pwa-register";
 import { BRAND, LAND_PRODUCT_SUPPORT } from "@/lib/brand";
-import { THEME_BG } from "@/lib/ui-tokens";
 import "./globals.css";
 import "./phone-theme.css";
 
@@ -78,7 +77,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: THEME_BG,
+  themeColor: "#0B1F3A",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
