@@ -14,8 +14,8 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  await hydrateStore();
   const user = await requireUser();
+  await hydrateStore(user.id);
   const needsYouCount = listDeals(user.id).filter(
     (deal) => deal.status === "Needs you",
   ).length;
