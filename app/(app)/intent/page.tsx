@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/auth";
 import {
   INTENT_H1,
   INTENT_SUB,
+  displayAccountEmail,
   hasReachableEmail,
 } from "@/lib/john-ux";
 import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
@@ -19,7 +20,7 @@ export default async function IntentPage() {
   const intents = listIntents(user.id);
 
   return (
-    <div className="space-y-6">
+    <div className="bb-hunt-page space-y-6">
       <header>
         <p className="sr-only">{INTENT_H1}</p>
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9bb0c7]">
@@ -28,13 +29,21 @@ export default async function IntentPage() {
         <h1 className="mt-1 text-[1.85rem] font-semibold tracking-tight text-white">
           New hunt
         </h1>
+        <p className="sr-only">{INTENT_SUB}</p>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#9bb0c7]">
-          {INTENT_SUB}
+          A business, a car, a house, a book, or anything else you want bought.
         </p>
       </header>
 
       <div className="bb-hunt-form">
-        <IntentForm emailMissing={!hasReachableEmail(user)} cancelHref={MY_DEALS_HREF} />
+        <IntentForm
+          emailMissing={!hasReachableEmail(user)}
+          cancelHref={MY_DEALS_HREF}
+          contactEmail={
+            displayAccountEmail(user.notificationEmail) ||
+            displayAccountEmail(user.email)
+          }
+        />
       </div>
 
       {intents.length ? (
