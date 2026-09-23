@@ -571,3 +571,17 @@ body {
   color: #fb7185;
   font-size: 14px;
 }
+
+html:has(.bb-app-phone),
+html:has(.bb-app-phone) body {
+  background: #0b1f3a !important;
+}
+
+.bb-app-phone {
+  min-height: 100dvh;
+  background: #0b1f3a !important;
+}
+
+.bb-app-phone [data-surface="phone-tabs"] {
+  background: #0b1f3a !important;
+}
