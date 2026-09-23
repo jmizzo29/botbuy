@@ -96,7 +96,10 @@ export function IntentForm({
       setError(body?.error ?? "Could not start search.");
       return;
     }
-    router.push(MY_DEALS_HREF);
+    const created = (await response.json().catch(() => null)) as
+      | { deal?: { id?: string } }
+      | null;
+    router.push(created?.deal?.id ? `/deals/${created.deal.id}` : MY_DEALS_HREF);
     router.refresh();
   }
 
