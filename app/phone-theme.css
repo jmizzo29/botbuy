@@ -398,3 +398,51 @@ body {
   max-width: 18px !important;
   flex: 0 0 18px !important;
 }
+
+.bb-hunt-page,
+.bb-hunt-form,
+.bb-hunt-fields {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.bb-app-phone [data-surface="intent-capture"] input,
+.bb-app-phone [data-surface="intent-capture"] textarea {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 16px !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  scroll-margin-top: 5.5rem;
+  scroll-margin-bottom: 8.5rem;
+}
+
+.bb-app-phone [data-surface="intent-capture"] textarea.bb-hunt-text {
+  min-height: 8.5rem !important;
+  max-height: 12rem !important;
+  resize: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  white-space: pre-wrap !important;
+}
+
+.bb-app-phone .bb-hunt-actions {
+  position: sticky;
+  bottom: calc(4.6rem + env(safe-area-inset-bottom));
+  z-index: 15;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 12px 0 8px;
+  background: #0b1f3a;
+}
+
+.bb-app-phone .bb-hunt-actions button {
+  width: 100%;
+  min-height: 48px;
+}
