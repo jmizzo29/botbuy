@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiUser } from "@/lib/api-auth";
+import { explainHuntSaveError } from "@/lib/db/hunts";
 import {
   addIntent,
   createSearchingDealFromIntent,
@@ -54,10 +55,17 @@ export async function POST(request: Request) {
   if (!parsed.data.startSearch) {
     return NextResponse.json({ intent }, { status: 201 });
   }
-  const deal = await createSearchingDealFromIntent(
-    intent,
-    gated.user.id,
-    gated.user.notificationEmail || gated.user.email,
-  );
-  return NextResponse.json({ intent, deal }, { status: 201 });
+  try {
+    const deal = await createSearchingDealFromIntent(
+      intent,
+      gated.user.id,
+      gated.user.notificationEmail || gated.user.email,
+    );
+    return NextResponse.json({ intent, deal }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: explainHuntSaveError(error) },
+      { status: 500 },
+    );
+  }
 }

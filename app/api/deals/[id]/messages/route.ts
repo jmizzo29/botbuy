@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiUser } from "@/lib/api-auth";
+import { explainHuntSaveError } from "@/lib/db/hunts";
 import { addUserHuntNote } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
 
@@ -20,12 +21,20 @@ export async function POST(
   if (!parsed.success) {
     return NextResponse.json({ error: "Write a message first." }, { status: 400 });
   }
-  const event = await addUserHuntNote(
-    id,
-    gated.user.id,
-    parsed.data.text,
-    gated.user.role === "admin",
-  );
+  let event;
+  try {
+    event = await addUserHuntNote(
+      id,
+      gated.user.id,
+      parsed.data.text,
+      gated.user.role === "admin",
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { error: explainHuntSaveError(error) },
+      { status: 500 },
+    );
+  }
   if (!event) {
     return NextResponse.json({ error: "Deal not found" }, { status: 404 });
   }
