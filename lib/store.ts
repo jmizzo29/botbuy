@@ -401,6 +401,7 @@ export async function createSearchingDealFromIntent(
     if (intent.listingUrl) {
       await attachListingUrl(existing, intent.listingUrl, userId);
     }
+    await ensureHuntThread(existing);
     await persistEngineStore();
     return existing;
   }
@@ -413,6 +414,7 @@ export async function createSearchingDealFromIntent(
   if (intent.listingUrl) {
     await attachListingUrl(deal, intent.listingUrl, userId);
   }
+  await ensureHuntThread(deal);
   auditLogs.unshift({
     id: `aud_${crypto.randomUUID().slice(0, 8)}`,
     userId,
@@ -498,6 +500,49 @@ async function attachListingUrl(deal: Deal, listingUrl: string, userId: string) 
   if (overGate) {
     deal.blockers = [...deal.blockers, overGate];
   }
+}
+
+
+const AGENT_HELLO =
+  "Got it. I'll post updates in this thread. I won't spend anything until you approve.";
+
+export async function ensureHuntThread(deal: Deal) {
+  const id = `evt_${deal.id}_hello`;
+  if (listDealEvents(deal.id).some((event) => event.id === id)) return;
+  appendDealEvent({
+    id,
+    dealId: deal.id,
+    type: "note",
+    stage: "search",
+    title: "Agent",
+    detail: AGENT_HELLO,
+    at: deal.openedAt,
+    status: "active",
+    actor: "agent",
+  });
+  await persistEngineStore();
+}
+
+export async function addUserHuntNote(
+  dealId: string,
+  userId: string,
+  text: string,
+  asAdmin = false,
+) {
+  await hydrateStore();
+  const deal = getDeal(dealId, userId, asAdmin);
+  if (!deal) return null;
+  const event = appendDealEvent({
+    dealId,
+    type: "note",
+    title: "You",
+    detail: text.trim(),
+    at: new Date().toISOString(),
+    status: "done",
+    actor: "you",
+  });
+  await persistEngineStore();
+  return event;
 }
 
 export function listDirectoryUsers(): User[] {

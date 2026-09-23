@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DealApproveActions } from "@/components/deal-approve-actions";
+import { HuntThread } from "@/components/hunt-thread";
 import { DealBadges } from "@/components/deal-badges";
 import { DealAmount } from "@/components/money";
 import { StatusControls } from "@/components/status-controls";
@@ -58,6 +59,30 @@ export default async function DealDetailPage({
   if (deal.source === "engine") {
     ensureSearchingUsageStub(deal);
   }
+  await ensureHuntThread(deal);
+  const thread = listDealEvents(deal.id).flatMap((event) => {
+    if (event.type === "note" && (event.actor === "you" || event.actor === "agent")) {
+      return [
+        {
+          id: event.id,
+          from: event.actor === "you" ? ("you" as const) : ("agent" as const),
+          text: event.detail,
+          at: formatDateTime(event.at),
+        },
+      ];
+    }
+    if (event.type === "search" && event.title !== "Searching") {
+      return [
+        {
+          id: event.id,
+          from: "agent" as const,
+          text: `${event.title}. ${event.detail}`,
+          at: formatDateTime(event.at),
+        },
+      ];
+    }
+    return [];
+  });
   const verification = runVerificationStub(deal);
   const usage = listUsageEvents(deal.id);
   const remaining = formatUsd(remainingAfterVerified(verifiedSpendUsd(deal.userId)));
@@ -90,6 +115,8 @@ export default async function DealDetailPage({
           <p className="mt-2 text-sm text-muted">{HISTORY_MICRO}</p>
         ) : null}
       </div>
+
+      <HuntThread dealId={deal.id} messages={thread} />
 
       <Card>
         <CardContent className="grid gap-8 pt-6 md:grid-cols-2">

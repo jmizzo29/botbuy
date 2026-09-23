@@ -131,7 +131,7 @@ export type DealEventType =
   | "close"
   | "note";
 
-export type DealEventActor = "imported" | "reconstructed" | "engine" | "agent";
+export type DealEventActor = "imported" | "reconstructed" | "engine" | "agent" | "you";
 
 export interface DealEvent {
   id: string;
