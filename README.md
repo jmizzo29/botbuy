@@ -67,13 +67,52 @@ Detail microcopy on imported rows: `Added from your history. BotBuyer didn’t e
 
 Every imported row persists `source: "imported"`, `agent_executed: false`, plus `price_verified`, `amount_verified`, and `amount_status` from JSON. `deal_botbuyer_ai` is CHO-cleared verified $179.96 (`price_verified=true`, `amount_status=verified`, `amount_verified=true`). That personal $ is **not** platform traction and stays out of the public ProofStrip. Savedfast and the transfer fee may be personal Closed with `imported_unverified` — never `price_verified`, never Customer GMV, never ProofStrip closed GMV.
 
+## Scanner ingest
+
+`POST /api/ingest/candidates` lets an outside scanner push marketplace listings into one owner account. It does not spend, touch the vault, or turn on auto-approve.
+
+Auth is a bearer token, not Clerk. `BOTBUY_INGEST_TOKEN` unset returns 503. A missing or wrong bearer returns 401. The owner is `BOTBUY_INGEST_OWNER_USER_ID` (a `users.id` already in Neon). The request body cannot choose the account.
+
+Each item becomes a deal on the existing hunts tables (`deals` + `deal_events` + an `audit_logs` row). Status is `Needs you`. Amounts are `imported` / `imported_unverified` / `price_verified=false`. The same marketplace + listing URL updates price and listing status (`new`, `price_cut`, `ended`, `sold`) instead of inserting a second deal. Sold or ended stays `Needs you` for the owner to dismiss. It is not Closed and not a purchase.
+
+```http
+POST /api/ingest/candidates
+Authorization: Bearer <BOTBUY_INGEST_TOKEN>
+Content-Type: application/json
+```
+
+```json
+{
+  "items": [
+    {
+      "marketplace": "flippa",
+      "url": "https://flippa.com/example-listing",
+      "title": "Example SaaS",
+      "askPriceUsd": 12000,
+      "binUsd": 15000,
+      "reserveUsd": 8000,
+      "claimedMonthlyProfitUsd": 2000,
+      "claimedMonthlyRevenueUsd": 4000,
+      "traffic": "12k/mo",
+      "status": "price_cut",
+      "notes": "Scanner note",
+      "verdict": "watch",
+      "firstSeenAt": "2026-09-24T00:00:00.000Z",
+      "updatedAt": "2026-09-24T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+`binUsd`, `reserveUsd`, profit, revenue, traffic, notes, verdict, and timestamps are optional. At most 25 items and 64KB per request. Extra keys, including any user id, are rejected.
+
 ## Auth (Clerk + Neon)
 
 Identity is Clerk. `getCurrentUser()` resolves the session to a Neon `users` row (`clerk_user_id` unique). John’s imported ledger stays on seed id `john-mitchell` when his Clerk email matches `john.mitchell@buildstarlabs.com`. New buyers get their own row; auto-approve stays OFF.
 
 `bb_signup` is not identity. Missing Clerk keys: build still completes; app routes fail closed (no DEMO_USER).
 
-John must add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `DATABASE_URL` in Vercel (Preview + Development for staging). Optional: `CLERK_WEBHOOK_SECRET` + Clerk webhook → `/api/webhooks/clerk`. Apply `drizzle/0000_engine_base.sql` (base CREATE TABLEs) or `npm run db:push` on the **BotBuy** Neon project — never Autofleeto. With `DATABASE_URL`, Start search persists engine deals / events / usage / intents in Neon so My deals survives Vercel isolates. Without it, Start search fails closed with a clear persist error instead of an opaque 500. The `bb_engine_journal` cookie is a size-capped fallback only. Soft HOLD. Land promote HOLD.
+John must add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `DATABASE_URL` in Vercel (Preview + Development for staging). Optional: `CLERK_WEBHOOK_SECRET` + Clerk webhook → `/api/webhooks/clerk`. Apply `drizzle/0000_engine_base.sql` (base CREATE TABLEs) or `npm run db:push` on the **BotBuy** Neon project — never Autofleeto. With `DATABASE_URL`, Start search persists engine deals / events / usage / intents in Neon so My deals survives Vercel isolates. Without it, the hunt stays in the in-memory journal for that process and is not written to Neon. The `bb_engine_journal` cookie is a size-capped fallback only. Scanner ingest still returns 503 until the database and owner account exist. Soft HOLD. Land promote HOLD.
 
 ## Native clients (`apps/mobile/`)
 

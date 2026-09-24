@@ -1,36 +1,42 @@
-/**
- * John LOCK: category-agnostic starters. Cars + houses + broader.
- * Software / domain / official catalog remain scaffolds — not the product.
- */
-
+/** John product templates. Software-first. Domain+software OK. Domains secondary. */
 export const JOHN_INTENT_TEMPLATES = [
-  {
-    id: "anything",
-    label: "Anything",
-    summary:
-      "Find what I want to buy — a car, a house, a consumer product, or anything else. Search, act, and wait for my approve.",
-    categories: [] as string[],
-    primary: true,
-  },
-  {
-    id: "car",
-    label: "Car",
-    summary: "Find a car I can buy. Search listings and wait for my approve.",
-    categories: ["vehicle"],
-    primary: false,
-  },
-  {
-    id: "house",
-    label: "House",
-    summary: "Find a house I can buy. Search listings and wait for my approve.",
-    categories: ["property"],
-    primary: false,
-  },
   {
     id: "software",
     label: "Software",
     summary:
       "Find software we can buy across vendor checkout, SaaS billing, or a license store.",
+    categories: ["software"],
+    primary: true,
+  },
+  {
+    id: "saas_tool",
+    label: "SaaS tool",
+    summary:
+      "Find a SaaS tool with a checkout we can approve. Prefer monthly billing.",
+    categories: ["software"],
+    primary: false,
+  },
+  {
+    id: "software_license",
+    label: "Software license",
+    summary:
+      "Find a software license we can purchase and keep. Any vendor or marketplace.",
+    categories: ["software"],
+    primary: false,
+  },
+  {
+    id: "software_domain",
+    label: "Software + domain",
+    summary:
+      "Find a software product and a transferable domain that matches it.",
+    categories: ["software", "domain"],
+    primary: false,
+  },
+  {
+    id: "team_software",
+    label: "Team software",
+    summary:
+      "Find software for a small team — seats, checkout, and a price we can approve.",
     categories: ["software"],
     primary: false,
   },
@@ -39,14 +45,6 @@ export const JOHN_INTENT_TEMPLATES = [
     label: "Domain",
     summary: "Secure a clean product domain on a registrar we can pay at purchase.",
     categories: ["domain"],
-    primary: false,
-  },
-  {
-    id: "official_catalog",
-    label: "Official catalog",
-    summary:
-      "Query an official HTTPS JSON catalog for whatever I want to buy.",
-    categories: ["http_json"],
     primary: false,
   },
 ] as const;

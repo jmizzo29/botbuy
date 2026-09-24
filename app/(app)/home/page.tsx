@@ -14,6 +14,7 @@ import {
   MY_DEALS_PROGRESS,
   MY_DEALS_QUIET_IDLE,
 } from "@/lib/john-ux";
+import { isVerifiedAmount, amountCopy } from "@/lib/deal-ui";
 import { hydrateStore, listDeals, listVaultRefs, verifiedSpendUsd } from "@/lib/store";
 import { formatUsd } from "@/lib/money";
 import { remainingAfterVerified } from "@/lib/spend-policy";
@@ -24,8 +25,8 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  await hydrateStore();
   const user = await requireUser();
+  await hydrateStore(user.id);
   const deals = listDeals(user.id);
   const remaining = formatUsd(remainingAfterVerified(verifiedSpendUsd(user.id)));
   const vault = listVaultRefs(user.id)[0];
@@ -36,6 +37,7 @@ export default async function HomePage() {
 
   return (
     <div>
+      {/* Honesty lock: no invented GMV. Listed prices stay unverified. */}
       <p className="sr-only">
         {MY_DEALS_LABEL} {SPEND_LIMIT_PILL} Remaining {remaining} {deals.length}{" "}
         {AUTO_APPROVE_OFF} {APPROVE_MICRO} {payment}{" "}
@@ -73,7 +75,12 @@ export default async function HomePage() {
                     {deal.title}
                   </p>
                   <p className="mt-2 font-mono text-sm text-white/60">
-                    {formatUsd(deal.priceUsd)} · remaining {remaining}
+                    {isVerifiedAmount(deal)
+                      ? formatUsd(deal.priceUsd)
+                      : deal.priceUsd > 0
+                        ? `Listed ${formatUsd(deal.priceUsd)} · unverified`
+                        : amountCopy(deal)}{" "}
+                    · remaining {remaining}
                   </p>
                 </div>
                 <ChevronRight className="mt-1 size-5 shrink-0 text-white/40" />

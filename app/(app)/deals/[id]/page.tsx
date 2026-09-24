@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ActOnBehalfPrep } from "@/components/act-on-behalf-prep";
+import { AuthorizedBuyPrep } from "@/components/authorized-buy-prep";
 import { DealApproveActions } from "@/components/deal-approve-actions";
+import { HonestyFlag } from "@/components/honesty-flag";
 import { HuntThread } from "@/components/hunt-thread";
 import { DealBadges } from "@/components/deal-badges";
 import { DealAmount } from "@/components/money";
@@ -11,6 +14,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivateAgents } from "@/components/activate-agents";
 import { SearchingEmpty } from "@/components/empty-ctas";
 import { requireUser } from "@/lib/auth";
+import {
+  ACT_ON_BEHALF_PREPARED_NOT_REGISTERED,
+  ACT_ON_BEHALF_PREPARED_NOT_SENT,
+} from "@/lib/act-copy";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { getAgentOrg } from "@/lib/agent-runtime";
@@ -21,6 +28,7 @@ import { remainingAfterVerified, SPEND_HARD_GATE_USD } from "@/lib/spend-policy"
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import {
   ensureSearchingUsageStub,
+  ensureHuntThread,
   getDeal,
   hydrateStore,
   listDealEvents,
@@ -29,6 +37,8 @@ import {
   verifiedSpendUsd,
 } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
+import { DealCandidates } from "@/components/deal-candidates";
+import { readSearchActHandoff } from "@/lib/connectors/search-handoff";
 import { runVerificationStub } from "@/lib/verification";
 import type { DealEvent } from "@/lib/types";
 
@@ -40,8 +50,8 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await hydrateStore();
   const user = await requireUser();
+  await hydrateStore(user.id);
   const deal = getDeal(id, user.id, user.role === "admin");
   return { title: deal?.title ?? "Deal" };
 }
@@ -52,15 +62,17 @@ export default async function DealDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await hydrateStore();
   const user = await requireUser();
+  await hydrateStore(user.id);
   const deal = getDeal(id, user.id, user.role === "admin");
   if (!deal) notFound();
   if (deal.source === "engine") {
     ensureSearchingUsageStub(deal);
   }
   await ensureHuntThread(deal);
-  const thread = listDealEvents(deal.id).flatMap((event) => {
+  const dealEvents = listDealEvents(deal.id);
+  const searchHandoff = readSearchActHandoff(dealEvents);
+  const thread = dealEvents.flatMap((event) => {
     if (event.type === "note" && (event.actor === "you" || event.actor === "agent")) {
       return [
         {
@@ -135,6 +147,8 @@ export default async function DealDetailPage({
               Every deal needs your approval · auto-approve OFF
             </p>
             <div className="mt-6">
+              <ActOnBehalfPrep dealId={deal.id} status={deal.status} />
+              <AuthorizedBuyPrep dealId={deal.id} status={deal.status} />
               <DealApproveActions
                 dealId={deal.id}
                 status={deal.status}
@@ -165,6 +179,8 @@ export default async function DealDetailPage({
         {deal.evidencePath ? <span>evidence={deal.evidencePath}</span> : null}
       </div>
 
+      {searchHandoff ? <DealCandidates handoff={searchHandoff} /> : null}
+
       {deal.status === "Searching" ? <SearchingEmpty /> : null}
 
       {deal.blockers.length ? (
@@ -186,7 +202,12 @@ export default async function DealDetailPage({
         <ActivateAgents
           assetId={deal.id}
           assetTitle={deal.title}
-          activated={Boolean(getAgentOrg(deal.id)?.activated)}
+          activated={Boolean(
+            getAgentOrg(deal.id, {
+              userId: user.id,
+              asAdmin: user.role === "admin",
+            })?.activated,
+          )}
           imported={deal.source === "imported"}
         />
       ) : null}
@@ -382,6 +403,25 @@ function TimelineItem({
           {event.stage ? ` · ${event.stage}` : ""} · {formatDateTime(event.at)}
         </p>
         <p className="mt-1 text-sm font-medium">{event.title}</p>
+        {event.metadata?.kind === "act_on_behalf" ? (
+          <div
+            className="mt-1.5 flex flex-wrap gap-1.5"
+            data-surface="act-on-behalf-timeline"
+          >
+            <HonestyFlag
+              token={
+                event.metadata.action === "register"
+                  ? ACT_ON_BEHALF_PREPARED_NOT_REGISTERED
+                  : ACT_ON_BEHALF_PREPARED_NOT_SENT
+              }
+            />
+            <HonestyFlag token="live=false" />
+            <HonestyFlag token="spend=false" />
+            <HonestyFlag token="sent=false" />
+            <HonestyFlag token="registered=false" />
+            <HonestyFlag token="autoApprove=false" />
+          </div>
+        ) : null}
         <p className="mt-1 text-sm leading-relaxed text-muted">
           {event.detail}
         </p>

@@ -87,8 +87,21 @@ function allEvents(): DealEvent[] {
 
 function replaceEngine(journal: EngineJournal) {
   const engine = engineState();
-  engine.deals = journal.deals.filter((deal) => deal.source === "engine");
-  engine.events = journal.events;
+  // Cookie/Neon journals only carry source=engine rows. Database hunts
+  // (imported scans included) stay in memory so a later hydrate without
+  // a user id does not drop them before the page renders.
+  const keptDeals = engine.deals.filter((deal) => deal.source !== "engine");
+  const keptIds = new Set(keptDeals.map((deal) => deal.id));
+  const byId = new Map<string, Deal>();
+  for (const deal of keptDeals) byId.set(deal.id, deal);
+  for (const deal of journal.deals) {
+    if (deal.source === "engine") byId.set(deal.id, deal);
+  }
+  engine.deals = [...byId.values()];
+  engine.events = [
+    ...journal.events.filter((event) => !keptIds.has(event.dealId)),
+    ...engine.events.filter((event) => keptIds.has(event.dealId)),
+  ];
   engine.usage = journal.usage ?? [];
   engine.hydrated = true;
 }
@@ -143,12 +156,17 @@ function ensureDemoNeedsYou() {
 export async function hydrateStore(userId?: string) {
   const engine = engineState();
   const durable = await readDurableJournal();
-  replaceEngine(
-    mergeJournals(
-      { deals: engine.deals, events: engine.events, usage: engine.usage },
-      durable,
-    ),
+  const merged = mergeJournals(
+    {
+      deals: engine.deals,
+      events: engine.events,
+      usage: engine.usage,
+      intents,
+    },
+    durable,
   );
+  replaceEngine(merged);
+  if (merged.intents?.length) rememberIntents(merged.intents);
   if (userId) {
     const saved = await loadUserHunts(userId);
     if (saved) {
@@ -177,7 +195,17 @@ export async function persistEngineStore() {
     deals: engine.deals,
     events: engine.events,
     usage: engine.usage ?? [],
+    intents: intents.slice(),
   });
+}
+
+function rememberIntents(rows: Intent[]) {
+  const ids = new Set(intents.map((row) => row.id));
+  for (const row of rows) {
+    if (ids.has(row.id)) continue;
+    intents.push(row);
+    ids.add(row.id);
+  }
 }
 
 function rememberEngineDeal(deal: Deal, events: DealEvent[]) {
@@ -232,8 +260,9 @@ const intents: Intent[] = [
   {
     id: "intent_software_domain",
     userId: SEED_OWNER.id,
-    summary: JOHN_INTENT_TEMPLATES.find((item) => item.id === "software_domain")
-      ?.summary ?? JOHN_INTENT_TEMPLATES[0].summary,
+    summary:
+      JOHN_INTENT_TEMPLATES.find((item) => item.id === "software_domain")
+        ?.summary ?? JOHN_INTENT_TEMPLATES[0].summary,
     categories: ["software", "domain"],
     maxPriceUsd: SPEND_HARD_GATE_USD,
     status: "active",
@@ -417,9 +446,10 @@ export async function createSearchingDealFromIntent(
       await attachListingUrl(existing, intent.listingUrl, userId);
     }
     await ensureHuntThread(existing);
+    const searched = await thickenEngineDealSearch(existing, intent, userId);
     await persistEngineStore();
-    await saveOpenedHunt(intent, existing, listDealEvents(existing.id));
-    return existing;
+    await saveOpenedHunt(intent, searched, listDealEvents(searched.id));
+    return searched;
   }
 
   const id = `deal_run_${crypto.randomUUID().slice(0, 8)}`;
@@ -446,9 +476,23 @@ export async function createSearchingDealFromIntent(
     },
     createdAt: deal.openedAt,
   });
+  const searched = await thickenEngineDealSearch(deal, intent, userId);
   await persistEngineStore();
-  await saveOpenedHunt(intent, deal, listDealEvents(deal.id));
-  return deal;
+  await saveOpenedHunt(intent, searched, listDealEvents(searched.id));
+  return searched;
+}
+
+async function thickenEngineDealSearch(
+  deal: Deal,
+  intent: Intent | undefined,
+  userId: string,
+) {
+  const { applyDealSearchPipeline } = await import("@/lib/connectors/deal-search");
+  return applyDealSearchPipeline({
+    deal,
+    intent: intent ?? null,
+    userId,
+  });
 }
 
 async function attachListingUrl(deal: Deal, listingUrl: string, userId: string) {

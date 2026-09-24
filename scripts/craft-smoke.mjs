@@ -329,7 +329,7 @@ assert(clerkUi.includes("unsafe_disableDevelopmentModeWarnings: true"), "Clerk h
 assert(clerkUi.includes('elevation: "flush"'), "Clerk card is flush — no giant circle shell");
 assert(clerkUi.includes('footer: "hidden"') && clerkUi.includes('footerPages: "hidden"'), "Clerk promo footer is hidden");
 assert(clerkUi.includes('colorPrimary: "#2DD4BF"') && clerkUi.includes('colorTextOnPrimaryBackground: "#042F2E"'), "Clerk primary is Electric Teal");
-assert(clerkUi.includes('colorBackground: "#122A46"'), "Clerk card surface is Quiet Capital navy");
+assert(clerkUi.includes('colorBackground: "#0B1F3A"'), "Clerk card surface is Quiet Capital navy");
 assert(css.includes(".bb-auth-shell") && css.includes("overflow-x: hidden"), "auth shell kills horizontal overflow");
 assert(css.includes(".bb-auth-card") && css.includes("overflow: hidden"), "auth card clips decorative circle");
 assert(css.includes(".bb-auth-shell") && css.includes("#0b1f3a"), "auth page bg is Quiet Capital navy");
@@ -358,7 +358,7 @@ assert(!signup.includes("DEMO_PILL_CLASS"), "signup has no Demo pill token");
 assert(!signIn.includes("DEMO_PILL_CLASS"), "sign-in has no Demo pill token");
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "non-land public chrome keeps POC footer meta");
 assert(!chrome.includes("signalHold") && !chrome.includes("BRAND.signalHold"), "land chrome has no visible Soft-signal HOLD");
-assert(chrome.includes("{land ? null") && chrome.includes("<SiteFooter"), "land PublicChrome renders no SiteFooter or footer paragraph");
+assert(chrome.includes("{land || auth ? null") && chrome.includes("<SiteFooter"), "land and auth PublicChrome render no SiteFooter");
 assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
 assert(signIn.includes("<SignIn"), "sign-in uses Clerk SignIn");
@@ -403,7 +403,7 @@ assert(empty.includes('SEARCHING_EMPTY_SECONDARY = "Edit intent"'), "Searching E
 assert(empty.includes('NEEDS_YOU_CTA = "Review gates"'), "Needs-you Review gates");
 assert(empty.includes('AGENTS_EMPTY_SECONDARY = "See how activation works"'), "Agents empty secondary");
 assert(empty.includes('"/deals?status=Closed"'), "Agents empty → Closed deals");
-assert(home.includes("DealsTable"), "My deals dense table");
+assert(home.includes("href={`/deals/${deal.id}`}"), "My deals list opens each hunt");
 assert(home.includes("MY_DEALS_LABEL") || home.includes("My deals"), "My deals is /home");
 assert(
   approveUi.includes("APPROVE_MICRO") ||
@@ -444,7 +444,7 @@ assert(!chrome.includes(">Demo<"), "land header has no Demo badge");
 assert(!chrome.includes("BRAND.landHonesty"), "land chrome has no Private beta honesty link");
 assert(!chrome.includes("Private beta"), "land chrome has no Private beta string");
 assert(!chrome.includes('href="/beta"'), "land chrome has no /beta top link");
-assert(chrome.includes('href="/about"'), "land overlay includes About word link");
+assert(chrome.includes('data-nav="signin"') && chrome.includes('data-nav="signup"'), "signed-out land nav is Sign in and Sign up");
 assert(!chrome.includes("hidden sm:inline"), "About stays visible on phone and desktop");
 assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air band");
 assert(chrome.includes("bb-land-header"), "land header overlays the navy stage");
@@ -659,20 +659,20 @@ assert(land.includes("bb-land-signin"), "land Sign in uses fold class");
 assert(land.includes("bb-land-signup"), "land Sign up uses fold class");
 assert(land.includes("CLERK_SIGN_IN_URL") || land.includes("/signin"), "fold Sign in uses canonical /signin");
 assert(land.includes('href="/signup"'), "land Sign up door is /signup");
-assert(chrome.includes(") : land ? null : ("), "land nav has no signed-out Sign in duplicate");
+assert(chrome.includes('data-nav="signin"'), "signed-out land header offers Sign in");
 assert(
   read("components/install-hint.tsx").includes("if (onLand) return null"),
   "InstallHint is already null on land",
 );
 assert(
-  land.includes("redirectSignedInFromLand") ||
-    land.includes("redirect(MY_DEALS_HREF)"),
-  "signed-in redirects off land",
+  land.includes("redirectSignedInFromLand"),
+  "land calls the signed-in land gate",
 );
 assert(
   existsSync(join(root, "lib/land-gate.ts")) &&
-    read("lib/land-gate.ts").includes("redirect(MY_DEALS_HREF)"),
-  "land-gate helper redirects signed-in visitors to My deals",
+    read("lib/land-gate.ts").includes("Do not bounce") &&
+    !read("lib/land-gate.ts").includes("redirect("),
+  "public land stays the pitch for signed-in visitors",
 );
 assert(land.includes('dynamic = "force-dynamic"'), "land session redirect is request-time");
 assert(land.includes('themeColor: "#0B1F3A"'), "land status/theme color is navy");
@@ -904,8 +904,8 @@ assert(
   read("land/INSTALL.md").includes("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md"),
   "land INSTALL records replaced R3 kit",
 );
-assert(chrome.includes('data-nav="about"'), "land About link is marked for chrome QA");
-assert(chrome.includes('link("about")') || chrome.includes('className={link("about")}'), "land About uses U1 about class");
+assert(chrome.includes('data-nav="signin"'), "land Sign in link is marked for chrome QA");
+assert(chrome.includes('data-nav="signup"'), "land Sign up link is marked for chrome QA");
 assert(
   css.includes("font-size: 15px") &&
     css.includes("font-weight: 550") &&
@@ -1020,7 +1020,7 @@ assert(layout.includes("/favicon.ico"), "layout links favicon.ico");
 assert(layout.includes("/favicon.svg"), "layout links favicon.svg");
 assert(layout.includes("/brand/logo-soft-spine/favicon/apple-touch-icon.png"), "layout apple-touch-icon");
 assert(layout.includes("appleWebApp") && layout.includes("capable: true"), "layout appleWebApp capable");
-assert(layout.includes("statusBarStyle: \"default\""), "layout Apple status bar for light shell");
+assert(layout.includes("statusBarStyle: \"black-translucent\""), "layout Apple status bar for navy shell");
 assert(layout.includes("apple-mobile-web-app-capable"), "layout Apple capable meta");
 assert(layout.includes("/brand/logo-soft-spine/og/og-1200x630.png"), "layout Open Graph image");
 assert(layout.includes("https://botbuyer.ai/brand/logo-soft-spine/og/og-1200x630.png"), "twitter image soft-spine OG");
@@ -1123,7 +1123,7 @@ assert(home.includes("SPEND_LIMIT_PILL") && home.includes("AUTO_APPROVE_OFF"), "
 assert(home.includes("remainingAfterVerified"), "My deals remaining is computed, not a fake $840");
 assert(!home.includes("Spend remaining"), "home dropped $1k remaining-as-limit badge");
 assert(shell.includes("data-surface=\"phone-tabs\""), "phone tabs designer surface");
-assert(shell.includes("text-primary"), "active tab icon is teal jewelry");
+assert(shell.includes("text-white"), "active tab is white on the navy shell");
 assert(!usageUi.includes("text-zinc-"), "usage UI is Techlux light, not dark zinc");
 assert(!usageUi.includes("bg-white/[0.03]"), "usage counters are not dark wash");
 const vaultRailsUi = read("components/vault-rails.tsx");
@@ -1446,7 +1446,7 @@ assert(
 );
 assert(johnTemplatesSot.includes("Software-first"), "templates SoT software-first");
 assert(johnHome.includes("MY_DEALS_EMPTY_TITLE") || johnHome.includes("Nothing searching yet"), "My deals empty title wired");
-assert(johnHome.includes("IntentForm"), "My deals empty has chips + describe");
+assert(johnHome.includes('href="/intent"') && johnHome.includes("New hunt"), "My deals empty starts a hunt");
 assert(johnHome.includes("MY_DEALS_PROGRESS"), "My deals progress line");
 assert(johnHome.includes("APPROVE_MICRO") || johnHome.includes("BotBuyer only moves when you approve."), "My deals approve micro");
 assert(johnHome.includes("AUTO_APPROVE_OFF"), "My deals auto-approve OFF");

@@ -3,8 +3,7 @@ export const LAND_META_LINE =
   "BotBuyer finds it and handles the chase. You approve before it pays.";
 
 /** Land H1 / support — CMO LOCKED ≤10s lead. Soft-signal HOLD. */
-export const LAND_PRODUCT_H1 =
-  "Your AI agent for buying, almost anything!!!" as const;
+export const LAND_PRODUCT_H1 = "Your AI agent for buying." as const;
 export const LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK." as const;
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
@@ -13,22 +12,6 @@ export const LAND_SKY_MARK_SRC =
   "/brand/logo-soft-spine/botbuyer-mark-reverse.svg" as const;
 export const LAND_ARC_SRC = "/land/assets/06-arc-reverse.svg" as const;
 export const LAND_ARC_LABEL = "Find Decide Buy arc" as const;
-
-/** L1 capital-desk story strip. Soft-signal HOLD. */
-export const LAND_STORY = [
-  {
-    title: "Tell it what to find",
-    support: "One intent. BotBuyer runs the chase.",
-  },
-  {
-    title: "Searches land for review",
-    support: "Quiet queue — no spend until you say so.",
-  },
-  {
-    title: "You approve. Then it buys.",
-    support: "Every search needs your OK.",
-  },
-] as const;
 
 /** Signup live door — CPO `cpo-real-auth-signup-ia-v1.md`. Soft-signal HOLD. */
 export const SIGNUP_H1 = "Create your BotBuyer account" as const;
@@ -50,7 +33,7 @@ export const BRAND = {
     "The automated agent that searches, purchases, and closes — within your limit.",
   easeMicro: "Three inputs, zero babysitting.",
   channelMicro:
-    "Anything you want to buy. Cars, houses, consumer products, software, domains — you approve before it pays.",
+    "Any software, any channel. Domains optional. Cars & real estate later.",
   primaryCta: "Sign up",
   /** In-app / A2HS label — not a land fold CTA. */
   installLink: "Install",

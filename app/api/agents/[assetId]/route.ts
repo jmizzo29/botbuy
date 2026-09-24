@@ -14,7 +14,10 @@ export async function GET(
   const gated = await requireApiUser();
   if (gated.error) return gated.error;
   const { assetId } = await params;
-  const org = getAgentOrg(assetId);
+  const org = getAgentOrg(assetId, {
+    userId: gated.user.id,
+    asAdmin: gated.user.role === "admin",
+  });
   if (!org) {
     return NextResponse.json(
       {

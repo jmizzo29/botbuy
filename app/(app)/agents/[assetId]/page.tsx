@@ -7,6 +7,7 @@ import {
   AGENT_IMPORTED_MICRO,
   AGENT_SPEND_MICRO,
 } from "@/lib/agent-org";
+import { requireUser } from "@/lib/auth";
 import { getAgentOrg } from "@/lib/agent-runtime";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
@@ -16,7 +17,11 @@ export async function generateMetadata({
   params: Promise<{ assetId: string }>;
 }) {
   const { assetId } = await params;
-  const org = getAgentOrg(assetId);
+  const user = await requireUser();
+  const org = getAgentOrg(assetId, {
+    userId: user.id,
+    asAdmin: user.role === "admin",
+  });
   return { title: org ? `${org.title} agents` : "Your agents" };
 }
 
@@ -26,7 +31,11 @@ export default async function AgentAssetPage({
   params: Promise<{ assetId: string }>;
 }) {
   const { assetId } = await params;
-  const org = getAgentOrg(assetId);
+  const user = await requireUser();
+  const org = getAgentOrg(assetId, {
+    userId: user.id,
+    asAdmin: user.role === "admin",
+  });
   if (!org) notFound();
 
   return (

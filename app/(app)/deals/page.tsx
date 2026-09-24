@@ -16,8 +16,8 @@ export default async function DealsPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await searchParams;
-  await hydrateStore();
   const user = await requireUser();
+  await hydrateStore(user.id);
   const deals = listDeals(user.id);
   const filtered =
     status && DEAL_STATUSES.includes(status as (typeof DEAL_STATUSES)[number])
