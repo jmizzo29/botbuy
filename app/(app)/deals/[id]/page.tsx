@@ -1,11 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ActOnBehalfPrep } from "@/components/act-on-behalf-prep";
-import { AuthorizedBuyPrep } from "@/components/authorized-buy-prep";
-import { HonestyFlag } from "@/components/honesty-flag";
 import { DealApproveActions } from "@/components/deal-approve-actions";
+import { HuntThread } from "@/components/hunt-thread";
 import { DealBadges } from "@/components/deal-badges";
-import { DealCandidates } from "@/components/deal-candidates";
 import { DealAmount } from "@/components/money";
 import { StatusControls } from "@/components/status-controls";
 import { StatusPill } from "@/components/status-pill";
@@ -32,11 +29,6 @@ import {
   verifiedSpendUsd,
 } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
-import {
-  ACT_ON_BEHALF_PREPARED_NOT_REGISTERED,
-  ACT_ON_BEHALF_PREPARED_NOT_SENT,
-} from "@/lib/act-copy";
-import { readSearchActHandoff } from "@/lib/connectors/search-handoff";
 import { runVerificationStub } from "@/lib/verification";
 import type { DealEvent } from "@/lib/types";
 
@@ -67,8 +59,30 @@ export default async function DealDetailPage({
   if (deal.source === "engine") {
     ensureSearchingUsageStub(deal);
   }
-  const dealEvents = listDealEvents(deal.id);
-  const candidates = readSearchActHandoff(dealEvents);
+  await ensureHuntThread(deal);
+  const thread = listDealEvents(deal.id).flatMap((event) => {
+    if (event.type === "note" && (event.actor === "you" || event.actor === "agent")) {
+      return [
+        {
+          id: event.id,
+          from: event.actor === "you" ? ("you" as const) : ("agent" as const),
+          text: event.detail,
+          at: formatDateTime(event.at),
+        },
+      ];
+    }
+    if (event.type === "search" && event.title !== "Searching") {
+      return [
+        {
+          id: event.id,
+          from: "agent" as const,
+          text: `${event.title}. ${event.detail}`,
+          at: formatDateTime(event.at),
+        },
+      ];
+    }
+    return [];
+  });
   const verification = runVerificationStub(deal);
   const usage = listUsageEvents(deal.id);
   const remaining = formatUsd(remainingAfterVerified(verifiedSpendUsd(deal.userId)));
@@ -81,9 +95,7 @@ export default async function DealDetailPage({
 
   return (
     <div className="space-y-6">
-      {deal.source === "engine" && deal.status === "Searching" ? (
-        <PersistRunDeal dealId={deal.id} />
-      ) : null}
+      {deal.source === "engine" ? <PersistRunDeal dealId={deal.id} /> : null}
       <div>
         <p className="text-xs text-muted">
           <Link href={MY_DEALS_HREF} className="hover:text-foreground">
@@ -103,6 +115,8 @@ export default async function DealDetailPage({
           <p className="mt-2 text-sm text-muted">{HISTORY_MICRO}</p>
         ) : null}
       </div>
+
+      <HuntThread dealId={deal.id} messages={thread} />
 
       <Card>
         <CardContent className="grid gap-8 pt-6 md:grid-cols-2">
@@ -129,8 +143,6 @@ export default async function DealDetailPage({
                 remaining={`Remaining ${remaining}`}
                 payment={payment}
               />
-              <ActOnBehalfPrep dealId={deal.id} status={deal.status} />
-              <AuthorizedBuyPrep dealId={deal.id} status={deal.status} />
             </div>
           </div>
           <div>
@@ -152,8 +164,6 @@ export default async function DealDetailPage({
         <span>price_verified={String(deal.priceVerified)}</span>
         {deal.evidencePath ? <span>evidence={deal.evidencePath}</span> : null}
       </div>
-
-      {candidates ? <DealCandidates handoff={candidates} /> : null}
 
       {deal.status === "Searching" ? <SearchingEmpty /> : null}
 
@@ -244,7 +254,7 @@ export default async function DealDetailPage({
         </CardHeader>
         <CardContent>
           <ol className="space-y-0">
-            {dealEvents.map((event, index, all) => (
+            {listDealEvents(deal.id).map((event, index, all) => (
               <TimelineItem
                 key={event.id}
                 event={event}
@@ -372,25 +382,6 @@ function TimelineItem({
           {event.stage ? ` · ${event.stage}` : ""} · {formatDateTime(event.at)}
         </p>
         <p className="mt-1 text-sm font-medium">{event.title}</p>
-        {event.metadata?.kind === "act_on_behalf" ? (
-          <div
-            className="mt-1.5 flex flex-wrap gap-1.5"
-            data-surface="act-on-behalf-timeline"
-          >
-            <HonestyFlag
-              token={
-                event.metadata.action === "register"
-                  ? ACT_ON_BEHALF_PREPARED_NOT_REGISTERED
-                  : ACT_ON_BEHALF_PREPARED_NOT_SENT
-              }
-            />
-            <HonestyFlag token="live=false" />
-            <HonestyFlag token="spend=false" />
-            <HonestyFlag token="sent=false" />
-            <HonestyFlag token="registered=false" />
-            <HonestyFlag token="autoApprove=false" />
-          </div>
-        ) : null}
         <p className="mt-1 text-sm leading-relaxed text-muted">
           {event.detail}
         </p>

@@ -1,10 +1,10 @@
 # Land mobile rebuild — R3 lower-panel
 
-**CEO LOCK.** READY-TO-SHIP → **`staging` only**. Soft-signal HOLD · land promote HOLD.
+**CEO LOCK.** READY-TO-SHIP → **land-only `main` / prod**. Soft-signal HOLD on full product.
 
-Replaces failed **D1 center stack**. Do **not** densify D1. No arc rail. No R1/R2.
+Replaces failed **D1 center stack** and prod **Coming soon**. Do **not** densify D1. No arc rail. No R1/R2.
 
-Do **not** merge to `main` or ship production `botbuyer.ai` from this kit. Do **not** touch the prod Coming soon gate.
+Do **not** merge `staging` → `main`. Port land UI only.
 
 Visual bar: phone fold `r3-lower-panel-phone-fold.png`. Atmosphere **A1 richer-mesh-deep** in the sky only. Chrome is soft-spine 28px + BotBuyer.
 
@@ -61,7 +61,7 @@ Same architecture (hard edge + panel). Do **not** revert to D1 center stack. 50/
 - [ ] Teal 2px edge · oversized soft-spine in sky · chrome soft-spine + BotBuyer
 - [ ] About-only · no Private beta · no Install · no one-liner · no arc rail
 - [ ] Exact H1 + support · equal CTAs
-- [ ] PR base = `staging` · do not merge to `main`
+- [ ] PR base = `main` · land-only diff
 
 ## Out
 
@@ -71,9 +71,9 @@ Same architecture (hard edge + panel). Do **not** revert to D1 center stack. 50/
 - Install on land
 - Private beta in chrome
 - Land footer dump on the fold
-- Prod Coming soon gate
-- Merge to `main`
+- Coming soon gate
+- Staging product scaffolds (connectors / vault / act / OAuth vault shell)
 
 Strings live in `lib/brand.ts`.
 
-*BotBuyer Designer → CTO · R3 lower-panel READY-TO-SHIP → stage*
+*BotBuyer Designer → CTO · R3 lower-panel READY-TO-SHIP → land-only prod*

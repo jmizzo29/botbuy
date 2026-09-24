@@ -131,7 +131,7 @@ export type DealEventType =
   | "close"
   | "note";
 
-export type DealEventActor = "imported" | "reconstructed" | "engine" | "agent";
+export type DealEventActor = "imported" | "reconstructed" | "engine" | "agent" | "you";
 
 export interface DealEvent {
   id: string;
@@ -201,6 +201,7 @@ export interface Intent {
   templateId?: string | null;
   mustInclude?: string | null;
   avoid?: string | null;
+  listingUrl?: string | null;
 }
 
 export interface SpendLimits {

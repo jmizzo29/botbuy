@@ -31,6 +31,8 @@ export interface AdapterListing {
   title: string;
   listedUsd: number | null;
   amountStatus: "unverified";
+  url?: string;
+  summary?: string;
 }
 
 export interface AdapterPurchaseCtx {

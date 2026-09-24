@@ -1,6 +1,7 @@
 import { loadLedgerDeals, seedDealEvents } from "@/lib/ledger";
 import { SEED_OWNER } from "@/lib/auth-owner";
 import { listPersistedUsers } from "@/lib/db/users";
+import { loadUserHunts, saveHuntEvent, saveOpenedHunt } from "@/lib/db/hunts";
 import { listMemoryUsers, rememberDirectoryUser } from "@/lib/user-directory";
 import {
   DEMO_NEEDS_YOU_DEAL,
@@ -10,6 +11,7 @@ import {
 } from "@/lib/demo-needs-you";
 import { isVerifiedAmount } from "@/lib/deal-ui";
 import "@/lib/adapters";
+import { fetchPublicListing } from "@/lib/adapters/listing-fetch";
 import {
   mergeJournals,
   readDurableJournal,
@@ -138,7 +140,7 @@ function ensureDemoNeedsYou() {
   );
 }
 
-export async function hydrateStore() {
+export async function hydrateStore(userId?: string) {
   const engine = engineState();
   const durable = await readDurableJournal();
   replaceEngine(
@@ -147,7 +149,20 @@ export async function hydrateStore() {
       durable,
     ),
   );
-  if (durable.intents?.length) rememberIntents(durable.intents);
+  if (userId) {
+    const saved = await loadUserHunts(userId);
+    if (saved) {
+      for (const deal of saved.deals) {
+        rememberEngineDeal(
+          deal,
+          saved.events.filter((event) => event.dealId === deal.id),
+        );
+      }
+      for (const intent of saved.intents) {
+        if (!intents.some((row) => row.id === intent.id)) intents.unshift(intent);
+      }
+    }
+  }
   ensureDemoNeedsYou();
   ensureEngineUsageStubs();
   const persisted = await listPersistedUsers();
@@ -159,10 +174,9 @@ export async function hydrateStore() {
 export async function persistEngineStore() {
   const engine = engineState();
   await writeDurableJournal({
-    deals: engine.deals.filter((deal) => deal.id !== DEMO_NEEDS_YOU_ID),
-    events: engine.events.filter((event) => event.dealId !== DEMO_NEEDS_YOU_ID),
-    usage: (engine.usage ?? []).filter((row) => row.dealId !== DEMO_NEEDS_YOU_ID),
-    intents: intents.slice(),
+    deals: engine.deals,
+    events: engine.events,
+    usage: engine.usage ?? [],
   });
 }
 
@@ -205,16 +219,12 @@ function materializeRunDeal(
   return deal;
 }
 
-const softwareTemplate =
-  JOHN_INTENT_TEMPLATES.find((item) => item.id === "software") ??
-  JOHN_INTENT_TEMPLATES[0];
-
 const intents: Intent[] = [
   {
     id: "intent_software",
     userId: SEED_OWNER.id,
-    summary: softwareTemplate.summary,
-    categories: [...softwareTemplate.categories],
+    summary: JOHN_INTENT_TEMPLATES[0].summary,
+    categories: [...JOHN_INTENT_TEMPLATES[0].categories],
     maxPriceUsd: SPEND_HARD_GATE_USD,
     status: "active",
     createdAt: "2026-09-04T18:00:00Z",
@@ -222,8 +232,8 @@ const intents: Intent[] = [
   {
     id: "intent_software_domain",
     userId: SEED_OWNER.id,
-    summary:
-      "Find a software product and a transferable domain that matches it.",
+    summary: JOHN_INTENT_TEMPLATES.find((item) => item.id === "software_domain")
+      ?.summary ?? JOHN_INTENT_TEMPLATES[0].summary,
     categories: ["software", "domain"],
     maxPriceUsd: SPEND_HARD_GATE_USD,
     status: "active",
@@ -239,15 +249,6 @@ const intents: Intent[] = [
     createdAt: "2026-09-11T14:00:00Z",
   },
 ];
-
-function rememberIntents(rows: Intent[]) {
-  const ids = new Set(intents.map((row) => row.id));
-  for (const row of rows) {
-    if (ids.has(row.id)) continue;
-    intents.push(row);
-    ids.add(row.id);
-  }
-}
 
 function defaultSpendLimits(userId: string): SpendLimits {
   return {
@@ -364,13 +365,8 @@ export async function createSearchingDealFromRun(
   if (reused) {
     assertRunDealSoftHold(reused);
     ensureSearchingUsageStub(reused);
-    const thickened = await thickenEngineDealSearch(
-      reused,
-      listIntents(userId)[0],
-      userId,
-    );
     await persistEngineStore();
-    return thickened;
+    return reused;
   }
 
   const intent = listIntents(userId)[0];
@@ -398,7 +394,7 @@ export async function createSearchingDealFromRun(
     createdAt: deal.openedAt,
   });
   await persistEngineStore();
-  return thickenEngineDealSearch(deal, intent, userId);
+  return deal;
 }
 
 export async function createSearchingDealFromIntent(
@@ -406,7 +402,7 @@ export async function createSearchingDealFromIntent(
   userId = SEED_OWNER.id,
   email?: string | null,
 ): Promise<Deal> {
-  await hydrateStore();
+  await hydrateStore(userId);
   const title = intent.summary.slice(0, 80);
   const existing = engineState().deals.find(
     (deal) =>
@@ -417,9 +413,13 @@ export async function createSearchingDealFromIntent(
   if (existing) {
     assertRunDealSoftHold(existing);
     ensureSearchingUsageStub(existing);
-    const thickened = await thickenEngineDealSearch(existing, intent, userId);
+    if (intent.listingUrl) {
+      await attachListingUrl(existing, intent.listingUrl, userId);
+    }
+    await ensureHuntThread(existing);
     await persistEngineStore();
-    return thickened;
+    await saveOpenedHunt(intent, existing, listDealEvents(existing.id));
+    return existing;
   }
 
   const id = `deal_run_${crypto.randomUUID().slice(0, 8)}`;
@@ -427,6 +427,10 @@ export async function createSearchingDealFromIntent(
   assertRunDealSoftHold(deal);
   rememberEngineDeal(deal, seedRunDealEvents(deal, email));
   ensureSearchingUsageStub(deal);
+  if (intent.listingUrl) {
+    await attachListingUrl(deal, intent.listingUrl, userId);
+  }
+  await ensureHuntThread(deal);
   auditLogs.unshift({
     id: `aud_${crypto.randomUUID().slice(0, 8)}`,
     userId,
@@ -434,28 +438,129 @@ export async function createSearchingDealFromIntent(
     entityType: "deal",
     entityId: deal.id,
     metadata: {
-      status: "Searching",
+      status: deal.status,
       intentId: intent.id,
       email: email ?? null,
       templateId: intent.templateId ?? null,
+      listingUrl: intent.listingUrl ?? null,
     },
     createdAt: deal.openedAt,
   });
   await persistEngineStore();
-  return thickenEngineDealSearch(deal, intent, userId);
+  await saveOpenedHunt(intent, deal, listDealEvents(deal.id));
+  return deal;
 }
 
-async function thickenEngineDealSearch(
-  deal: Deal,
-  intent: Intent | undefined,
-  userId: string,
-) {
-  const { applyDealSearchPipeline } = await import("@/lib/connectors/deal-search");
-  return applyDealSearchPipeline({
-    deal,
-    intent: intent ?? null,
-    userId,
+async function attachListingUrl(deal: Deal, listingUrl: string, userId: string) {
+  const fetched = await fetchPublicListing(listingUrl);
+  const at = new Date().toISOString();
+  if (!fetched.ok) {
+    appendDealEvent({
+      dealId: deal.id,
+      type: "search",
+      stage: "search",
+      title: "Listing URL failed",
+      detail: fetched.error,
+      at,
+      status: "blocked",
+      actor: "engine",
+      toStatus: "Searching",
+    });
+    deal.blockers = [...deal.blockers, fetched.error];
+    deal.timeline = [
+      ...deal.timeline,
+      {
+        id: `ev_${deal.id}_url_fail`,
+        stage: "search",
+        title: "Could not read listing",
+        detail: fetched.error,
+        at,
+        status: "blocked",
+      },
+    ];
+    rememberEngineDeal(deal, []);
+    return;
+  }
+  const { listing } = fetched;
+  const listed = listing.listedUsd;
+  const overGate =
+    listed != null && listed > SPEND_HARD_GATE_USD
+      ? `Listed ask ${listed} is over the $1,000 spend gate. Unverified. Needs you before any chase spend.`
+      : null;
+  deal.marketplace = listing.boardId;
+  deal.title = listing.title.slice(0, 80);
+  deal.notes = [
+    deal.notes,
+    `Listing ${listing.url}`,
+    listed != null ? `Listed ask $${listed} · unverified · not booked as spend.` : null,
+    overGate,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  appendDealEvent({
+    dealId: deal.id,
+    type: "search",
+    stage: "search",
+    title: `Found on ${listing.boardLabel}`,
+    detail: `${listing.title}${listed != null ? ` · listed $${listed} unverified` : ""} · ${listing.url}`,
+    at,
+    status: "done",
+    actor: "engine",
+    fromStatus: "Searching",
+    toStatus: "Found",
   });
+  try {
+    transitionDeal(deal.id, "Found", userId);
+  } catch {
+    /* stay Searching if transition rejected */
+  }
+  if (overGate) {
+    deal.blockers = [...deal.blockers, overGate];
+  }
+}
+
+
+const AGENT_HELLO =
+  "Got it. I'll post updates in this thread. I won't spend anything until you approve.";
+
+export async function ensureHuntThread(deal: Deal) {
+  const id = `evt_${deal.id}_hello`;
+  if (listDealEvents(deal.id).some((event) => event.id === id)) return;
+  appendDealEvent({
+    id,
+    dealId: deal.id,
+    type: "note",
+    stage: "search",
+    title: "Agent",
+    detail: AGENT_HELLO,
+    at: deal.openedAt,
+    status: "active",
+    actor: "agent",
+  });
+  await persistEngineStore();
+}
+
+export async function addUserHuntNote(
+  dealId: string,
+  userId: string,
+  text: string,
+  asAdmin = false,
+) {
+  await hydrateStore(userId);
+  const deal = getDeal(dealId, userId, asAdmin);
+  if (!deal) return null;
+  const event = appendDealEvent({
+    dealId,
+    type: "note",
+    title: "You",
+    detail: text.trim(),
+    at: new Date().toISOString(),
+    status: "done",
+    actor: "you",
+  });
+  await persistEngineStore();
+  await saveHuntEvent(event);
+  return event;
 }
 
 export function listDirectoryUsers(): User[] {
@@ -554,12 +659,7 @@ export function transitionDeal(
   ];
   if (deal.source === "engine") {
     rememberEngineDeal(deal, []);
-    void persistEngineStore().catch((error) => {
-      console.error(
-        "[store] persist after transition failed",
-        error instanceof Error ? error.message : error,
-      );
-    });
+    void persistEngineStore();
   }
   return deal;
 }
@@ -588,6 +688,7 @@ export function addIntent(
     templateId: input.templateId ?? null,
     mustInclude: input.mustInclude ?? null,
     avoid: input.avoid ?? null,
+    listingUrl: input.listingUrl ?? null,
   };
   intents.unshift(intent);
   auditLogs.unshift({
