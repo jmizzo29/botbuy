@@ -453,11 +453,11 @@ body {
 .bb-land-story-index {
   flex: 0 0 auto;
   min-width: 1.5rem;
-  font-size: 0.8125rem;
-  font-weight: 550;
-  letter-spacing: -0.02em;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   line-height: 1.4;
-  color: rgba(255, 255, 255, 0.42);
+  color: #2dd4bf;
   font-variant-numeric: tabular-nums;
 }
 
@@ -543,9 +543,10 @@ body {
   }
 
   .bb-land-h1 {
-    font-size: 2.25rem;
+    /* 30px — "Your AI agent for buying," stays one line on 390. */
+    font-size: 1.875rem;
     font-weight: 600;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.042em;
     line-height: 1.12;
   }
 
@@ -639,12 +640,19 @@ body {
     margin-top: 0;
   }
 
+  .bb-land-signup,
+  .bb-land-cta [data-cta="land-signup"] {
+    width: auto;
+    min-width: 200px;
+  }
+
   .bb-land-story {
     max-width: none;
     margin-top: 0.35rem;
     padding: 0.15rem 1.35rem;
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 12px;
+    border-radius: 8px;
     border-top: 1px solid rgba(255, 255, 255, 0.10);
   }
 

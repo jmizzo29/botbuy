@@ -779,6 +779,12 @@ assert(css.includes(".bb-atm-richer-mesh-deep::before"), "A1 richer-mesh-deep at
 assert(css.includes("rgba(42,125,158,0.42)"), "A1 richer-mesh-deep teal blob stays for auth");
 assert(!css.includes(".bb-land-watermark") && !css.includes(".bb-mark-watermark"), "L1 CSS dropped the watermark");
 assert(!css.includes(".bb-land-jewelry") && !css.includes(".jewelry"), "L1 HARDEN deleted jewelry CSS");
+assert(
+  !existsSync(join(root, "app/phone-theme.css")) &&
+    !/bb-land-copy[\s\S]{0,240}(?:width|height):\s*1px/.test(css) &&
+    !/clip:\s*rect\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0\s*\)/.test(css),
+  "no phone-theme clip hides land copy or fold CTA",
+);
 assert(css.includes(".bb-land-panel") && css.includes("z-index: 1"), "panel stays above the navy field");
 assert(css.includes("background: #0b1f3a"), "L1 land stage is flat navy");
 assert(!css.includes("rgba(5, 10, 12, 0.38)"), "L1 killed the #050A0C scrim slab");
