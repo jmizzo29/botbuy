@@ -389,7 +389,7 @@ export async function createSearchingDealFromRun(
   userId = SEED_OWNER.id,
   email?: string | null,
 ): Promise<Deal> {
-  await hydrateStore();
+  await hydrateStore(userId);
   const reused = openSearchingEngineDeal(userId);
   if (reused) {
     assertRunDealSoftHold(reused);

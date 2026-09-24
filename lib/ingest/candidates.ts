@@ -89,7 +89,25 @@ export function ingestDealId(marketplace: string, url: string) {
 
 export function listingStatusFromNotes(notes: string | null | undefined) {
   const match = notes?.match(/listing_status=([a-z_]+)/);
-  return match?.[1] ?? null;
+  const status = match?.[1] ?? null;
+  return status && (LISTING_STATUSES as readonly string[]).includes(status)
+    ? (status as ListingStatus)
+    : null;
+}
+
+export function listingStatusLabel(status: string | null | undefined) {
+  switch (status) {
+    case "new":
+      return "New listing";
+    case "price_cut":
+      return "Price cut";
+    case "ended":
+      return "Listing ended";
+    case "sold":
+      return "Listing sold";
+    default:
+      return null;
+  }
 }
 
 const hits = new Map<string, number[]>();

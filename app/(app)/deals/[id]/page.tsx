@@ -37,6 +37,7 @@ import {
   verifiedSpendUsd,
 } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
+import { ImportedListing } from "@/components/imported-listing";
 import { DealCandidates } from "@/components/deal-candidates";
 import { readSearchActHandoff } from "@/lib/connectors/search-handoff";
 import { runVerificationStub } from "@/lib/verification";
@@ -178,6 +179,8 @@ export default async function DealDetailPage({
         <span>price_verified={String(deal.priceVerified)}</span>
         {deal.evidencePath ? <span>evidence={deal.evidencePath}</span> : null}
       </div>
+
+      <ImportedListing deal={deal} />
 
       {searchHandoff ? <DealCandidates handoff={searchHandoff} /> : null}
 

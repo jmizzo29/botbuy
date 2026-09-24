@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { POST } from "../app/api/ingest/candidates/route";
+import { readFileSync } from "node:fs";
 import {
   INGEST_MAX_BYTES,
   INGEST_MAX_PER_MINUTE,
@@ -9,6 +10,8 @@ import {
   ingestDealId,
   ingestRateLimit,
   ingestTokensMatch,
+  listingStatusFromNotes,
+  listingStatusLabel,
   readIngestBearer,
   resetIngestRateLimit,
 } from "../lib/ingest/candidates";
@@ -132,5 +135,24 @@ for (let i = 0; i < INGEST_MAX_PER_MINUTE; i += 1) {
   assert.equal(ingestRateLimit("smoke"), true);
 }
 assert.equal(ingestRateLimit("smoke"), false);
+
+assert.equal(listingStatusFromNotes(built.deal.notes), "price_cut");
+assert.equal(listingStatusFromNotes("listing_status=nope"), null);
+assert.equal(listingStatusLabel("sold"), "Listing sold");
+assert.equal(listingStatusLabel("ended"), "Listing ended");
+assert.equal(listingStatusLabel(null), null);
+
+const statusRoute = readFileSync(
+  new URL("../app/api/deals/[id]/status/route.ts", import.meta.url),
+  "utf8",
+);
+assert.match(statusRoute, /hydrateStore\(gated\.user\.id\)/);
+assert.match(statusRoute, /saveDealTransition/);
+const dealPage = readFileSync(
+  new URL("../app/(app)/deals/[id]/page.tsx", import.meta.url),
+  "utf8",
+);
+assert.match(dealPage, /ImportedListing/);
+assert.match(dealPage, /DealApproveActions/);
 
 console.log("ingest-candidates-smoke ok");

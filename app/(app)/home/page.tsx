@@ -15,6 +15,10 @@ import {
   MY_DEALS_QUIET_IDLE,
 } from "@/lib/john-ux";
 import { isVerifiedAmount, amountCopy } from "@/lib/deal-ui";
+import {
+  listingStatusFromNotes,
+  listingStatusLabel,
+} from "@/lib/ingest/candidates";
 import { hydrateStore, listDeals, listVaultRefs, verifiedSpendUsd } from "@/lib/store";
 import { formatUsd } from "@/lib/money";
 import { remainingAfterVerified } from "@/lib/spend-policy";
@@ -61,7 +65,9 @@ export default async function HomePage() {
 
       {deals.length ? (
         <ul className="mt-5 grid list-none gap-3 p-0">
-          {deals.map((deal) => (
+          {deals.map((deal) => {
+            const listing = listingStatusLabel(listingStatusFromNotes(deal.notes));
+            return (
             <li key={deal.id}>
               <Link
                 href={`/deals/${deal.id}`}
@@ -70,6 +76,7 @@ export default async function HomePage() {
                 <div className="min-w-0">
                   <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55">
                     {deal.status}
+                    {listing ? ` · ${listing}` : ""}
                   </p>
                   <p className="mt-1 text-xl font-semibold leading-tight tracking-tight text-white">
                     {deal.title}
@@ -86,7 +93,8 @@ export default async function HomePage() {
                 <ChevronRight className="mt-1 size-5 shrink-0 text-white/40" />
               </Link>
             </li>
-          ))}
+            );
+          })}
         </ul>
       ) : (
         <div

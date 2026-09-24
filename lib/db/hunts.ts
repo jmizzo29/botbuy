@@ -182,6 +182,27 @@ export async function saveOpenedHunt(
   }
 }
 
+export async function saveDealTransition(deal: Deal, event: DealEvent) {
+  const db = getDb();
+  if (!db) return;
+  await ensureHuntTables();
+  const [row] = await db
+    .select({ id: deals.id, userId: deals.userId })
+    .from(deals)
+    .where(eq(deals.id, deal.id))
+    .limit(1);
+  if (!row || row.userId !== deal.userId) return;
+  await db
+    .update(deals)
+    .set({
+      status: deal.status,
+      closedAt: stamp(deal.closedAt),
+      updatedAt: new Date(),
+    })
+    .where(eq(deals.id, deal.id));
+  await saveHuntEvent(event);
+}
+
 export async function saveHuntEvent(event: DealEvent) {
   const db = getDb();
   if (!db) return;
