@@ -1364,6 +1364,23 @@ body {
   }
 }
 
+/* Unlayered so it wins over `* { border-color: var(--line) }` (light-theme black). */
+.bb-app-phone [data-quiet-list="needs"] {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bb-app-phone [data-quiet-list="needs"] > li {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.bb-app-phone [data-quiet-list="needs"] > li:last-child {
+  border-bottom-color: transparent;
+}
+
+.bb-app-phone [data-quiet-list="needs"] button {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
 @media (min-width: 768px) {
   .bb-app-phone main:has([data-surface="quiet-desk"]) {
     max-width: none;

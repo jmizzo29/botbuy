@@ -61,21 +61,42 @@ function DeskHeading({
   title,
   sub,
   extra,
+  tone = "desk",
 }: {
   title: string;
   sub: string;
   extra?: ReactNode;
+  tone?: "desk" | "needs";
 }) {
+  const needs = tone === "needs";
   return (
     <header>
-      <h1 className="text-[22px] font-semibold leading-tight tracking-tight text-white md:text-[1.65rem]">
+      <h1
+        className={
+          needs
+            ? "mb-1 text-[18px] font-medium leading-tight tracking-[-0.03em] text-white md:mb-0 md:text-[1.65rem] md:font-semibold md:tracking-tight"
+            : "text-[22px] font-semibold leading-tight tracking-tight text-white md:text-[1.65rem]"
+        }
+      >
         {title}
       </h1>
-      <p className="mt-1 max-w-3xl text-[13px] leading-snug text-white/70 md:mt-1.5 md:text-sm md:leading-relaxed">
+      <p
+        className={
+          needs
+            ? "max-w-3xl text-[12px] leading-[1.35] text-white/50 md:mt-1.5 md:text-sm md:leading-relaxed md:text-white/70"
+            : "mt-1 max-w-3xl text-[13px] leading-snug text-white/70 md:mt-1.5 md:text-sm md:leading-relaxed"
+        }
+      >
         {sub}
       </p>
       {extra ? (
-        <div className="mt-0.5 text-[13px] leading-snug text-white/70 md:mt-1 md:text-sm">
+        <div
+          className={
+            needs
+              ? "mt-1.5 text-[11px] leading-[1.35] text-white/[0.42] md:mt-1 md:text-sm md:text-white/70"
+              : "mt-0.5 text-[13px] leading-snug text-white/70 md:mt-1 md:text-sm"
+          }
+        >
           {extra}
         </div>
       ) : null}
@@ -245,6 +266,76 @@ export function QuietSearchesList({ rows }: { rows: QuietRow[] }) {
   );
 }
 
+const needPair =
+  "inline-flex h-8 w-[5.75rem] shrink-0 items-center justify-center rounded-[8px] px-3.5 text-[12px] font-semibold";
+
+function NeedPhoneActions({ row }: { row: QuietRow }) {
+  if (row.live) {
+    return (
+      <DealApproveActions
+        quiet
+        flow="row"
+        dealId={row.id}
+        status="Needs you"
+        title={row.title}
+        spend={row.amount}
+      />
+    );
+  }
+  const approveClass = `${needPair} bg-[#2DD4BF] text-[#042F2E]`;
+  return (
+    <div className="flex gap-2">
+      {row.href ? (
+        <Link href={row.href} className={approveClass}>
+          {QUIET_APPROVE}
+        </Link>
+      ) : (
+        <button type="button" className={approveClass}>
+          {QUIET_APPROVE}
+        </button>
+      )}
+      <button
+        type="button"
+        className={`${needPair} border border-white/[0.28] bg-transparent text-white/[0.88]`}
+      >
+        {QUIET_REJECT}
+      </button>
+    </div>
+  );
+}
+
+function NeedPhoneRow({ row }: { row: QuietRow }) {
+  const title = row.href ? (
+    <Link
+      href={row.href}
+      className="mb-1.5 block text-[13px] font-medium tracking-[-0.02em] text-white/[0.92]"
+    >
+      {row.title}
+    </Link>
+  ) : (
+    <p className="mb-1.5 text-[13px] font-medium tracking-[-0.02em] text-white/[0.92]">
+      {row.title}
+    </p>
+  );
+  return (
+    <li className="border-b border-white/[0.08] p-3 last:border-b-0">
+      {title}
+      <div className="mb-2.5 flex flex-wrap items-center gap-1.5">
+        <span className="inline-flex h-[18px] items-center rounded-[6px] border border-[#2DD4BF] bg-[#2DD4BF] px-[7px] text-[10px] font-semibold text-[#042F2E]">
+          {row.chip}
+        </span>
+        {row.example ? (
+          <span className="inline-flex h-[18px] items-center rounded-[6px] border border-[#E8B84A]/35 bg-[#E8B84A]/[0.08] px-[7px] text-[10px] font-semibold text-[#E8B84A]/95">
+            {QUIET_EXAMPLE_CHIP}
+          </span>
+        ) : null}
+        <span className="text-[11px] text-white/[0.52]">{row.amount}</span>
+      </div>
+      <NeedPhoneActions row={row} />
+    </li>
+  );
+}
+
 function PairActions({ row }: { row: QuietRow }) {
   if (row.live) {
     return (
@@ -283,39 +374,19 @@ export function QuietNeedsList({ rows }: { rows: QuietRow[] }) {
   return (
     <div data-surface="quiet-desk" data-quiet="needs">
       <DeskHeading
+        tone="needs"
         title={QUIET_NEEDS_TITLE}
         sub={QUIET_NEEDS_POP_SUB}
         extra={QUIET_CHARGE_MICRO}
       />
-      <div className="mt-3 grid gap-2 md:hidden">
+      <ul
+        data-quiet-list="needs"
+        className="mt-3.5 list-none overflow-hidden rounded-[8px] border border-white/10 bg-white/[0.03] p-0 md:hidden"
+      >
         {rows.map((row) => (
-          <article
-            key={row.id}
-            className="rounded-[8px] border border-white/[0.12] bg-white/[0.03] px-3 py-2.5"
-          >
-            {row.href ? (
-              <Link
-                href={row.href}
-                className="text-[14px] font-medium leading-5 tracking-tight text-white"
-              >
-                {row.title}
-              </Link>
-            ) : (
-              <p className="text-[14px] font-medium leading-5 tracking-tight text-white">
-                {row.title}
-              </p>
-            )}
-            <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-              <StatusChip label={row.chip} />
-              {row.example ? <ExampleChip>{QUIET_EXAMPLE_CHIP}</ExampleChip> : null}
-              <span className="text-[12px] text-white/55">{row.amount}</span>
-            </div>
-            <div className="mt-2">
-              <PairActions row={row} />
-            </div>
-          </article>
+          <NeedPhoneRow key={row.id} row={row} />
         ))}
-      </div>
+      </ul>
       <div className="mt-4 hidden overflow-x-auto rounded-[8px] border border-white/10 bg-white/[0.03] md:block">
         <table className="w-full min-w-[56rem] text-left text-sm">
           <thead>
