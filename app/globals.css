@@ -273,13 +273,21 @@ body {
 }
 
 .bb-land-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  /* 14px word link. 44px hit area; negative margin keeps the 28px lockup chrome. */
+  min-height: 44px;
+  margin-block: -8px;
   font-size: 14px;
   line-height: 1.2;
   color: rgba(255, 255, 255, 0.90);
   background: none;
   border: 0;
   border-radius: 0;
-  padding: 0;
+  padding: 0 0.25rem;
   box-shadow: none;
   text-underline-offset: 0.22em;
   text-decoration-thickness: 1px;
@@ -290,7 +298,8 @@ body {
   font-size: 14px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.90);
-  padding: 0;
+  min-height: 44px;
+  padding: 0 0.25rem;
   letter-spacing: -0.01em;
   text-decoration: none;
 }
@@ -508,21 +517,27 @@ body {
   border: 1.5px solid #2DD4BF;
 }
 
-/* C3 fold micro — muted text link, not a second button. */
+/* C3 fold micro — muted 14px word link, not a second button or a jewel pill. */
 .bb-land-login {
+  position: relative;
   flex: 0 0 auto;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
   width: auto;
-  min-width: 0;
+  min-width: 44px;
   max-width: none;
-  min-height: 0;
+  /* Readable 14px type. 44px target; negative margin keeps the micro gap under the CTA. */
+  min-height: 44px;
   height: auto;
-  margin: 0;
-  padding: 0;
+  margin-block: -12px;
+  margin-inline: 0;
+  padding: 0 0.15rem;
   border: 0;
   border-radius: 0;
   background: none;
   box-shadow: none;
-  display: inline;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.01em;
