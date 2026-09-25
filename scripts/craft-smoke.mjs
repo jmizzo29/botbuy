@@ -539,7 +539,12 @@ assert(!chrome.includes("bb-land-footer"), "land has no footer chrome strip");
 assert(!chrome.includes("<Button"), "land overlay nav has no Button pills");
 assert(!chrome.includes("rounded-full"), "land overlay nav has no pill radius");
 assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
-assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuyer only moves when you approve."), "go-live approve micro");
+assert(
+  goLive.includes("APPROVE_MICRO") ||
+    goLive.includes("BotBuyer only moves when you approve.") ||
+    read("lib/golive-quiet.ts").includes("BotBuyer only runs what you approve."),
+  "go-live approve micro",
+);
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
 assert(existsSync(join(root, "public/brand/logo-soft-spine/botbuyer-logo-header.svg")), "soft-spine header lockup committed");
 assert(existsSync(join(root, "public/brand/logo-soft-spine/botbuyer-logo-header-light.svg")), "soft-spine light header committed");
@@ -1761,6 +1766,40 @@ assert(!vaultQuiet.toLowerCase().includes("wallet"), "vault copy has no wallet t
 assert(!vaultQuietUi.toLowerCase().includes("gmv"), "vault UI has no GMV");
 assert(!vaultQuiet.includes("Fund your vault"), "vault quiet dropped Fund your vault");
 assert(shell.includes("vaultDesk"), "Vault chrome hides the search CTA");
+
+const goliveQuiet = read("lib/golive-quiet.ts");
+const goliveUi = read("components/golive-quiet.tsx");
+const goliveChrome = read("components/golive-chrome.tsx");
+const goliveCraft = read("app/craft/golive/page.tsx");
+const goliveCss = read("app/globals.css");
+assert(goliveCraft.includes("panel=incomplete") || goliveCraft.includes("golivePanelOf"), "craft golive panel query");
+assert(goliveCraft.includes("?panel="), "craft golive switches incomplete ready running");
+assert(goliveQuiet.includes('GOLIVE_INCOMPLETE_TITLE = "Go live"'), "golive incomplete title");
+assert(goliveQuiet.includes('GOLIVE_READY_TITLE = "Ready to run"'), "golive ready title");
+assert(goliveQuiet.includes('GOLIVE_RUNNING_TITLE = "BotBuyer is searching"'), "golive running title");
+assert(goliveQuiet.includes("BotBuyer only runs what you approve."), "golive honesty approve");
+assert(goliveQuiet.includes("Nothing is charged until you approve a deal."), "golive honesty charge");
+assert(goliveQuiet.includes('GOLIVE_AUTO_OFF = "Auto-approve off."'), "golive auto-approve off");
+assert(goliveQuiet.includes("EXAMPLE · not CHO-verified"), "golive EXAMPLE chip");
+assert(goliveQuiet.includes("Visa · •••• 4242"), "golive masked method");
+assert(goliveQuiet.includes('GOLIVE_ADD_METHOD = "Add payment method"'), "golive add payment method");
+assert(goliveQuiet.includes('GOLIVE_VIEW_SEARCHES = "View searches"'), "golive view searches");
+assert(goliveQuiet.includes("Mid-market SaaS · ARR $2–8M"), "golive example intent");
+assert(goliveQuiet.includes("$25,000 / month"), "golive example spend limit");
+assert(goliveUi.includes("GOLIVE_VIEW_SEARCHES") && goliveUi.includes("GOLIVE_EXAMPLE_CHIP"), "golive UI locked copy");
+assert(goliveUi.includes('data-golive="run-muted"'), "golive muted Run");
+assert(goliveChrome.includes("botbuyer-mark-reverse.svg"), "golive soft-spine reverse mark");
+assert(goliveChrome.includes(">BotBuyer<") || goliveChrome.includes("bb-golive-word"), "golive wordmark BotBuyer");
+assert(!goliveChrome.includes("phone-tabs") && !goliveUi.includes("grid-cols-4"), "golive is not a fifth tab");
+assert(!goliveQuiet.toLowerCase().includes("deposit"), "golive copy has no deposit theater");
+assert(!goliveQuiet.toLowerCase().includes("holding balance"), "golive copy has no holding balance");
+assert(!goliveQuiet.includes("autoApprove: true"), "golive auto-approve stays off");
+assert(!goliveUi.includes("rounded-full") && !goliveChrome.includes("rounded-full"), "golive controls are not pills");
+assert(goliveCss.includes(".bb-golive") && goliveCss.includes("#2dd4bf") && goliveCss.includes("#042f2e"), "golive teal tokens");
+assert(goLive.includes("GoliveQuiet") && goLive.includes("goliveFromAccount"), "signed-in go-live is Quiet Capital");
+assert(read("app/onboarding/go-live/actions.ts").includes("panel=running"), "go-live success stays on running before searches");
+assert(goliveCss.includes('[data-surface="public-shell"]:has(.bb-golive) header'), "go-live hides public chrome");
+assert(!read("middleware.ts").includes("x-bb-path"), "go-live does not rewrite Clerk middleware");
 
 if (failures.length) {
   console.error("craft-smoke FAIL");
