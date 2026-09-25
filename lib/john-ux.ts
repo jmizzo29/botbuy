@@ -9,11 +9,14 @@ export const INTENT_SUB = "Pick a starter or describe it yourself." as const;
 export const INTENT_CTA = "Start search" as const;
 export const INTENT_TEXTAREA_LABEL = "Describe what you want" as const;
 export const INTENT_TEXTAREA_PLACEHOLDER =
-  "A car, a house, a consumer product, software, a domain — or anything else." as const;
+  "A SaaS tool, a software license, or a product plus its domain." as const;
 export const INTENT_HELPERS_LABEL = "Optional details" as const;
 export const INTENT_MAX_PRICE_LABEL = "Max price" as const;
 export const INTENT_MUST_INCLUDE_LABEL = "Must include" as const;
 export const INTENT_AVOID_LABEL = "Avoid" as const;
+export const INTENT_LISTING_URL_LABEL = "Listing URL" as const;
+export const INTENT_LISTING_URL_HINT =
+  "Optional. Paste a Flippa, Craigslist, or Acquire listing. BotBuyer reads it. Spend stays gated." as const;
 export const INTENT_MAX_PRICE_HINT = "Optional. Your spend limit still applies." as const;
 
 export const MY_DEALS_EMPTY_TITLE = "Nothing searching yet" as const;

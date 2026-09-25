@@ -2,10 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ActOnBehalfPrep } from "@/components/act-on-behalf-prep";
 import { AuthorizedBuyPrep } from "@/components/authorized-buy-prep";
-import { HonestyFlag } from "@/components/honesty-flag";
 import { DealApproveActions } from "@/components/deal-approve-actions";
+import { HonestyFlag } from "@/components/honesty-flag";
+import { HuntThread } from "@/components/hunt-thread";
 import { DealBadges } from "@/components/deal-badges";
-import { DealCandidates } from "@/components/deal-candidates";
 import { DealAmount } from "@/components/money";
 import { StatusControls } from "@/components/status-controls";
 import { StatusPill } from "@/components/status-pill";
@@ -14,6 +14,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivateAgents } from "@/components/activate-agents";
 import { SearchingEmpty } from "@/components/empty-ctas";
 import { requireUser } from "@/lib/auth";
+import {
+  ACT_ON_BEHALF_PREPARED_NOT_REGISTERED,
+  ACT_ON_BEHALF_PREPARED_NOT_SENT,
+} from "@/lib/act-copy";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { getAgentOrg } from "@/lib/agent-runtime";
@@ -24,6 +28,7 @@ import { remainingAfterVerified, SPEND_HARD_GATE_USD } from "@/lib/spend-policy"
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 import {
   ensureSearchingUsageStub,
+  ensureHuntThread,
   getDeal,
   hydrateStore,
   listDealEvents,
@@ -32,10 +37,8 @@ import {
   verifiedSpendUsd,
 } from "@/lib/store";
 import { formatDateTime } from "@/lib/utils";
-import {
-  ACT_ON_BEHALF_PREPARED_NOT_REGISTERED,
-  ACT_ON_BEHALF_PREPARED_NOT_SENT,
-} from "@/lib/act-copy";
+import { ImportedListing } from "@/components/imported-listing";
+import { DealCandidates } from "@/components/deal-candidates";
 import { readSearchActHandoff } from "@/lib/connectors/search-handoff";
 import { runVerificationStub } from "@/lib/verification";
 import type { DealEvent } from "@/lib/types";
@@ -48,8 +51,8 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await hydrateStore();
   const user = await requireUser();
+  await hydrateStore(user.id);
   const deal = getDeal(id, user.id, user.role === "admin");
   return { title: deal?.title ?? "Deal" };
 }
@@ -60,15 +63,39 @@ export default async function DealDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await hydrateStore();
   const user = await requireUser();
+  await hydrateStore(user.id);
   const deal = getDeal(id, user.id, user.role === "admin");
   if (!deal) notFound();
   if (deal.source === "engine") {
     ensureSearchingUsageStub(deal);
   }
+  await ensureHuntThread(deal);
   const dealEvents = listDealEvents(deal.id);
-  const candidates = readSearchActHandoff(dealEvents);
+  const searchHandoff = readSearchActHandoff(dealEvents);
+  const thread = dealEvents.flatMap((event) => {
+    if (event.type === "note" && (event.actor === "you" || event.actor === "agent")) {
+      return [
+        {
+          id: event.id,
+          from: event.actor === "you" ? ("you" as const) : ("agent" as const),
+          text: event.detail,
+          at: formatDateTime(event.at),
+        },
+      ];
+    }
+    if (event.type === "search" && event.title !== "Searching") {
+      return [
+        {
+          id: event.id,
+          from: "agent" as const,
+          text: `${event.title}. ${event.detail}`,
+          at: formatDateTime(event.at),
+        },
+      ];
+    }
+    return [];
+  });
   const verification = runVerificationStub(deal);
   const usage = listUsageEvents(deal.id);
   const remaining = formatUsd(remainingAfterVerified(verifiedSpendUsd(deal.userId)));
@@ -81,9 +108,7 @@ export default async function DealDetailPage({
 
   return (
     <div className="space-y-6">
-      {deal.source === "engine" && deal.status === "Searching" ? (
-        <PersistRunDeal dealId={deal.id} />
-      ) : null}
+      {deal.source === "engine" ? <PersistRunDeal dealId={deal.id} /> : null}
       <div>
         <p className="text-xs text-muted">
           <Link href={MY_DEALS_HREF} className="hover:text-foreground">
@@ -104,6 +129,8 @@ export default async function DealDetailPage({
         ) : null}
       </div>
 
+      <HuntThread dealId={deal.id} messages={thread} />
+
       <Card>
         <CardContent className="grid gap-8 pt-6 md:grid-cols-2">
           <div>
@@ -121,6 +148,8 @@ export default async function DealDetailPage({
               Every deal needs your approval · auto-approve OFF
             </p>
             <div className="mt-6">
+              <ActOnBehalfPrep dealId={deal.id} status={deal.status} />
+              <AuthorizedBuyPrep dealId={deal.id} status={deal.status} />
               <DealApproveActions
                 dealId={deal.id}
                 status={deal.status}
@@ -129,8 +158,6 @@ export default async function DealDetailPage({
                 remaining={`Remaining ${remaining}`}
                 payment={payment}
               />
-              <ActOnBehalfPrep dealId={deal.id} status={deal.status} />
-              <AuthorizedBuyPrep dealId={deal.id} status={deal.status} />
             </div>
           </div>
           <div>
@@ -153,7 +180,9 @@ export default async function DealDetailPage({
         {deal.evidencePath ? <span>evidence={deal.evidencePath}</span> : null}
       </div>
 
-      {candidates ? <DealCandidates handoff={candidates} /> : null}
+      <ImportedListing deal={deal} />
+
+      {searchHandoff ? <DealCandidates handoff={searchHandoff} /> : null}
 
       {deal.status === "Searching" ? <SearchingEmpty /> : null}
 
@@ -176,7 +205,12 @@ export default async function DealDetailPage({
         <ActivateAgents
           assetId={deal.id}
           assetTitle={deal.title}
-          activated={Boolean(getAgentOrg(deal.id)?.activated)}
+          activated={Boolean(
+            getAgentOrg(deal.id, {
+              userId: user.id,
+              asAdmin: user.role === "admin",
+            })?.activated,
+          )}
           imported={deal.source === "imported"}
         />
       ) : null}
@@ -244,7 +278,7 @@ export default async function DealDetailPage({
         </CardHeader>
         <CardContent>
           <ol className="space-y-0">
-            {dealEvents.map((event, index, all) => (
+            {listDealEvents(deal.id).map((event, index, all) => (
               <TimelineItem
                 key={event.id}
                 event={event}

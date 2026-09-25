@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { DealCard } from "@/components/deal-card";
 import { EmptyPanel } from "@/components/empty-ctas";
+import { Button } from "@/components/ui/button";
 import { requireUser } from "@/lib/auth";
 import { DEAL_STATUSES } from "@/lib/types";
 import { hydrateStore, listDeals } from "@/lib/store";
@@ -16,8 +18,8 @@ export default async function DealsPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await searchParams;
-  await hydrateStore();
   const user = await requireUser();
+  await hydrateStore(user.id);
   const deals = listDeals(user.id);
   const filtered =
     status && DEAL_STATUSES.includes(status as (typeof DEAL_STATUSES)[number])
@@ -52,8 +54,20 @@ export default async function DealsPage({
             <DealCard key={deal.id} deal={deal} />
           ))}
         </div>
+      ) : status === "Needs you" ? (
+        <EmptyPanel
+          title="Nothing needs you"
+          body="Hunts and scanner listings wait here until you approve or reject them. Auto-approve stays off."
+        >
+          <Button asChild variant="secondary">
+            <Link href="/intent">New hunt</Link>
+          </Button>
+        </EmptyPanel>
       ) : (
-        <EmptyPanel body="No deals in this status." />
+        <EmptyPanel
+          title="No deals in this status"
+          body="This filter is empty. Other hunts may still be on All."
+        />
       )}
     </div>
   );

@@ -19,7 +19,7 @@ export async function GET(
   const gated = await requireApiUser();
   if (gated.error) return gated.error;
   const { id } = await params;
-  await hydrateStore();
+  await hydrateStore(gated.user.id);
   const deal = getDeal(id, gated.user.id, gated.user.role === "admin");
   if (!deal) {
     return NextResponse.json({ error: "Deal not found" }, { status: 404 });
@@ -51,7 +51,7 @@ export async function POST(
   const gated = await requireApiUser();
   if (gated.error) return gated.error;
   const { id } = await params;
-  await hydrateStore();
+  await hydrateStore(gated.user.id);
   try {
     const prep = prepareAuthorizedBuy({
       userId: gated.user.id,

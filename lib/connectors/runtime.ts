@@ -45,7 +45,7 @@ export async function invokeConnectorTool(input: {
   dealId?: string | null;
   payload?: ConnectorToolInput;
 }): Promise<ConnectorToolResult> {
-  await hydrateStore();
+  await hydrateStore(input.userId);
   if (!providerSupportsTool(input.provider, input.tool)) {
     throw new ConnectorError(
       "This tool is not registered for that connector. Fail-closed.",

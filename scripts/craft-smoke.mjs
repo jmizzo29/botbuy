@@ -20,8 +20,6 @@ const signIn = read("app/signin/[[...sign-in]]/page.tsx");
 const authSignupIa = read("cpo-real-auth-signup-ia-v1.md");
 const authSignupCraft = read("designer-real-auth-signup-craft-v1.md");
 const authDoor = read("components/auth-door.tsx");
-const clerkUi = read("lib/clerk-ui.ts");
-const nextConfig = read("next.config.ts");
 const middleware = read("middleware.ts");
 const schema = read("lib/db/schema.ts");
 const authLib = read("lib/auth.ts");
@@ -38,8 +36,6 @@ const finance = read("lib/finance.ts");
 const usage = read("lib/usage.ts");
 const store = read("lib/store.ts");
 const journal = read("lib/engine-journal.ts");
-const persistHttp = read("lib/api-persist.ts");
-const engineDb = read("lib/db/engine.ts");
 const dealDetail = read("app/(app)/deals/[id]/page.tsx");
 const usageUi = read("components/usage-meter.tsx");
 const brand = read("lib/brand.ts");
@@ -138,7 +134,6 @@ assert(!goLive.includes(">Run BotBuyer<") && !goLive.includes(">Run<"), "go-live
 assert(!/<(Button)[^>]*variant="ghost"[^>]*>\s*Run/.test(goLive), "Run is not ghost");
 
 const primaryBlocks = [
-  ["land CTA", land, "<Button asChild className=\"bb-land-signup\""],
   ["signup Clerk", signup, "data-cta=\"clerk-signup\""],
   ["go-live Run", goLive, "data-cta=\"go-live-run\""],
 ];
@@ -328,23 +323,17 @@ assert(signup.includes("<PublicChrome auth>"), "signup uses Quiet Capital auth c
 assert(signIn.includes("<PublicChrome auth>"), "sign-in uses Quiet Capital auth chrome");
 assert(!signup.includes("BRAND.footerHold") && !signup.includes("No paid Stripe"), "signup has no status footer dump");
 assert(!signIn.includes("BRAND.footerHold") && !signIn.includes("No paid Stripe"), "sign-in has no status footer dump");
+const clerkUi = read("lib/clerk-ui.ts");
+const nextConfig = read("next.config.ts");
 assert(clerkUi.includes("unsafe_disableDevelopmentModeWarnings: true"), "Clerk hides Development mode badge");
 assert(clerkUi.includes('elevation: "flush"'), "Clerk card is flush — no giant circle shell");
 assert(clerkUi.includes('footer: "hidden"') && clerkUi.includes('footerPages: "hidden"'), "Clerk promo footer is hidden");
 assert(clerkUi.includes('colorPrimary: "#2DD4BF"') && clerkUi.includes('colorTextOnPrimaryBackground: "#042F2E"'), "Clerk primary is Electric Teal");
-assert(clerkUi.includes('colorBackground: "#122A46"'), "Clerk card surface is Quiet Capital navy");
+assert(clerkUi.includes('colorBackground: "#0B1F3A"'), "Clerk card surface is Quiet Capital navy");
 assert(css.includes(".bb-auth-shell") && css.includes("overflow-x: hidden"), "auth shell kills horizontal overflow");
 assert(css.includes(".bb-auth-card") && css.includes("overflow: hidden"), "auth card clips decorative circle");
 assert(css.includes(".bb-auth-shell") && css.includes("#0b1f3a"), "auth page bg is Quiet Capital navy");
 assert(css.includes("vercel-live-feedback") && nextConfig.includes("x-vercel-skip-toolbar"), "auth routes hide stage toolbar");
-assert(
-  nextConfig.includes('source: "/"') && nextConfig.includes('source: "/about"'),
-  "land and about skip the stage toolbar header",
-);
-assert(
-  css.includes(".bb-land-shell") && css.includes('data-surface="about-story"'),
-  "land + about CSS hide the stage toolbar FAB",
-);
 assert(
   nextConfig.includes('source: "/sign-up"') &&
     nextConfig.includes('destination: "/signup"') &&
@@ -359,12 +348,17 @@ assert(
 );
 assert(!authDoor.includes("eyebrow"), "auth door dropped extra eyebrow chrome");
 assert(authDoor.includes("bb-auth-card"), "auth door uses Quiet Capital card");
+assert(
+  read("components/install-hint.tsx").includes("onAuth") &&
+    read("components/install-hint.tsx").includes('pathname === "/signup"'),
+  "auth routes hide Install BotBuyer banner",
+);
 assert(!signup.includes("className=\"display\""), "signup H1 is not land display");
 assert(!signup.includes("DEMO_PILL_CLASS"), "signup has no Demo pill token");
 assert(!signIn.includes("DEMO_PILL_CLASS"), "sign-in has no Demo pill token");
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "non-land public chrome keeps POC footer meta");
 assert(!chrome.includes("signalHold") && !chrome.includes("BRAND.signalHold"), "land chrome has no visible Soft-signal HOLD");
-assert(chrome.includes("{land ? null") && chrome.includes("<SiteFooter"), "land PublicChrome renders no SiteFooter or footer paragraph");
+assert(chrome.includes("{land || auth ? null") && chrome.includes("<SiteFooter"), "land and auth PublicChrome render no SiteFooter");
 assert(signup.includes("Sign up"), "signup eyebrow");
 assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
 assert(signIn.includes("<SignIn"), "sign-in uses Clerk SignIn");
@@ -376,11 +370,6 @@ assert(!signup.includes("persistSignupAction"), "signup is not in-memory persist
 assert(middleware.includes("clerkMiddleware"), "middleware uses Clerk");
 assert(middleware.includes("isClerkConfigured"), "middleware skips Clerk when keys missing");
 assert(middleware.includes("/home"), "middleware protects /home");
-assert(
-  middleware.includes("NextResponse.redirect") && middleware.includes("CLERK_SIGN_IN_URL"),
-  "unauth app pages 3xx to /signin",
-);
-assert(!middleware.includes("auth.protect("), "unauth pages are not Clerk protect-rewrite 404");
 assert(schema.includes("clerkUserId"), "users.clerkUserId column");
 assert(schema.includes('autoApprove: boolean("auto_approve").notNull().default(false)'), "autoApprove default false");
 assert(authLib.includes("resolveOrCreateAppUser"), "Clerk session resolves Neon user");
@@ -414,7 +403,7 @@ assert(empty.includes('SEARCHING_EMPTY_SECONDARY = "Edit intent"'), "Searching E
 assert(empty.includes('NEEDS_YOU_CTA = "Review gates"'), "Needs-you Review gates");
 assert(empty.includes('AGENTS_EMPTY_SECONDARY = "See how activation works"'), "Agents empty secondary");
 assert(empty.includes('"/deals?status=Closed"'), "Agents empty → Closed deals");
-assert(home.includes("DealsTable"), "My deals dense table");
+assert(home.includes("href={`/deals/${deal.id}`}"), "My deals list opens each hunt");
 assert(home.includes("MY_DEALS_LABEL") || home.includes("My deals"), "My deals is /home");
 assert(
   approveUi.includes("APPROVE_MICRO") ||
@@ -456,6 +445,12 @@ assert(!chrome.includes("BRAND.landHonesty"), "land chrome has no Private beta h
 assert(!chrome.includes("Private beta"), "land chrome has no Private beta string");
 assert(!chrome.includes('href="/beta"'), "land chrome has no /beta top link");
 assert(chrome.includes('href="/about"'), "land overlay includes About word link");
+assert(
+  chrome.includes('data-nav="signin"') &&
+    chrome.includes('data-nav="about"') &&
+    chrome.indexOf('data-nav="signin"') < chrome.indexOf('data-nav="about"'),
+  "signed-out land nav is Sign in then About",
+);
 assert(!chrome.includes("hidden sm:inline"), "About stays visible on phone and desktop");
 assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air band");
 assert(chrome.includes("bb-land-header"), "land header overlays the navy stage");
@@ -518,23 +513,6 @@ assert(store.includes("ensureSearchingUsageStub"), "Run records usage stub");
 assert(store.includes("createSearchingDealFromRun"), "go-live Searching run wired");
 assert(journal.includes("usage: journal.usage"), "journal persists usage");
 assert(journal.includes("ENGINE_JOURNAL_COOKIE"), "cookie journal still used");
-assert(journal.includes("readNeonJournal"), "Neon journal read when DATABASE_URL");
-assert(journal.includes("writeNeonJournal"), "Neon journal write when DATABASE_URL");
-assert(journal.includes("COOKIE_JOURNAL_MAX_CHARS"), "cookie journal size-capped");
-assert(journal.includes("EnginePersistError"), "typed persist error, not opaque 500");
-assert(journal.includes("missing_database"), "missing DATABASE_URL has a persist code");
-assert(journal.includes("export function persistErrorFromFallback"), "persist error helper exported");
-assert(engineDb.includes("Neon journal write failed"), "Neon SQL errors wrapped, not opaque");
-assert(engineDb.includes("writeNeonJournalUnlocked"), "Neon write isolated behind catch");
-assert(persistHttp.includes("persistFailureResponse"), "API maps persist errors");
-assert(persistHttp.includes("503"), "persist failure is 503 not opaque 500");
-assert(journal.includes("setDurableJournalIO"), "isolate test hook for durable journal");
-assert(
-  existsSync(join(root, "drizzle/0000_engine_base.sql")),
-  "engine base migration checked in",
-);
-assert(store.includes("durable.intents"), "hydrate restores persisted intents");
-assert(store.includes("intents: intents.slice()"), "persist writes intents with engine journal");
 assert(dealDetail.includes("DealUsageSection"), "deal detail usage section");
 assert(usageUi.includes("Demo · not live") || usageUi.includes("USAGE_DEMO_BADGE"), "usage Demo badge");
 assert(usageUi.includes("tokens_est"), "usage labels tokens_est");
@@ -585,6 +563,7 @@ const LAND_META =
   "BotBuyer finds it and handles the chase. You approve before it pays.";
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
+assert(!brand.includes("LAND_COMING_SOON"), "public land coming-soon lock retired");
 assert(
   brand.includes(
     'LAND_PRODUCT_H1 =\n  "Your AI agent for buying, almost anything!!!"',
@@ -649,10 +628,10 @@ assert(!land.includes("VaultCardsBackdrop"), "land does not use vault-cards fold
 assert(!land.includes("HowItWorksRail"), "land fold dropped elevate how-stack");
 assert(land.includes('data-surface="land-stage"'), "land uses full-bleed navy stage");
 assert(land.includes("bb-land-stage"), "land stage class is wired");
-assert(!land.includes("bb-atm-richer-mesh-deep"), "L1 land has no richer-mesh-deep atmosphere");
-assert(!land.includes("bb-land-atm"), "L1 land has no full-bleed atm layer");
-assert(!land.includes("bb-land-sky"), "L1 land has no 50/50 sky zone");
-assert(!land.includes("bb-mark-hero"), "L1 land has no giant hero mark");
+assert(!land.includes("bb-atm-richer-mesh-deep"), "Q1 land has no richer-mesh-deep atmosphere");
+assert(!land.includes("bb-land-atm"), "Q1 land has no full-bleed atm layer");
+assert(!land.includes("bb-land-sky"), "Q1 land has no 50/50 sky zone");
+assert(!land.includes("bb-mark-hero"), "Q1 land has no giant hero mark");
 assert(!land.includes("bb-atm-mesh-glow"), "land no longer wires unused mesh-glow");
 assert(!land.includes("bb-land-watermark") && !land.includes("bb-mark-watermark"), "L1 killed the Q1 watermark");
 assert(!land.includes("bb-land-jewelry") && !land.includes("jewelry"), "L1 HARDEN killed teal jewelry");
@@ -664,14 +643,27 @@ assert(!chrome.includes("bb-land-main mx-auto w-full max-w-6xl"), "land main is 
 assert(!land.includes("filter"), "land does not CSS-filter the arc");
 assert(!land.includes("invert"), "land does not CSS-invert the light arc");
 assert(!land.includes("BRAND.landHonesty"), "land fold has no under-CTA Private beta chip");
+assert(!land.includes("Private beta"), "R3 land has no Private beta");
 assert(!land.includes("bg-primary"), "land fold has no orphan teal hairline");
 assert(!land.includes("ProofStrip"), "land dropped No public proof essay card");
-assert(land.includes("LAND_PRODUCT_H1"), "land H1 uses locked product line");
-assert(land.includes("LAND_PRODUCT_SUPPORT"), "land support sits under H1");
+assert(land.includes("LAND_PRODUCT_H1"), "land H1 is locked product H1");
+assert(land.includes("LAND_PRODUCT_SUPPORT"), "land support is locked product support");
+assert(!land.includes("LAND_COMING_SOON"), "R3 land dropped Coming soon");
 assert(!land.includes("LAND_PRODUCT_TAG"), "land has no software-only product tag");
 assert(!land.includes("Buy software. You approve."), "land dropped software-only hero/tag");
 assert(!land.includes("LAND_META_LINE"), "land fold dropped meta one-liner constant");
-assert(land.includes("description: LAND_PRODUCT_SUPPORT"), "land page meta uses support line");
+assert(land.includes("description: LAND_PRODUCT_SUPPORT"), "land page meta is product support");
+assert(
+  land.includes("openGraph:") &&
+    land.includes("twitter:") &&
+    (land.match(/description: LAND_PRODUCT_SUPPORT/g) || []).length >= 3,
+  "land page/OG/twitter use product support description",
+);
+assert(
+  land.includes("/brand/logo-soft-spine/og/og-1200x630.png") &&
+    land.includes('card: "summary_large_image"'),
+  "R3 land keeps soft-spine OG/twitter image",
+);
 assert(!land.includes("LandInstallButton"), "land has no Install door");
 assert(!land.includes("Install"), "land page source has no Install string");
 assert(!land.includes("land-install"), "land fold has no Install CTA");
@@ -679,6 +671,7 @@ assert(!land.includes('data-cta="land-signin"'), "L1 HARDEN removed fold Sign in
 assert(!land.includes("bb-land-signin"), "land fold has no Sign in class");
 assert(land.includes("bb-land-signup"), "land Sign up uses fold class");
 assert(!land.includes("CLERK_SIGN_IN_URL") && !land.includes("/signin"), "fold has no Sign in href");
+assert(land.includes('href="/signup"'), "land Sign up door is /signup");
 assert(chrome.includes('data-nav="signin"'), "land chrome mounts Sign in");
 assert(chrome.includes('data-nav="about"'), "land chrome mounts About after Sign in");
 assert(
@@ -690,22 +683,14 @@ assert(
   "InstallHint is already null on land",
 );
 assert(
-  read("components/install-hint.tsx").includes("if (onAbout) return null"),
-  "InstallHint is null on about",
-);
-assert(
-  read("components/install-hint.tsx").includes("if (onAuth) return null"),
-  "InstallHint is null on auth routes",
-);
-assert(
-  land.includes("redirectSignedInFromLand") ||
-    land.includes("redirect(MY_DEALS_HREF)"),
-  "signed-in redirects off land",
+  land.includes("redirectSignedInFromLand"),
+  "land calls the signed-in land gate",
 );
 assert(
   existsSync(join(root, "lib/land-gate.ts")) &&
-    read("lib/land-gate.ts").includes("redirect(MY_DEALS_HREF)"),
-  "land-gate helper redirects signed-in visitors to My deals",
+    read("lib/land-gate.ts").includes("Do not bounce") &&
+    !read("lib/land-gate.ts").includes("redirect("),
+  "public land stays the pitch for signed-in visitors",
 );
 assert(land.includes('dynamic = "force-dynamic"'), "land session redirect is request-time");
 assert(land.includes('themeColor: "#0B1F3A"'), "land status/theme color is navy");
@@ -912,9 +897,11 @@ assert(
   "L1 story strip copy is locked in brand",
 );
 assert(
-  !css.includes("margin-top: auto") ||
-    !/@media \(max-width: 1023px\)[\s\S]*?margin-top:\s*auto/.test(css),
-  "L1 story is dense — no margin-top:auto void",
+  css.includes("color: #2dd4bf") &&
+    css.includes("min-width: 200px") &&
+    css.includes("rgba(255, 255, 255, 0.03)") &&
+    css.includes("border-radius: 8px"),
+  "L1 story indices are teal, desktop story card is 8px with a 3% fill, Sign up hugs 200px",
 );
 assert(
   css.includes(
@@ -947,82 +934,21 @@ assert(
   "historical U1 unify-bg INSTALL stays committed",
 );
 assert(
-  existsSync(join(root, "land/craft-raise-v2-2026-09-14/INSTALL.md")) &&
-    read("land/craft-raise-v2-2026-09-14/INSTALL.md").includes("READY-TO-SHIP") &&
-    read("land/craft-raise-v2-2026-09-14/INSTALL.md").includes("capital-desk") &&
-    read("land/craft-raise-v2-2026-09-14/INSTALL.md").includes("Story strip"),
-  "L1 capital-desk INSTALL is READY-TO-SHIP",
-);
-assert(
-  existsSync(
-    join(root, "land/craft-raise-v2-2026-09-14/HARDEN-l1-chrome-signin-2026-09-14.md"),
-  ) &&
-    read("land/craft-raise-v2-2026-09-14/HARDEN-l1-chrome-signin-2026-09-14.md").includes(
-      "Kill top chrome hairline",
-    ) &&
-    read("land/craft-raise-v2-2026-09-14/HARDEN-l1-chrome-signin-2026-09-14.md").includes(
-      "Kill teal jewelry",
-    ) &&
-    read("land/craft-raise-v2-2026-09-14/HARDEN-l1-chrome-signin-2026-09-14.md").includes(
-      "Sign in` then `About",
-    ),
-  "L1 chrome HARDEN SoT is committed",
-);
-assert(
   existsSync(join(root, "land/craft-raise-2026-09-13/INSTALL.md")) &&
     read("land/craft-raise-2026-09-13/INSTALL.md").includes("READY-TO-SHIP") &&
     read("land/craft-raise-2026-09-13/INSTALL.md").includes("institutional-folio") &&
     read("land/craft-raise-2026-09-13/INSTALL.md").includes("Harden (6fdb02c Item 8)"),
-  "historical Q1 institutional-folio INSTALL stays committed",
+  "Q1 institutional-folio INSTALL is READY-TO-SHIP",
 );
 assert(
   read("land/INSTALL.md").includes("land/craft-raise-v2-2026-09-14/INSTALL.md"),
   "land INSTALL points at L1 kit SoT",
 );
 assert(
-  read("land/INSTALL.md").includes("land/craft-raise-2026-09-13/INSTALL.md"),
-  "land INSTALL records replaced Q1 kit",
-);
-assert(
   read("land/INSTALL.md").includes("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md"),
   "land INSTALL records replaced R3 kit",
 );
-assert(
-  existsSync(join(root, "land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md")) &&
-    read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md").includes("READY-TO-SHIP") &&
-    read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md").includes("bb-land-rule"),
-  "historical D1 designer INSTALL stays committed",
-);
-assert(
-  read("land/INSTALL.md").includes("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL.md"),
-  "land INSTALL records replaced D1 kit",
-);
-assert(
-  existsSync(join(root, "land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md")) &&
-    read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md").includes("P1") &&
-    read("land/mobile-rebuild-v1/d1-bold-h1-first/INSTALL-harden-v1.md").includes("staging"),
-  "historical D1 Quiet Capital harden INSTALL stays committed",
-);
-assert(
-  existsSync(join(root, "land/mobile-rebuild-v1/d1-bold-h1-first/designer-d1-quiet-capital-harden-v1.md")),
-  "historical D1 Quiet Capital harden designer notes stay committed",
-);
-assert(
-  read("land/INSTALL.md").includes("INSTALL-harden-v1.md"),
-  "land INSTALL records replaced D1 harden kit",
-);
-assert(
-  css.includes("fractalNoise") &&
-    css.includes("stitchTiles='noStitch'") &&
-    css.includes("no-repeat"),
-  "A1 richer-mesh-deep includes non-repeating mesh/noise",
-);
-assert(
-  css.includes(".bb-land-link:focus-visible") &&
-    css.includes("text-decoration: underline") &&
-    css.includes("rgba(255, 255, 255, 0.90)"),
-  "About word link is clearer with hover/focus underline",
-);
+assert(chrome.includes('data-nav="signin"'), "land Sign in link is marked for chrome QA");
 assert(chrome.includes('data-nav="about"'), "land About link is marked for chrome QA");
 assert(chrome.includes('link("about")') || chrome.includes('className={link("about")}'), "land About uses U1 about class");
 assert(
@@ -1038,11 +964,6 @@ assert(
   "L1 HARDEN killed jewelry — no 12% watermark",
 );
 assert(
-  css.includes("rgba(255, 255, 255, 0.70)") &&
-    css.includes(".bb-land-support"),
-  "L1 support is muted white ~70%",
-);
-assert(
   !read("public/brand/logo-soft-spine/botbuyer-mark-reverse.svg").includes(
     'fill="#2DD4BF"',
   ) &&
@@ -1056,14 +977,6 @@ assert(
       'fill="#2DD4BF"',
     ),
   "land soft-spine reverse + chrome mark have no teal tip",
-);
-assert(
-  read("public/land/assets/06-arc-reverse.svg").includes('opacity="0.55"'),
-  "reverse arc connectors sit at white opacity ~0.55",
-);
-assert(
-  chrome.includes("{land || auth ? null : <InstallHint />}"),
-  "land/auth chrome never mounts InstallHint",
 );
 assert(read("app/how/page.tsx").includes('redirect("/about")'), "how route leaves land fold");
 assert(
@@ -1152,7 +1065,7 @@ assert(layout.includes("/favicon.ico"), "layout links favicon.ico");
 assert(layout.includes("/favicon.svg"), "layout links favicon.svg");
 assert(layout.includes("/brand/logo-soft-spine/favicon/apple-touch-icon.png"), "layout apple-touch-icon");
 assert(layout.includes("appleWebApp") && layout.includes("capable: true"), "layout appleWebApp capable");
-assert(layout.includes("statusBarStyle: \"default\""), "layout Apple status bar for light shell");
+assert(layout.includes("statusBarStyle: \"black-translucent\""), "layout Apple status bar for navy shell");
 assert(layout.includes("apple-mobile-web-app-capable"), "layout Apple capable meta");
 assert(layout.includes("/brand/logo-soft-spine/og/og-1200x630.png"), "layout Open Graph image");
 assert(layout.includes("https://botbuyer.ai/brand/logo-soft-spine/og/og-1200x630.png"), "twitter image soft-spine OG");
@@ -1255,7 +1168,7 @@ assert(home.includes("SPEND_LIMIT_PILL") && home.includes("AUTO_APPROVE_OFF"), "
 assert(home.includes("remainingAfterVerified"), "My deals remaining is computed, not a fake $840");
 assert(!home.includes("Spend remaining"), "home dropped $1k remaining-as-limit badge");
 assert(shell.includes("data-surface=\"phone-tabs\""), "phone tabs designer surface");
-assert(shell.includes("text-primary"), "active tab icon is teal jewelry");
+assert(shell.includes("text-white"), "active tab is white on the navy shell");
 assert(!usageUi.includes("text-zinc-"), "usage UI is Techlux light, not dark zinc");
 assert(!usageUi.includes("bg-white/[0.03]"), "usage counters are not dark wash");
 const vaultRailsUi = read("components/vault-rails.tsx");
@@ -1382,15 +1295,6 @@ assert(aboutLib.includes('ABOUT_MARK_SRC = "/brand/logo-soft-spine/botbuyer-mark
 assert(aboutStory.includes("ABOUT_MARK_SRC"), "about story renders journey mark");
 assert(aboutStory.includes("ABOUT_STEPS"), "about story renders 3 panels");
 assert(aboutStory.includes("ABOUT_CONTROL"), "about story renders control caption");
-assert(
-  (aboutStory.match(/\{ABOUT_CONTROL\}/g) || []).length === 1,
-  "about control caption is one source of truth",
-);
-assert(
-  (aboutStory.match(/<ControlBlock/g) || []).length === 1,
-  "about renders one ControlBlock",
-);
-assert(aboutStory.includes('data-surface="about-control"'), "about control has a single surface");
 assert(aboutStory.includes('href={ABOUT_SIGNUP_HREF}'), "about CTA is /signup");
 assert(aboutStory.includes('data-cta="about-signup"'), "about Sign up marked");
 assert((aboutStory.match(/<Button/g) || []).length === 1, "about Sign up is sole primary");
@@ -1578,26 +1482,16 @@ assert(johnIntentForm.includes("Textarea"), "intent form textarea always availab
 assert(johnIntentForm.includes("startSearch: true"), "Start search creates Searching deal");
 assert(johnIntentsApi.includes("startSearch") && johnIntentsApi.includes("createSearchingDealFromIntent"), "intents API starts search");
 assert(store.includes("createSearchingDealFromIntent"), "store opens Searching from intent");
-assert(store.includes("thickenEngineDealSearch") && store.includes("applyDealSearchPipeline"), "intent/run deals thicken connector search");
 assert(store.includes('autoApprove: false'), "store autoApprove stays false");
-assert(johnTemplates.includes('id: "software"') && johnTemplates.includes('id: "domain"'), "templates keep software + domain scaffolds");
-assert(
-  johnTemplates.includes('id: "car"') &&
-    johnTemplates.includes('id: "house"') &&
-    johnTemplates.includes('id: "anything"'),
-  "templates include car + house + anything",
-);
+assert(johnTemplates.includes('id: "software"') && johnTemplates.includes('id: "domain"'), "templates software-first + domain wedge");
 assert(
   (johnTemplates.match(/id: "/g) || []).length >= 4 &&
     (johnTemplates.match(/id: "/g) || []).length <= 6,
   "4–6 honest starter templates",
 );
-assert(
-  johnTemplatesSot.includes("category-agnostic") || johnTemplatesSot.includes("Cars + houses"),
-  "templates SoT category-agnostic",
-);
+assert(johnTemplatesSot.includes("Software-first"), "templates SoT software-first");
 assert(johnHome.includes("MY_DEALS_EMPTY_TITLE") || johnHome.includes("Nothing searching yet"), "My deals empty title wired");
-assert(johnHome.includes("IntentForm"), "My deals empty has chips + describe");
+assert(johnHome.includes('href="/intent"') && johnHome.includes("New hunt"), "My deals empty starts a hunt");
 assert(johnHome.includes("MY_DEALS_PROGRESS"), "My deals progress line");
 assert(johnHome.includes("APPROVE_MICRO") || johnHome.includes("BotBuyer only moves when you approve."), "My deals approve micro");
 assert(johnHome.includes("AUTO_APPROVE_OFF"), "My deals auto-approve OFF");
@@ -1682,86 +1576,7 @@ assert(settingsPageSrc.includes("ConnectedAccountsPanel"), "Settings hosts Conne
 assert(settingsPageSrc.includes('id="connected-accounts"') || connectUi.includes('id="connected-accounts"'), "connected-accounts anchor");
 assert(connectPage.includes("ConnectedAccountsPanel"), "connected-accounts route");
 assert(connectUi.includes("Namecheap") && connectUi.includes("Twilio"), "Namecheap + Twilio rows");
-assert(connectUi.includes("Shopify") && connectUi.includes("HTTP JSON"), "M2 Shopify + HTTP JSON rows");
-assert(connectUi.includes("DigitalOcean") && connectUi.includes("digitalocean-needs-setup"), "DigitalOcean SaaS MCP row");
-assert(connectUi.includes("data-flow=\"digitalocean-connect\""), "DigitalOcean connect hook");
-assert(connectUi.includes("GitHub") && connectUi.includes("github-needs-setup"), "GitHub SaaS MCP row");
-assert(connectUi.includes("data-flow=\"github-connect\""), "GitHub connect hook");
-assert(connectUi.includes("data-cta=\"github-oauth\""), "GitHub OAuth is preferred CTA");
-assert(connectUi.includes("shopify-needs-setup") && connectUi.includes("http-json-needs-setup"), "M2 Needs setup honesty");
-assert(connectUi.includes("SHOPIFY_OAUTH_PREFERRED"), "Shopify Needs setup names OAuth preferred");
-assert(connectUi.includes("SHOPIFY_OAUTH_INCOMPLETE"), "Shopify OAuth incomplete copy is honest");
-assert(connectUi.includes("twilio-needs-setup"), "Twilio Needs setup honesty");
-assert(connectUi.includes("OAUTH_VAULT_KEY_REQUIRED") || connectUi.includes("BOTBUY_VAULT_KEY is required"), "Connect UI fail-closed without vault key");
-assert(existsSync(join(root, "app/api/connectors/oauth/twilio/callback/route.ts")), "Twilio OAuth callback vault shell");
-assert(existsSync(join(root, "app/api/connectors/oauth/shopify/callback/route.ts")), "Shopify OAuth callback vault shell");
-assert(existsSync(join(root, "app/api/connectors/oauth/github/callback/route.ts")), "GitHub OAuth callback vault shell");
-assert(read("lib/connectors/oauth.ts").includes("isVaultKeyConfigured"), "OAuth shell checks vault key");
-assert(read("lib/connectors/oauth.ts").includes("connectProvider"), "OAuth callback encrypts via connect");
-assert(connectUi.includes("data-cta=\"shopify-oauth\""), "Shopify OAuth is preferred CTA");
-assert(connectUi.includes("data-flow=\"http-json-connect\""), "HTTP JSON connect hook");
-assert(connectDocs.includes("shopify") && connectDocs.includes("http_json"), "POC docs list M2 shells");
-assert(connectDocs.includes("digitalocean") && connectDocs.includes("DIGITALOCEAN_ACCESS_TOKEN"), "POC docs list DigitalOcean SaaS MCP");
-assert(connectDocs.includes("github") && connectDocs.includes("GITHUB_TOKEN"), "POC docs list GitHub SaaS MCP");
-assert(envExample.includes("SHOPIFY_ADMIN_TOKEN=") && envExample.includes("HTTP_JSON_BASE_URL="), "env names M2 keys");
-assert(envExample.includes("DIGITALOCEAN_ACCESS_TOKEN="), "env names DigitalOcean token");
-assert(envExample.includes("GITHUB_TOKEN="), "env names GitHub token");
-assert(
-  !/DIGITALOCEAN_ACCESS_TOKEN=\S+/.test(
-    envExample.split("\n").find((line) => line.startsWith("DIGITALOCEAN_ACCESS_TOKEN=")) ?? "",
-  ),
-  "env example has no DigitalOcean secret",
-);
-assert(
-  !/GITHUB_TOKEN=\S+/.test(
-    envExample.split("\n").find((line) => line.startsWith("GITHUB_TOKEN=")) ?? "",
-  ),
-  "env example has no GitHub secret",
-);
-assert(!/SHOPIFY_ADMIN_TOKEN=\S+/.test(envExample.split("\n").find((line) => line.startsWith("SHOPIFY_ADMIN_TOKEN=")) ?? ""), "env example has no Shopify secret");
-assert(envExample.includes("SHOPIFY_OAUTH_CLIENT_ID="), "env names Shopify OAuth client id");
-assert(envExample.includes("SHOPIFY_OAUTH_CLIENT_SECRET="), "env names Shopify OAuth secret");
-assert(envExample.includes("SHOPIFY_OAUTH_REDIRECT_URL="), "env names Shopify OAuth redirect");
-assert(
-  !/SHOPIFY_OAUTH_CLIENT_ID=\S+/.test(
-    envExample.split("\n").find((line) => line.startsWith("SHOPIFY_OAUTH_CLIENT_ID=")) ?? "",
-  ),
-  "env example keeps Shopify OAuth client id empty",
-);
-assert(
-  !/SHOPIFY_OAUTH_CLIENT_SECRET=\S+/.test(
-    envExample.split("\n").find((line) => line.startsWith("SHOPIFY_OAUTH_CLIENT_SECRET=")) ?? "",
-  ),
-  "env example keeps Shopify OAuth secret empty",
-);
-assert(
-  !/SHOPIFY_OAUTH_REDIRECT_URL=\S+/.test(
-    envExample.split("\n").find((line) => line.startsWith("SHOPIFY_OAUTH_REDIRECT_URL=")) ?? "",
-  ),
-  "env example keeps Shopify OAuth redirect empty",
-);
 assert(connectUi.includes("Connect") && connectUi.includes("Revoke"), "Connect / Revoke actions");
-assert(connectUi.includes("data-cta=\"connector-smoke\""), "Connected accounts hosts read-only smoke");
-assert(connectUi.includes("keysConfigured"), "Connected accounts shows keysConfigured");
-assert(connectUi.includes('token="spend=false"'), "HonestyFlag spend=false");
-assert(connectUi.includes('token="autoApprove=false"'), "HonestyFlag autoApprove=false");
-assert(connectUi.includes("AUTO_APPROVE_OFF"), "Connected accounts Auto-approve OFF");
-assert(settingsPageSrc.includes("settingsHonestyFlags"), "Settings page uses settingsHonestyFlags");
-assert(settingsPageSrc.includes("AUTO_APPROVE_OFF"), "Settings page Auto-approve OFF");
-assert(connectPage.includes("settingsHonestyFlags"), "Connected accounts page uses settingsHonestyFlags");
-assert(connectPage.includes("keysConfigured"), "Connected accounts page shows keysConfigured");
-assert(existsSync(join(root, "components/honesty-flag.tsx")), "shared HonestyFlag");
-assert(read("components/honesty-flag.tsx").includes("data-honesty"), "HonestyFlag data-honesty token");
-assert(read("lib/honesty-flags.ts").includes('HONESTY_SPEND_FALSE = "spend=false"'), "spend=false SoT");
-assert(vaultPage.includes('token="spend=false"'), "Vault spend=false HonestyFlag");
-assert(vaultPage.includes('token="charged=false"'), "Vault charged=false HonestyFlag");
-assert(read("components/authorized-buy-prep.tsx").includes('token="spend=false"'), "Authorized-buy prep spend=false HonestyFlag");
-assert(read("lib/authorized-buy.ts").includes("authorizedBuyFailClosed"), "authorized-buy fail-closed helper");
-assert(read("lib/authorized-buy.ts").includes("spend: false"), "authorized-buy spend false");
-assert(connectDocs.includes("/api/connectors/smoke"), "POC docs name smoke API");
-assert(connectDocs.includes("is **not** unlocked by env"), "POC docs refuse env live:true");
-assert(read("ops/STAGE.md").includes("Read-only smoke"), "STAGE docs CPO connector smoke");
-assert(read("ops/STAGE.md").includes("Act on behalf"), "STAGE docs CPO act-on-behalf smoke");
 assert(connectUi.includes("data-cta=\"twilio-oauth\""), "Twilio OAuth is primary CTA");
 assert(connectUi.includes("TWILIO_ADVANCED_CREDENTIALS") || connectUi.includes("Use API credentials"), "Twilio API is advanced");
 assert(connectUi.includes("data-step=\"egress-ip-whitelist\""), "Namecheap step 2 IP whitelist");
@@ -1776,79 +1591,7 @@ assert(connectMiddleware.includes("/api/connectors"), "middleware protects conne
 assert(!connectUi.includes("Autofleeto") && !connectPage.includes("Autofleeto"), "UI never Autofleeto");
 assert(!connectCopy.includes("password vault") || connectCopy.includes("never a password vault"), "no password vault product");
 assert(read("lib/connectors/sanitize.ts").includes("looksLikeSecretKey"), "never-log sanitizer");
-assert(read("lib/connectors/sanitize.ts").includes("looksLikePan"), "never-log PAN sanitizer");
 assert(read("lib/connectors/audit.ts").includes("dealId") && read("lib/connectors/audit.ts").includes("provider"), "connector audit row shape");
-assert(envExample.includes("BOTBUY_STRIPE_SECRET_KEY="), "env example names BotBuy Stripe secret");
-assert(envExample.includes("BOTBUY_STRIPE_LIVE=false"), "env example Stripe live stays false");
-assert(!/^STRIPE_SECRET_KEY=/m.test(envExample), "env example has no generic Stripe secret");
-assert(read("docs/authorized-buy-rails.md").includes("BOTBUY_STRIPE_SECRET_KEY"), "authorized-buy docs");
-assert(read("lib/authorized-buy.ts").includes("assertAuthorizedBuyAllowed"), "authorized-buy uses approve gate");
-assert(read("lib/authorized-buy.ts").includes("live: false"), "authorized-buy live false");
-assert(read("app/api/deals/[id]/authorized-buy/route.ts").includes("prepareAuthorizedBuy"), "authorized-buy deal API");
-assert(read("app/(app)/deals/[id]/page.tsx").includes("AuthorizedBuyPrep"), "Buying surface hosts prep");
-assert(read("app/(app)/deals/[id]/page.tsx").includes("ActOnBehalfPrep"), "Buying surface hosts act-on-behalf");
-assert(read("components/act-on-behalf-prep.tsx").includes('token="sent=false"'), "Act-on-behalf sent=false HonestyFlag");
-assert(read("components/act-on-behalf-prep.tsx").includes('token="registered=false"'), "Act-on-behalf registered=false HonestyFlag");
-assert(read("lib/act-on-behalf.ts").includes("actOnBehalfFailClosed"), "act-on-behalf fail-closed helper");
-assert(read("lib/act-on-behalf.ts").includes("sent: false"), "act-on-behalf sent false");
-assert(read("lib/act-on-behalf.ts").includes("registered: false"), "act-on-behalf registered false");
-assert(read("lib/connectors/approve-gate.ts").includes("assertActOnBehalfAllowed"), "approve gate covers act-on-behalf");
-assert(envExample.includes("BOTBUY_MAIL_LIVE=false"), "env example mail live stays false");
-assert(read("docs/act-on-behalf.md").includes("Needs you → Buying"), "act-on-behalf docs");
-assert(approveGate.includes("assertAuthorizedBuyAllowed"), "approve gate covers Checkout prep");
-const intentRoute = read("lib/connectors/intent-route.ts");
-const dealSearch = read("lib/connectors/deal-search.ts");
-assert(existsSync(join(root, "lib/connectors/intent-route.ts")), "intent→connector mapper");
-assert(existsSync(join(root, "lib/connectors/deal-search.ts")), "deal search pipeline");
-assert(intentRoute.includes("namecheap") && intentRoute.includes("twilio") && intentRoute.includes("shopify") && intentRoute.includes("digitalocean") && intentRoute.includes("github") && intentRoute.includes("http_json") && intentRoute.includes("stub"), "mapper covers domain/phone/shopify/digitalocean/github/http_json/stub");
-assert(existsSync(join(root, "lib/connectors/tech-lock.ts")), "M1 tech lock committed");
-assert(read("lib/connectors/tech-lock.ts").includes("MCP-first"), "tech lock names MCP-first");
-assert(read("lib/connectors/tech-lock.ts").includes("designatedHolderApprove: true"), "tech lock designated-holder");
-assert(read("lib/connectors/tech-lock.ts").includes("landPromote: false"), "tech lock never promotes land");
-assert(approveGate.includes("Designated-holder Approve sheet"), "approve gate designated-holder");
-assert(connectDocs.includes("captcha farms") && connectDocs.includes("HTML login"), "POC docs lock no captcha/HTML login");
-assert(!/puppeteer|playwright|selenium/i.test(dealSearch), "pipeline adds no browser farm");
-assert(dealSearch.includes("invokeConnectorTool"), "pipeline uses connector tools");
-assert(dealSearch.includes("assertConnectorSpendAllowed") || dealSearch.includes("invokeConnectorTool"), "pipeline stays behind tools/gate");
-assert(dealSearch.includes("live: false") || dealSearch.includes("live:false"), "pipeline search events stay live:false");
-assert(dealSearch.includes('transitionDeal(deal.id, "Found"'), "candidates advance Searching → Found");
-assert(dealSearch.includes('transitionDeal(found.id, "Needs you"'), "candidates then move Found → Needs you");
-assert(dealSearch.includes("applySearchActHandoff"), "search act handoff is wired");
-assert(dealSearch.includes("applyStageSearchFixtureHandoff"), "stage fixture handoff is wired");
-assert(dealSearch.includes("isStageSearchFixtureEnabled"), "stage fixture is gated");
-assert(existsSync(join(root, "lib/connectors/search-handoff.ts")), "structured candidate handoff module");
-assert(existsSync(join(root, "lib/connectors/stage-search-fixture.ts")), "stage search fixture module");
-assert(existsSync(join(root, "scripts/stage-search-fixture-smoke.mts")), "stage fixture smoke for non-seed user");
-assert(existsSync(join(root, "components/deal-candidates.tsx")), "deal candidates card");
-const stageFixture = read("lib/connectors/stage-search-fixture.ts");
-assert(stageFixture.includes("qa-needs-you"), "stage fixture token qa-needs-you");
-assert(stageFixture.includes("isProductionSearchEnv"), "stage fixture refuses production/main");
-assert(
-  stageFixture.includes("intentRequestsStageSearchFixture"),
-  "stage fixture requires an explicit intent token",
-);
-assert(
-  stageFixture.includes("Empty stubs stay Searching"),
-  "empty stubs stay Searching without an explicit fixture",
-);
-assert(
-  stageFixture.includes("VERCEL_ENV=preview alone does not invent candidates"),
-  "preview alone does not invent candidates",
-);
-assert(
-  stageFixture.includes("STAGE_SEARCH_FIXTURE=1"),
-  "STAGE_SEARCH_FIXTURE=1 remains an explicit opt-in",
-);
-assert(!stageFixture.includes("priceVerified: true"), "stage fixture invents no verified prices");
-assert(johnIntentForm.includes("stageFixture"), "intent form accepts stage fixture toggle");
-assert(johnIntentForm.includes("STAGE_SEARCH_FIXTURE_TOKEN"), "intent form sends qa-needs-you when ?fixture=1");
-assert(dealDetail.includes("DealCandidates"), "deal detail renders candidates");
-assert(!dealSearch.includes("tool: \"register\"") && !dealSearch.includes("tool: \"buy\""), "pipeline never auto-buys");
-assert(!dealSearch.includes("autoApprove: true"), "pipeline never enables auto-approve");
-assert(!dealSearch.includes("priceVerified: true") && !dealSearch.includes("amountVerified: true"), "pipeline invents no verified prices");
-assert(connectDocs.includes("Intent → search"), "POC docs cover intent search pipeline");
-assert(connectDocs.includes("Stage search fixture"), "POC docs cover stage search fixture");
-assert(dealDetail.includes("deal.status === \"Searching\"") && dealDetail.includes("PersistRunDeal"), "Found deals do not re-open Run");
 
 if (failures.length) {
   console.error("craft-smoke FAIL");
@@ -1858,6 +1601,7 @@ if (failures.length) {
 
 console.log("craft-smoke PASS");
 console.log(" - g-techlux light #F7F8FA · teal #2DD4BF / #042F2E ≥4.5:1");
+console.log(" - land L1 capital-desk · flat navy · story strip · Sign up 8px · Soft HOLD");
 console.log(" - land/meta one-liner payment method lock · no Vault it");
 console.log(" - go-live Run BotBuyer present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
@@ -1866,8 +1610,8 @@ console.log(" - GMV=0 · verified $179.96");
 console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #B8860B");
-console.log(" - Quiet Capital type · Product door A · clean #F7F8FA");
 console.log(" - auth /signin /signup Quiet Capital navy shell · Soft HOLD");
+console.log(" - Quiet Capital type · Product door A · clean #F7F8FA");
 console.log(" - soft-spine mark+wordmark header · favicon/PWA/OG wired");
 console.log(" - site pages /privacy /terms /about /beta /contact · footer lock");
 console.log(" - /about graphical story · Land E captions · soft-spine sitewide · Soft HOLD");

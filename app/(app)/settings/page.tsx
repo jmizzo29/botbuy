@@ -40,8 +40,8 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-  await hydrateStore();
   const user = await requireUser();
+  await hydrateStore(user.id);
   const logs = listAuditLogs(user.id).slice(0, 8);
   const myDealIds = new Set(listDeals(user.id).map((deal) => deal.id));
   const usageEvents = listUsageEvents().filter((event) =>

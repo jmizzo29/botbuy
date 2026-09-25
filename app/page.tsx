@@ -15,6 +15,24 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: BRAND.name,
   description: LAND_PRODUCT_SUPPORT,
+  openGraph: {
+    title: BRAND.name,
+    description: LAND_PRODUCT_SUPPORT,
+    images: [
+      {
+        url: "/brand/logo-soft-spine/og/og-1200x630.png",
+        width: 1200,
+        height: 630,
+        alt: BRAND.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image" as const,
+    title: BRAND.name,
+    description: LAND_PRODUCT_SUPPORT,
+    images: ["https://botbuyer.ai/brand/logo-soft-spine/og/og-1200x630.png"],
+  },
 };
 
 export const viewport: Viewport = {

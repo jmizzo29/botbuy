@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkAppProvider } from "@/components/clerk-app-provider";
 import { PwaRegister } from "@/components/pwa-register";
 import { BRAND, LAND_PRODUCT_SUPPORT } from "@/lib/brand";
-import { THEME_BG } from "@/lib/ui-tokens";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: BRAND.name,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
   },
   other: {
     "apple-mobile-web-app-capable": "yes",
@@ -77,13 +77,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: THEME_BG,
+  themeColor: "#0B1F3A",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"

@@ -14,6 +14,9 @@ import { CLERK_SIGN_IN_URL, isClerkConfigured } from "@/lib/auth-config";
  * Do not use Clerk protect-rewrite here. Unsigned GETs (curl, missing
  * Sec-Fetch-Dest / Accept: text/html) become HTTP 404 instead of a
  * sign-in redirect. App pages 3xx to `/signin`; APIs 401.
+ *
+ * `/start` stays public. The page sends a session to My deals and everyone
+ * else to the landing. `/api/ingest` uses its own bearer, not Clerk.
  */
 const isProtectedRoute = createRouteMatcher([
   "/home(.*)",
@@ -23,7 +26,6 @@ const isProtectedRoute = createRouteMatcher([
   "/vault(.*)",
   "/agents(.*)",
   "/onboarding(.*)",
-  "/start",
   "/intent(.*)",
   "/api/deals(.*)",
   "/api/intents(.*)",
@@ -54,9 +56,7 @@ export default function middleware(req: NextRequest, event: NextFetchEvent) {
 
       return NextResponse.redirect(new URL(CLERK_SIGN_IN_URL, request.url));
     },
-    {
-      signInUrl: CLERK_SIGN_IN_URL,
-    },
+    { signInUrl: CLERK_SIGN_IN_URL },
   )(req, event);
 }
 

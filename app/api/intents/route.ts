@@ -1,32 +1,28 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiUser } from "@/lib/api-auth";
-import { persistFailureResponse } from "@/lib/api-persist";
-import { inferIntentCategories } from "@/lib/intent-categories";
+import { explainHuntSaveError } from "@/lib/db/hunts";
 import {
   addIntent,
   createSearchingDealFromIntent,
   getSpendLimits,
-  hydrateStore,
   listIntents,
-  persistEngineStore,
 } from "@/lib/store";
 
 const createIntent = z.object({
   summary: z.string().min(3).max(280),
   categories: z.array(z.string().min(1)).max(8).default([]),
-  /** Search hint only — not a spend. Spend hard gate stays $1,000. */
-  maxPriceUsd: z.number().positive().max(50_000_000).optional(),
+  maxPriceUsd: z.number().positive().max(1000).optional(),
   mustInclude: z.string().max(280).optional(),
   avoid: z.string().max(280).optional(),
   templateId: z.string().max(64).optional(),
+  listingUrl: z.string().url().max(500).optional(),
   startSearch: z.boolean().optional(),
 });
 
 export async function GET() {
   const gated = await requireApiUser();
   if (gated.error) return gated.error;
-  await hydrateStore();
   return NextResponse.json({ intents: listIntents(gated.user.id) });
 }
 
@@ -42,29 +38,21 @@ export async function POST(request: Request) {
     );
   }
   const limits = getSpendLimits(gated.user.id);
-  await hydrateStore();
   const intent = addIntent(
     {
       summary: parsed.data.summary,
-      categories: inferIntentCategories({
-        summary: parsed.data.summary,
-        mustInclude: parsed.data.mustInclude,
-        avoid: parsed.data.avoid,
-        explicit: parsed.data.categories,
-      }),
+      categories: parsed.data.categories.length
+        ? parsed.data.categories
+        : ["software"],
       maxPriceUsd: parsed.data.maxPriceUsd ?? limits.perDealLimitUsd,
       mustInclude: parsed.data.mustInclude,
       avoid: parsed.data.avoid,
       templateId: parsed.data.templateId,
+      listingUrl: parsed.data.listingUrl,
     },
     gated.user.id,
   );
   if (!parsed.data.startSearch) {
-    try {
-      await persistEngineStore();
-    } catch (error) {
-      return persistFailureResponse(error, "Could not save intent.");
-    }
     return NextResponse.json({ intent }, { status: 201 });
   }
   try {
@@ -75,6 +63,9 @@ export async function POST(request: Request) {
     );
     return NextResponse.json({ intent, deal }, { status: 201 });
   } catch (error) {
-    return persistFailureResponse(error, "Could not start search.");
+    return NextResponse.json(
+      { error: explainHuntSaveError(error) },
+      { status: 500 },
+    );
   }
 }

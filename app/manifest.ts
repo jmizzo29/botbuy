@@ -5,7 +5,6 @@ import {
   MY_DEALS_HREF,
   MY_DEALS_LABEL,
 } from "@/lib/cpo-techlux";
-import { THEME_BG } from "@/lib/ui-tokens";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -17,7 +16,7 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: "/",
     display: "standalone",
     display_override: ["standalone", "browser"],
-    background_color: THEME_BG,
+    background_color: "#0B1F3A",
     theme_color: "#0B1F3A",
     lang: "en",
     prefer_related_applications: false,

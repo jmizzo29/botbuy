@@ -2,8 +2,15 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { persistFailureResponse } from "@/lib/api-persist";
 import { requireApiUser } from "@/lib/api-auth";
+import { explainHuntSaveError, saveDealTransition } from "@/lib/db/hunts";
 import { DEAL_STATUSES } from "@/lib/types";
-import { getDeal, hydrateStore, persistEngineStore, transitionDeal } from "@/lib/store";
+import {
+  getDeal,
+  hydrateStore,
+  listDealEvents,
+  persistEngineStore,
+  transitionDeal,
+} from "@/lib/store";
 import { isEnginePersistError } from "@/lib/engine-journal";
 import { TransitionError } from "@/lib/status-engine";
 
@@ -18,7 +25,7 @@ export async function POST(
   const gated = await requireApiUser();
   if (gated.error) return gated.error;
   const { id } = await params;
-  await hydrateStore();
+  await hydrateStore(gated.user.id);
   const asAdmin = gated.user.role === "admin";
   if (!getDeal(id, gated.user.id, asAdmin)) {
     return NextResponse.json({ error: "Deal not found" }, { status: 404 });
@@ -32,6 +39,17 @@ export async function POST(
   }
   try {
     const deal = transitionDeal(id, parsed.data.status, gated.user.id, asAdmin);
+    const event = listDealEvents(deal.id).at(-1);
+    if (event) {
+      try {
+        await saveDealTransition(deal, event);
+      } catch (error) {
+        return NextResponse.json(
+          { error: explainHuntSaveError(error) },
+          { status: 503 },
+        );
+      }
+    }
     await persistEngineStore();
     return NextResponse.json({ deal });
   } catch (error) {

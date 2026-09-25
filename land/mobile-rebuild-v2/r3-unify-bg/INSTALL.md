@@ -1,8 +1,8 @@
 # Land U1 — mesh-continuous (unify-bg)
 
-**CEO LOCK.** READY-TO-SHIP → **`staging` only**. Soft-signal HOLD · land promote HOLD.
+**CEO LOCK.** READY-TO-SHIP → **`main` / prod**. Soft-signal HOLD · **land-only promote GO**. Soft HOLD full product.
 
-LEAN hotfix on the live **R3 lower-panel** skeleton. Not a rebuild. Soft HOLD full product.
+LEAN hotfix on the live **R3 lower-panel** skeleton. Not a rebuild. Do **not** promote staging product / auth.
 
 Visual bar: phone fold `u1-mesh-continuous-phone-fold.png` (~390).
 
@@ -23,4 +23,4 @@ Visual bar: phone fold `u1-mesh-continuous-phone-fold.png` (~390).
 - Install · Private beta · arc · one-liner · land footer
 - Full product / connectors / vault
 
-*BotBuyer Designer → CTO · U1 mesh-continuous READY-TO-SHIP → stage*
+*BotBuyer Designer → CTO · U1 mesh-continuous READY-TO-SHIP → prod*

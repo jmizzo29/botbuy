@@ -1,82 +1,68 @@
 import { IntentForm } from "@/components/intent-form";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { requireUser } from "@/lib/auth";
 import {
   INTENT_H1,
   INTENT_SUB,
+  displayAccountEmail,
   hasReachableEmail,
 } from "@/lib/john-ux";
-import { formatIntentCategories } from "@/lib/intent-categories";
+import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
 import { formatUsd } from "@/lib/money";
 import { listIntents } from "@/lib/store";
 import { formatDate } from "@/lib/utils";
-import { stageFixtureQueryEnabled } from "@/lib/connectors/stage-search-fixture";
 
 export const metadata = {
-  title: "Intent",
+  title: "New hunt",
 };
 
-export default async function IntentPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ fixture?: string | string[] }>;
-}) {
+export default async function IntentPage() {
   const user = await requireUser();
   const intents = listIntents(user.id);
-  const params = searchParams ? await searchParams : undefined;
-  const stageFixture = stageFixtureQueryEnabled(params?.fixture);
 
   return (
-    <div className="space-y-8">
+    <div className="bb-hunt-page space-y-6">
       <header>
-        <h1 className="text-3xl font-semibold tracking-tight">{INTENT_H1}</h1>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
-          {INTENT_SUB}
+        <p className="sr-only">{INTENT_H1}</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9bb0c7]">
+          Start
+        </p>
+        <h1 className="mt-1 text-[1.85rem] font-semibold tracking-tight text-white">
+          New hunt
+        </h1>
+        <p className="sr-only">{INTENT_SUB}</p>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#9bb0c7]">
+          A business, a car, a house, a book, or anything else you want bought.
         </p>
       </header>
 
-      <Card>
-        <CardContent className="pt-5">
-          <IntentForm
-            emailMissing={!hasReachableEmail(user)}
-            stageFixture={stageFixture}
-          />
-        </CardContent>
-      </Card>
+      <div className="bb-hunt-form">
+        <IntentForm
+          emailMissing={!hasReachableEmail(user)}
+          cancelHref={MY_DEALS_HREF}
+          contactEmail={
+            displayAccountEmail(user.notificationEmail) ||
+            displayAccountEmail(user.email)
+          }
+        />
+      </div>
 
       {intents.length ? (
         <section className="space-y-3">
-          <h2 className="text-lg font-medium tracking-tight">Active and recent</h2>
-          <div className="grid gap-3">
+          <h2 className="text-sm font-medium text-white/80">Recent</h2>
+          <ul className="grid list-none gap-3 p-0">
             {intents.map((intent) => (
-              <Card key={intent.id} className="px-5 py-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className="text-[15px] font-medium">{intent.summary}</p>
-                    <p className="mt-1 text-sm text-muted">
-                      {formatIntentCategories(intent.categories)} ·{" "}
-                      {formatDate(intent.createdAt)}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="money text-sm">{formatUsd(intent.maxPriceUsd)}</p>
-                    <Badge
-                      className={
-                        intent.status === "fulfilled"
-                          ? "mt-2 bg-emerald-500/10 text-emerald-800 ring-emerald-500/20"
-                          : intent.status === "paused"
-                            ? "mt-2 bg-black/[0.04] text-muted ring-[var(--bb-line)]"
-                            : "mt-2 bg-primary/10 text-foreground ring-primary/20"
-                      }
-                    >
-                      {intent.status}
-                    </Badge>
-                  </div>
-                </div>
-              </Card>
+              <li
+                key={intent.id}
+                className="rounded-xl border border-white/15 bg-[#163556] px-4 py-4"
+              >
+                <p className="text-[15px] font-medium text-white">{intent.summary}</p>
+                <p className="mt-1 font-mono text-xs text-white/55">
+                  {intent.status} \u00b7 {formatUsd(intent.maxPriceUsd)} \u00b7{" "}
+                  {formatDate(intent.createdAt)}
+                </p>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       ) : null}
     </div>

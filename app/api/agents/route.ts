@@ -20,7 +20,7 @@ export async function GET() {
     banner: AGENT_DEMO_BANNER,
     hold: AGENT_HOLD_NOTE,
     spendLock: AGENT_SPEND_MICRO,
-    orgs: listAgentOrgs(),
+    orgs: listAgentOrgs({ userId: gated.user.id }),
   });
 }
 
@@ -32,7 +32,10 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "assetId required" }, { status: 400 });
   }
-  const result = activateAgentOrg(parsed.data.assetId);
+  const result = activateAgentOrg(parsed.data.assetId, {
+    userId: gated.user.id,
+    asAdmin: gated.user.role === "admin",
+  });
   if (!result.ok) {
     return NextResponse.json({ error: result.reason }, { status: 409 });
   }
