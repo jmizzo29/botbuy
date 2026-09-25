@@ -445,11 +445,22 @@ assert(!chrome.includes("BRAND.landHonesty"), "land chrome has no Private beta h
 assert(!chrome.includes("Private beta"), "land chrome has no Private beta string");
 assert(!chrome.includes('href="/beta"'), "land chrome has no /beta top link");
 assert(chrome.includes('href="/about"'), "land overlay includes About word link");
+assert(!chrome.includes('data-nav="signin"'), "C3 land chrome has no Sign in");
+assert(chrome.includes('data-nav="about"'), "C3 land chrome is About only");
+const landNavStart = chrome.indexOf(") : land ? (");
+const landNavEnd = chrome.indexOf(") : (", landNavStart);
+const landNav =
+  landNavStart >= 0 && landNavEnd > landNavStart
+    ? chrome.slice(landNavStart, landNavEnd)
+    : "";
 assert(
-  chrome.includes('data-nav="signin"') &&
-    chrome.includes('data-nav="about"') &&
-    chrome.indexOf('data-nav="signin"') < chrome.indexOf('data-nav="about"'),
-  "signed-out land nav is Sign in then About",
+  landNav.includes("About") &&
+    !landNav.includes("Sign in") &&
+    !landNav.includes("Sign up") &&
+    !landNav.includes("Log in") &&
+    !landNav.includes("Signup") &&
+    !landNav.includes("Sign-in"),
+  "C3 signed-out land chrome is the About word link only",
 );
 assert(!chrome.includes("hidden sm:inline"), "About stays visible on phone and desktop");
 assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air band");
@@ -580,7 +591,15 @@ assert(brand.includes("lead: LAND_META_LINE"), "land lead is locked one-liner");
 assert(!brand.includes("Buy software. You approve."), "software-only land tag removed from brand");
 assert(!brand.includes("productTag"), "land has no product-tag slot");
 assert(brand.includes('name: "BotBuyer"'), "product name lock");
-assert(brand.includes('primaryCta: "Sign up"'), "land primary door is Sign up");
+assert(brand.includes('primaryCta: "Sign up"'), "about and non-land door label stays Sign up");
+assert(
+  brand.includes('LAND_REQUEST_ACCESS = "Request access"'),
+  "C3 land primary is Request access",
+);
+assert(
+  brand.includes('LAND_ALREADY_HERE = "Already here? Log in"'),
+  "C3 fold micro is Already here? Log in",
+);
 assert(brand.includes('installLink: "Install"'), "in-app Install label stays off land fold");
 assert(!brand.includes("secondaryCta"), "land has no peer secondary CTA");
 assert(!brand.includes("Start your first buy"), "land dropped Start your first buy");
@@ -667,17 +686,23 @@ assert(
 assert(!land.includes("LandInstallButton"), "land has no Install door");
 assert(!land.includes("Install"), "land page source has no Install string");
 assert(!land.includes("land-install"), "land fold has no Install CTA");
-assert(!land.includes('data-cta="land-signin"'), "L1 HARDEN removed fold Sign in");
+assert(!land.includes('data-cta="land-signin"'), "C3 fold has no Sign in CTA");
 assert(!land.includes("bb-land-signin"), "land fold has no Sign in class");
-assert(land.includes("bb-land-signup"), "land Sign up uses fold class");
-assert(!land.includes("CLERK_SIGN_IN_URL") && !land.includes("/signin"), "fold has no Sign in href");
-assert(land.includes('href="/signup"'), "land Sign up door is /signup");
-assert(chrome.includes('data-nav="signin"'), "land chrome mounts Sign in");
-assert(chrome.includes('data-nav="about"'), "land chrome mounts About after Sign in");
+assert(land.includes("bb-land-signup"), "Request access uses the fold primary class");
+assert(land.includes("LAND_REQUEST_ACCESS"), "fold primary label is Request access");
+assert(land.includes("LAND_ALREADY_HERE"), "fold micro label is Already here? Log in");
+assert(land.includes("bb-land-login"), "fold micro is a text link, not a second button");
+assert(land.includes("CLERK_SIGN_IN_URL"), "Already here? Log in uses the existing sign-in door");
 assert(
-  chrome.indexOf('data-nav="signin"') < chrome.indexOf('data-nav="about"'),
-  "chrome right is Sign in then About",
+  !land.includes("Sign up") &&
+    !land.includes("Sign in") &&
+    !land.includes("Signup") &&
+    !land.includes("Sign-in"),
+  "public land source has no banned visible labels",
 );
+assert(land.includes('href="/signup"'), "Request access door is /signup");
+assert(!chrome.includes('data-nav="signin"'), "land chrome does not mount Sign in");
+assert(chrome.includes('data-nav="about"'), "land chrome mounts About");
 assert(
   read("components/install-hint.tsx").includes("if (onLand) return null"),
   "InstallHint is already null on land",
@@ -696,10 +721,11 @@ assert(land.includes('dynamic = "force-dynamic"'), "land session redirect is req
 assert(land.includes('themeColor: "#0B1F3A"'), "land status/theme color is navy");
 assert(!land.includes("land-my-deals"), "My deals is never land primary");
 assert(!land.includes("BRAND.myDealsCta"), "land fold has no My deals CTA");
-assert(land.includes('data-cta="land-signup"'), "signed-out land primary is Sign up");
+assert(land.includes('data-cta="land-signup"'), "signed-out land primary is Request access");
+assert(land.includes('data-cta="land-login"'), "fold micro is Already here? Log in");
 assert(
   (land.match(/<Button/g) || []).length === 1,
-  "land fold Button is Sign up only",
+  "land fold Button is Request access only",
 );
 assert(!land.includes("variant="), "land fold Buttons have no secondary/ghost variant");
 assert(!landInstall.includes("<Button"), "land Install is not a Button");
@@ -793,7 +819,7 @@ assert(
   css.includes(".bb-land-header") &&
     css.includes("justify-content: space-between") &&
     css.includes("flex-wrap: nowrap"),
-  "phone overlay is lockup + Sign in + About on the chrome row",
+  "phone overlay is lockup + About on the chrome row",
 );
 assert(
   css.includes("justify-content: space-between") &&
@@ -803,28 +829,29 @@ assert(
   "L1 chrome killed header hairline; no teal divider",
 );
 assert(css.includes("@media (max-width: 1023px)"), "phone axis is locked at max-lg");
-assert(css.includes(".bb-land-cta") && css.includes("flex-direction: column"), "fold CTA is Sign up only");
+assert(css.includes(".bb-land-cta") && css.includes("flex-direction: column"), "fold CTA stacks Request access then the login micro");
 assert(!css.includes("flex: 1 1 0%"), "L1 killed dual equal CTA flex");
 assert(
   !css.includes("min-width: calc((100% - 10px) / 2)") &&
     !css.includes("width: calc((100% - 10px) / 2)"),
   "L1 killed half-row dual CTAs",
 );
-assert(css.includes("min-height: 48px") && css.includes("height: 48px"), "Sign up keeps 48px height");
-assert(css.includes("border-radius: 8px"), "Sign up radius is 8px");
-assert(!land.includes('size="lg"'), "land Sign up box is CSS-owned, not Button lg");
+assert(css.includes("min-height: 48px") && css.includes("height: 48px"), "Request access keeps 48px height");
+assert(css.includes("border-radius: 8px"), "Request access radius is 8px");
+assert(!land.includes('size="lg"'), "land Request access box is CSS-owned, not Button lg");
 assert(
   css.includes('.bb-land-cta [data-cta="land-signup"]') &&
     css.includes("background: #2DD4BF") &&
     css.includes("color: #042F2E"),
-  "Sign up is filled primary teal",
+  "Request access is filled primary teal",
 );
 assert(
-  !css.includes('.bb-land-cta [data-cta="land-signin"]') &&
+  /\.bb-land-login\s*\{[\s\S]*?color:\s*rgba\(255,\s*255,\s*255,\s*0\.58\)/.test(css) &&
+    !css.includes('.bb-land-cta [data-cta="land-signin"]') &&
     !css.includes(".bb-land-signin") &&
     css.includes(".bb-land-link") &&
     css.includes("color: rgba(255, 255, 255, 0.90)"),
-  "Sign in is a chrome text link, not a fold CTA",
+  "Already here? Log in is a muted fold text link; About stays a chrome word link",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(!land.includes("data-fold"), "land production DOM has no data-fold debug tag");
@@ -870,7 +897,7 @@ assert(
   land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
     land.indexOf("bb-land-support") < land.indexOf("bb-land-cta") &&
     land.indexOf("bb-land-cta") < land.indexOf("bb-land-story"),
-  "L1 fold order is H1 → support → Sign up → story",
+  "L1 fold order is H1 → support → Request access → story",
 );
 assert(
   css.includes("margin-block-start: 0") &&
@@ -885,7 +912,7 @@ assert(
     !/@media \(max-width: 1023px\)[\s\S]*?\.bb-land-cta \{[\s\S]*?max-width: 13\.75rem/.test(
       css,
     ),
-  "phone Sign up is 100% of the content column",
+  "phone Request access is 100% of the content column",
 );
 assert(
   brand.includes("Tell it what to find") &&
@@ -901,7 +928,7 @@ assert(
     css.includes("min-width: 200px") &&
     css.includes("rgba(255, 255, 255, 0.03)") &&
     css.includes("border-radius: 8px"),
-  "L1 story indices are teal, desktop story card is 8px with a 3% fill, Sign up hugs 200px",
+  "L1 story indices are teal, desktop story card is 8px with a 3% fill, Request access hugs 200px",
 );
 assert(
   css.includes(
@@ -913,7 +940,7 @@ assert(
   !css.includes("padding: 10px 6px") &&
     css.includes("font-size: 14px") &&
     css.includes("color: rgba(255, 255, 255, 0.90)"),
-  "chrome Sign in + About stay 14px / 0.90 without inflating chrome",
+  "chrome About stays 14px / 0.90 without inflating chrome",
 );
 assert(
   /@media \(max-width: 1023px\)[\s\S]*?\.bb-land-support \{[\s\S]*?margin-bottom: 0\.5rem/.test(
@@ -948,15 +975,16 @@ assert(
   read("land/INSTALL.md").includes("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md"),
   "land INSTALL records replaced R3 kit",
 );
-assert(chrome.includes('data-nav="signin"'), "land Sign in link is marked for chrome QA");
+assert(!chrome.includes('data-nav="signin"'), "land chrome has no Sign in mark");
 assert(chrome.includes('data-nav="about"'), "land About link is marked for chrome QA");
 assert(chrome.includes('link("about")') || chrome.includes('className={link("about")}'), "land About uses U1 about class");
 assert(
   css.includes("font-size: 14px") &&
     css.includes("font-weight: 500") &&
     css.includes(".about") &&
-    css.includes('[data-nav="signin"]'),
-  "HARDEN chrome Sign in + About are 14px / 500 / 0.90",
+    css.includes('[data-nav="about"]') &&
+    !css.includes('[data-nav="signin"]'),
+  "C3 chrome About is 14px / 500 / 0.90",
 );
 assert(
   !css.includes(".bb-land-jewelry") &&
@@ -1601,7 +1629,7 @@ if (failures.length) {
 
 console.log("craft-smoke PASS");
 console.log(" - g-techlux light #F7F8FA · teal #2DD4BF / #042F2E ≥4.5:1");
-console.log(" - land L1 capital-desk · flat navy · story strip · Sign up 8px · Soft HOLD");
+console.log(" - land C3 Request access · About chrome · Already here? Log in · Soft HOLD");
 console.log(" - land/meta one-liner payment method lock · no Vault it");
 console.log(" - go-live Run BotBuyer present");
 console.log(" - CPO land/signup/proof/empty CTA locks");

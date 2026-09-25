@@ -6,6 +6,10 @@ export const LAND_META_LINE =
 export const LAND_PRODUCT_H1 =
   "Your AI agent for buying, almost anything!!!" as const;
 export const LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK." as const;
+/** C3 fold primary. Label only — door stays `/signup`. Soft-signal HOLD. */
+export const LAND_REQUEST_ACCESS = "Request access" as const;
+/** C3 fold micro. Muted text link — door stays `/signin`. Not a second button. */
+export const LAND_ALREADY_HERE = "Already here? Log in" as const;
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
 export const LAND_WORDMARK = "BotBuyer" as const;
