@@ -1686,6 +1686,45 @@ assert(!connectCopy.includes("password vault") || connectCopy.includes("never a 
 assert(read("lib/connectors/sanitize.ts").includes("looksLikeSecretKey"), "never-log sanitizer");
 assert(read("lib/connectors/audit.ts").includes("dealId") && read("lib/connectors/audit.ts").includes("provider"), "connector audit row shape");
 
+const intentChat = [
+  read("components/intent-chat.tsx"),
+  read("components/intent-example-decision.tsx"),
+].join("\n");
+const intentCopy = read("lib/intent-chat.ts");
+const intentPage = read("app/(app)/intent/page.tsx");
+const intentThreadPage = read("app/(app)/intent/[id]/page.tsx");
+assert(intentPage.includes("IntentEmpty") && intentPage.includes("IntentList"), "Intent home is empty or list");
+assert(intentPage.includes("INTENT_EXAMPLE_ROWS"), "Intent list example gate");
+assert(intentCopy.includes('INTENT_EMPTY_H = "No intents yet"'), "Intent empty headline");
+assert(
+  intentCopy.includes(
+    '"Set an intent in plain language. Matches land for review — BotBuyer spends only with your OK."',
+  ),
+  "Intent empty sentence",
+);
+assert(intentCopy.includes('INTENT_ASK = "Ask BotBuyer"'), "Intent empty CTA Ask BotBuyer");
+assert(intentCopy.includes('INTENT_NEW = "New intent"'), "Intent New intent");
+assert(
+  intentCopy.includes("Nothing is charged on this screen. Auto-approve is off."),
+  "Intent empty charge micro",
+);
+assert(intentCopy.includes("Nothing is charged on this screen."), "Intent thread charge micro");
+assert(intentCopy.includes("BotBuyer only runs what you approve."), "Intent thread trust micro");
+assert(intentCopy.includes("Listed $8,900 · unverified"), "Intent listing Listed $8,900 unverified");
+assert(intentCopy.includes("InvoiceFlow · SaaS billing"), "Intent listing title");
+assert(intentCopy.includes('ask: INTENT_ASK_DECISION') || intentCopy.includes("I’ll keep searching"), "Intent approve ask");
+assert(intentChat.includes("Approve") && intentChat.includes("Reject"), "Intent thread Approve and Reject");
+assert(intentChat.includes("data-quiet=\"intent-empty\""), "Intent empty surface");
+assert(intentChat.includes("data-quiet=\"intent-list\""), "Intent list surface");
+assert(intentChat.includes("data-quiet=\"intent-thread\""), "Intent thread surface");
+assert(intentChat.includes(">EXAMPLE<") || intentChat.includes("EXAMPLE"), "Intent EXAMPLE chip");
+assert(intentCopy.includes("EXAMPLE · not CHO-verified"), "Intent empty EXAMPLE chip");
+assert(!intentChat.includes("rounded-full") && !intentCopy.includes("autoApprove: true"), "Intent no pills and no auto-approve");
+assert(intentThreadPage.includes("isExampleIntentId") && intentThreadPage.includes("notFound"), "EXAMPLE thread stays behind example=1");
+assert(shell.includes("New intent") && shell.includes("← Intent"), "Intent chrome New intent and back");
+assert(shell.includes('href="/intent/new"'), "New intent opens the hunt form");
+assert(shell.includes("grid-cols-4"), "Intent stays on the four phone tabs");
+
 if (failures.length) {
   console.error("craft-smoke FAIL");
   for (const item of failures) console.error(" -", item);

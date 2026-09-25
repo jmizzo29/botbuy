@@ -1381,6 +1381,47 @@ body {
   border-color: rgba(255, 255, 255, 0.28);
 }
 
+.bb-app-phone [data-intent-line] {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bb-app-phone [data-intent-line="hair"] {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.bb-app-phone [data-intent-line="card"] {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.bb-app-phone [data-intent-line="reject"] {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.bb-app-phone [data-intent-chip="example"] {
+  color: rgba(232, 184, 74, 0.95);
+  border-color: rgba(232, 184, 74, 0.35);
+  background: rgba(232, 184, 74, 0.08);
+}
+
+.bb-app-phone [data-intent-chip="imported"],
+.bb-app-phone [data-intent-chip="watch"] {
+  color: rgba(255, 255, 255, 0.62);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.bb-app-phone [data-intent-chip="search"] {
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.bb-app-phone [data-intent-chip="needs"] {
+  color: #042f2e;
+  border-color: #2dd4bf;
+  background: #2dd4bf;
+}
+
 @media (min-width: 768px) {
   .bb-app-phone main:has([data-surface="quiet-desk"]) {
     max-width: none;
