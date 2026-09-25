@@ -554,21 +554,46 @@ assert(existsSync(join(root, "brand/logo-soft-spine/botbuyer-mark.svg")), "soft-
 assert(existsSync(join(root, "brand/logo-eclipse-pass/INSTALL.md")), "eclipse-pass archive INSTALL retained");
 assert(agents.includes("AgentsEmptySecondary"), "agents empty secondary");
 
-const financeIdx = admin.indexOf("<CardTitle>Finance</CardTitle>");
-const dealsIdx = admin.indexOf("<CardTitle>Deals ops</CardTitle>");
-const usageIdx = admin.indexOf("<AdminUsageRollup");
-const trafficIdx = admin.indexOf("<CardTitle>Web traffic</CardTitle>");
-const mrrIdx = admin.indexOf("<CardTitle>MRR / revenue</CardTitle>");
-assert(financeIdx > -1 && dealsIdx > -1 && trafficIdx > -1, "admin sections present");
-assert(financeIdx < trafficIdx && dealsIdx < trafficIdx, "Finance/Deals above analytics stubs");
-assert(financeIdx < dealsIdx, "Finance above Deals");
-assert(usageIdx > dealsIdx && usageIdx < trafficIdx, "Usage rollup after Deals, before stubs");
-assert(trafficIdx < mrrIdx, "traffic stub before MRR stub");
-assert(admin.includes("Demo stub") && admin.includes("DemoStub"), "in-card Demo stub styling");
+const adminQuiet = read("lib/admin-quiet.ts");
+const adminUi = read("components/admin-quiet.tsx");
+const adminChrome = read("components/admin-chrome.tsx");
+assert(admin.includes("isAdmin") && admin.includes("notFound"), "admin stays owner-only");
+assert(admin.includes("AdminQuiet") && admin.includes("AdminChrome"), "signed-in admin is Quiet Capital");
+assert(admin.includes("getOwnerFinance"), "admin still runs CHO finance guard");
+assert(admin.includes("customerGmvUsd !== 0"), "admin refuses live GMV");
+assert(adminQuiet.includes('ADMIN_WORDMARK = "BotBuyer"'), "admin wordmark BotBuyer");
+assert(!adminQuiet.includes('"BotBuy"'), "admin copy is not BotBuy");
+assert(adminChrome.includes("ADMIN_WORDMARK") && adminChrome.includes("ADMIN_DONE"), "admin chrome is BotBuyer + Done");
+assert(adminChrome.includes("ADMIN_OWNER") && adminChrome.includes("ADMIN_DEMO"), "admin chrome Owner / Admin + Demo");
+assert(adminChrome.includes("botbuyer-mark-reverse.svg"), "admin mark is soft-spine reverse");
 assert(
-  admin.includes("No $ / user") ||
-    usageUi.includes("No $ / user") ||
-    usage.includes("No $ / user"),
+  !read("public/brand/logo-soft-spine/botbuyer-mark-reverse.svg").toLowerCase().includes("#2dd4bf"),
+  "soft-spine reverse has no teal tip",
+);
+assert(adminQuiet.includes("Web traffic") && adminQuiet.includes("MRR / revenue"), "admin home cards");
+assert(adminQuiet.includes('ADMIN_USERS_VALUE = "0"'), "admin users stay 0");
+assert(adminQuiet.includes("No deals in ops yet."), "admin deals empty honesty");
+assert(adminQuiet.includes("Not connected") && adminQuiet.includes("Demo · not monitored"), "admin health Demo");
+assert(adminQuiet.includes("BotBuyer only runs what you approve."), "admin honesty approve");
+assert(adminQuiet.includes("No live traction until CHO-verified."), "admin honesty traction");
+assert(adminQuiet.includes('ADMIN_BURN_VALUE = "$179.96"'), "admin verified EXAMPLE $179.96");
+assert(adminQuiet.includes("never $596.64"), "admin forbids $596.64 blend");
+assert(
+  !adminQuiet.replace(/never \$596\.64/g, "").includes("596.64"),
+  "596.64 appears only as a prohibition",
+);
+assert(adminQuiet.includes("Pending CHO") && adminQuiet.includes("Imported / Closing"), "admin CHO panels stay separate");
+assert(
+  adminQuiet.includes("Closing / imported deals are not company burn and not GMV."),
+  "admin closing honesty",
+);
+assert(adminQuiet.includes("No blended Startup costs / GMV total."), "admin forbids blended GMV");
+assert(adminQuiet.includes("No agent orgs yet."), "admin agent orgs empty");
+assert(adminQuiet.includes("no fake businesses-running counts."), "admin bans fake businesses running");
+assert(adminUi.includes("ADMIN_BURN_VALUE") && adminUi.includes("ADMIN_AGENTS_EMPTY"), "admin UI uses locked copy");
+assert(!adminUi.includes("AdminUsageRollup") && !admin.includes("AdminUsageRollup"), "admin overview drops usage theater");
+assert(
+  usageUi.includes("No $ / user") || usage.includes("No $ / user"),
   "admin usage has no $/user",
 );
 assert(!usageUi.includes("formatUsd") && !/\$\d/.test(usageUi), "usage UI invents no $ amounts");
@@ -576,13 +601,20 @@ assert(!usageUi.includes("formatUsd") && !/\$\d/.test(usageUi), "usage UI invent
 assert(finance.includes("const customerGmvUsd = 0"), "customer GMV locked at 0");
 assert(finance.includes("EXPECTED_IMPORTED_PENDING_USD = 416.68"), "CFO pending lock $416.68");
 assert(finance.includes("FORBIDDEN_DEMO_INFLATED_PENDING_USD = 836.68"), "CFO forbids demo-inflated $836.68");
+assert(finance.includes("FORBIDDEN_IMPORTED_TOTAL_USD = 596.64"), "CFO forbids blended $596.64");
 assert(finance.includes("countsTowardCfoMoney"), "CFO rollup excludes demo QA fixture");
 assert(store.includes("countsTowardCfoMoney"), "listed/verified spend exclude demo QA fixture");
-assert(admin.includes("botbuyer.ai $179.96"), "admin verified $179.96");
-assert(admin.includes("GMV empty until platform Closed deals"), "admin GMV empty copy");
-assert(admin.includes("Savedfast + xfer · not burn · not GMV"), "admin pending is Savedfast-only");
-assert(admin.includes("Demo pending"), "admin labels Demo pending separately");
-assert(admin.includes("demoPendingListedUsd"), "admin Demo pending uses fixture helper");
+assert(finance.includes("GMV empty until platform Closed deals"), "admin GMV empty copy");
+assert(
+  finance.includes("Savedfast $405 + xfer $11.68") &&
+    finance.includes("never company burn or GMV"),
+  "CFO pending is Savedfast + xfer, not burn or GMV",
+);
+assert(
+  read("lib/demo-needs-you.ts").includes("function demoPendingListedUsd"),
+  "demo pending helper stays QA-only",
+);
+assert(finance.includes("isNonLedgerDemoSeed"), "demo pending stays out of CHO rollup");
 
 assert(usage.includes('costKind: "estimate"') || usage.includes('USAGE_COST_KIND'), "usage costKind estimate");
 assert(usage.includes("Estimate until CHO promote"), "usage Estimate until CHO");
@@ -1284,7 +1316,14 @@ assert(usageUi.includes("SettingsUsageSection") && usageUi.includes('id="usage"'
 assert(usageUi.includes("SETTINGS_USAGE_MICRO"), "Settings card uses per-user micro");
 assert(usageUi.includes("ADMIN_USAGE_MICRO"), "Admin card defaults to platform aggregate");
 assert(usageUi.includes("byUser"), "Admin usage accepts by-user rows");
-assert(admin.includes("byUser={usage.byUser}"), "Admin page passes platform by-user");
+assert(
+  read("lib/admin-metrics.ts").includes("byUser: rollupUsageByUser"),
+  "Admin metrics pass platform by-user",
+);
+assert(
+  read("app/api/admin/metrics/route.ts").includes("getAdminMetrics"),
+  "Admin metrics API still serves platform usage",
+);
 assert(usageUi.includes("/settings#usage"), "deal usage links to Settings");
 assert(usageUi.includes("USAGE_ESTIMATE_LABEL") && usageUi.includes("DemoBadge"), "usage badges Demo/Estimate");
 assert(!usageUi.includes("Actual $") || usage.includes("Never Actual $"), "usage UI invents no Actual $");
@@ -1825,6 +1864,19 @@ assert(settingsQuiet.includes('SETTINGS_NEEDS_SETUP = "Needs setup"'), "settings
 assert(settingsQuiet.includes('SETTINGS_COMING = "Coming"'), "settings connectors Coming");
 assert(settingsQuiet.includes("no synced GMV or closed deals shown"), "settings connectors no fake GMV");
 assert(settingsQuiet.includes('SETTINGS_LOGOUT_TITLE = "Log out of BotBuyer?"'), "settings logout title");
+const adminCraft = read("app/craft/admin/page.tsx");
+assert(adminCraft.includes("adminPanelOf"), "craft admin panel query");
+assert(adminCraft.includes("ADMIN_CRAFT_HREFS"), "craft admin uses craft hrefs");
+assert(
+  adminQuiet.includes('value === "finance"') && adminQuiet.includes('value === "agents"'),
+  "craft admin switches home finance agents",
+);
+assert(shell.includes("grid-cols-4"), "buyer phone tabs stay four");
+assert(
+  !shell.includes('{ href: "/admin", label: "Admin" }') &&
+    shell.includes("PHONE_TAB_ADMIN"),
+  "Admin is not a fifth buyer tab",
+);
 assert(settingsQuiet.includes("EXAMPLE · not CHO-verified"), "settings EXAMPLE chip");
 assert(settingsUi.includes('data-auto-approve="off"'), "settings Off badge is a fact");
 assert(!settingsUi.includes('type="checkbox"') && !settingsUi.includes('role="switch"'), "settings auto-approve is not a toggle");
@@ -1846,7 +1898,7 @@ console.log(" - land C3 Request access · About chrome · Already here? Log in �
 console.log(" - land/meta one-liner payment method lock · no Vault it");
 console.log(" - go-live Run BotBuyer present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
-console.log(" - Admin Finance/Deals above stubs");
+console.log(" - Admin Quiet Capital owner-only · CHO split · no $596.64 blend");
 console.log(" - GMV=0 · verified $179.96");
 console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");

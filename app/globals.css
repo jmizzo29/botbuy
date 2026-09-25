@@ -2948,3 +2948,397 @@ html:has(#connected-accounts:target) .bb-settings-legacy {
     display: none;
   }
 }
+
+/* Track G · Admin Quiet Capital. Owner-only. 8px. No pills. Not a buyer tab. */
+html:has(.bb-admin),
+html:has(.bb-admin) body {
+  background: #0b1f3a;
+}
+
+.bb-admin {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  overflow: auto;
+  background: #0b1f3a;
+  color: #fff;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bb-admin-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+.bb-admin-top {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 16px;
+  background: #0b1f3a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bb-admin-lockup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.bb-admin-mark {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.bb-admin-word {
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.bb-admin-top-r {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bb-admin-owner {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.42);
+  white-space: nowrap;
+}
+
+.bb-admin-demo,
+.bb-admin-ex {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  border: 1px solid rgba(232, 184, 74, 0.35);
+  border-radius: 6px;
+  background: rgba(232, 184, 74, 0.08);
+  padding: 4px 8px;
+  color: rgba(232, 184, 74, 0.95);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.bb-admin-done {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2dd4bf;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bb-admin-tag {
+  position: absolute;
+  top: 58px;
+  right: 12px;
+  z-index: 5;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+}
+
+.bb-admin-stage {
+  position: relative;
+  z-index: 3;
+  padding: 14px 16px 28px;
+}
+
+.bb-admin-panel {
+  min-width: 0;
+}
+
+.bb-admin-head {
+  margin: 0 0 2px;
+  font-size: 18px;
+  font-weight: 550;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.bb-admin-sub {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.bb-admin-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+
+.bb-admin-nav a {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 4px 8px;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.bb-admin-nav a.on {
+  border-color: #2dd4bf;
+  background: #2dd4bf;
+  color: #042f2e;
+}
+
+.bb-admin-home-grid,
+.bb-admin-stack {
+  min-width: 0;
+}
+
+.bb-admin-card {
+  margin-bottom: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px 14px;
+}
+
+.bb-admin-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 6px;
+}
+
+.bb-admin-card-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.bb-admin-val {
+  margin: 0 0 2px;
+  font-size: 14px;
+  font-weight: 550;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.bb-admin-meta,
+.bb-admin-row-meta {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.bb-admin-row-meta {
+  font-size: 11px;
+}
+
+.bb-admin-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0;
+}
+
+.bb-admin-row-l {
+  min-width: 0;
+}
+
+.bb-admin-row-label,
+.bb-admin-empty {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.bb-admin-empty {
+  margin: 4px 0 2px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.bb-admin-micro {
+  margin: 10px 0 0;
+  font-size: 11px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.bb-admin-only-desk {
+  display: none;
+}
+
+.bb-admin-homebar {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  z-index: 6;
+  width: 134px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .bb-admin-grain {
+    opacity: 0.035;
+  }
+
+  .bb-admin-top {
+    height: 56px;
+    padding: 0 32px;
+  }
+
+  .bb-admin-lockup {
+    gap: 10px;
+  }
+
+  .bb-admin-mark {
+    width: 26px;
+    height: 26px;
+  }
+
+  .bb-admin-word {
+    font-size: 15px;
+  }
+
+  .bb-admin-top-r {
+    gap: 12px;
+  }
+
+  .bb-admin-owner {
+    font-size: 12px;
+  }
+
+  .bb-admin-tag {
+    top: 18px;
+    right: 32px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.16);
+  }
+
+  .bb-admin-stage {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: calc(100dvh - 56px);
+    padding: 24px 32px;
+  }
+
+  .bb-admin-panel {
+    width: 720px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 18px 24px 16px;
+  }
+
+  .bb-admin-head {
+    font-size: 20px;
+  }
+
+  .bb-admin-sub {
+    margin: 0 0 14px;
+  }
+
+  .bb-admin-nav {
+    gap: 8px;
+    margin: 0 0 14px;
+  }
+
+  .bb-admin-nav a {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .bb-admin-home-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .bb-admin[data-panel="home"] .bb-admin-card {
+    margin-bottom: 0;
+  }
+
+  .bb-admin-card-wide {
+    grid-column: 1 / -1;
+  }
+
+  .bb-admin-card {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 12px 14px;
+  }
+
+  .bb-admin[data-panel="finance"] .bb-admin-card {
+    margin-bottom: 10px;
+  }
+
+  .bb-admin[data-panel="finance"] .bb-admin-card:last-of-type {
+    margin-bottom: 4px;
+  }
+
+  .bb-admin[data-panel="agents"] .bb-admin-card {
+    margin-bottom: 0;
+  }
+
+  .bb-admin-val {
+    font-size: 15px;
+  }
+
+  .bb-admin-row {
+    gap: 12px;
+  }
+
+  .bb-admin-micro {
+    margin-top: 12px;
+    font-size: 12px;
+  }
+
+  .bb-admin-only-phone {
+    display: none;
+  }
+
+  .bb-admin-only-desk {
+    display: inline;
+  }
+
+  .bb-admin-homebar {
+    display: none;
+  }
+}
