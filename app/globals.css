@@ -1769,6 +1769,36 @@ html:has(.bb-auth-shell) a[href*="clerk.dev"] {
   }
 }
 
+/* Track D Vault — Quiet Capital. 8px cards, no pills. */
+@media (max-width: 767px) {
+  .bb-app-phone main:has([data-vault]) {
+    padding-top: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .bb-app-phone main:has([data-vault]) {
+    max-width: none;
+    padding-top: 28px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+.bb-app-phone [data-vault-field] {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.bb-app-phone [data-vault-field] input {
+  background: transparent !important;
+  border: 0 !important;
+  color: #fff;
+  box-shadow: none;
+}
+
 /* Request access first step — email + Google only. Password waits until email is set. */
 .bb-auth-shell[data-auth-screen="request"]:not([data-auth-password="open"]) .cl-formFieldRow__password {
   display: none !important;
