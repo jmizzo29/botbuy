@@ -8,6 +8,43 @@ import {
 } from "@/lib/auth-copy";
 
 /** Clerk ships light placeholders and stock labels. Keep A1 copy on the live fields. */
+function paintRequestPrimary(root: Element) {
+  root.querySelectorAll(".cl-formButtonPrimary").forEach((el) => {
+    const button = el as HTMLElement;
+    if (button.getAttribute("aria-label") !== AUTH_REQUEST_CTA) {
+      button.setAttribute("aria-label", AUTH_REQUEST_CTA);
+    }
+    const collapsed = (button.textContent || "").replace(/\s+/g, " ").trim();
+    if (collapsed === AUTH_REQUEST_CTA) return;
+    if (!/^(Continue|Sign up|Create account)$/.test(collapsed)) return;
+
+    const walker = document.createTreeWalker(button, NodeFilter.SHOW_TEXT);
+    let node = walker.nextNode();
+    let painted = false;
+    while (node) {
+      const current = node.textContent || "";
+      const next = current
+        .replaceAll("Continue", AUTH_REQUEST_CTA)
+        .replaceAll("Sign up", AUTH_REQUEST_CTA)
+        .replaceAll("Create account", AUTH_REQUEST_CTA);
+      if (next !== current) {
+        node.textContent = next;
+        painted = true;
+      }
+      node = walker.nextNode();
+    }
+
+    if (painted) return;
+    const host = button.querySelector("span") ?? button;
+    const textNode = Array.from(host.childNodes).find((child) => child.nodeType === Node.TEXT_NODE);
+    if (textNode) {
+      textNode.textContent = AUTH_REQUEST_CTA;
+      return;
+    }
+    host.insertBefore(document.createTextNode(AUTH_REQUEST_CTA), host.firstChild);
+  });
+}
+
 export function AuthFields() {
   useEffect(() => {
     function hideNode(el: Element) {
@@ -49,12 +86,7 @@ export function AuthFields() {
           input.required = passwordOpen;
           input.tabIndex = passwordOpen ? 0 : -1;
         });
-        root.querySelectorAll(".cl-formButtonPrimary").forEach((el) => {
-          const button = el as HTMLElement;
-          if (button.getAttribute("aria-label") !== AUTH_REQUEST_CTA) {
-            button.setAttribute("aria-label", AUTH_REQUEST_CTA);
-          }
-        });
+        paintRequestPrimary(root);
       }
 
       root.querySelectorAll(".cl-formFieldLabel, [data-localization-key^='formFieldLabel__email']").forEach((el) => {

@@ -414,11 +414,20 @@ assert(
     !signIn.includes("Signup"),
   "sign-in has no banned auth labels",
 );
+const authFields = read("components/auth-fields.tsx");
+const clerkProvider = read("components/clerk-app-provider.tsx");
 assert(
   css.includes(
     '.bb-auth-shell[data-auth-screen="request"]:not([data-auth-password="open"]) .cl-formFieldRow__password',
-  ) && css.includes('content: "Request access"'),
-  "request access first step hides password and labels the primary",
+  ) &&
+    !css.includes('content: "Request access"') &&
+    authFields.includes("paintRequestPrimary") &&
+    authFields.includes('querySelectorAll(".cl-formButtonPrimary")') &&
+    authFields.includes("AUTH_REQUEST_CTA") &&
+    clerkProvider.includes("formButtonPrimary") &&
+    clerkProvider.includes("AUTH_REQUEST_CTA") &&
+    clerkProvider.includes('pathname.startsWith("/signup/")'),
+  "request access first step hides password and sets the live primary text",
 );
 assert(!signup.includes("in-memory session"), "signup scrubbed in-memory copy");
 assert(!signup.includes("not a live account"), "signup scrubbed POC persist copy");

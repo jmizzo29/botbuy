@@ -87,7 +87,8 @@ export const CLERK_APPEARANCE = {
 
 /**
  * Clerk 7 localization lives on ClerkProvider, not SignIn/SignUp.
- * Request access paints its primary through auth CSS so Log in can keep Continue.
+ * formButtonPrimary is one shared key. ClerkAppProvider sets it per route:
+ * Request access on /signup, Continue on Log in.
  */
 export const CLERK_AUTH_LOCALIZATION = {
   socialButtonsBlockButton: AUTH_GOOGLE_LABEL.replace(
