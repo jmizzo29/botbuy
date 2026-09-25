@@ -1,6 +1,7 @@
 import type { Viewport } from "next";
 import { AppShell } from "@/components/app-shell";
 import { requireUser } from "@/lib/auth";
+import { quietFont } from "@/lib/quiet-font";
 import { hydrateStore, listDeals } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -20,8 +21,10 @@ export default async function AppLayout({
     (deal) => deal.status === "Needs you",
   ).length;
   return (
-    <AppShell user={user} needsYouCount={needsYouCount}>
-      {children}
-    </AppShell>
+    <div className={quietFont.className}>
+      <AppShell user={user} needsYouCount={needsYouCount}>
+        {children}
+      </AppShell>
+    </div>
   );
 }

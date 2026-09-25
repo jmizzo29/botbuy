@@ -1356,6 +1356,12 @@ body {
   padding-top: 0.25rem;
 }
 
+@media (min-width: 768px) {
+  .bb-app-phone main:has([data-surface="quiet-desk"]) {
+    max-width: none;
+  }
+}
+
 .bb-app-phone input,
 .bb-app-phone textarea {
   background: #0a182c;
@@ -1366,7 +1372,7 @@ body {
 .bb-app-phone [data-surface="intent-capture"] button[type="submit"] {
   background: #2dd4bf;
   color: #042f2e;
-  border-radius: 999px;
+  border-radius: 8px;
   min-height: 48px;
 }
 
@@ -1385,7 +1391,7 @@ body {
   background: transparent !important;
   color: #f7f8fa !important;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35) !important;
-  border-radius: 999px !important;
+  border-radius: 8px !important;
   min-height: 48px !important;
 }
 

@@ -14,10 +14,13 @@ export default function AppError({
   }, [error]);
 
   return (
-    <div className="rounded-xl border border-white/15 bg-[#163556] px-4 py-6">
-      <h1 className="text-lg font-semibold text-white">This page didn’t load</h1>
-      <p className="mt-2 text-sm leading-relaxed text-[#9bb0c7]">
-        Nothing was charged. Try again, or go back to your hunts.
+    <div
+      data-surface="quiet-desk"
+      className="rounded-[8px] border border-white/10 bg-white/[0.03] px-4 py-6"
+    >
+      <h1 className="text-lg font-semibold text-white">Couldn’t load searches</h1>
+      <p className="mt-2 text-sm leading-relaxed text-white/70">
+        Nothing was charged. Try again, or go back home.
       </p>
       {error.digest ? (
         <p className="mt-2 font-mono text-[11px] text-white/45">ref {error.digest}</p>
@@ -26,15 +29,15 @@ export default function AppError({
         <button
           type="button"
           onClick={() => retry()}
-          className="inline-flex h-11 items-center rounded-full bg-[#2DD4BF] px-4 text-sm font-semibold text-[#042F2E]"
+          className="inline-flex min-h-11 items-center rounded-[8px] bg-[#2DD4BF] px-4 text-sm font-semibold text-[#042F2E]"
         >
           Try again
         </button>
         <a
           href="/home"
-          className="inline-flex h-11 items-center rounded-full px-4 text-sm text-white ring-1 ring-white/20"
+          className="inline-flex min-h-11 items-center rounded-[8px] border border-white/30 px-4 text-sm text-white"
         >
-          Hunts
+          Back to searches
         </a>
       </div>
     </div>
