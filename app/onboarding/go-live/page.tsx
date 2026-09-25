@@ -1,82 +1,66 @@
 import { runFirstBuyAction } from "@/app/onboarding/go-live/actions";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { BRAND } from "@/lib/brand";
-import { APPROVE_MICRO } from "@/lib/cpo-techlux";
-import { GO_LIVE_PRIMARY_LABEL } from "@/lib/designer-wire-notes";
+import { GoliveChrome } from "@/components/golive-chrome";
+import { GoliveQuiet } from "@/components/golive-quiet";
+import { PersistRunDeal } from "@/components/persist-run-deal";
 import { requireUser } from "@/lib/auth";
+import { GO_LIVE_PRIMARY_LABEL } from "@/lib/designer-wire-notes";
+import { goliveFromAccount, GOLIVE_SEARCHES_HREF } from "@/lib/golive-quiet";
 import { EMAIL_SOFT_GATE, hasReachableEmail } from "@/lib/john-ux";
-import { getSpendLimits, listIntents } from "@/lib/store";
-import { formatUsd } from "@/lib/money";
-import { SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
-import { isVaultReady, vaultReadyCopy } from "@/lib/vault-rails";
+import { isEngineRunDealId } from "@/lib/run-deal";
+import { getSpendLimits, listIntents, listVaultRefs } from "@/lib/store";
 
 export const metadata = {
   title: "Onboarding · Go live",
 };
 
-export default async function OnboardingGoLivePage() {
+export const dynamic = "force-dynamic";
+
+export default async function OnboardingGoLivePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ panel?: string; deal?: string }>;
+}) {
   const user = await requireUser();
-  const intent = listIntents(user.id)[0];
-  const limits = getSpendLimits(user.id);
-  const ready = isVaultReady();
+  const { panel, deal } = await searchParams;
+  const model = goliveFromAccount({
+    intents: listIntents(user.id),
+    limits: getSpendLimits(user.id),
+    methods: listVaultRefs(user.id),
+    panel,
+  });
   const reachable = hasReachableEmail(user);
+  const persistDeal =
+    model.panel === "running" && deal && isEngineRunDealId(deal) ? deal : null;
+
+  const runControl =
+    model.panel === "ready" ? (
+      <form action={runFirstBuyAction} className="contents">
+        <button type="submit" data-cta="go-live-run" data-golive="run" className="bb-golive-cta">
+          {GO_LIVE_PRIMARY_LABEL}
+        </button>
+      </form>
+    ) : model.panel === "incomplete" ? (
+      <button
+        type="button"
+        disabled
+        aria-disabled="true"
+        data-cta="go-live-run"
+        data-golive="run-muted"
+        className="bb-golive-cta bb-golive-cta-muted"
+      >
+        {GO_LIVE_PRIMARY_LABEL}
+      </button>
+    ) : null;
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-3xl font-semibold tracking-tight">BotBuyer buys</h1>
-        <p className="mt-2 text-sm leading-relaxed text-muted">
-          Recap. {BRAND.footerHold}. Run opens a Searching deal — agent runtime
-          is not live.
-        </p>
-      </header>
-      <Card>
-        <CardContent className="space-y-3 pt-5 text-sm">
-          <Row label="Intent" value={intent?.summary ?? "Set in previous step"} />
-          <Row label="Spend limit" value={formatUsd(SPEND_HARD_GATE_USD)} />
-          <Row label="Working cap" value={formatUsd(limits.perDealLimitUsd)} />
-          <Row
-            label="Approval"
-            value="Every deal needs approval before spend · Auto-approve OFF"
-          />
-          <Row label="Payment method" value={vaultReadyCopy(ready)} />
-        </CardContent>
-      </Card>
-      {ready ? (
-        <form action={runFirstBuyAction} className="space-y-3">
-          <Button type="submit" size="lg" data-cta="go-live-run">
-            {GO_LIVE_PRIMARY_LABEL}
-          </Button>
-          {!reachable ? (
-            <p className="text-sm text-muted">{EMAIL_SOFT_GATE}</p>
-          ) : null}
-          <p className="text-sm text-muted">{APPROVE_MICRO}</p>
-        </form>
-      ) : (
-        <div className="space-y-2">
-          <Button disabled size="lg" data-cta="go-live-run">
-            {GO_LIVE_PRIMARY_LABEL}
-          </Button>
-          <p className="text-xs text-muted">
-            Coming rails alone do not unlock Run. Add an Available payment
-            method.
-          </p>
-          {!reachable ? (
-            <p className="text-sm text-muted">{EMAIL_SOFT_GATE}</p>
-          ) : null}
-          <p className="text-sm text-muted">{APPROVE_MICRO}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex justify-between gap-4">
-      <span className="text-muted">{label}</span>
-      <span className="max-w-[16rem] text-right">{value}</span>
-    </div>
+    <GoliveChrome panel={model.panel} homeHref={GOLIVE_SEARCHES_HREF} settingsHref="/settings">
+      {persistDeal ? <PersistRunDeal dealId={persistDeal} /> : null}
+      <GoliveQuiet
+        model={model}
+        runControl={runControl}
+        searchesHref={GOLIVE_SEARCHES_HREF}
+        note={reachable ? null : EMAIL_SOFT_GATE}
+      />
+    </GoliveChrome>
   );
 }
