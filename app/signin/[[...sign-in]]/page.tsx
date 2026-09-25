@@ -3,21 +3,27 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SignIn } from "@clerk/nextjs";
 import { AuthDoor } from "@/components/auth-door";
+import { AuthQuietForm } from "@/components/auth-quiet-form";
 import { PublicChrome } from "@/components/public-chrome";
-import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import {
   CLERK_AFTER_SIGN_IN_URL,
   CLERK_SIGN_UP_URL,
   isClerkPublishableConfigured,
 } from "@/lib/auth-config";
-import { SIGN_IN_H1 } from "@/lib/brand";
+import {
+  AUTH_LOGIN_ALT_LEAD,
+  AUTH_LOGIN_ALT_LINK,
+  AUTH_LOGIN_CTA,
+  AUTH_LOGIN_H1,
+  AUTH_LOGIN_SUB,
+} from "@/lib/auth-copy";
 import { CLERK_APPEARANCE } from "@/lib/clerk-ui";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Sign in",
+  title: AUTH_LOGIN_H1,
 };
 
 export const viewport: Viewport = {
@@ -30,12 +36,14 @@ export default async function SignInPage() {
   }
 
   return (
-    <PublicChrome auth>
+    <PublicChrome auth authScreen="login">
       <AuthDoor
-        title={SIGN_IN_H1}
+        title={AUTH_LOGIN_H1}
+        lead={AUTH_LOGIN_SUB}
         foot={
           <p className="bb-auth-alt">
-            New here? <Link href={CLERK_SIGN_UP_URL}>Sign up</Link>
+            {AUTH_LOGIN_ALT_LEAD}{" "}
+            <Link href={CLERK_SIGN_UP_URL}>{AUTH_LOGIN_ALT_LINK}</Link>
           </p>
         }
       >
@@ -46,19 +54,7 @@ export default async function SignInPage() {
             signUpUrl={CLERK_SIGN_UP_URL}
           />
         ) : (
-          <div className="grid gap-4">
-            <p className="bb-auth-note">
-              Clerk keys are not configured. Add{" "}
-              <code className="text-white">
-                NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-              </code>{" "}
-              and <code className="text-white">CLERK_SECRET_KEY</code> in
-              Vercel before production beta sign-in works.
-            </p>
-            <Button type="button" size="lg" className="w-full" disabled>
-              {SIGN_IN_H1}
-            </Button>
-          </div>
+          <AuthQuietForm primary={AUTH_LOGIN_CTA} />
         )}
       </AuthDoor>
     </PublicChrome>

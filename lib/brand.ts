@@ -34,13 +34,6 @@ export const LAND_STORY = [
   },
 ] as const;
 
-/** Signup live door — CPO `cpo-real-auth-signup-ia-v1.md`. Soft-signal HOLD. */
-export const SIGNUP_H1 = "Create your BotBuyer account" as const;
-export const SIGNUP_SUB = LAND_META_LINE;
-export const SIGNUP_CTA = "Create account" as const;
-export const SIGNUP_FOOT = "No charge to create an account." as const;
-export const SIGN_IN_H1 = "Sign in" as const;
-
 export const BRAND = {
   name: "BotBuyer",
   domain: "botbuyer.ai",

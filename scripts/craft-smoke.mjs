@@ -284,10 +284,30 @@ assert(!land.includes("BRAND.trustLine"), "land renders no trust line under CTAs
 assert(!land.includes("BRAND.pocBanner"), "land fold has no POC banner stack");
 assert(!signup.includes("BRAND.pocBanner"), "signup has no POC Demo pill");
 assert(!signup.includes("POC · Demo · not live"), "signup scrubbed Demo pill copy");
-assert(signup.includes("SIGNUP_H1") && brand.includes('SIGNUP_H1 = "Create your BotBuyer account"'), "signup H1 lock");
-assert(signup.includes("SIGNUP_SUB"), "signup sub is spend/intent/payment");
-assert(signup.includes("SIGNUP_CTA") || signup.includes("Create account"), "signup CTA Create account");
-assert(signup.includes("SIGNUP_FOOT") && brand.includes("No charge to create an account."), "signup no-charge foot");
+const authCopy = read("lib/auth-copy.ts");
+assert(
+  authCopy.includes('AUTH_REQUEST_H1 = "Request access"') &&
+    signup.includes("AUTH_REQUEST_H1"),
+  "request access H1 lock",
+);
+assert(
+  authCopy.includes(
+    'AUTH_REQUEST_SUB =\n  "Set spend, intent, and a payment method. BotBuyer only moves when you approve."',
+  ) && signup.includes("AUTH_REQUEST_SUB"),
+  "request access subcopy lock",
+);
+assert(
+  authCopy.includes('AUTH_REQUEST_CTA = "Request access"') &&
+    signup.includes("AUTH_REQUEST_CTA"),
+  "request access CTA lock",
+);
+assert(
+  authCopy.includes('AUTH_REQUEST_ALT_LEAD = "Already here?"') &&
+    authCopy.includes('AUTH_REQUEST_ALT_LINK = "Log in"') &&
+    signup.includes("AUTH_REQUEST_ALT_LEAD") &&
+    signup.includes("AUTH_REQUEST_ALT_LINK"),
+  "request access alternate lock",
+);
 assert(
   existsSync(join(root, "cpo-real-auth-signup-ia-v1.md")),
   "CPO real-auth signup IA committed",
@@ -319,8 +339,8 @@ assert(authDoor.includes('data-surface="auth-door"'), "auth door surface marker"
 assert(authDoor.includes("text-3xl"), "auth door Quiet Capital H1 not land display");
 assert(signup.includes("AuthDoor"), "signup uses Techlux auth door");
 assert(signIn.includes("AuthDoor"), "sign-in uses Techlux auth door");
-assert(signup.includes("<PublicChrome auth>"), "signup uses Quiet Capital auth chrome");
-assert(signIn.includes("<PublicChrome auth>"), "sign-in uses Quiet Capital auth chrome");
+assert(signup.includes("<PublicChrome auth"), "signup uses Quiet Capital auth chrome");
+assert(signIn.includes("<PublicChrome auth"), "sign-in uses Quiet Capital auth chrome");
 assert(!signup.includes("BRAND.footerHold") && !signup.includes("No paid Stripe"), "signup has no status footer dump");
 assert(!signIn.includes("BRAND.footerHold") && !signIn.includes("No paid Stripe"), "sign-in has no status footer dump");
 const clerkUi = read("lib/clerk-ui.ts");
@@ -358,12 +378,42 @@ assert(!signup.includes("DEMO_PILL_CLASS"), "signup has no Demo pill token");
 assert(!signIn.includes("DEMO_PILL_CLASS"), "sign-in has no Demo pill token");
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "non-land public chrome keeps POC footer meta");
 assert(!chrome.includes("signalHold") && !chrome.includes("BRAND.signalHold"), "land chrome has no visible Soft-signal HOLD");
-assert(chrome.includes("{land || auth ? null") && chrome.includes("<SiteFooter"), "land and auth PublicChrome render no SiteFooter");
-assert(signup.includes("Sign up"), "signup eyebrow");
+assert(
+  chrome.includes("bb-auth-legal") && chrome.includes("legalOnly") && chrome.includes("land ? null"),
+  "auth footer is Privacy · Terms; land still skips SiteFooter",
+);
 assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
 assert(signIn.includes("<SignIn"), "sign-in uses Clerk SignIn");
-assert(signIn.includes("SIGN_IN_H1"), "sign-in H1 is Sign in");
-assert(signup.includes("Sign in"), "signup offers Sign in");
+assert(
+  authCopy.includes('AUTH_LOGIN_H1 = "Log in"') &&
+    authCopy.includes(
+      'AUTH_LOGIN_SUB =\n  "Same desk. Searches stay quiet until you approve."',
+    ) &&
+    signIn.includes("AUTH_LOGIN_H1") &&
+    signIn.includes("AUTH_LOGIN_SUB"),
+  "log in title and subcopy lock",
+);
+assert(
+  authCopy.includes('AUTH_LOGIN_ALT_LEAD = "New here?"') &&
+    authCopy.includes('AUTH_LOGIN_ALT_LINK = "Request access"') &&
+    signIn.includes("AUTH_LOGIN_ALT_LEAD") &&
+    signIn.includes("AUTH_LOGIN_ALT_LINK"),
+  "log in alternate lock",
+);
+assert(
+  !signup.includes("Sign up") &&
+    !signup.includes("Sign in") &&
+    !signup.includes("Create account") &&
+    !signup.includes("Signup"),
+  "signup has no banned auth labels",
+);
+assert(
+  !signIn.includes("Sign up") &&
+    !signIn.includes("Sign in") &&
+    !signIn.includes("Create account") &&
+    !signIn.includes("Signup"),
+  "sign-in has no banned auth labels",
+);
 assert(!signup.includes("in-memory session"), "signup scrubbed in-memory copy");
 assert(!signup.includes("not a live account"), "signup scrubbed POC persist copy");
 assert(!signup.includes("persistSignupAction"), "signup is not in-memory persist");
@@ -1638,7 +1688,7 @@ console.log(" - GMV=0 · verified $179.96");
 console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #B8860B");
-console.log(" - auth /signin /signup Quiet Capital navy shell · Soft HOLD");
+console.log(" - auth A1 Log in / Request access Quiet Capital · Soft HOLD");
 console.log(" - Quiet Capital type · Product door A · clean #F7F8FA");
 console.log(" - soft-spine mark+wordmark header · favicon/PWA/OG wired");
 console.log(" - site pages /privacy /terms /about /beta /contact · footer lock");

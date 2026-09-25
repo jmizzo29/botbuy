@@ -6,7 +6,7 @@ import {
   CLERK_SIGN_UP_URL,
   isClerkPublishableConfigured,
 } from "@/lib/auth-config";
-import { CLERK_APPEARANCE } from "@/lib/clerk-ui";
+import { CLERK_APPEARANCE, CLERK_AUTH_LOCALIZATION } from "@/lib/clerk-ui";
 
 export function ClerkAppProvider({ children }: { children: React.ReactNode }) {
   if (!isClerkPublishableConfigured()) {
@@ -15,6 +15,7 @@ export function ClerkAppProvider({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider
       appearance={CLERK_APPEARANCE}
+      localization={CLERK_AUTH_LOCALIZATION}
       signInUrl={CLERK_SIGN_IN_URL}
       signUpUrl={CLERK_SIGN_UP_URL}
       signInFallbackRedirectUrl={CLERK_AFTER_SIGN_IN_URL}

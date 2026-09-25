@@ -1049,52 +1049,71 @@ body {
   max-width: 100%;
   box-sizing: border-box;
 }
-.bb-auth-header {
-  justify-content: flex-start !important;
-}
-
-.bb-auth-header .bb-land-lockup {
-  height: 1.35rem !important;
-}
-
 .bb-auth-main {
-  padding-top: 0.25rem !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 30rem;
+  padding: 1.65rem 1.25rem 1.25rem !important;
 }
 
 .bb-auth-h1 {
-  font-size: 1.6rem !important;
+  font-size: 2rem !important;
   font-weight: 600 !important;
   letter-spacing: -0.03em !important;
   line-height: 1.1 !important;
   margin: 0 !important;
+  color: #ffffff !important;
 }
 
-.bb-auth-lead,
+.bb-auth-lead {
+  display: block !important;
+  margin: 0.55rem 0 0 !important;
+  font-size: 0.9375rem !important;
+  font-weight: 450 !important;
+  line-height: 1.45 !important;
+  color: rgba(255, 255, 255, 0.66) !important;
+}
+
 .bb-auth-legal {
-  display: none !important;
+  display: block !important;
+  margin-top: auto;
+  padding: 0.85rem 1.25rem calc(1rem + env(safe-area-inset-bottom, 0px)) !important;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 13px;
+}
+
+.bb-auth-legal a,
+.bb-auth-legal span {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.bb-auth-legal a:hover {
+  color: #ffffff;
 }
 
 .bb-auth-card {
   margin-top: 1.25rem !important;
-  padding: 0 !important;
-  background: transparent !important;
+  padding: 18px 16px 16px !important;
+  background: #0b1f3a !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 8px !important;
   box-shadow: none !important;
 }
 
 .bb-auth-foot {
-  margin-top: 1.25rem !important;
+  margin-top: 1.15rem !important;
 }
 
 .bb-auth-alt {
-  display: flex !important;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
-  margin: 4px 0 0 !important;
+  display: block !important;
+  margin: 0 !important;
   text-align: center;
-  font-size: 16px !important;
-  line-height: 1.35;
-  color: rgba(247, 248, 250, 0.88) !important;
+  font-size: 14px !important;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.58) !important;
 }
 
 .bb-auth-shell .cl-rootBox,
@@ -1137,40 +1156,49 @@ body {
 
 .bb-auth-shell .cl-formFieldInput,
 .bb-auth-shell .cl-input,
+.bb-auth-shell .bb-auth-input,
 .bb-auth-shell input {
-  background: #ffffff !important;
-  color: #0b1f3a !important;
-  -webkit-text-fill-color: #0b1f3a !important;
-  caret-color: #0b1f3a;
-  border: 1px solid #ffffff !important;
-  border-radius: 14px !important;
+  background: #081422 !important;
+  color: #f7f8fa !important;
+  -webkit-text-fill-color: #f7f8fa !important;
+  caret-color: #f7f8fa;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 8px !important;
   min-height: 48px !important;
+  height: 48px !important;
   font-size: 16px !important;
   box-shadow: none !important;
+  padding: 0 14px !important;
+  width: 100%;
 }
 
 .bb-auth-shell input::placeholder {
-  color: #5c6b80 !important;
-  -webkit-text-fill-color: #5c6b80 !important;
+  color: rgba(247, 248, 250, 0.4) !important;
+  -webkit-text-fill-color: rgba(247, 248, 250, 0.4) !important;
   opacity: 1 !important;
 }
 
 .bb-auth-shell input:focus {
   outline: none !important;
-  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.45) !important;
+  box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.45) !important;
 }
 
 .bb-auth-shell input:-webkit-autofill {
-  -webkit-text-fill-color: #0b1f3a !important;
-  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #f7f8fa !important;
+  box-shadow: 0 0 0 1000px #081422 inset !important;
 }
 
-.bb-auth-shell .cl-formButtonPrimary {
+.bb-auth-shell .cl-formButtonPrimary,
+.bb-auth-shell .bb-auth-primary {
   background: #2dd4bf !important;
   color: #042f2e !important;
   -webkit-text-fill-color: #042f2e !important;
-  border-radius: 14px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
   min-height: 48px !important;
+  height: 48px !important;
+  width: 100%;
+  font-size: 15px !important;
   font-weight: 650 !important;
   box-shadow: none !important;
 }
@@ -1180,38 +1208,53 @@ body {
   display: none !important;
 }
 
-.bb-auth-shell .cl-socialButtonsBlockButton {
-  border-radius: 14px !important;
+.bb-auth-shell .cl-socialButtonsBlockButton,
+.bb-auth-shell .bb-auth-google {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  border-radius: 8px !important;
   min-height: 48px !important;
-  background: #f7f8fa !important;
-  color: #0b1f3a !important;
+  height: 48px !important;
+  background: transparent !important;
+  color: #f7f8fa !important;
+  -webkit-text-fill-color: #f7f8fa !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
   box-shadow: none !important;
+  font-size: 15px !important;
+  font-weight: 550 !important;
 }
 
 .bb-auth-shell .cl-socialButtonsBlockButtonText,
-.bb-auth-shell .cl-socialButtonsBlockButton span {
-  color: #0b1f3a !important;
-  -webkit-text-fill-color: #0b1f3a !important;
+.bb-auth-shell .cl-socialButtonsBlockButton span,
+.bb-auth-shell .bb-auth-google span {
+  color: #f7f8fa !important;
+  -webkit-text-fill-color: #f7f8fa !important;
 }
 
-.bb-auth-shell .cl-formFieldLabel {
-  color: #f7f8fa !important;
+.bb-auth-shell .cl-formFieldLabel,
+.bb-auth-shell .bb-auth-field-label {
+  color: rgba(247, 248, 250, 0.78) !important;
   font-size: 13px !important;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
 }
 
 .bb-auth-shell .cl-dividerLine {
-  background: rgba(255, 255, 255, 0.28) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  height: 1px !important;
 }
 
 .bb-auth-shell .cl-dividerText {
-  color: rgba(247, 248, 250, 0.72) !important;
+  color: rgba(247, 248, 250, 0.5) !important;
+  background: #0b1f3a !important;
   font-size: 13px !important;
 }
 
 .bb-auth-shell .cl-formFieldInputShowPasswordButton,
 .bb-auth-shell .cl-formFieldInputShowPasswordIcon {
-  color: #0b1f3a !important;
+  color: rgba(247, 248, 250, 0.62) !important;
 }
 
 .bb-auth-shell input[name="password"] {
@@ -1219,16 +1262,56 @@ body {
 }
 
 .bb-auth-alt a {
+  display: inline !important;
+  min-height: 0 !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 550;
+  text-decoration: none !important;
+}
+
+.bb-auth-stack {
   display: flex;
+  flex-direction: column;
+}
+
+.bb-auth-or {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  color: #f7f8fa !important;
-  font-size: 16px !important;
-  font-weight: 650;
-  text-decoration: none;
+  gap: 12px;
+  margin: 14px 0;
+  color: rgba(247, 248, 250, 0.5);
+  font-size: 13px;
+}
+
+.bb-auth-or::before,
+.bb-auth-or::after {
+  content: "";
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.bb-auth-field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+
+.bb-auth-google-mark {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
 }
 
 .bb-app-phone {
@@ -1331,11 +1414,11 @@ body {
 }
 
 .bb-auth-h1 {
-  margin: 0 0 1.35rem !important;
+  margin: 0 !important;
 }
 
 .bb-auth-card {
-  margin-top: 0 !important;
+  margin-top: 1.25rem !important;
   position: relative;
   z-index: 1;
 }
@@ -1556,4 +1639,60 @@ html:has(.bb-app-phone) body {
   background: #0b1f3a;
   z-index: 19;
   pointer-events: none;
+}
+
+/* Auth Quiet Capital A1 — flat navy, 8px, dark panel. Soft HOLD. */
+.bb-auth-shell .cl-card,
+.bb-auth-shell .cl-cardBox,
+.bb-auth-shell .cl-main,
+.bb-auth-shell .cl-scrollBox,
+.bb-auth-shell .cl-pageScrollBox {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.bb-auth-shell .cl-socialButtonsRoot,
+.bb-auth-shell .cl-form {
+  margin: 0 !important;
+  gap: 0 !important;
+}
+
+.bb-auth-shell .cl-dividerRow {
+  margin: 14px 0 !important;
+}
+
+.bb-auth-shell .cl-formFieldRow {
+  margin: 0 0 12px !important;
+}
+
+.bb-auth-shell .cl-footer,
+.bb-auth-shell .cl-footerAction,
+.bb-auth-shell .cl-footerPages,
+.bb-auth-shell .cl-badge,
+html:has(.bb-auth-shell) .cl-badge,
+html:has(.bb-auth-shell) [data-localization-key*="development"],
+html:has(.bb-auth-shell) a[href*="clerk.com"],
+html:has(.bb-auth-shell) a[href*="clerk.dev"] {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  .bb-auth-main {
+    justify-content: center;
+    padding-top: 2rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  .bb-auth-h1 {
+    font-size: 2.5rem !important;
+  }
+
+  .bb-auth-legal {
+    padding-left: 5.5rem !important;
+    padding-right: 5.5rem !important;
+  }
 }
