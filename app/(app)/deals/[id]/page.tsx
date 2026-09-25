@@ -1,15 +1,11 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ActOnBehalfPrep } from "@/components/act-on-behalf-prep";
 import { AuthorizedBuyPrep } from "@/components/authorized-buy-prep";
 import { DealApproveActions } from "@/components/deal-approve-actions";
 import { HonestyFlag } from "@/components/honesty-flag";
 import { HuntThread } from "@/components/hunt-thread";
-import { DealBadges } from "@/components/deal-badges";
-import { DealAmount } from "@/components/money";
+import { QuietDeal } from "@/components/quiet-desk";
 import { StatusControls } from "@/components/status-controls";
-import { StatusPill } from "@/components/status-pill";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivateAgents } from "@/components/activate-agents";
 import { SearchingEmpty } from "@/components/empty-ctas";
@@ -19,13 +15,13 @@ import {
   ACT_ON_BEHALF_PREPARED_NOT_SENT,
 } from "@/lib/act-copy";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
-import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
+import { MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { getAgentOrg } from "@/lib/agent-runtime";
 import { PersistRunDeal } from "@/components/persist-run-deal";
 import { DealUsageSection } from "@/components/usage-meter";
 import { formatUsd } from "@/lib/money";
-import { remainingAfterVerified, SPEND_HARD_GATE_USD } from "@/lib/spend-policy";
-import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
+import { quietDetailFromDeal } from "@/lib/quiet-capital";
+import { remainingAfterVerified } from "@/lib/spend-policy";
 import {
   ensureSearchingUsageStub,
   ensureHuntThread,
@@ -107,69 +103,33 @@ export default async function DealDetailPage({
       : "Card · Available ≠ live";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {deal.source === "engine" ? <PersistRunDeal dealId={deal.id} /> : null}
-      <div>
-        <p className="text-xs text-muted">
-          <Link href={MY_DEALS_HREF} className="hover:text-foreground">
-            {MY_DEALS_LABEL}
-          </Link>
-          {" → Deal detail"}
-        </p>
-        <div className="mt-5 flex flex-wrap items-center gap-2">
-          <Badge className={DEMO_PILL_CLASS}>Demo</Badge>
-          <StatusPill status={deal.status} />
-          <DealBadges deal={deal} />
-        </div>
-        <h1 className="mt-5 text-3xl font-semibold tracking-tight">
-          {deal.title}
-        </h1>
-        {isImported(deal) ? (
-          <p className="mt-2 text-sm text-muted">{HISTORY_MICRO}</p>
-        ) : null}
-      </div>
+      <p className="sr-only">
+        {MY_DEALS_LABEL} Every deal needs your approval · auto-approve OFF{" "}
+        {isImported(deal) ? HISTORY_MICRO : null}
+      </p>
+      <QuietDeal
+        detail={quietDetailFromDeal(deal)}
+        actions={
+          <DealApproveActions
+            quiet
+            flow="split"
+            dealId={deal.id}
+            status={deal.status}
+            title={deal.title}
+            spend={deal.priceUsd > 0 ? formatUsd(deal.priceUsd) : undefined}
+            remaining={`Remaining ${remaining}`}
+            payment={payment}
+          />
+        }
+      />
 
+      <section className="space-y-6 border-t border-white/10 pt-6">
+      <h2 className="text-sm font-medium text-white/70">Record</h2>
       <HuntThread dealId={deal.id} messages={thread} />
-
-      <Card>
-        <CardContent className="grid gap-8 pt-6 md:grid-cols-2">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
-              Spend
-            </p>
-            <p className="money mt-2 text-2xl font-medium tracking-tight">
-              <DealAmount deal={deal} />
-              <span className="text-base font-medium text-muted">
-                {" "}
-                / {formatUsd(SPEND_HARD_GATE_USD)}
-              </span>
-            </p>
-            <p className="mt-4 text-sm text-muted">
-              Every deal needs your approval · auto-approve OFF
-            </p>
-            <div className="mt-6">
-              <ActOnBehalfPrep dealId={deal.id} status={deal.status} />
-              <AuthorizedBuyPrep dealId={deal.id} status={deal.status} />
-              <DealApproveActions
-                dealId={deal.id}
-                status={deal.status}
-                title={deal.title}
-                spend={deal.priceUsd > 0 ? formatUsd(deal.priceUsd) : undefined}
-                remaining={`Remaining ${remaining}`}
-                payment={payment}
-              />
-            </div>
-          </div>
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.14em] text-muted">
-              Intent
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-foreground/80">
-              {deal.notes || `${deal.category} · ${deal.marketplace}`}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <ActOnBehalfPrep dealId={deal.id} status={deal.status} />
+      <AuthorizedBuyPrep dealId={deal.id} status={deal.status} />
 
       <div className="flex flex-wrap gap-2 text-xs text-muted">
         <span>source={deal.source}</span>
@@ -362,6 +322,7 @@ export default async function DealDetailPage({
           </CardContent>
         </Card>
       </div>
+      </section>
     </div>
   );
 }

@@ -151,6 +151,19 @@ export default async function SettingsPage() {
             Signed in with Clerk. Session cookies are HttpOnly. 2FA is phase-2.
           </p>
           <div className="pt-2">
+            <p className="mb-3 text-sm">
+              <Link href="/agents" className="text-white/80 underline-offset-2 hover:underline">
+                Agents
+              </Link>
+              {user.role === "admin" ? (
+                <>
+                  {" · "}
+                  <Link href="/admin" className="text-white/80 underline-offset-2 hover:underline">
+                    Admin
+                  </Link>
+                </>
+              ) : null}
+            </p>
             <SignOutButtonPrimary />
           </div>
         </CardContent>

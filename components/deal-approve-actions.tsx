@@ -21,6 +21,8 @@ export function DealApproveActions({
   remaining,
   payment,
   compact = false,
+  quiet = false,
+  flow = "split",
 }: {
   dealId: string;
   status: DealStatus;
@@ -29,6 +31,9 @@ export function DealApproveActions({
   remaining?: string;
   payment?: string;
   compact?: boolean;
+  /** Track B desk: 8px radius, no pill. Phone still opens the approve sheet. */
+  quiet?: boolean;
+  flow?: "row" | "split";
 }) {
   const router = useRouter();
   const [pending, setPending] = useState<string | null>(null);
@@ -58,6 +63,78 @@ export function DealApproveActions({
   }
 
   const size = compact ? "sm" : "lg";
+  const quietBtn =
+    "min-h-11 w-full !rounded-[8px] shadow-none";
+
+  if (quiet) {
+    return (
+      <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-2 md:hidden">
+          <Button
+            type="button"
+            size={size}
+            className={quietBtn}
+            disabled={pending !== null}
+            onClick={() => setSheetOpen(true)}
+          >
+            {APPROVE_LABEL}
+          </Button>
+          <Button
+            type="button"
+            size={size}
+            variant="secondary"
+            className={`${quietBtn} !border-white/30 !bg-transparent !text-white/90 ring-1 !ring-white/30`}
+            disabled={pending !== null}
+            onClick={() => setSheetOpen(true)}
+          >
+            {REJECT_LABEL}
+          </Button>
+        </div>
+        <div
+          className={
+            flow === "split"
+              ? "hidden gap-2 md:grid md:grid-cols-1"
+              : "hidden gap-2 md:grid md:grid-cols-2"
+          }
+        >
+          <Button
+            type="button"
+            size={size}
+            className={quietBtn}
+            disabled={pending !== null}
+            onClick={() => decide(APPROVE_STATUS)}
+          >
+            {pending === APPROVE_STATUS ? "…" : APPROVE_LABEL}
+          </Button>
+          <Button
+            type="button"
+            size={size}
+            variant="secondary"
+            className={`${quietBtn} !border-white/30 !bg-transparent !text-white/90 ring-1 !ring-white/30`}
+            disabled={pending !== null}
+            onClick={() => decide(REJECT_STATUS)}
+          >
+            {pending === REJECT_STATUS ? "…" : REJECT_LABEL}
+          </Button>
+        </div>
+        {error && !sheetOpen ? <p className="text-sm text-demo">{error}</p> : null}
+        {sheetOpen ? (
+          <ApproveSheet
+            title={title ?? "Needs you"}
+            spend={spend}
+            remaining={remaining}
+            status={status}
+            payment={payment}
+            pending={pending}
+            error={error}
+            onApprove={() => decide(APPROVE_STATUS)}
+            onReject={() => decide(REJECT_STATUS)}
+            onClose={() => setSheetOpen(false)}
+          />
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <div className={compact ? "space-y-1.5" : "space-y-3"}>

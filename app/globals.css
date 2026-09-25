@@ -1356,6 +1356,37 @@ body {
   padding-top: 0.25rem;
 }
 
+@media (max-width: 767px) {
+  .bb-app-phone main:has([data-surface="quiet-desk"]) {
+    padding-top: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Unlayered so it wins over `* { border-color: var(--line) }` (light-theme black). */
+.bb-app-phone [data-quiet-list="needs"] {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bb-app-phone [data-quiet-list="needs"] > li {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.bb-app-phone [data-quiet-list="needs"] > li:last-child {
+  border-bottom-color: transparent;
+}
+
+.bb-app-phone [data-quiet-list="needs"] button {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+@media (min-width: 768px) {
+  .bb-app-phone main:has([data-surface="quiet-desk"]) {
+    max-width: none;
+  }
+}
+
 .bb-app-phone input,
 .bb-app-phone textarea {
   background: #0a182c;
@@ -1366,7 +1397,7 @@ body {
 .bb-app-phone [data-surface="intent-capture"] button[type="submit"] {
   background: #2dd4bf;
   color: #042f2e;
-  border-radius: 999px;
+  border-radius: 8px;
   min-height: 48px;
 }
 
@@ -1385,7 +1416,7 @@ body {
   background: transparent !important;
   color: #f7f8fa !important;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35) !important;
-  border-radius: 999px !important;
+  border-radius: 8px !important;
   min-height: 48px !important;
 }
 
