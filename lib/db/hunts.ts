@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { eq, inArray } from "drizzle-orm";
 import { getDb } from "@/lib/db";
-import { dealEvents, deals, intents } from "@/lib/db/schema";
+import { auditLogs, dealEvents, deals, intents, users } from "@/lib/db/schema";
 import type {
   AgentEventStatus,
   AgentStage,
@@ -64,6 +64,17 @@ async function ensureHuntTables() {
     )
   `;
   await sql`
+    CREATE TABLE IF NOT EXISTS audit_logs (
+      id text PRIMARY KEY,
+      user_id text NOT NULL REFERENCES users(id),
+      action text NOT NULL,
+      entity_type text NOT NULL,
+      entity_id text NOT NULL,
+      metadata jsonb DEFAULT '{}'::jsonb,
+      created_at timestamptz NOT NULL DEFAULT now()
+    )
+  `;
+  await sql`
     CREATE TABLE IF NOT EXISTS deal_events (
       id text PRIMARY KEY,
       deal_id text NOT NULL REFERENCES deals(id),
@@ -107,9 +118,11 @@ export async function saveOpenedHunt(
   deal: Deal,
   events: DealEvent[],
 ) {
-  await ensureHuntTables();
   const db = getDb();
-  if (!db) throw new Error("Database is not connected.");
+  // In-memory journal is the store until DATABASE_URL is set. Do not fail
+  // a search that already landed in that journal.
+  if (!db) return;
+  await ensureHuntTables();
   await db
     .insert(intents)
     .values({
@@ -169,10 +182,31 @@ export async function saveOpenedHunt(
   }
 }
 
-export async function saveHuntEvent(event: DealEvent) {
-  await ensureHuntTables();
+export async function saveDealTransition(deal: Deal, event: DealEvent) {
   const db = getDb();
-  if (!db) throw new Error("Database is not connected.");
+  if (!db) return;
+  await ensureHuntTables();
+  const [row] = await db
+    .select({ id: deals.id, userId: deals.userId })
+    .from(deals)
+    .where(eq(deals.id, deal.id))
+    .limit(1);
+  if (!row || row.userId !== deal.userId) return;
+  await db
+    .update(deals)
+    .set({
+      status: deal.status,
+      closedAt: stamp(deal.closedAt),
+      updatedAt: new Date(),
+    })
+    .where(eq(deals.id, deal.id));
+  await saveHuntEvent(event);
+}
+
+export async function saveHuntEvent(event: DealEvent) {
+  const db = getDb();
+  if (!db) return;
+  await ensureHuntTables();
   await db
     .insert(dealEvents)
     .values({
@@ -189,6 +223,114 @@ export async function saveHuntEvent(event: DealEvent) {
       actor: event.actor,
     })
     .onConflictDoNothing();
+}
+
+export async function saveIngestedCandidate(input: {
+  ownerUserId: string;
+  deal: Deal;
+  event: DealEvent | null;
+  audit: {
+    id: string;
+    action: string;
+    metadata: Record<string, unknown>;
+  };
+}) {
+  await ensureHuntTables();
+  const db = getDb();
+  if (!db) throw new Error("Database is not connected.");
+  const [owner] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.id, input.ownerUserId))
+    .limit(1);
+  if (!owner) throw new Error("Owner account is not in the database yet.");
+
+  const [existing] = await db
+    .select()
+    .from(deals)
+    .where(eq(deals.id, input.deal.id))
+    .limit(1);
+  if (existing && existing.userId !== input.ownerUserId) {
+    throw new Error("That listing is already stored for another account.");
+  }
+
+  const workflowStatus =
+    existing && existing.status !== "Needs you" ? existing.status : "Needs you";
+  const previousPrice = existing ? Number(existing.priceUsd) : null;
+  const previousStatus = existing?.notes?.match(/listing_status=([a-z_]+)/)?.[1] ?? null;
+  const nextStatus = input.deal.notes.match(/listing_status=([a-z_]+)/)?.[1] ?? null;
+  const changed =
+    !existing ||
+    previousPrice !== input.deal.priceUsd ||
+    previousStatus !== nextStatus;
+
+  await db
+    .insert(deals)
+    .values({
+      id: input.deal.id,
+      userId: input.ownerUserId,
+      title: input.deal.title,
+      category: input.deal.category,
+      marketplace: input.deal.marketplace,
+      status: workflowStatus,
+      priceUsd: money(input.deal.priceUsd),
+      currency: "USD",
+      openedAt: stamp(input.deal.openedAt) ?? new Date(),
+      closedAt: null,
+      parentDealId: null,
+      receipt: null,
+      escrow: null,
+      domainTransfer: null,
+      blockers: input.deal.blockers,
+      notes: input.deal.notes,
+      source: "imported",
+      agentExecuted: false,
+      priceVerified: false,
+      amountVerified: false,
+      amountStatus: "imported_unverified",
+      evidencePath: input.deal.evidencePath,
+      verification: input.deal.verification,
+      updatedAt: new Date(),
+    })
+    .onConflictDoUpdate({
+      target: deals.id,
+      set: {
+        title: input.deal.title,
+        marketplace: input.deal.marketplace,
+        status: workflowStatus,
+        priceUsd: money(input.deal.priceUsd),
+        notes: input.deal.notes,
+        blockers: input.deal.blockers,
+        source: "imported",
+        agentExecuted: false,
+        priceVerified: false,
+        amountVerified: false,
+        amountStatus: "imported_unverified",
+        evidencePath: input.deal.evidencePath,
+        updatedAt: new Date(),
+      },
+    });
+
+  if (changed && input.event) {
+    await saveHuntEvent({ ...input.event, toStatus: workflowStatus as DealStatus });
+  }
+
+  await db.insert(auditLogs).values({
+    id: input.audit.id,
+    userId: input.ownerUserId,
+    action: input.audit.action,
+    entityType: "deal",
+    entityId: input.deal.id,
+    metadata: input.audit.metadata,
+    createdAt: new Date(),
+  });
+
+  return {
+    created: !existing,
+    changed,
+    status: workflowStatus,
+    priceUsd: input.deal.priceUsd,
+  };
 }
 
 function asStatus(value: string): DealStatus {
@@ -274,9 +416,9 @@ export async function loadUserHunts(userId: string): Promise<{
           openedAt: (stamp(row.openedAt) ?? new Date()).toISOString(),
           closedAt: stamp(row.closedAt)?.toISOString() ?? null,
           parentDealId: row.parentDealId,
-          receipt: row.receipt,
-          escrow: row.escrow,
-          domainTransfer: row.domainTransfer,
+          receipt: (row.receipt as Deal["receipt"]) ?? null,
+          escrow: (row.escrow as Deal["escrow"]) ?? null,
+          domainTransfer: (row.domainTransfer as Deal["domainTransfer"]) ?? null,
           blockers: row.blockers ?? [],
           notes: row.notes ?? "",
           source: row.source,
@@ -285,7 +427,7 @@ export async function loadUserHunts(userId: string): Promise<{
           amountVerified: row.amountVerified,
           amountStatus: row.amountStatus as AmountStatus,
           evidencePath: row.evidencePath,
-          verification: row.verification ?? {
+          verification: (row.verification as Deal["verification"] | null) ?? {
             passed: false,
             skipped_reason: null,
             artifacts: [],

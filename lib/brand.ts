@@ -3,8 +3,13 @@ export const LAND_META_LINE =
   "BotBuyer finds it and handles the chase. You approve before it pays.";
 
 /** Land H1 / support — CMO LOCKED ≤10s lead. Soft-signal HOLD. */
-export const LAND_PRODUCT_H1 = "Your AI agent for buying." as const;
+export const LAND_PRODUCT_H1 =
+  "Your AI agent for buying, almost anything!!!" as const;
 export const LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK." as const;
+/** C3 fold primary. Label only — door stays `/signup`. Soft-signal HOLD. */
+export const LAND_REQUEST_ACCESS = "Request access" as const;
+/** C3 fold micro. Muted text link — door stays `/signin`. Not a second button. */
+export const LAND_ALREADY_HERE = "Already here? Log in" as const;
 export const LAND_INSTALL_HELPER =
   "Add to Home Screen for the full app on your phone." as const;
 export const LAND_WORDMARK = "BotBuyer" as const;
@@ -13,12 +18,21 @@ export const LAND_SKY_MARK_SRC =
 export const LAND_ARC_SRC = "/land/assets/06-arc-reverse.svg" as const;
 export const LAND_ARC_LABEL = "Find Decide Buy arc" as const;
 
-/** Signup live door — CPO `cpo-real-auth-signup-ia-v1.md`. Soft-signal HOLD. */
-export const SIGNUP_H1 = "Create your BotBuyer account" as const;
-export const SIGNUP_SUB = LAND_META_LINE;
-export const SIGNUP_CTA = "Create account" as const;
-export const SIGNUP_FOOT = "No charge to create an account." as const;
-export const SIGN_IN_H1 = "Sign in" as const;
+/** L1 capital-desk story strip. Soft-signal HOLD. */
+export const LAND_STORY = [
+  {
+    title: "Tell it what to find",
+    support: "One intent. BotBuyer runs the chase.",
+  },
+  {
+    title: "Searches land for review",
+    support: "Quiet queue — no spend until you say so.",
+  },
+  {
+    title: "You approve. Then it buys.",
+    support: "Every search needs your OK.",
+  },
+] as const;
 
 export const BRAND = {
   name: "BotBuyer",
@@ -33,7 +47,7 @@ export const BRAND = {
     "The automated agent that searches, purchases, and closes — within your limit.",
   easeMicro: "Three inputs, zero babysitting.",
   channelMicro:
-    "Any software, any channel. Domains optional. Cars & real estate later.",
+    "Anything you want to buy. Cars, houses, consumer products, software, domains — you approve before it pays.",
   primaryCta: "Sign up",
   /** In-app / A2HS label — not a land fold CTA. */
   installLink: "Install",

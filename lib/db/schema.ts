@@ -10,9 +10,10 @@ import {
 } from "drizzle-orm/pg-core";
 
 /**
- * Neon-ready schema. POC serves from the imported ledger + in-memory store
- * until DATABASE_URL is connected. Never store card PAN, CVV, or full account
- * numbers — vault references and last4 only.
+ * Neon-ready schema. Imported ledger still seeds from JSON. When
+ * DATABASE_URL is set, engine deals / deal_events / usage_events / intents
+ * persist here so Start search survives serverless isolates.
+ * Never store card PAN, CVV, or full account numbers — vault refs + last4 only.
  */
 
 export const users = pgTable("users", {

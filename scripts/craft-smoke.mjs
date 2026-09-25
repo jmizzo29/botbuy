@@ -284,10 +284,30 @@ assert(!land.includes("BRAND.trustLine"), "land renders no trust line under CTAs
 assert(!land.includes("BRAND.pocBanner"), "land fold has no POC banner stack");
 assert(!signup.includes("BRAND.pocBanner"), "signup has no POC Demo pill");
 assert(!signup.includes("POC · Demo · not live"), "signup scrubbed Demo pill copy");
-assert(signup.includes("SIGNUP_H1") && brand.includes('SIGNUP_H1 = "Create your BotBuyer account"'), "signup H1 lock");
-assert(signup.includes("SIGNUP_SUB"), "signup sub is spend/intent/payment");
-assert(signup.includes("SIGNUP_CTA") || signup.includes("Create account"), "signup CTA Create account");
-assert(signup.includes("SIGNUP_FOOT") && brand.includes("No charge to create an account."), "signup no-charge foot");
+const authCopy = read("lib/auth-copy.ts");
+assert(
+  authCopy.includes('AUTH_REQUEST_H1 = "Request access"') &&
+    signup.includes("AUTH_REQUEST_H1"),
+  "request access H1 lock",
+);
+assert(
+  authCopy.includes(
+    'AUTH_REQUEST_SUB =\n  "Set spend, intent, and a payment method. BotBuyer only moves when you approve."',
+  ) && signup.includes("AUTH_REQUEST_SUB"),
+  "request access subcopy lock",
+);
+assert(
+  authCopy.includes('AUTH_REQUEST_CTA = "Request access"') &&
+    signup.includes("AUTH_REQUEST_CTA"),
+  "request access CTA lock",
+);
+assert(
+  authCopy.includes('AUTH_REQUEST_ALT_LEAD = "Already here?"') &&
+    authCopy.includes('AUTH_REQUEST_ALT_LINK = "Log in"') &&
+    signup.includes("AUTH_REQUEST_ALT_LEAD") &&
+    signup.includes("AUTH_REQUEST_ALT_LINK"),
+  "request access alternate lock",
+);
 assert(
   existsSync(join(root, "cpo-real-auth-signup-ia-v1.md")),
   "CPO real-auth signup IA committed",
@@ -319,8 +339,8 @@ assert(authDoor.includes('data-surface="auth-door"'), "auth door surface marker"
 assert(authDoor.includes("text-3xl"), "auth door Quiet Capital H1 not land display");
 assert(signup.includes("AuthDoor"), "signup uses Techlux auth door");
 assert(signIn.includes("AuthDoor"), "sign-in uses Techlux auth door");
-assert(signup.includes("<PublicChrome auth>"), "signup uses Quiet Capital auth chrome");
-assert(signIn.includes("<PublicChrome auth>"), "sign-in uses Quiet Capital auth chrome");
+assert(signup.includes("<PublicChrome auth"), "signup uses Quiet Capital auth chrome");
+assert(signIn.includes("<PublicChrome auth"), "sign-in uses Quiet Capital auth chrome");
 assert(!signup.includes("BRAND.footerHold") && !signup.includes("No paid Stripe"), "signup has no status footer dump");
 assert(!signIn.includes("BRAND.footerHold") && !signIn.includes("No paid Stripe"), "sign-in has no status footer dump");
 const clerkUi = read("lib/clerk-ui.ts");
@@ -329,7 +349,7 @@ assert(clerkUi.includes("unsafe_disableDevelopmentModeWarnings: true"), "Clerk h
 assert(clerkUi.includes('elevation: "flush"'), "Clerk card is flush — no giant circle shell");
 assert(clerkUi.includes('footer: "hidden"') && clerkUi.includes('footerPages: "hidden"'), "Clerk promo footer is hidden");
 assert(clerkUi.includes('colorPrimary: "#2DD4BF"') && clerkUi.includes('colorTextOnPrimaryBackground: "#042F2E"'), "Clerk primary is Electric Teal");
-assert(clerkUi.includes('colorBackground: "#122A46"'), "Clerk card surface is Quiet Capital navy");
+assert(clerkUi.includes('colorBackground: "#0B1F3A"'), "Clerk card surface is Quiet Capital navy");
 assert(css.includes(".bb-auth-shell") && css.includes("overflow-x: hidden"), "auth shell kills horizontal overflow");
 assert(css.includes(".bb-auth-card") && css.includes("overflow: hidden"), "auth card clips decorative circle");
 assert(css.includes(".bb-auth-shell") && css.includes("#0b1f3a"), "auth page bg is Quiet Capital navy");
@@ -358,12 +378,57 @@ assert(!signup.includes("DEMO_PILL_CLASS"), "signup has no Demo pill token");
 assert(!signIn.includes("DEMO_PILL_CLASS"), "sign-in has no Demo pill token");
 assert(chrome.includes("footerHold") || chrome.includes("BRAND.footerHold"), "non-land public chrome keeps POC footer meta");
 assert(!chrome.includes("signalHold") && !chrome.includes("BRAND.signalHold"), "land chrome has no visible Soft-signal HOLD");
-assert(chrome.includes("{land ? null") && chrome.includes("<SiteFooter"), "land PublicChrome renders no SiteFooter or footer paragraph");
-assert(signup.includes("Sign up"), "signup eyebrow");
+assert(
+  chrome.includes("bb-auth-legal") && chrome.includes("legalOnly") && chrome.includes("land ? null"),
+  "auth footer is Privacy · Terms; land still skips SiteFooter",
+);
 assert(signup.includes("<SignUp"), "signup uses Clerk SignUp");
 assert(signIn.includes("<SignIn"), "sign-in uses Clerk SignIn");
-assert(signIn.includes("SIGN_IN_H1"), "sign-in H1 is Sign in");
-assert(signup.includes("Sign in"), "signup offers Sign in");
+assert(
+  authCopy.includes('AUTH_LOGIN_H1 = "Log in"') &&
+    authCopy.includes(
+      'AUTH_LOGIN_SUB =\n  "Same desk. Searches stay quiet until you approve."',
+    ) &&
+    signIn.includes("AUTH_LOGIN_H1") &&
+    signIn.includes("AUTH_LOGIN_SUB"),
+  "log in title and subcopy lock",
+);
+assert(
+  authCopy.includes('AUTH_LOGIN_ALT_LEAD = "New here?"') &&
+    authCopy.includes('AUTH_LOGIN_ALT_LINK = "Request access"') &&
+    signIn.includes("AUTH_LOGIN_ALT_LEAD") &&
+    signIn.includes("AUTH_LOGIN_ALT_LINK"),
+  "log in alternate lock",
+);
+assert(
+  !signup.includes("Sign up") &&
+    !signup.includes("Sign in") &&
+    !signup.includes("Create account") &&
+    !signup.includes("Signup"),
+  "signup has no banned auth labels",
+);
+assert(
+  !signIn.includes("Sign up") &&
+    !signIn.includes("Sign in") &&
+    !signIn.includes("Create account") &&
+    !signIn.includes("Signup"),
+  "sign-in has no banned auth labels",
+);
+const authFields = read("components/auth-fields.tsx");
+const clerkProvider = read("components/clerk-app-provider.tsx");
+assert(
+  css.includes(
+    '.bb-auth-shell[data-auth-screen="request"]:not([data-auth-password="open"]) .cl-formFieldRow__password',
+  ) &&
+    !css.includes('content: "Request access"') &&
+    authFields.includes("paintRequestPrimary") &&
+    authFields.includes('querySelectorAll(".cl-formButtonPrimary")') &&
+    authFields.includes("AUTH_REQUEST_CTA") &&
+    clerkProvider.includes("formButtonPrimary") &&
+    clerkProvider.includes("AUTH_REQUEST_CTA") &&
+    clerkProvider.includes('pathname.startsWith("/signup/")'),
+  "request access first step hides password and sets the live primary text",
+);
 assert(!signup.includes("in-memory session"), "signup scrubbed in-memory copy");
 assert(!signup.includes("not a live account"), "signup scrubbed POC persist copy");
 assert(!signup.includes("persistSignupAction"), "signup is not in-memory persist");
@@ -403,7 +468,7 @@ assert(empty.includes('SEARCHING_EMPTY_SECONDARY = "Edit intent"'), "Searching E
 assert(empty.includes('NEEDS_YOU_CTA = "Review gates"'), "Needs-you Review gates");
 assert(empty.includes('AGENTS_EMPTY_SECONDARY = "See how activation works"'), "Agents empty secondary");
 assert(empty.includes('"/deals?status=Closed"'), "Agents empty → Closed deals");
-assert(home.includes("DealsTable"), "My deals dense table");
+assert(home.includes("href={`/deals/${deal.id}`}"), "My deals list opens each hunt");
 assert(home.includes("MY_DEALS_LABEL") || home.includes("My deals"), "My deals is /home");
 assert(
   approveUi.includes("APPROVE_MICRO") ||
@@ -445,6 +510,23 @@ assert(!chrome.includes("BRAND.landHonesty"), "land chrome has no Private beta h
 assert(!chrome.includes("Private beta"), "land chrome has no Private beta string");
 assert(!chrome.includes('href="/beta"'), "land chrome has no /beta top link");
 assert(chrome.includes('href="/about"'), "land overlay includes About word link");
+assert(!chrome.includes('data-nav="signin"'), "C3 land chrome has no Sign in");
+assert(chrome.includes('data-nav="about"'), "C3 land chrome is About only");
+const landNavStart = chrome.indexOf(") : land ? (");
+const landNavEnd = chrome.indexOf(") : (", landNavStart);
+const landNav =
+  landNavStart >= 0 && landNavEnd > landNavStart
+    ? chrome.slice(landNavStart, landNavEnd)
+    : "";
+assert(
+  landNav.includes("About") &&
+    !landNav.includes("Sign in") &&
+    !landNav.includes("Sign up") &&
+    !landNav.includes("Log in") &&
+    !landNav.includes("Signup") &&
+    !landNav.includes("Sign-in"),
+  "C3 signed-out land chrome is the About word link only",
+);
 assert(!chrome.includes("hidden sm:inline"), "About stays visible on phone and desktop");
 assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air band");
 assert(chrome.includes("bb-land-header"), "land header overlays the navy stage");
@@ -457,7 +539,12 @@ assert(!chrome.includes("bb-land-footer"), "land has no footer chrome strip");
 assert(!chrome.includes("<Button"), "land overlay nav has no Button pills");
 assert(!chrome.includes("rounded-full"), "land overlay nav has no pill radius");
 assert(!chrome.includes("BRAND.pocBanner"), "POC pill is not land chrome");
-assert(goLive.includes("APPROVE_MICRO") || goLive.includes("BotBuyer only moves when you approve."), "go-live approve micro");
+assert(
+  goLive.includes("APPROVE_MICRO") ||
+    goLive.includes("BotBuyer only moves when you approve.") ||
+    read("lib/golive-quiet.ts").includes("BotBuyer only runs what you approve."),
+  "go-live approve micro",
+);
 assert(existsSync(join(root, "public/brand/techlux/land-bg-techlux-air.png")), "techlux-air committed");
 assert(existsSync(join(root, "public/brand/logo-soft-spine/botbuyer-logo-header.svg")), "soft-spine header lockup committed");
 assert(existsSync(join(root, "public/brand/logo-soft-spine/botbuyer-logo-header-light.svg")), "soft-spine light header committed");
@@ -467,21 +554,46 @@ assert(existsSync(join(root, "brand/logo-soft-spine/botbuyer-mark.svg")), "soft-
 assert(existsSync(join(root, "brand/logo-eclipse-pass/INSTALL.md")), "eclipse-pass archive INSTALL retained");
 assert(agents.includes("AgentsEmptySecondary"), "agents empty secondary");
 
-const financeIdx = admin.indexOf("<CardTitle>Finance</CardTitle>");
-const dealsIdx = admin.indexOf("<CardTitle>Deals ops</CardTitle>");
-const usageIdx = admin.indexOf("<AdminUsageRollup");
-const trafficIdx = admin.indexOf("<CardTitle>Web traffic</CardTitle>");
-const mrrIdx = admin.indexOf("<CardTitle>MRR / revenue</CardTitle>");
-assert(financeIdx > -1 && dealsIdx > -1 && trafficIdx > -1, "admin sections present");
-assert(financeIdx < trafficIdx && dealsIdx < trafficIdx, "Finance/Deals above analytics stubs");
-assert(financeIdx < dealsIdx, "Finance above Deals");
-assert(usageIdx > dealsIdx && usageIdx < trafficIdx, "Usage rollup after Deals, before stubs");
-assert(trafficIdx < mrrIdx, "traffic stub before MRR stub");
-assert(admin.includes("Demo stub") && admin.includes("DemoStub"), "in-card Demo stub styling");
+const adminQuiet = read("lib/admin-quiet.ts");
+const adminUi = read("components/admin-quiet.tsx");
+const adminChrome = read("components/admin-chrome.tsx");
+assert(admin.includes("isAdmin") && admin.includes("notFound"), "admin stays owner-only");
+assert(admin.includes("AdminQuiet") && admin.includes("AdminChrome"), "signed-in admin is Quiet Capital");
+assert(admin.includes("getOwnerFinance"), "admin still runs CHO finance guard");
+assert(admin.includes("customerGmvUsd !== 0"), "admin refuses live GMV");
+assert(adminQuiet.includes('ADMIN_WORDMARK = "BotBuyer"'), "admin wordmark BotBuyer");
+assert(!adminQuiet.includes('"BotBuy"'), "admin copy is not BotBuy");
+assert(adminChrome.includes("ADMIN_WORDMARK") && adminChrome.includes("ADMIN_DONE"), "admin chrome is BotBuyer + Done");
+assert(adminChrome.includes("ADMIN_OWNER") && adminChrome.includes("ADMIN_DEMO"), "admin chrome Owner / Admin + Demo");
+assert(adminChrome.includes("botbuyer-mark-reverse.svg"), "admin mark is soft-spine reverse");
 assert(
-  admin.includes("No $ / user") ||
-    usageUi.includes("No $ / user") ||
-    usage.includes("No $ / user"),
+  !read("public/brand/logo-soft-spine/botbuyer-mark-reverse.svg").toLowerCase().includes("#2dd4bf"),
+  "soft-spine reverse has no teal tip",
+);
+assert(adminQuiet.includes("Web traffic") && adminQuiet.includes("MRR / revenue"), "admin home cards");
+assert(adminQuiet.includes('ADMIN_USERS_VALUE = "0"'), "admin users stay 0");
+assert(adminQuiet.includes("No deals in ops yet."), "admin deals empty honesty");
+assert(adminQuiet.includes("Not connected") && adminQuiet.includes("Demo · not monitored"), "admin health Demo");
+assert(adminQuiet.includes("BotBuyer only runs what you approve."), "admin honesty approve");
+assert(adminQuiet.includes("No live traction until CHO-verified."), "admin honesty traction");
+assert(adminQuiet.includes('ADMIN_BURN_VALUE = "$179.96"'), "admin verified EXAMPLE $179.96");
+assert(adminQuiet.includes("never $596.64"), "admin forbids $596.64 blend");
+assert(
+  !adminQuiet.replace(/never \$596\.64/g, "").includes("596.64"),
+  "596.64 appears only as a prohibition",
+);
+assert(adminQuiet.includes("Pending CHO") && adminQuiet.includes("Imported / Closing"), "admin CHO panels stay separate");
+assert(
+  adminQuiet.includes("Closing / imported deals are not company burn and not GMV."),
+  "admin closing honesty",
+);
+assert(adminQuiet.includes("No blended Startup costs / GMV total."), "admin forbids blended GMV");
+assert(adminQuiet.includes("No agent orgs yet."), "admin agent orgs empty");
+assert(adminQuiet.includes("no fake businesses-running counts."), "admin bans fake businesses running");
+assert(adminUi.includes("ADMIN_BURN_VALUE") && adminUi.includes("ADMIN_AGENTS_EMPTY"), "admin UI uses locked copy");
+assert(!adminUi.includes("AdminUsageRollup") && !admin.includes("AdminUsageRollup"), "admin overview drops usage theater");
+assert(
+  usageUi.includes("No $ / user") || usage.includes("No $ / user"),
   "admin usage has no $/user",
 );
 assert(!usageUi.includes("formatUsd") && !/\$\d/.test(usageUi), "usage UI invents no $ amounts");
@@ -489,13 +601,20 @@ assert(!usageUi.includes("formatUsd") && !/\$\d/.test(usageUi), "usage UI invent
 assert(finance.includes("const customerGmvUsd = 0"), "customer GMV locked at 0");
 assert(finance.includes("EXPECTED_IMPORTED_PENDING_USD = 416.68"), "CFO pending lock $416.68");
 assert(finance.includes("FORBIDDEN_DEMO_INFLATED_PENDING_USD = 836.68"), "CFO forbids demo-inflated $836.68");
+assert(finance.includes("FORBIDDEN_IMPORTED_TOTAL_USD = 596.64"), "CFO forbids blended $596.64");
 assert(finance.includes("countsTowardCfoMoney"), "CFO rollup excludes demo QA fixture");
 assert(store.includes("countsTowardCfoMoney"), "listed/verified spend exclude demo QA fixture");
-assert(admin.includes("botbuyer.ai $179.96"), "admin verified $179.96");
-assert(admin.includes("GMV empty until platform Closed deals"), "admin GMV empty copy");
-assert(admin.includes("Savedfast + xfer · not burn · not GMV"), "admin pending is Savedfast-only");
-assert(admin.includes("Demo pending"), "admin labels Demo pending separately");
-assert(admin.includes("demoPendingListedUsd"), "admin Demo pending uses fixture helper");
+assert(finance.includes("GMV empty until platform Closed deals"), "admin GMV empty copy");
+assert(
+  finance.includes("Savedfast $405 + xfer $11.68") &&
+    finance.includes("never company burn or GMV"),
+  "CFO pending is Savedfast + xfer, not burn or GMV",
+);
+assert(
+  read("lib/demo-needs-you.ts").includes("function demoPendingListedUsd"),
+  "demo pending helper stays QA-only",
+);
+assert(finance.includes("isNonLedgerDemoSeed"), "demo pending stays out of CHO rollup");
 
 assert(usage.includes('costKind: "estimate"') || usage.includes('USAGE_COST_KIND'), "usage costKind estimate");
 assert(usage.includes("Estimate until CHO promote"), "usage Estimate until CHO");
@@ -558,7 +677,12 @@ const LAND_META =
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
 assert(!brand.includes("LAND_COMING_SOON"), "public land coming-soon lock retired");
-assert(brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying."'), "land H1 lock");
+assert(
+  brand.includes(
+    'LAND_PRODUCT_H1 =\n  "Your AI agent for buying, almost anything!!!"',
+  ) || brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying, almost anything!!!"'),
+  "land H1 lock",
+);
 assert(
   brand.includes('LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK."'),
   "land support lock",
@@ -569,7 +693,15 @@ assert(brand.includes("lead: LAND_META_LINE"), "land lead is locked one-liner");
 assert(!brand.includes("Buy software. You approve."), "software-only land tag removed from brand");
 assert(!brand.includes("productTag"), "land has no product-tag slot");
 assert(brand.includes('name: "BotBuyer"'), "product name lock");
-assert(brand.includes('primaryCta: "Sign up"'), "land primary door is Sign up");
+assert(brand.includes('primaryCta: "Sign up"'), "about and non-land door label stays Sign up");
+assert(
+  brand.includes('LAND_REQUEST_ACCESS = "Request access"'),
+  "C3 land primary is Request access",
+);
+assert(
+  brand.includes('LAND_ALREADY_HERE = "Already here? Log in"'),
+  "C3 fold micro is Already here? Log in",
+);
 assert(brand.includes('installLink: "Install"'), "in-app Install label stays off land fold");
 assert(!brand.includes("secondaryCta"), "land has no peer secondary CTA");
 assert(!brand.includes("Start your first buy"), "land dropped Start your first buy");
@@ -622,7 +754,9 @@ assert(!land.includes("bb-land-atm"), "Q1 land has no full-bleed atm layer");
 assert(!land.includes("bb-land-sky"), "Q1 land has no 50/50 sky zone");
 assert(!land.includes("bb-mark-hero"), "Q1 land has no giant hero mark");
 assert(!land.includes("bb-atm-mesh-glow"), "land no longer wires unused mesh-glow");
-assert(land.includes("bb-land-watermark") && land.includes("bb-mark-watermark"), "Q1 faint watermark is wired");
+assert(!land.includes("bb-land-watermark") && !land.includes("bb-mark-watermark"), "L1 killed the Q1 watermark");
+assert(!land.includes("bb-land-jewelry") && !land.includes("jewelry"), "L1 HARDEN killed teal jewelry");
+assert(land.includes("bb-land-story") && land.includes("LAND_STORY"), "L1 fold mounts the story strip");
 assert(land.includes("bb-land-h1") && land.includes("bb-land-support"), "land fold uses CSS type-scale classes");
 assert(!land.includes("bb-land-meta"), "land fold dropped meta one-liner");
 assert(chrome.includes("bb-land-main w-full"), "land main is unguttered full width");
@@ -654,34 +788,46 @@ assert(
 assert(!land.includes("LandInstallButton"), "land has no Install door");
 assert(!land.includes("Install"), "land page source has no Install string");
 assert(!land.includes("land-install"), "land fold has no Install CTA");
-assert(land.includes('data-cta="land-signin"'), "land fold pairs Sign in with Sign up");
-assert(land.includes("bb-land-signin"), "land Sign in uses fold class");
-assert(land.includes("bb-land-signup"), "land Sign up uses fold class");
-assert(land.includes("CLERK_SIGN_IN_URL") || land.includes("/signin"), "fold Sign in uses canonical /signin");
-assert(land.includes('href="/signup"'), "land Sign up door is /signup");
-assert(chrome.includes(") : land ? null : ("), "land nav has no signed-out Sign in duplicate");
+assert(!land.includes('data-cta="land-signin"'), "C3 fold has no Sign in CTA");
+assert(!land.includes("bb-land-signin"), "land fold has no Sign in class");
+assert(land.includes("bb-land-signup"), "Request access uses the fold primary class");
+assert(land.includes("LAND_REQUEST_ACCESS"), "fold primary label is Request access");
+assert(land.includes("LAND_ALREADY_HERE"), "fold micro label is Already here? Log in");
+assert(land.includes("bb-land-login"), "fold micro is a text link, not a second button");
+assert(land.includes("CLERK_SIGN_IN_URL"), "Already here? Log in uses the existing sign-in door");
+assert(
+  !land.includes("Sign up") &&
+    !land.includes("Sign in") &&
+    !land.includes("Signup") &&
+    !land.includes("Sign-in"),
+  "public land source has no banned visible labels",
+);
+assert(land.includes('href="/signup"'), "Request access door is /signup");
+assert(!chrome.includes('data-nav="signin"'), "land chrome does not mount Sign in");
+assert(chrome.includes('data-nav="about"'), "land chrome mounts About");
 assert(
   read("components/install-hint.tsx").includes("if (onLand) return null"),
   "InstallHint is already null on land",
 );
 assert(
-  land.includes("redirectSignedInFromLand") ||
-    land.includes("redirect(MY_DEALS_HREF)"),
-  "signed-in redirects off land",
+  land.includes("redirectSignedInFromLand"),
+  "land calls the signed-in land gate",
 );
 assert(
   existsSync(join(root, "lib/land-gate.ts")) &&
-    read("lib/land-gate.ts").includes("redirect(MY_DEALS_HREF)"),
-  "land-gate helper redirects signed-in visitors to My deals",
+    read("lib/land-gate.ts").includes("Do not bounce") &&
+    !read("lib/land-gate.ts").includes("redirect("),
+  "public land stays the pitch for signed-in visitors",
 );
 assert(land.includes('dynamic = "force-dynamic"'), "land session redirect is request-time");
 assert(land.includes('themeColor: "#0B1F3A"'), "land status/theme color is navy");
 assert(!land.includes("land-my-deals"), "My deals is never land primary");
 assert(!land.includes("BRAND.myDealsCta"), "land fold has no My deals CTA");
-assert(land.includes('data-cta="land-signup"'), "signed-out land primary is Sign up");
+assert(land.includes('data-cta="land-signup"'), "signed-out land primary is Request access");
+assert(land.includes('data-cta="land-login"'), "fold micro is Already here? Log in");
 assert(
   (land.match(/<Button/g) || []).length === 1,
-  "land fold Button is Sign up only",
+  "land fold Button is Request access only",
 );
 assert(!land.includes("variant="), "land fold Buttons have no secondary/ghost variant");
 assert(!landInstall.includes("<Button"), "land Install is not a Button");
@@ -744,11 +890,18 @@ assert(
 assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage tokens stay");
 assert(css.includes(".bb-atm-richer-mesh-deep::before"), "A1 richer-mesh-deep atmosphere CSS stays for auth");
 assert(css.includes("rgba(42,125,158,0.42)"), "A1 richer-mesh-deep teal blob stays for auth");
-assert(css.includes(".bb-land-watermark") && css.includes("opacity: 0.12"), "Q1 watermark opacity is ≤12%");
-assert(css.includes(".bb-land-panel") && css.includes("z-index: 1"), "panel stays above watermark");
-assert(css.includes("background: #0b1f3a"), "Q1 land stage is flat navy");
-assert(!css.includes("rgba(5, 10, 12, 0.38)"), "Q1 killed the #050A0C scrim slab");
-assert(!css.includes("width: 148px"), "Q1 killed the 148px hero mark");
+assert(!css.includes(".bb-land-watermark") && !css.includes(".bb-mark-watermark"), "L1 CSS dropped the watermark");
+assert(!css.includes(".bb-land-jewelry") && !css.includes(".jewelry"), "L1 HARDEN deleted jewelry CSS");
+assert(
+  !existsSync(join(root, "app/phone-theme.css")) &&
+    !/bb-land-copy[\s\S]{0,240}(?:width|height):\s*1px/.test(css) &&
+    !/clip:\s*rect\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0\s*\)/.test(css),
+  "no phone-theme clip hides land copy or fold CTA",
+);
+assert(css.includes(".bb-land-panel") && css.includes("z-index: 1"), "panel stays above the navy field");
+assert(css.includes("background: #0b1f3a"), "L1 land stage is flat navy");
+assert(!css.includes("rgba(5, 10, 12, 0.38)"), "L1 killed the #050A0C scrim slab");
+assert(!css.includes("width: 148px"), "L1 killed the 148px hero mark");
 assert(!css.includes("bb-atm-grain-veil"), "do not ship grain-veil");
 assert(!css.includes("bb-atm-eclipse-whisper"), "do not ship eclipse-whisper");
 assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
@@ -763,101 +916,121 @@ assert(
 assert(css.includes("border-radius: 0"), "stage is square full-bleed");
 assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
 assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
-assert(css.includes(".bb-land-copy") && css.includes("text-align: left"), "Q1 land copy is left folio");
+assert(css.includes(".bb-land-copy") && css.includes("text-align: left"), "L1 land copy is left folio");
 assert(
   css.includes(".bb-land-header") &&
     css.includes("justify-content: space-between") &&
-    css.includes("flex-wrap: wrap"),
+    css.includes("flex-wrap: nowrap"),
   "phone overlay is lockup + About on the chrome row",
 );
 assert(
   css.includes("justify-content: space-between") &&
     css.includes(".bb-land-panel") &&
     css.includes("border-top: none") &&
-    css.includes("rgba(255, 255, 255, 0.10)"),
-  "Q1 chrome is lockup + About with hairline; no teal divider",
+    !/\.bb-land-header \{[\s\S]{0,400}border-bottom:/.test(css),
+  "L1 chrome killed header hairline; no teal divider",
 );
 assert(css.includes("@media (max-width: 1023px)"), "phone axis is locked at max-lg");
-assert(css.includes(".bb-land-cta") && css.includes("flex-direction: column"), "fold CTA is Sign up over Sign in");
-assert(!css.includes("flex: 1 1 0%"), "Q1 killed dual equal CTA flex");
+assert(css.includes(".bb-land-cta") && css.includes("flex-direction: column"), "fold CTA stacks Request access then the login micro");
+assert(!css.includes("flex: 1 1 0%"), "L1 killed dual equal CTA flex");
 assert(
   !css.includes("min-width: calc((100% - 10px) / 2)") &&
     !css.includes("width: calc((100% - 10px) / 2)"),
-  "Q1 killed half-row dual CTAs",
+  "L1 killed half-row dual CTAs",
 );
-assert(css.includes("min-height: 48px") && css.includes("height: 48px"), "Sign up keeps 48px height");
-assert(css.includes("border-radius: 8px"), "Sign up radius is 8px");
-assert(!land.includes('size="lg"'), "land Sign up box is CSS-owned, not Button lg");
+assert(css.includes("min-height: 48px") && css.includes("height: 48px"), "Request access keeps 48px height");
+assert(css.includes("border-radius: 8px"), "Request access radius is 8px");
+assert(!land.includes('size="lg"'), "land Request access box is CSS-owned, not Button lg");
 assert(
   css.includes('.bb-land-cta [data-cta="land-signup"]') &&
     css.includes("background: #2DD4BF") &&
     css.includes("color: #042F2E"),
-  "Sign up is filled primary teal",
+  "Request access is filled primary teal",
 );
 assert(
-  css.includes('.bb-land-cta [data-cta="land-signin"]') &&
-    css.includes("color: rgba(255, 255, 255, 0.90)") &&
-    /\[data-cta="land-signin"\][\s\S]{0,800}border:\s*0/.test(css),
-  "Sign in is a text link, not a teal outline pill",
+  /\.bb-land-login\s*\{[\s\S]*?color:\s*rgba\(255,\s*255,\s*255,\s*0\.58\)/.test(css) &&
+    !css.includes('.bb-land-cta [data-cta="land-signin"]') &&
+    !css.includes(".bb-land-signin") &&
+    css.includes(".bb-land-link") &&
+    css.includes("color: rgba(255, 255, 255, 0.90)"),
+  "Already here? Log in is a muted fold text link; About stays a chrome word link",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(!land.includes("data-fold"), "land production DOM has no data-fold debug tag");
 assert(
-  land.includes("bb-land-watermark") &&
+  !land.includes("bb-land-jewelry") &&
     land.includes("bb-land-panel") &&
-    css.includes(".bb-land-watermark") &&
+    land.includes("bb-land-story") &&
+    !css.includes(".bb-land-jewelry") &&
     css.includes(".bb-land-panel") &&
+    css.includes(".bb-land-story") &&
     css.includes("border-top: none") &&
     !css.includes("rgba(5, 10, 12, 0.38)") &&
     !css.includes("border-top: 2px solid #2dd4bf") &&
     !css.includes("background: #050a0c"),
-  "Q1 fold is flat navy folio with no mesh slab or teal edge",
+  "L1 fold is flat navy folio with story and no jewelry or mesh slab",
 );
 assert(
   css.includes("font-size: 1.875rem") &&
     css.includes("letter-spacing: -0.04em") &&
     css.includes("text-wrap: balance"),
-  "Q1 H1 is 30px / 600 / -0.04em / balance",
+  "L1 H1 is 30px / 600 / -0.04em / balance",
 );
-assert(!land.includes("bb-land-arc"), "Q1 fold has no arc rail");
-assert(!land.includes("bb-land-rule"), "Q1 fold has no D1 teal rule");
-assert(!land.includes("LAND_ARC_SRC"), "Q1 fold does not mount the arc asset");
-assert(!css.includes(".bb-land-arc"), "Q1 CSS dropped the arc rail");
-assert(!css.includes(".bb-land-rule"), "Q1 CSS dropped the D1 hairline rule");
+assert(!land.includes("bb-land-arc"), "L1 fold has no arc rail");
+assert(!land.includes("bb-land-rule"), "L1 fold has no D1 teal rule");
+assert(!land.includes("LAND_ARC_SRC"), "L1 fold does not mount the arc asset");
+assert(!css.includes(".bb-land-arc"), "L1 CSS dropped the arc rail");
+assert(!css.includes(".bb-land-rule"), "L1 CSS dropped the D1 hairline rule");
 assert(
   !land.includes("bb-mark-hero") &&
     !css.includes(".bb-mark-hero") &&
     !css.includes("width: 148px") &&
     !css.includes("height: 148px"),
-  "Q1 killed the oversized 148px hero mark",
+  "L1 killed the oversized 148px hero mark",
 );
 assert(
-  land.includes("LAND_SKY_MARK_SRC") &&
+  !land.includes("LAND_SKY_MARK_SRC") &&
     brand.includes(
       'LAND_SKY_MARK_SRC =\n  "/brand/logo-soft-spine/botbuyer-mark-reverse.svg"',
     ),
-  "Q1 watermark is the locked soft-spine reverse",
+  "L1 land fold does not mount the watermark mark",
 );
 assert(
-  land.indexOf("bb-land-watermark") < land.indexOf("bb-land-panel") &&
-    land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
-    land.indexOf("bb-land-support") < land.indexOf("bb-land-cta"),
-  "Q1 fold order is watermark → panel H1 → support → CTA",
+  land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
+    land.indexOf("bb-land-support") < land.indexOf("bb-land-cta") &&
+    land.indexOf("bb-land-cta") < land.indexOf("bb-land-story"),
+  "L1 fold order is H1 → support → Request access → story",
 );
 assert(
   css.includes("margin-block-start: 0") &&
     css.includes("align-items: flex-start") &&
-    css.includes("padding: 48px 24px"),
-  "phone Q1 panel is top-weighted left folio",
+    css.includes("padding: 28px 24px"),
+  "phone L1 panel is dense top folio",
 );
 assert(
-  /@media \(max-width: 1023px\)[\s\S]*?\.bb-land-cta \{[\s\S]*?max-width: 13\.75rem/.test(
+  /@media \(max-width: 1023px\)[\s\S]*?\[data-cta="land-signup"\][\s\S]*?width:\s*100%/.test(
     css,
   ) &&
-    /@media \(max-width: 1023px\)[\s\S]*?\[data-cta="land-signup"\][\s\S]*?width:\s*100%/.test(
+    !/@media \(max-width: 1023px\)[\s\S]*?\.bb-land-cta \{[\s\S]*?max-width: 13\.75rem/.test(
       css,
     ),
-  "phone Sign up is 100% of the ~220px content stack",
+  "phone Request access is 100% of the content column",
+);
+assert(
+  brand.includes("Tell it what to find") &&
+    brand.includes("One intent. BotBuyer runs the chase.") &&
+    brand.includes("Searches land for review") &&
+    brand.includes("Quiet queue — no spend until you say so.") &&
+    brand.includes("You approve. Then it buys.") &&
+    brand.includes("Every search needs your OK."),
+  "L1 story strip copy is locked in brand",
+);
+assert(
+  css.includes("color: #2dd4bf") &&
+    css.includes("min-width: 200px") &&
+    css.includes("rgba(255, 255, 255, 0.03)") &&
+    css.includes("border-radius: 8px"),
+  "L1 story indices are teal, desktop story card is 8px with a 3% fill, Request access hugs 200px",
 );
 assert(
   css.includes(
@@ -867,9 +1040,9 @@ assert(
 );
 assert(
   !css.includes("padding: 10px 6px") &&
-    css.includes("font-size: 15px") &&
-    css.includes("color: rgba(255, 255, 255, 0.9)"),
-  "About stays 15px / 0.90 without inflating chrome",
+    css.includes("font-size: 14px") &&
+    css.includes("color: rgba(255, 255, 255, 0.90)"),
+  "chrome About stays 14px / 0.90 without inflating chrome",
 );
 assert(
   /@media \(max-width: 1023px\)[\s\S]*?\.bb-land-support \{[\s\S]*?margin-bottom: 0\.5rem/.test(
@@ -897,26 +1070,28 @@ assert(
   "Q1 institutional-folio INSTALL is READY-TO-SHIP",
 );
 assert(
-  read("land/INSTALL.md").includes("land/craft-raise-2026-09-13/INSTALL.md"),
-  "land INSTALL points at Q1 kit SoT",
+  read("land/INSTALL.md").includes("land/craft-raise-v2-2026-09-14/INSTALL.md"),
+  "land INSTALL points at L1 kit SoT",
 );
 assert(
   read("land/INSTALL.md").includes("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md"),
   "land INSTALL records replaced R3 kit",
 );
+assert(!chrome.includes('data-nav="signin"'), "land chrome has no Sign in mark");
 assert(chrome.includes('data-nav="about"'), "land About link is marked for chrome QA");
 assert(chrome.includes('link("about")') || chrome.includes('className={link("about")}'), "land About uses U1 about class");
 assert(
-  css.includes("font-size: 15px") &&
-    css.includes("font-weight: 550") &&
-    css.includes(".about"),
-  "U1 About chrome is 15px / 550",
+  css.includes("font-size: 14px") &&
+    css.includes("font-weight: 500") &&
+    css.includes(".about") &&
+    css.includes('[data-nav="about"]') &&
+    !css.includes('[data-nav="signin"]'),
+  "C3 chrome About is 14px / 500 / 0.90",
 );
 assert(
-  css.includes(".bb-land-watermark") &&
-    css.includes("inset: 0") &&
-    css.includes("opacity: 0.12"),
-  "Q1 watermark is a faint full-bleed mark",
+  !css.includes(".bb-land-jewelry") &&
+    !css.includes("opacity: 0.12"),
+  "L1 HARDEN killed jewelry — no 12% watermark",
 );
 assert(
   !read("public/brand/logo-soft-spine/botbuyer-mark-reverse.svg").includes(
@@ -1020,7 +1195,7 @@ assert(layout.includes("/favicon.ico"), "layout links favicon.ico");
 assert(layout.includes("/favicon.svg"), "layout links favicon.svg");
 assert(layout.includes("/brand/logo-soft-spine/favicon/apple-touch-icon.png"), "layout apple-touch-icon");
 assert(layout.includes("appleWebApp") && layout.includes("capable: true"), "layout appleWebApp capable");
-assert(layout.includes("statusBarStyle: \"default\""), "layout Apple status bar for light shell");
+assert(layout.includes("statusBarStyle: \"black-translucent\""), "layout Apple status bar for navy shell");
 assert(layout.includes("apple-mobile-web-app-capable"), "layout Apple capable meta");
 assert(layout.includes("/brand/logo-soft-spine/og/og-1200x630.png"), "layout Open Graph image");
 assert(layout.includes("https://botbuyer.ai/brand/logo-soft-spine/og/og-1200x630.png"), "twitter image soft-spine OG");
@@ -1123,7 +1298,7 @@ assert(home.includes("SPEND_LIMIT_PILL") && home.includes("AUTO_APPROVE_OFF"), "
 assert(home.includes("remainingAfterVerified"), "My deals remaining is computed, not a fake $840");
 assert(!home.includes("Spend remaining"), "home dropped $1k remaining-as-limit badge");
 assert(shell.includes("data-surface=\"phone-tabs\""), "phone tabs designer surface");
-assert(shell.includes("text-primary"), "active tab icon is teal jewelry");
+assert(shell.includes("text-white"), "active tab is white on the navy shell");
 assert(!usageUi.includes("text-zinc-"), "usage UI is Techlux light, not dark zinc");
 assert(!usageUi.includes("bg-white/[0.03]"), "usage counters are not dark wash");
 const vaultRailsUi = read("components/vault-rails.tsx");
@@ -1141,7 +1316,14 @@ assert(usageUi.includes("SettingsUsageSection") && usageUi.includes('id="usage"'
 assert(usageUi.includes("SETTINGS_USAGE_MICRO"), "Settings card uses per-user micro");
 assert(usageUi.includes("ADMIN_USAGE_MICRO"), "Admin card defaults to platform aggregate");
 assert(usageUi.includes("byUser"), "Admin usage accepts by-user rows");
-assert(admin.includes("byUser={usage.byUser}"), "Admin page passes platform by-user");
+assert(
+  read("lib/admin-metrics.ts").includes("byUser: rollupUsageByUser"),
+  "Admin metrics pass platform by-user",
+);
+assert(
+  read("app/api/admin/metrics/route.ts").includes("getAdminMetrics"),
+  "Admin metrics API still serves platform usage",
+);
 assert(usageUi.includes("/settings#usage"), "deal usage links to Settings");
 assert(usageUi.includes("USAGE_ESTIMATE_LABEL") && usageUi.includes("DemoBadge"), "usage badges Demo/Estimate");
 assert(!usageUi.includes("Actual $") || usage.includes("Never Actual $"), "usage UI invents no Actual $");
@@ -1446,7 +1628,7 @@ assert(
 );
 assert(johnTemplatesSot.includes("Software-first"), "templates SoT software-first");
 assert(johnHome.includes("MY_DEALS_EMPTY_TITLE") || johnHome.includes("Nothing searching yet"), "My deals empty title wired");
-assert(johnHome.includes("IntentForm"), "My deals empty has chips + describe");
+assert(johnHome.includes('href="/intent"') && johnHome.includes("New hunt"), "My deals empty starts a hunt");
 assert(johnHome.includes("MY_DEALS_PROGRESS"), "My deals progress line");
 assert(johnHome.includes("APPROVE_MICRO") || johnHome.includes("BotBuyer only moves when you approve."), "My deals approve micro");
 assert(johnHome.includes("AUTO_APPROVE_OFF"), "My deals auto-approve OFF");
@@ -1548,6 +1730,162 @@ assert(!connectCopy.includes("password vault") || connectCopy.includes("never a 
 assert(read("lib/connectors/sanitize.ts").includes("looksLikeSecretKey"), "never-log sanitizer");
 assert(read("lib/connectors/audit.ts").includes("dealId") && read("lib/connectors/audit.ts").includes("provider"), "connector audit row shape");
 
+const intentChat = [
+  read("components/intent-chat.tsx"),
+  read("components/intent-example-decision.tsx"),
+].join("\n");
+const intentCopy = read("lib/intent-chat.ts");
+const intentPage = read("app/(app)/intent/page.tsx");
+const intentThreadPage = read("app/(app)/intent/[id]/page.tsx");
+assert(intentPage.includes("IntentEmpty") && intentPage.includes("IntentList"), "Intent home is empty or list");
+assert(intentPage.includes("INTENT_EXAMPLE_ROWS"), "Intent list example gate");
+assert(intentCopy.includes('INTENT_EMPTY_H = "No intents yet"'), "Intent empty headline");
+assert(
+  intentCopy.includes(
+    '"Set an intent in plain language. Matches land for review — BotBuyer spends only with your OK."',
+  ),
+  "Intent empty sentence",
+);
+assert(intentCopy.includes('INTENT_ASK = "Ask BotBuyer"'), "Intent empty CTA Ask BotBuyer");
+assert(intentCopy.includes('INTENT_NEW = "New intent"'), "Intent New intent");
+assert(
+  intentCopy.includes("Nothing is charged on this screen. Auto-approve is off."),
+  "Intent empty charge micro",
+);
+assert(intentCopy.includes("Nothing is charged on this screen."), "Intent thread charge micro");
+assert(intentCopy.includes("BotBuyer only runs what you approve."), "Intent thread trust micro");
+assert(intentCopy.includes("Listed $8,900 · unverified"), "Intent listing Listed $8,900 unverified");
+assert(intentCopy.includes("InvoiceFlow · SaaS billing"), "Intent listing title");
+assert(intentCopy.includes('ask: INTENT_ASK_DECISION') || intentCopy.includes("I’ll keep searching"), "Intent approve ask");
+assert(intentChat.includes("Approve") && intentChat.includes("Reject"), "Intent thread Approve and Reject");
+assert(intentChat.includes("data-quiet=\"intent-empty\""), "Intent empty surface");
+assert(intentChat.includes("data-quiet=\"intent-list\""), "Intent list surface");
+assert(intentChat.includes("data-quiet=\"intent-thread\""), "Intent thread surface");
+assert(intentChat.includes(">EXAMPLE<") || intentChat.includes("EXAMPLE"), "Intent EXAMPLE chip");
+assert(intentCopy.includes("EXAMPLE · not CHO-verified"), "Intent empty EXAMPLE chip");
+assert(!intentChat.includes("rounded-full") && !intentCopy.includes("autoApprove: true"), "Intent no pills and no auto-approve");
+assert(intentThreadPage.includes("isExampleIntentId") && intentThreadPage.includes("notFound"), "EXAMPLE thread stays behind example=1");
+assert(shell.includes("New intent") && shell.includes("← Intent"), "Intent chrome New intent and back");
+assert(shell.includes('href="/intent/new"'), "New intent opens the hunt form");
+assert(shell.includes("grid-cols-4"), "Intent stays on the four phone tabs");
+
+const vaultQuiet = read("lib/vault-quiet.ts");
+const vaultQuietUi = read("components/vault-quiet.tsx");
+const vaultCraft = read("app/craft/vault/page.tsx");
+assert(vaultPage.includes("VaultQuiet"), "signed-in Vault is Quiet Capital");
+assert(vaultCraft.includes("panel=spend-limit") || vaultCraft.includes("spend-limit"), "craft vault spend-limit panel");
+assert(vaultCraft.includes('path="/vault"'), "craft vault uses Vault tab");
+assert(vaultQuiet.includes('VAULT_EMPTY_H = "No payment method yet"'), "vault empty headline");
+assert(vaultQuiet.includes("Nothing is charged on this screen. Auto-approve is off."), "vault empty charge micro");
+assert(
+  vaultQuiet.includes("Pay at purchase from your linked method. Your spend limit still applies."),
+  "vault honesty pay at purchase",
+);
+assert(vaultQuiet.includes("BotBuyer only spends what you approve."), "vault honesty approve");
+assert(
+  vaultQuiet.includes("BotBuyer will not exceed this without your approval."),
+  "vault spend limit will not exceed",
+);
+assert(vaultQuiet.includes("nothing sits in a balance here"), "vault empty denies a held balance");
+assert(vaultQuiet.includes("no holding balance"), "vault populated denies a holding balance");
+assert(vaultQuiet.includes("•••• 4242"), "vault example Visa");
+assert(vaultQuiet.includes("ACH · Linked"), "vault example ACH");
+assert(vaultQuiet.includes("VAULT_EXAMPLE_LIMIT_USD = 25_000"), "vault example spend limit");
+assert(vaultQuiet.includes('VAULT_ADD = "Add payment method"'), "vault primary Add payment method");
+assert(vaultQuiet.includes('VAULT_SET = "Set spend limit"'), "vault set spend limit");
+assert(vaultQuietUi.includes("VAULT_ADD") && vaultQuietUi.includes("VAULT_SET"), "vault UI uses locked verbs");
+assert(vaultQuietUi.includes('data-quiet="vault-empty"') || vaultQuietUi.includes("vault-empty"), "vault empty surface");
+assert(vaultQuietUi.includes("vault-populated"), "vault populated surface");
+assert(vaultQuietUi.includes("vault-spend-limit"), "vault spend-limit surface");
+assert(vaultQuietUi.includes(">#2DD4BF<") || vaultQuietUi.includes("bg-[#2DD4BF]"), "vault Save is teal");
+assert(!vaultQuietUi.includes("rounded-full"), "vault controls are not pills");
+assert(!vaultQuiet.includes("autoApprove: true"), "vault auto-approve stays off");
+assert(!vaultQuiet.toLowerCase().includes("deposit"), "vault copy has no deposit theater");
+assert(!vaultQuiet.toLowerCase().includes("wallet"), "vault copy has no wallet theater");
+assert(!vaultQuietUi.toLowerCase().includes("gmv"), "vault UI has no GMV");
+assert(!vaultQuiet.includes("Fund your vault"), "vault quiet dropped Fund your vault");
+assert(shell.includes("vaultDesk"), "Vault chrome hides the search CTA");
+
+const goliveQuiet = read("lib/golive-quiet.ts");
+const goliveUi = read("components/golive-quiet.tsx");
+const goliveChrome = read("components/golive-chrome.tsx");
+const goliveCraft = read("app/craft/golive/page.tsx");
+const goliveCss = read("app/globals.css");
+assert(goliveCraft.includes("panel=incomplete") || goliveCraft.includes("golivePanelOf"), "craft golive panel query");
+assert(goliveCraft.includes("?panel="), "craft golive switches incomplete ready running");
+assert(goliveQuiet.includes('GOLIVE_INCOMPLETE_TITLE = "Go live"'), "golive incomplete title");
+assert(goliveQuiet.includes('GOLIVE_READY_TITLE = "Ready to run"'), "golive ready title");
+assert(goliveQuiet.includes('GOLIVE_RUNNING_TITLE = "BotBuyer is searching"'), "golive running title");
+assert(goliveQuiet.includes("BotBuyer only runs what you approve."), "golive honesty approve");
+assert(goliveQuiet.includes("Nothing is charged until you approve a deal."), "golive honesty charge");
+assert(goliveQuiet.includes('GOLIVE_AUTO_OFF = "Auto-approve off."'), "golive auto-approve off");
+assert(goliveQuiet.includes("EXAMPLE · not CHO-verified"), "golive EXAMPLE chip");
+assert(goliveQuiet.includes("Visa · •••• 4242"), "golive masked method");
+assert(goliveQuiet.includes('GOLIVE_ADD_METHOD = "Add payment method"'), "golive add payment method");
+assert(goliveQuiet.includes('GOLIVE_VIEW_SEARCHES = "View searches"'), "golive view searches");
+assert(goliveQuiet.includes("Mid-market SaaS · ARR $2–8M"), "golive example intent");
+assert(goliveQuiet.includes("$25,000 / month"), "golive example spend limit");
+assert(goliveUi.includes("GOLIVE_VIEW_SEARCHES") && goliveUi.includes("GOLIVE_EXAMPLE_CHIP"), "golive UI locked copy");
+assert(goliveUi.includes('data-golive="run-muted"'), "golive muted Run");
+assert(goliveChrome.includes("botbuyer-mark-reverse.svg"), "golive soft-spine reverse mark");
+assert(goliveChrome.includes(">BotBuyer<") || goliveChrome.includes("bb-golive-word"), "golive wordmark BotBuyer");
+assert(!goliveChrome.includes("phone-tabs") && !goliveUi.includes("grid-cols-4"), "golive is not a fifth tab");
+assert(!goliveQuiet.toLowerCase().includes("deposit"), "golive copy has no deposit theater");
+assert(!goliveQuiet.toLowerCase().includes("holding balance"), "golive copy has no holding balance");
+assert(!goliveQuiet.includes("autoApprove: true"), "golive auto-approve stays off");
+assert(!goliveUi.includes("rounded-full") && !goliveChrome.includes("rounded-full"), "golive controls are not pills");
+assert(goliveCss.includes(".bb-golive") && goliveCss.includes("#2dd4bf") && goliveCss.includes("#042f2e"), "golive teal tokens");
+assert(goLive.includes("GoliveQuiet") && goLive.includes("goliveFromAccount"), "signed-in go-live is Quiet Capital");
+assert(read("app/onboarding/go-live/actions.ts").includes("panel=running"), "go-live success stays on running before searches");
+assert(goliveCss.includes('[data-surface="public-shell"]:has(.bb-golive) header'), "go-live hides public chrome");
+assert(!read("middleware.ts").includes("x-bb-path"), "go-live does not rewrite Clerk middleware");
+
+const settingsQuiet = read("lib/settings-quiet.ts");
+const settingsUi = read("components/settings-quiet.tsx");
+const settingsChrome = read("components/settings-chrome.tsx");
+const settingsCraft = read("app/craft/settings/page.tsx");
+const settingsCss = read("app/globals.css");
+assert(settingsCraft.includes("settingsPanelOf"), "craft settings panel query");
+assert(
+  settingsCraft.includes("panel=home") || settingsQuiet.includes('return "home"'),
+  "craft settings defaults home",
+);
+assert(settingsQuiet.includes('value === "connectors"') && settingsQuiet.includes('value === "logout"'), "craft settings switches home connectors logout");
+assert(settingsQuiet.includes('SETTINGS_WORDMARK = "BotBuyer"'), "settings wordmark BotBuyer");
+assert(settingsChrome.includes("botbuyer-mark-reverse.svg"), "settings soft-spine reverse mark");
+assert(settingsChrome.includes("SETTINGS_WORDMARK") && settingsChrome.includes("SETTINGS_DONE"), "settings chrome is BotBuyer + Done");
+assert(!settingsChrome.includes("phone-tabs") && !settingsUi.includes("grid-cols-"), "settings is not a fifth tab");
+assert(settingsQuiet.includes("BotBuyer only runs what you approve."), "settings honesty approve");
+assert(settingsQuiet.includes("Nothing is charged until you approve a deal."), "settings honesty charge");
+assert(settingsQuiet.includes('SETTINGS_AUTO_OFF = "Off"'), "settings auto-approve Off fact");
+assert(settingsQuiet.includes("not editable to ON"), "settings auto-approve cannot be edited ON");
+assert(settingsQuiet.includes("no balance theater"), "settings vault has no balance theater");
+assert(settingsQuiet.includes('SETTINGS_NEEDS_SETUP = "Needs setup"'), "settings connectors Needs setup");
+assert(settingsQuiet.includes('SETTINGS_COMING = "Coming"'), "settings connectors Coming");
+assert(settingsQuiet.includes("no synced GMV or closed deals shown"), "settings connectors no fake GMV");
+assert(settingsQuiet.includes('SETTINGS_LOGOUT_TITLE = "Log out of BotBuyer?"'), "settings logout title");
+const adminCraft = read("app/craft/admin/page.tsx");
+assert(adminCraft.includes("adminPanelOf"), "craft admin panel query");
+assert(adminCraft.includes("ADMIN_CRAFT_HREFS"), "craft admin uses craft hrefs");
+assert(
+  adminQuiet.includes('value === "finance"') && adminQuiet.includes('value === "agents"'),
+  "craft admin switches home finance agents",
+);
+assert(shell.includes("grid-cols-4"), "buyer phone tabs stay four");
+assert(
+  !shell.includes('{ href: "/admin", label: "Admin" }') &&
+    shell.includes("PHONE_TAB_ADMIN"),
+  "Admin is not a fifth buyer tab",
+);
+assert(settingsQuiet.includes("EXAMPLE · not CHO-verified"), "settings EXAMPLE chip");
+assert(settingsUi.includes('data-auto-approve="off"'), "settings Off badge is a fact");
+assert(!settingsUi.includes('type="checkbox"') && !settingsUi.includes('role="switch"'), "settings auto-approve is not a toggle");
+assert(!settingsUi.includes("autoApprove: true") && !settingsQuiet.includes("autoApprove: true"), "settings auto-approve stays off");
+assert(!settingsUi.includes("rounded-full") && !settingsChrome.includes("rounded-full"), "settings controls are not pills");
+assert(settingsCss.includes(".bb-settings") && settingsCss.includes("border-radius: 8px"), "settings radius 8px");
+assert(settingsPage.includes("SettingsQuiet") && settingsPage.includes("SettingsChrome"), "signed-in settings is Quiet Capital");
+assert(!settingsQuiet.toLowerCase().includes("deposit"), "settings copy has no deposit theater");
+
 if (failures.length) {
   console.error("craft-smoke FAIL");
   for (const item of failures) console.error(" -", item);
@@ -1556,16 +1894,16 @@ if (failures.length) {
 
 console.log("craft-smoke PASS");
 console.log(" - g-techlux light #F7F8FA · teal #2DD4BF / #042F2E ≥4.5:1");
-console.log(" - land Q1 institutional-folio · flat navy · Sign up 8px · Sign in text · Soft HOLD");
+console.log(" - land C3 Request access · About chrome · Already here? Log in · Soft HOLD");
 console.log(" - land/meta one-liner payment method lock · no Vault it");
 console.log(" - go-live Run BotBuyer present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
-console.log(" - Admin Finance/Deals above stubs");
+console.log(" - Admin Quiet Capital owner-only · CHO split · no $596.64 blend");
 console.log(" - GMV=0 · verified $179.96");
 console.log(" - Savedfast/xfer personal Closed · imported_unverified");
 console.log(" - usage meter Estimate / Demo · not live");
 console.log(" - soft-signal HOLD · Demo pill #B8860B");
-console.log(" - auth /signin /signup Quiet Capital navy shell · Soft HOLD");
+console.log(" - auth A1 Log in / Request access Quiet Capital · Soft HOLD");
 console.log(" - Quiet Capital type · Product door A · clean #F7F8FA");
 console.log(" - soft-spine mark+wordmark header · favicon/PWA/OG wired");
 console.log(" - site pages /privacy /terms /about /beta /contact · footer lock");

@@ -13,6 +13,19 @@ export const CONNECT_ACCOUNTS_ANCHOR = "/settings#connected-accounts" as const;
 
 export const NAMECHEAP_LABEL = "Namecheap" as const;
 export const TWILIO_LABEL = "Twilio" as const;
+export const SHOPIFY_LABEL = "Shopify" as const;
+export const DIGITALOCEAN_LABEL = "DigitalOcean" as const;
+export const GITHUB_LABEL = "GitHub" as const;
+export const HTTP_JSON_LABEL = "HTTP JSON" as const;
+
+export const CONNECTOR_LABEL = {
+  namecheap: NAMECHEAP_LABEL,
+  twilio: TWILIO_LABEL,
+  shopify: SHOPIFY_LABEL,
+  digitalocean: DIGITALOCEAN_LABEL,
+  github: GITHUB_LABEL,
+  http_json: HTTP_JSON_LABEL,
+} as const;
 
 export const CONNECTOR_STATUS_LABEL = {
   disconnected: "Disconnected",
@@ -43,6 +56,16 @@ export const TWILIO_OAUTH_CTA = "Continue with Twilio" as const;
 export const TWILIO_ADVANCED_CREDENTIALS = "Use API credentials" as const;
 export const TWILIO_API_KEY_DISCLOSURE =
   "API key connect is OK for this POC. Keys are encrypted and never logged. This is not a live public connector." as const;
+export const TWILIO_NEEDS_SETUP_COPY =
+  "Twilio OAuth. Continue with Twilio when a BotBuy Twilio OAuth client is configured. Without TWILIO_OAUTH_CLIENT_ID + TWILIO_OAUTH_CLIENT_SECRET, this row stays Needs setup — not connected live." as const;
+export const OAUTH_VAULT_KEY_REQUIRED =
+  "BOTBUY_VAULT_KEY is required before tokens can be stored. OAuth does not start. Tokens are not stored in plaintext. Fail-closed." as const;
+export const OAUTH_ENV_NEEDS_SETUP =
+  "OAuth is not configured on this POC. Needs setup — not connected. Tokens are not stored." as const;
+export const OAUTH_STORED_HONESTY =
+  "OAuth tokens were encrypted at rest. Connected ≠ live. spend=false. Auto-approve OFF. Not a live public connector." as const;
+export const OAUTH_CALLBACK_NEEDS_SETUP =
+  "OAuth Needs setup. Tokens were not stored. Not connected live." as const;
 
 export const REVOKE_SHEET_TITLE = "Revoke this connection?" as const;
 export const REVOKE_SHEET_LEAD =
@@ -54,3 +77,53 @@ export const CONNECTOR_APPROVE_LOCK =
 
 export const CONNECTOR_NO_PASSWORD =
   "BotBuyer never asks for a registrar or carrier password." as const;
+
+export const SHOPIFY_NEEDS_SETUP_COPY =
+  "Shopify Admin OAuth. Continue with Shopify when a BotBuy Shopify app client is configured. Without SHOPIFY_OAUTH_CLIENT_ID + SHOPIFY_OAUTH_CLIENT_SECRET + SHOPIFY_OAUTH_REDIRECT_URL, this row stays Needs setup — not connected live. Official Admin API only — never a Shopify password or HTML login." as const;
+export const SHOPIFY_OAUTH_NEEDS_SETUP =
+  "Shopify OAuth is preferred but not configured. Add SHOPIFY_OAUTH_CLIENT_ID, SHOPIFY_OAUTH_CLIENT_SECRET, and SHOPIFY_OAUTH_REDIRECT_URL. Admin API token connect is OK for this POC. Tokens are not stored. Needs setup — not connected live." as const;
+export const SHOPIFY_OAUTH_INCOMPLETE =
+  "Shopify OAuth client is incomplete. Add SHOPIFY_OAUTH_CLIENT_SECRET and SHOPIFY_OAUTH_REDIRECT_URL. Tokens are not stored. Needs setup — not connected live." as const;
+export const SHOPIFY_CUSTOM_APP_COPY =
+  "Custom app / partner access. Production Admin API access is not automatic. The shop must have a custom app (or OAuth app) before BotBuyer can call it." as const;
+export const SHOPIFY_OAUTH_PREFERRED =
+  "OAuth is preferred when a Shopify app client is configured." as const;
+export const SHOPIFY_OAUTH_CTA = "Continue with Shopify" as const;
+export const SHOPIFY_ADVANCED_CREDENTIALS = "Use Admin API token" as const;
+export const SHOPIFY_API_TOKEN_DISCLOSURE =
+  "Admin API token connect is OK for this POC. Tokens are encrypted and never logged. This is not a live public connector." as const;
+export const SHOPIFY_SHOP_LABEL = "Shop domain" as const;
+export const SHOPIFY_TOKEN_LABEL = "Admin API access token" as const;
+
+export const DIGITALOCEAN_NEEDS_SETUP_COPY =
+  "DigitalOcean official API. Connect a personal access token to search droplets and volumes. Official API only — never a DigitalOcean password or HTML login." as const;
+export const DIGITALOCEAN_TOKEN_DISCLOSURE =
+  "Access token connect is OK for this POC. Tokens are encrypted and never logged. This is not a live public connector." as const;
+export const DIGITALOCEAN_TOKEN_LABEL = "Access token" as const;
+
+export const GITHUB_NEEDS_SETUP_COPY =
+  "GitHub official API. Continue with GitHub when a BotBuy GitHub OAuth client is configured. Search repositories (or marketplace-ish resources) via the official API — never a GitHub password or HTML login." as const;
+export const GITHUB_TOKEN_DISCLOSURE =
+  "Personal access token connect is OK for this POC. Tokens are encrypted and never logged. This is not a live public connector." as const;
+export const GITHUB_OAUTH_PREFERRED =
+  "OAuth is preferred when a GitHub OAuth app client is configured." as const;
+export const GITHUB_OAUTH_CTA = "Continue with GitHub" as const;
+export const GITHUB_ADVANCED_CREDENTIALS = "Use personal access token" as const;
+export const GITHUB_TOKEN_LABEL = "Personal access token" as const;
+
+export const HTTP_JSON_NEEDS_SETUP_COPY =
+  "Official HTTPS JSON catalog. Category-agnostic — cars, houses, software, or anything the API lists. Paste a documented public API base URL. Never a password. Never a browser farm." as const;
+export const HTTP_JSON_HOST_COPY =
+  "Host allowlist. BotBuyer only calls the HTTPS host you save. Private, loopback, and metadata hosts are rejected." as const;
+export const HTTP_JSON_BASE_URL_LABEL = "HTTPS base URL" as const;
+export const HTTP_JSON_BEARER_LABEL = "Bearer token" as const;
+export const HTTP_JSON_TOKEN_DISCLOSURE =
+  "Optional bearer token. Encrypted at rest, never logged. Official APIs only. POC · not live." as const;
+
+export const CONNECT_SMOKE_CTA = "Read-only smoke" as const;
+export const CONNECT_SMOKE_NOTE =
+  "Search only. Never register or buy. live:false · spend=false. Fail-closed when keys are missing. Auto-approve OFF. Not a live purchase." as const;
+export const CONNECT_KEYS_STRIP =
+  "keysConfigured is honest. spend=false · Search only while mutationsLiveEnabled=false. Preview env unlocks official-API search HTTP. live:false stays locked. Auto-approve OFF." as const;
+export const CONNECT_SEARCH_ONLY =
+  "Search only. spend=false. Register / buy stay stub until mutationsLiveEnabled and human Approve. Auto-approve OFF. Not live spend." as const;

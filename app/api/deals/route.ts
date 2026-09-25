@@ -12,7 +12,7 @@ import { isVaultReady } from "@/lib/vault-rails";
 export async function GET() {
   const gated = await requireApiUser();
   if (gated.error) return gated.error;
-  await hydrateStore();
+  await hydrateStore(gated.user.id);
   return NextResponse.json({ deals: listDeals(gated.user.id) });
 }
 

@@ -7,6 +7,7 @@ import {
   AGENT_SPEND_MICRO,
   AGENTS_INBOX_NOTE,
 } from "@/lib/agent-org";
+import { requireUser } from "@/lib/auth";
 import { listAgentOrgs } from "@/lib/agent-runtime";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
@@ -14,8 +15,9 @@ export const metadata = {
   title: "Your agents",
 };
 
-export default function AgentsPage() {
-  const orgs = listAgentOrgs();
+export default async function AgentsPage() {
+  const user = await requireUser();
+  const orgs = listAgentOrgs({ userId: user.id });
 
   return (
     <div className="space-y-8">

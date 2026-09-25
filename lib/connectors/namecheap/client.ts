@@ -1,4 +1,5 @@
 import { safeProviderFetch } from "@/lib/connectors/http";
+import { namecheapXmlStatusOk } from "@/lib/connectors/namecheap/xml";
 import type { VaultSecretPayload } from "@/lib/connectors/types";
 
 function host() {
@@ -43,5 +44,10 @@ export async function namecheapCommand(
     method: "GET",
     cache: "no-store",
   });
-  return { ...result, reason: result.ok ? "http" : "Namecheap API error. Not live." };
+  const ok = result.ok && namecheapXmlStatusOk(result.body);
+  return {
+    ...result,
+    ok,
+    reason: ok ? "http" : "Namecheap API error. Not live.",
+  };
 }

@@ -1,0 +1,66 @@
+{
+  "expo": {
+    "name": "BotBuyer",
+    "slug": "botbuyer",
+    "scheme": "botbuyer",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0B1F3A",
+    "primaryColor": "#2DD4BF",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ai.botbuyer.app",
+      "buildNumber": "1",
+      "icon": "./assets/icon.png",
+      "infoPlist": {
+        "CFBundleDisplayName": "BotBuyer",
+        "CFBundleName": "BotBuyer"
+      }
+    },
+    "android": {
+      "package": "ai.botbuyer.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#0B1F3A",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "name": "BotBuyer"
+    },
+    "plugins": [
+      [
+        "@clerk/expo",
+        {
+          "appleSignIn": false
+        }
+      ],
+      "expo-secure-store",
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0B1F3A",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180
+        }
+      ]
+    ],
+    "extra": {
+      "product": "BotBuyer",
+      "hold": "Soft HOLD",
+      "live": false,
+      "spend": false,
+      "autoApprove": false,
+      "eas": {}
+    }
+  }
+}

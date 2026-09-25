@@ -39,13 +39,12 @@ White-stroke Find / Decide / Buy on navy. Same 06-arc node geometry. **No traili
 ## Captions (Land E exact)
 
 - H1: `Your AI agent for buying.`
-- Support: `Less tab-chasing. Same hard approve.`
-- One-liner: `Set spend, intent, and a payment method. BotBuyer only moves when you approve.`
+- Support: `Acts for you. Spends only with your OK.`
 - Steps (arc labels): Find · Decide · Buy
 
 ## Layout
 
-- **Phone:** one centered axis — overlay lockup + About, inverted arc, H1, support, equal **Sign up + Sign in** pair in the bottom gradient cap. H1 stays ~1 line on 390.
+- **Phone (D1 bold-h1-first):** one centered axis — overlay lockup + About, **H1 first**, support, teal hairline, inverted arc as a secondary rail, equal **Sign up + Sign in** pair. Arc is not above H1.
 - **Desktop:** copy left + inverted arc right **inside** the full-bleed navy (not a narrow centered stage). Overlay lockup left / About right. Single-line H1 heft. Sign up + Sign in pair in a row
 
 Do not ship the light elevate how-stack on the fold. Do not invent new mark geometry. Soft-signal HOLD.

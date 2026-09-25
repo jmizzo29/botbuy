@@ -1,16 +1,15 @@
 import type { Viewport } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import { LandProductPreview } from "@/components/land-product-preview";
 import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
 import { CLERK_SIGN_IN_URL } from "@/lib/auth-config";
 import {
   BRAND,
+  LAND_ALREADY_HERE,
   LAND_PRODUCT_H1,
   LAND_PRODUCT_SUPPORT,
-  LAND_SKY_MARK_SRC,
-  SIGN_IN_H1,
+  LAND_REQUEST_ACCESS,
+  LAND_STORY,
 } from "@/lib/brand";
 import { redirectSignedInFromLand } from "@/lib/land-gate";
 
@@ -32,7 +31,7 @@ export const metadata = {
     ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary_large_image" as const,
     title: BRAND.name,
     description: LAND_PRODUCT_SUPPORT,
     images: ["https://botbuyer.ai/brand/logo-soft-spine/og/og-1200x630.png"],
@@ -49,38 +48,40 @@ export default async function LandPage() {
   return (
     <PublicChrome land>
       <section data-surface="land-stage" className="bb-land-stage">
-        <div data-zone="watermark" className="bb-land-watermark" aria-hidden="true">
-          <Image
-            src={LAND_SKY_MARK_SRC}
-            alt=""
-            width={280}
-            height={280}
-            unoptimized
-            preload
-            aria-hidden="true"
-            className="bb-mark-watermark"
-          />
-        </div>
         <div data-zone="panel" className="bb-land-panel">
-          <LandProductPreview />
-          <div className="bb-land-copy">
-            <h1 className="bb-land-h1">{LAND_PRODUCT_H1}</h1>
-            <p className="bb-land-support">{LAND_PRODUCT_SUPPORT}</p>
-          </div>
-          <div className="bb-land-cta">
-            <Button asChild className="bb-land-signup">
-              <Link href="/signup" data-cta="land-signup">
-                {BRAND.primaryCta}
+          <div className="bb-land-folio">
+            <div className="bb-land-copy">
+              <h1 className="bb-land-h1">{LAND_PRODUCT_H1}</h1>
+              <p className="bb-land-support">{LAND_PRODUCT_SUPPORT}</p>
+            </div>
+            <div className="bb-land-cta">
+              <Button asChild className="bb-land-signup">
+                <Link href="/signup" data-cta="land-signup">
+                  {LAND_REQUEST_ACCESS}
+                </Link>
+              </Button>
+              <Link
+                href={CLERK_SIGN_IN_URL}
+                className="bb-land-login"
+                data-cta="land-login"
+              >
+                {LAND_ALREADY_HERE}
               </Link>
-            </Button>
-            <Link
-              href={CLERK_SIGN_IN_URL}
-              data-cta="land-signin"
-              className="bb-land-signin"
-            >
-              {SIGN_IN_H1}
-            </Link>
+            </div>
           </div>
+          <ol className="bb-land-story">
+            {LAND_STORY.map((row, index) => (
+              <li key={row.title} className="bb-land-story-row">
+                <span className="bb-land-story-index" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div className="bb-land-story-body">
+                  <p className="bb-land-story-title">{row.title}</p>
+                  <p className="bb-land-story-support">{row.support}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
     </PublicChrome>

@@ -12,12 +12,20 @@ import {
 } from "@/lib/connectors/types";
 import { decryptSecret, encryptSecret, isVaultKeyConfigured } from "@/lib/connectors/crypto";
 import {
+  CONNECTOR_LABEL,
   CONNECTOR_STATUS_LABEL,
+  DIGITALOCEAN_NEEDS_SETUP_COPY,
+  DIGITALOCEAN_TOKEN_DISCLOSURE,
+  GITHUB_NEEDS_SETUP_COPY,
+  GITHUB_TOKEN_DISCLOSURE,
+  HTTP_JSON_HOST_COPY,
+  HTTP_JSON_NEEDS_SETUP_COPY,
   NAMECHEAP_ELIGIBILITY_COPY,
   NAMECHEAP_IP_WHITELIST_COPY,
-  NAMECHEAP_LABEL,
-  TWILIO_LABEL,
+  SHOPIFY_CUSTOM_APP_COPY,
+  SHOPIFY_NEEDS_SETUP_COPY,
 } from "@/lib/connectors/copy";
+import { CONNECTOR_REGISTRY } from "@/lib/connectors/registry";
 
 type MemoryStore = Map<string, ConnectedAccountRecord>;
 
@@ -268,8 +276,56 @@ export function namecheapNeedsSetupReasons(input: {
   return reasons;
 }
 
+export function shopifyNeedsSetupReasons(input: {
+  officialApiAck?: boolean;
+  customAppAck?: boolean;
+  shopDomain?: string | null;
+}) {
+  const reasons: string[] = [];
+  if (!input.shopDomain) reasons.push(SHOPIFY_NEEDS_SETUP_COPY);
+  if (!input.customAppAck) reasons.push(SHOPIFY_CUSTOM_APP_COPY);
+  if (!input.officialApiAck && input.shopDomain) {
+    reasons.push(SHOPIFY_NEEDS_SETUP_COPY);
+  }
+  return [...new Set(reasons)];
+}
+
+export function digitalOceanNeedsSetupReasons(input: {
+  officialApiAck?: boolean;
+  hasToken?: boolean;
+}) {
+  const reasons: string[] = [];
+  if (!input.hasToken) reasons.push(DIGITALOCEAN_NEEDS_SETUP_COPY);
+  if (!input.officialApiAck) reasons.push(DIGITALOCEAN_TOKEN_DISCLOSURE);
+  return reasons;
+}
+
+export function githubNeedsSetupReasons(input: {
+  officialApiAck?: boolean;
+  hasToken?: boolean;
+}) {
+  const reasons: string[] = [];
+  if (!input.hasToken) reasons.push(GITHUB_NEEDS_SETUP_COPY);
+  if (!input.officialApiAck) reasons.push(GITHUB_TOKEN_DISCLOSURE);
+  return reasons;
+}
+
+export function httpJsonNeedsSetupReasons(input: {
+  officialApiAck?: boolean;
+  baseUrl?: string | null;
+}) {
+  const reasons: string[] = [];
+  if (!input.baseUrl) reasons.push(HTTP_JSON_NEEDS_SETUP_COPY);
+  if (!input.officialApiAck) reasons.push(HTTP_JSON_HOST_COPY);
+  return reasons;
+}
+
 export function providerLabel(provider: ConnectorProvider) {
-  return provider === "namecheap" ? NAMECHEAP_LABEL : TWILIO_LABEL;
+  return CONNECTOR_LABEL[provider];
+}
+
+function defaultNeedsSetup(provider: ConnectorProvider) {
+  return CONNECTOR_REGISTRY[provider].needsSetup;
 }
 
 export function toPublicStatus(
@@ -278,30 +334,26 @@ export function toPublicStatus(
   extras?: { oauthAvailable?: boolean; needsSetup?: string[] },
 ): ConnectorPublicStatus {
   const status = row?.status ?? "disconnected";
-  const needsSetup =
-    extras?.needsSetup ??
-    (provider === "namecheap" && status !== "connected"
-      ? namecheapNeedsSetupReasons({
-          productionEligible: false,
-          ipWhitelistAck: false,
-        })
-      : []);
+  const needsSetup = extras?.needsSetup ?? defaultNeedsSetup(provider);
+  const oauthPreferred =
+    provider === "twilio" || provider === "shopify" || provider === "github";
   return {
     provider,
     label: providerLabel(provider),
     status,
     statusLabel: CONNECTOR_STATUS_LABEL[status],
     hint: row?.hint ?? null,
-    authMode:
-      provider === "twilio"
-        ? extras?.oauthAvailable
-          ? "oauth"
-          : row
-            ? "api_key"
-            : "none"
+    authMode: oauthPreferred
+      ? extras?.oauthAvailable
+        ? "oauth"
         : row
           ? "api_key"
-          : "none",
+          : "none"
+      : row
+        ? row.provider === "http_json" && !row.hint
+          ? "none"
+          : "api_key"
+        : "none",
     live: false,
     needsSetup: status === "connected" ? [] : needsSetup,
     connectedAt: row && status === "connected" ? row.updatedAt : null,
@@ -310,27 +362,56 @@ export function toPublicStatus(
 
 export async function listPublicConnectorStatus(
   userId: string,
-  options?: { twilioOauthAvailable?: boolean },
+  options?: {
+    twilioOauthAvailable?: boolean;
+    shopifyOauthAvailable?: boolean;
+    githubOauthAvailable?: boolean;
+  },
 ): Promise<ConnectorPublicStatus[]> {
   const rows = await listConnectedAccounts(userId);
-  return CONNECTOR_PROVIDERS.map((provider) =>
-    toPublicStatus(
-      provider,
-      rows.find((row) => row.provider === provider) ?? null,
-      {
-        oauthAvailable: provider === "twilio" ? options?.twilioOauthAvailable : false,
-        needsSetup:
-          provider === "namecheap"
-            ? namecheapNeedsSetupReasons({
-                productionEligible:
-                  rows.find((row) => row.provider === "namecheap")?.status ===
-                  "connected",
-                ipWhitelistAck:
-                  rows.find((row) => row.provider === "namecheap")?.status ===
-                  "connected",
-              })
-            : [],
-      },
-    ),
-  );
+  return CONNECTOR_PROVIDERS.map((provider) => {
+    const row = rows.find((item) => item.provider === provider) ?? null;
+    const connected = row?.status === "connected";
+    let needsSetup = defaultNeedsSetup(provider);
+    if (provider === "namecheap") {
+      needsSetup = namecheapNeedsSetupReasons({
+        productionEligible: connected,
+        ipWhitelistAck: connected,
+      });
+    } else if (provider === "shopify") {
+      needsSetup = shopifyNeedsSetupReasons({
+        officialApiAck: connected,
+        customAppAck: connected,
+        shopDomain: connected ? row?.hint : null,
+      });
+    } else if (provider === "digitalocean") {
+      needsSetup = digitalOceanNeedsSetupReasons({
+        officialApiAck: connected,
+        hasToken: connected,
+      });
+    } else if (provider === "github") {
+      needsSetup = githubNeedsSetupReasons({
+        officialApiAck: connected,
+        hasToken: connected,
+      });
+    } else if (provider === "http_json") {
+      needsSetup = httpJsonNeedsSetupReasons({
+        officialApiAck: connected,
+        baseUrl: connected ? row?.hint : null,
+      });
+    } else {
+      needsSetup = connected ? [] : defaultNeedsSetup(provider);
+    }
+    return toPublicStatus(provider, row, {
+      oauthAvailable:
+        provider === "twilio"
+          ? options?.twilioOauthAvailable
+          : provider === "shopify"
+            ? options?.shopifyOauthAvailable
+            : provider === "github"
+              ? options?.githubOauthAvailable
+              : false,
+      needsSetup,
+    });
+  });
 }

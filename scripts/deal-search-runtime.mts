@@ -1,0 +1,462 @@
+import { prepareAuthorizedBuy } from "../lib/authorized-buy.ts";
+import { SEED_OWNER } from "../lib/auth-owner.ts";
+import {
+  assertAuthorizedBuyAllowed,
+  assertConnectorSpendAllowed,
+} from "../lib/connectors/approve-gate.ts";
+import {
+  applyDealSearchPipeline,
+  applySearchActHandoff,
+} from "../lib/connectors/deal-search.ts";
+import { parseHttpJsonCandidates } from "../lib/connectors/http-json/search.ts";
+import {
+  connectorResultHasCandidates,
+  officialSearchProvider,
+} from "../lib/connectors/intent-route.ts";
+import { readSearchActHandoff } from "../lib/connectors/search-handoff.ts";
+import {
+  addIntent,
+  createSearchingDealFromIntent,
+  listDealEvents,
+  transitionDeal,
+} from "../lib/store.ts";
+
+const stamp = Date.now();
+const software = addIntent(
+  {
+    summary: `Find software we can buy across vendor checkout for M1 smoke ${stamp}.`,
+    categories: ["software"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const softwareDeal = await createSearchingDealFromIntent(
+  software,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+const softwareEvents = listDealEvents(softwareDeal.id);
+const softwareSearch = softwareEvents.find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!softwareSearch) throw new Error("software intent missing connector search event");
+if (!softwareSearch.detail.includes("live:false")) {
+  throw new Error("software search event must be typed stub live:false");
+}
+if (!softwareSearch.detail.includes("shopify")) {
+  throw new Error("software search should attempt Shopify official API");
+}
+if (!softwareSearch.detail.includes("keysConfigured")) {
+  throw new Error("software search must report keysConfigured");
+}
+if (softwareDeal.status !== "Searching") {
+  throw new Error("software Shopify stub must stay Searching without invented candidates");
+}
+if (softwareDeal.priceUsd !== 0 || softwareDeal.amountVerified || softwareDeal.priceVerified) {
+  throw new Error("software deal must stay $0 unverified");
+}
+
+const domain = addIntent(
+  {
+    summary: `Secure a clean product domain botbuyer.ai for M1 smoke ${stamp}.`,
+    categories: ["domain"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const domainDeal = await createSearchingDealFromIntent(
+  domain,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+const domainEvents = listDealEvents(domainDeal.id);
+const domainSearch = domainEvents.find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!domainSearch) throw new Error("domain intent missing connector search event");
+if (!domainSearch.detail.includes("live:false")) {
+  throw new Error("domain search event must include live:false");
+}
+if (!domainSearch.detail.includes("namecheap")) {
+  throw new Error("domain search should attempt Namecheap");
+}
+if (!domainSearch.detail.includes("keysConfigured")) {
+  throw new Error("domain search must report keysConfigured");
+}
+if (domainDeal.priceUsd !== 0 || domainDeal.amountVerified) {
+  throw new Error("domain deal must not invent verified spend");
+}
+
+const phone = addIntent(
+  {
+    summary: `Find a Twilio SMS number in 415 for M1 smoke ${stamp}.`,
+    categories: ["phone"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const phoneDeal = await createSearchingDealFromIntent(phone, SEED_OWNER.id);
+const phoneSearch = listDealEvents(phoneDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!phoneSearch?.detail.includes("twilio")) {
+  throw new Error("phone search should attempt Twilio");
+}
+if (!phoneSearch.detail.includes("live:false")) {
+  throw new Error("phone search event must include live:false");
+}
+if (!phoneSearch.detail.includes("keysConfigured")) {
+  throw new Error("phone search must report keysConfigured");
+}
+
+const catalog = addIntent(
+  {
+    summary: `Query the official JSON API catalog for act handoff smoke ${stamp}.`,
+    categories: ["http_json"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const catalogDeal = await createSearchingDealFromIntent(
+  catalog,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+const catalogSearch = listDealEvents(catalogDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!catalogSearch?.detail.includes("http_json")) {
+  throw new Error("HTTP JSON intent should attempt official HTTPS JSON search");
+}
+
+const droplet = addIntent(
+  {
+    summary: `Find a DigitalOcean droplet or volume for SaaS MCP smoke ${stamp}.`,
+    categories: ["digitalocean"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const dropletDeal = await createSearchingDealFromIntent(
+  droplet,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+const dropletSearch = listDealEvents(dropletDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!dropletSearch?.detail.includes("digitalocean")) {
+  throw new Error("droplet intent should attempt DigitalOcean official API");
+}
+if (!dropletSearch.detail.includes("live:false") || !dropletSearch.detail.includes("keysConfigured")) {
+  throw new Error("DigitalOcean search must report live:false and keysConfigured");
+}
+if (dropletSearch.detail.includes("namecheap")) {
+  throw new Error("DigitalOcean must not duplicate Namecheap");
+}
+if (dropletDeal.status !== "Searching") {
+  throw new Error("DigitalOcean stub must stay Searching without invented candidates");
+}
+
+const githubIntent = addIntent(
+  {
+    summary: `Find a GitHub repo or gist for SaaS MCP smoke ${stamp}.`,
+    categories: ["github"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const githubDeal = await createSearchingDealFromIntent(
+  githubIntent,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+const githubSearch = listDealEvents(githubDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!githubSearch?.detail.includes("github")) {
+  throw new Error("github intent should attempt GitHub official API");
+}
+if (!githubSearch.detail.includes("live:false") || !githubSearch.detail.includes("keysConfigured")) {
+  throw new Error("GitHub search must report live:false and keysConfigured");
+}
+if (githubSearch.detail.includes("namecheap") || githubSearch.detail.includes("digitalocean")) {
+  throw new Error("GitHub must not duplicate Namecheap or DigitalOcean");
+}
+if (githubDeal.status !== "Searching") {
+  throw new Error("GitHub stub must stay Searching without invented candidates");
+}
+if (!catalogSearch.detail.includes("live:false")) {
+  throw new Error("HTTP JSON search event must include live:false");
+}
+if (catalogDeal.status !== "Searching") {
+  throw new Error("HTTP JSON stub must stay Searching without invented candidates");
+}
+if (!catalogSearch.detail.includes("keysConfigured")) {
+  throw new Error("HTTP JSON search must report keysConfigured");
+}
+
+const car = addIntent(
+  {
+    summary: `Find a used Honda Civic in Austin for category smoke ${stamp}.`,
+    categories: ["vehicle"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const carDeal = await createSearchingDealFromIntent(
+  car,
+  SEED_OWNER.id,
+  "m1@example.com",
+);
+if (carDeal.category !== "vehicle") {
+  throw new Error("car deal must keep vehicle category");
+}
+const carSearch = listDealEvents(carDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!carSearch?.detail.includes("accepted=true") && !carSearch?.detail.includes("accepted")) {
+  throw new Error("car search must record accepted category");
+}
+if (carSearch.detail.includes("shopify")) {
+  throw new Error("car search must not map to Shopify");
+}
+if (carSearch.detail.includes("github")) {
+  throw new Error("car search must not map to GitHub");
+}
+if (carDeal.status !== "Searching") {
+  throw new Error("car stub must stay Searching without invented candidates");
+}
+if (carDeal.priceUsd !== 0 || carDeal.amountVerified) {
+  throw new Error("car deal must stay $0 unverified");
+}
+
+const house = addIntent(
+  {
+    summary: `Find a 3-bed house in Denver for category smoke ${stamp}.`,
+    categories: ["property"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const houseDeal = await createSearchingDealFromIntent(house, SEED_OWNER.id);
+if (houseDeal.category !== "property") {
+  throw new Error("house deal must keep property category");
+}
+const houseSearch = listDealEvents(houseDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (houseSearch?.detail.includes("shopify")) {
+  throw new Error("house search must not map to Shopify");
+}
+if (houseDeal.status !== "Searching") {
+  throw new Error("house stub must stay Searching without invented candidates");
+}
+
+const goods = addIntent(
+  {
+    summary: `Find household appliances for the kitchen for category smoke ${stamp}.`,
+    categories: ["product"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const goodsDeal = await createSearchingDealFromIntent(goods, SEED_OWNER.id);
+if (goodsDeal.category !== "product") {
+  throw new Error("consumer product deal must keep product category");
+}
+const goodsSearch = listDealEvents(goodsDeal.id).find((event) =>
+  event.id.endsWith("_connector_search"),
+);
+if (!goodsSearch?.detail.includes("shopify")) {
+  throw new Error("consumer product search should attempt Shopify Admin stub");
+}
+if (!goodsSearch.detail.includes("live:false") || !goodsSearch.detail.includes("keysConfigured")) {
+  throw new Error("consumer product Shopify search must report live:false and keysConfigured");
+}
+if (goodsDeal.status !== "Searching") {
+  throw new Error("consumer product Shopify stub must stay Searching without invented candidates");
+}
+
+const general = addIntent(
+  {
+    summary: `Buy anything useful for the studio for category smoke ${stamp}.`,
+    categories: ["general"],
+    maxPriceUsd: 50,
+  },
+  SEED_OWNER.id,
+);
+const generalDeal = await createSearchingDealFromIntent(general, SEED_OWNER.id);
+if (generalDeal.status !== "Searching") {
+  throw new Error("general stub must stay Searching without invented candidates");
+}
+if (listDealEvents(generalDeal.id).some((event) => event.id.endsWith("_search_act"))) {
+  throw new Error("general stub must not attach a Needs you handoff");
+}
+
+if (officialSearchProvider("shopify") !== "shopify") {
+  throw new Error("Shopify search must resolve from MCP registry");
+}
+if (officialSearchProvider("digitalocean") !== "digitalocean") {
+  throw new Error("DigitalOcean search must resolve from MCP registry");
+}
+if (officialSearchProvider("github") !== "github") {
+  throw new Error("GitHub search must resolve from MCP registry");
+}
+if (officialSearchProvider("http_json") !== "http_json") {
+  throw new Error("HTTP JSON search must resolve from MCP registry");
+}
+
+const parsedJson = parseHttpJsonCandidates(
+  JSON.stringify({
+    results: [{ title: "Catalog license", sku: "lic-1" }],
+  }),
+);
+if (parsedJson.length !== 1 || parsedJson[0].title !== "Catalog license") {
+  throw new Error("HTTP JSON search must map official JSON rows into candidates");
+}
+const parsedListing = parseHttpJsonCandidates(
+  JSON.stringify({
+    listings: [{ make: "Honda", model: "Civic", vin: "1HGBH41JXMN109186", city: "Austin" }],
+  }),
+);
+if (
+  parsedListing.length !== 1 ||
+  !parsedListing[0].title.includes("Honda") ||
+  parsedListing[0].vin !== "1HGBH41JXMN109186"
+) {
+  throw new Error("HTTP JSON search must map vehicle listing rows without inventing prices");
+}
+
+if (connectorResultHasCandidates({ available: null, candidates: [] })) {
+  throw new Error("empty stub must not look like candidates");
+}
+
+const replay = await applyDealSearchPipeline({
+  deal: softwareDeal,
+  userId: SEED_OWNER.id,
+  intent: software,
+});
+const replayCount = listDealEvents(replay.id).filter((event) =>
+  event.id.endsWith("_connector_search"),
+).length;
+if (replayCount !== 1) throw new Error("pipeline must be idempotent");
+
+const reviewed = applySearchActHandoff({
+  deal: softwareDeal,
+  userId: SEED_OWNER.id,
+  provider: "shopify",
+  searchData: {
+    candidates: [
+      {
+        title: "Invoice tools",
+        handle: "invoice-tools",
+        amountStatus: "unverified",
+      },
+    ],
+    amountStatus: "unverified",
+  },
+  quoteData: { listedUsd: null, amountStatus: "unverified" },
+});
+if (reviewed.status !== "Needs you") {
+  throw new Error("candidates must advance Searching → Found → Needs you");
+}
+if (reviewed.priceUsd !== 0 || reviewed.amountVerified || reviewed.priceVerified) {
+  throw new Error("handoff must not invent verified prices");
+}
+if (reviewed.amountStatus === "verified") {
+  throw new Error("handoff must keep amountStatus unverified");
+}
+const handoff = readSearchActHandoff(listDealEvents(reviewed.id));
+if (!handoff || handoff.candidates[0]?.label !== "Invoice tools") {
+  throw new Error("deal events must carry structured candidates");
+}
+if (handoff.live !== false || handoff.quote?.verified !== false) {
+  throw new Error("handoff must stay live:false and quote unverified");
+}
+
+function expectSpendClosed(run: () => unknown, label: string) {
+  try {
+    run();
+    throw new Error(`${label} must fail closed`);
+  } catch (error) {
+    const name = error instanceof Error ? error.name : "";
+    const message = error instanceof Error ? error.message : String(error);
+    if (name !== "ConnectorError" && !/Fail-closed|Auto-approve is OFF/.test(message)) {
+      throw error;
+    }
+  }
+}
+expectSpendClosed(
+  () =>
+    assertConnectorSpendAllowed({
+      tool: "buy",
+      userId: SEED_OWNER.id,
+      dealId: reviewed.id,
+    }),
+  "buy on Needs you",
+);
+expectSpendClosed(
+  () =>
+    assertAuthorizedBuyAllowed({
+      userId: SEED_OWNER.id,
+      dealId: reviewed.id,
+    }),
+  "authorized-buy on Needs you",
+);
+
+const buying = transitionDeal(reviewed.id, "Buying", SEED_OWNER.id);
+if (buying.status !== "Buying") {
+  throw new Error("Approve sheet path Needs you → Buying must still work");
+}
+assertConnectorSpendAllowed({
+  tool: "buy",
+  userId: SEED_OWNER.id,
+  dealId: buying.id,
+});
+assertAuthorizedBuyAllowed({
+  userId: SEED_OWNER.id,
+  dealId: buying.id,
+});
+const prep = prepareAuthorizedBuy({
+  userId: SEED_OWNER.id,
+  dealId: buying.id,
+});
+if (prep.live !== false || prep.charged !== false || prep.sessionCreated !== false) {
+  throw new Error("authorized-buy prep must stay not-live");
+}
+if (prep.keysConfigured !== false || prep.prepared !== false) {
+  throw new Error("authorized-buy without keys must stay unprepared");
+}
+if (prep.amountCents !== 0 || prep.amountVerified !== false) {
+  throw new Error("authorized-buy must not invent verified amounts");
+}
+if (!listDealEvents(buying.id).some((event) => event.id.endsWith("_authorized_buy_prep"))) {
+  throw new Error("authorized-buy prep must persist a deal event");
+}
+
+const replayHandoff = applySearchActHandoff({
+  deal: buying,
+  userId: SEED_OWNER.id,
+  provider: "shopify",
+  searchData: {
+    candidates: [{ title: "Invoice tools", amountStatus: "unverified" }],
+  },
+});
+if (replayHandoff.status !== "Buying") {
+  throw new Error("search act handoff must be idempotent after approve");
+}
+
+console.log("deal-search-runtime PASS");
+console.log(` - software ${softwareDeal.id} Shopify search live:false`);
+console.log(` - domain ${domainDeal.id} Namecheap search live:false`);
+console.log(` - phone ${phoneDeal.id} Twilio search live:false`);
+console.log(` - http_json ${catalogDeal.id} official JSON search live:false`);
+console.log(` - digitalocean ${dropletDeal.id} droplet search live:false`);
+console.log(` - github ${githubDeal.id} repo search live:false`);
+console.log(` - car ${carDeal.id} accepted stub live:false`);
+console.log(` - house ${houseDeal.id} accepted stub live:false`);
+console.log(` - product ${goodsDeal.id} Shopify stub live:false · Searching`);
+console.log(` - general ${generalDeal.id} accepted stub live:false`);
+console.log(` - ${reviewed.id} candidates → Needs you · buy still fail-closed`);
+console.log(" - Needs you → Buying still required before spend / authorized-buy");

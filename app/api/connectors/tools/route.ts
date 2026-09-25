@@ -14,6 +14,8 @@ const bodySchema = z.object({
   country: z.string().optional(),
   phoneNumber: z.string().optional(),
   years: z.number().int().positive().optional(),
+  product: z.string().optional(),
+  sku: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -39,6 +41,8 @@ export async function POST(request: Request) {
         country: parsed.data.country,
         phoneNumber: parsed.data.phoneNumber,
         years: parsed.data.years,
+        product: parsed.data.product,
+        sku: parsed.data.sku,
       },
     });
     return NextResponse.json({ ...result, live: false });

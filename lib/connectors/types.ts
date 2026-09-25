@@ -1,4 +1,11 @@
-export const CONNECTOR_PROVIDERS = ["namecheap", "twilio"] as const;
+export const CONNECTOR_PROVIDERS = [
+  "namecheap",
+  "twilio",
+  "shopify",
+  "digitalocean",
+  "github",
+  "http_json",
+] as const;
 export type ConnectorProvider = (typeof CONNECTOR_PROVIDERS)[number];
 
 export const CONNECTOR_STATUSES = [
@@ -36,7 +43,7 @@ export interface VaultSecretPayload {
   authMode: ConnectorAuthMode;
   /** Namecheap API user */
   apiUser?: string;
-  /** Namecheap API key or Twilio auth token / API secret */
+  /** Namecheap API key, Twilio auth token / API secret, Shopify Admin token, or HTTP JSON bearer */
   apiKey?: string;
   /** Namecheap username */
   username?: string;
@@ -45,6 +52,12 @@ export interface VaultSecretPayload {
   apiKeySid?: string;
   oauthAccess?: string;
   oauthRefresh?: string;
+  /** Shopify *.myshopify.com host */
+  shopDomain?: string;
+  /** Official HTTPS JSON API base URL (http_json) */
+  baseUrl?: string;
+  /** DigitalOcean personal access token lives in apiKey */
+  /** GitHub PAT lives in apiKey; OAuth access token in oauthAccess */
 }
 
 export interface ConnectedAccountRecord {
@@ -66,6 +79,8 @@ export interface ConnectorToolInput {
   country?: string;
   phoneNumber?: string;
   years?: number;
+  product?: string;
+  sku?: string;
 }
 
 export interface ConnectorToolResult {

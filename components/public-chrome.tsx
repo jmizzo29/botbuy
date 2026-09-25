@@ -4,7 +4,7 @@ import { BrandLockup } from "@/components/brand-lockup";
 import { InstallHint } from "@/components/install-hint";
 import { SiteFooter } from "@/components/site-footer";
 import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from "@/lib/auth-config";
-import { BRAND, SIGN_IN_H1 } from "@/lib/brand";
+import { BRAND } from "@/lib/brand";
 import { MY_DEALS_HREF, MY_DEALS_LABEL } from "@/lib/cpo-techlux";
 import { hasPublicSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
@@ -13,10 +13,12 @@ export function PublicChrome({
   children,
   land = false,
   auth = false,
+  authScreen,
 }: {
   children: React.ReactNode;
   land?: boolean;
   auth?: boolean;
+  authScreen?: "login" | "request";
 }) {
   return (
     <div
@@ -28,6 +30,7 @@ export function PublicChrome({
             : "min-h-dvh bg-background text-foreground",
       )}
       data-surface={auth ? "auth-shell" : land ? "land-shell" : "public-shell"}
+      data-auth-screen={auth ? authScreen : undefined}
     >
       <div
         className={
@@ -36,17 +39,23 @@ export function PublicChrome({
       >
         <header
           className={
-            land
+            land || auth
               ? "bb-land-header"
-              : auth
-                ? "bb-auth-header"
-                : "mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8"
+              : "mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8"
           }
         >
           <Link href="/" className="flex items-center" aria-label="BotBuyer">
             <BrandLockup priority onDark={land || auth} />
           </Link>
-          {auth ? null : <PublicNav land={land} />}
+          {auth ? (
+            <div className="bb-land-nav">
+              <Link href="/about" className={landLinkClass("about")} data-nav="about">
+                About
+              </Link>
+            </div>
+          ) : (
+            <PublicNav land={land} />
+          )}
         </header>
         {auth ? <AuthFields /> : null}
         {land || auth ? null : <InstallHint />}
@@ -61,7 +70,11 @@ export function PublicChrome({
         >
           {children}
         </main>
-        {land || auth ? null : (
+        {auth ? (
+          <footer className="bb-auth-legal">
+            <SiteFooter legalOnly onDark />
+          </footer>
+        ) : land ? null : (
           <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8">
             <div>
               <SiteFooter />
@@ -94,14 +107,9 @@ async function PublicNav({ land }: { land: boolean }) {
           {MY_DEALS_LABEL}
         </Link>
       ) : land ? (
-        <>
-          <Link href={CLERK_SIGN_IN_URL} className={link()} data-nav="signin">
-            {SIGN_IN_H1}
-          </Link>
-          <Link href={CLERK_SIGN_UP_URL} className={link()} data-nav="signup">
-            Sign up
-          </Link>
-        </>
+        <Link href="/about" className={link("about")} data-nav="about">
+          About
+        </Link>
       ) : (
         <>
           <Link href={CLERK_SIGN_IN_URL} className={link()}>

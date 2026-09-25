@@ -9,8 +9,8 @@ export default async function OnboardingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  await hydrateStore();
-  await requireUser();
+  const user = await requireUser();
+  await hydrateStore(user.id);
   return (
     <PublicChrome>
       <div className="mx-auto max-w-xl space-y-8 pt-10 md:pt-16">{children}</div>

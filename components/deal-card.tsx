@@ -3,6 +3,10 @@ import { DealBadges } from "@/components/deal-badges";
 import { DealAmount } from "@/components/money";
 import { StatusPill } from "@/components/status-pill";
 import { HISTORY_MICRO, isImported } from "@/lib/deal-ui";
+import {
+  listingStatusFromNotes,
+  listingStatusLabel,
+} from "@/lib/ingest/candidates";
 import { formatDate } from "@/lib/utils";
 import type { Deal } from "@/lib/types";
 
@@ -31,7 +35,11 @@ export function DealCard({ deal }: { deal: Deal }) {
             <DealBadges deal={deal} />
           </div>
           <p className="mt-1 text-sm text-muted">
-            {deal.marketplace} · {deal.category} · {currentStage(deal)}
+            {deal.marketplace} · {deal.category}
+            {listingStatusLabel(listingStatusFromNotes(deal.notes))
+              ? ` · ${listingStatusLabel(listingStatusFromNotes(deal.notes))}`
+              : ""}{" "}
+            · {currentStage(deal)}
           </p>
         </div>
         <DealAmount deal={deal} withStatus className="shrink-0" />

@@ -70,3 +70,7 @@ export function vaultReadyCopy(ready = isVaultReady()) {
     ? "Vault-ready — at least one Available method."
     : "Coming rails alone do not unlock Run. Add an Available method.";
 }
+
+/** M3 authorized-buy honesty. Card Available ≠ live pay. */
+export const VAULT_AUTHORIZED_BUY_NOTE =
+  "After Approve, a Stripe/Link Checkout Session can be prepared for pay-at-purchase. Available ≠ live. live=false · spend=false · charged=false. Auto-approve OFF. Fail-closed without BOTBUY_STRIPE_*.";

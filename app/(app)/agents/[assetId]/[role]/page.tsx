@@ -8,6 +8,7 @@ import {
   AGENT_SPEND_MICRO,
   type AgentOrgRole,
 } from "@/lib/agent-org";
+import { requireUser } from "@/lib/auth";
 import { getAgentOrg } from "@/lib/agent-runtime";
 import { DEMO_PILL_CLASS } from "@/lib/ui-tokens";
 
@@ -17,7 +18,11 @@ export default async function AgentRolePage({
   params: Promise<{ assetId: string; role: string }>;
 }) {
   const { assetId, role } = await params;
-  const org = getAgentOrg(assetId);
+  const user = await requireUser();
+  const org = getAgentOrg(assetId, {
+    userId: user.id,
+    asAdmin: user.role === "admin",
+  });
   const normalized = role.toUpperCase() as AgentOrgRole;
   if (!org || !AGENT_ORG_ROLES.includes(normalized)) notFound();
   const agent = org.agents.find((item) => item.role === normalized);

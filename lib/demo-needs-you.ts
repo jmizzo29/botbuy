@@ -16,7 +16,8 @@ export function isNonLedgerDemoSeed(deal: Pick<Deal, "id" | "source">) {
   return (
     isDemoQaFixture(deal) ||
     deal.source === "engine" ||
-    deal.id.startsWith("deal_demo_")
+    deal.id.startsWith("deal_demo_") ||
+    deal.id.startsWith("ing_")
   );
 }
 

@@ -7,6 +7,14 @@ export function twilioOauthConfigured() {
   return Boolean(process.env.TWILIO_OAUTH_CLIENT_ID?.trim());
 }
 
+export function twilioOauthSecretConfigured() {
+  return Boolean(process.env.TWILIO_OAUTH_CLIENT_SECRET?.trim());
+}
+
+export function twilioOauthExchangeReady() {
+  return twilioOauthConfigured() && twilioOauthSecretConfigured();
+}
+
 export function namecheapEnvPresent() {
   return Boolean(
     process.env.NAMECHEAP_API_USER?.trim() && process.env.NAMECHEAP_API_KEY?.trim(),
@@ -20,6 +28,60 @@ export function twilioEnvPresent() {
         (process.env.TWILIO_API_KEY_SID?.trim() &&
           process.env.TWILIO_API_KEY_SECRET?.trim())),
   );
+}
+
+export function shopifyOauthConfigured() {
+  return Boolean(process.env.SHOPIFY_OAUTH_CLIENT_ID?.trim());
+}
+
+export function shopifyOauthSecretConfigured() {
+  return Boolean(process.env.SHOPIFY_OAUTH_CLIENT_SECRET?.trim());
+}
+
+export function shopifyOauthRedirectConfigured() {
+  return Boolean(process.env.SHOPIFY_OAUTH_REDIRECT_URL?.trim());
+}
+
+export function shopifyOauthExchangeReady() {
+  return (
+    shopifyOauthConfigured() &&
+    shopifyOauthSecretConfigured() &&
+    shopifyOauthRedirectConfigured()
+  );
+}
+
+export function shopifyEnvPresent() {
+  return Boolean(
+    process.env.SHOPIFY_SHOP_DOMAIN?.trim() &&
+      process.env.SHOPIFY_ADMIN_TOKEN?.trim(),
+  );
+}
+
+export function digitalOceanEnvPresent() {
+  return Boolean(
+    process.env.DIGITALOCEAN_ACCESS_TOKEN?.trim() ||
+      process.env.DIGITALOCEAN_API_TOKEN?.trim(),
+  );
+}
+
+export function githubOauthConfigured() {
+  return Boolean(process.env.GITHUB_OAUTH_CLIENT_ID?.trim());
+}
+
+export function githubOauthSecretConfigured() {
+  return Boolean(process.env.GITHUB_OAUTH_CLIENT_SECRET?.trim());
+}
+
+export function githubOauthExchangeReady() {
+  return githubOauthConfigured() && githubOauthSecretConfigured();
+}
+
+export function githubEnvPresent() {
+  return Boolean(process.env.GITHUB_TOKEN?.trim());
+}
+
+export function httpJsonEnvPresent() {
+  return Boolean(process.env.HTTP_JSON_BASE_URL?.trim());
 }
 
 export async function safeProviderFetch(

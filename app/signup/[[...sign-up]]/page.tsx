@@ -3,8 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SignUp } from "@clerk/nextjs";
 import { AuthDoor } from "@/components/auth-door";
+import { AuthQuietForm } from "@/components/auth-quiet-form";
 import { PublicChrome } from "@/components/public-chrome";
-import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import {
   CLERK_AFTER_SIGN_IN_URL,
@@ -12,35 +12,39 @@ import {
   CLERK_SIGN_IN_URL,
   isClerkPublishableConfigured,
 } from "@/lib/auth-config";
-import { SIGNUP_CTA, SIGNUP_FOOT, SIGNUP_H1, SIGNUP_SUB } from "@/lib/brand";
+import {
+  AUTH_REQUEST_ALT_LEAD,
+  AUTH_REQUEST_ALT_LINK,
+  AUTH_REQUEST_CTA,
+  AUTH_REQUEST_H1,
+  AUTH_REQUEST_SUB,
+} from "@/lib/auth-copy";
 import { CLERK_APPEARANCE } from "@/lib/clerk-ui";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Sign up",
+  title: AUTH_REQUEST_H1,
 };
 
 export const viewport: Viewport = {
   themeColor: "#0B1F3A",
 };
 
-export default async function SignupPage() {
+export default async function RequestAccessPage() {
   if (await getCurrentUser()) {
     redirect(CLERK_AFTER_SIGN_IN_URL);
   }
 
   return (
-    <PublicChrome auth>
-      <p className="sr-only">
-        {SIGNUP_H1} {SIGNUP_SUB} {SIGNUP_FOOT} {SIGNUP_CTA}
-      </p>
+    <PublicChrome auth authScreen="request">
       <AuthDoor
-        title="Sign up"
+        title={AUTH_REQUEST_H1}
+        lead={AUTH_REQUEST_SUB}
         foot={
           <p className="bb-auth-alt">
-            Already have an account?{" "}
-            <Link href={CLERK_SIGN_IN_URL}>Sign in</Link>
+            {AUTH_REQUEST_ALT_LEAD}{" "}
+            <Link href={CLERK_SIGN_IN_URL}>{AUTH_REQUEST_ALT_LINK}</Link>
           </p>
         }
       >
@@ -52,19 +56,7 @@ export default async function SignupPage() {
               signInUrl={CLERK_SIGN_IN_URL}
             />
           ) : (
-            <div className="grid gap-4">
-              <p className="text-sm text-white/70">
-                Clerk keys are not configured. Add{" "}
-                <code className="text-white">
-                  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-                </code>{" "}
-                and <code className="text-white">CLERK_SECRET_KEY</code> in
-                Vercel before production beta sign-up works.
-              </p>
-              <Button type="button" size="lg" className="w-full" disabled>
-                {SIGNUP_CTA}
-              </Button>
-            </div>
+            <AuthQuietForm primary={AUTH_REQUEST_CTA} />
           )}
         </div>
       </AuthDoor>
