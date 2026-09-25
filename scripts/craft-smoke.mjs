@@ -1801,6 +1801,39 @@ assert(read("app/onboarding/go-live/actions.ts").includes("panel=running"), "go-
 assert(goliveCss.includes('[data-surface="public-shell"]:has(.bb-golive) header'), "go-live hides public chrome");
 assert(!read("middleware.ts").includes("x-bb-path"), "go-live does not rewrite Clerk middleware");
 
+const settingsQuiet = read("lib/settings-quiet.ts");
+const settingsUi = read("components/settings-quiet.tsx");
+const settingsChrome = read("components/settings-chrome.tsx");
+const settingsCraft = read("app/craft/settings/page.tsx");
+const settingsCss = read("app/globals.css");
+assert(settingsCraft.includes("settingsPanelOf"), "craft settings panel query");
+assert(
+  settingsCraft.includes("panel=home") || settingsQuiet.includes('return "home"'),
+  "craft settings defaults home",
+);
+assert(settingsQuiet.includes('value === "connectors"') && settingsQuiet.includes('value === "logout"'), "craft settings switches home connectors logout");
+assert(settingsQuiet.includes('SETTINGS_WORDMARK = "BotBuyer"'), "settings wordmark BotBuyer");
+assert(settingsChrome.includes("botbuyer-mark-reverse.svg"), "settings soft-spine reverse mark");
+assert(settingsChrome.includes("SETTINGS_WORDMARK") && settingsChrome.includes("SETTINGS_DONE"), "settings chrome is BotBuyer + Done");
+assert(!settingsChrome.includes("phone-tabs") && !settingsUi.includes("grid-cols-"), "settings is not a fifth tab");
+assert(settingsQuiet.includes("BotBuyer only runs what you approve."), "settings honesty approve");
+assert(settingsQuiet.includes("Nothing is charged until you approve a deal."), "settings honesty charge");
+assert(settingsQuiet.includes('SETTINGS_AUTO_OFF = "Off"'), "settings auto-approve Off fact");
+assert(settingsQuiet.includes("not editable to ON"), "settings auto-approve cannot be edited ON");
+assert(settingsQuiet.includes("no balance theater"), "settings vault has no balance theater");
+assert(settingsQuiet.includes('SETTINGS_NEEDS_SETUP = "Needs setup"'), "settings connectors Needs setup");
+assert(settingsQuiet.includes('SETTINGS_COMING = "Coming"'), "settings connectors Coming");
+assert(settingsQuiet.includes("no synced GMV or closed deals shown"), "settings connectors no fake GMV");
+assert(settingsQuiet.includes('SETTINGS_LOGOUT_TITLE = "Log out of BotBuyer?"'), "settings logout title");
+assert(settingsQuiet.includes("EXAMPLE · not CHO-verified"), "settings EXAMPLE chip");
+assert(settingsUi.includes('data-auto-approve="off"'), "settings Off badge is a fact");
+assert(!settingsUi.includes('type="checkbox"') && !settingsUi.includes('role="switch"'), "settings auto-approve is not a toggle");
+assert(!settingsUi.includes("autoApprove: true") && !settingsQuiet.includes("autoApprove: true"), "settings auto-approve stays off");
+assert(!settingsUi.includes("rounded-full") && !settingsChrome.includes("rounded-full"), "settings controls are not pills");
+assert(settingsCss.includes(".bb-settings") && settingsCss.includes("border-radius: 8px"), "settings radius 8px");
+assert(settingsPage.includes("SettingsQuiet") && settingsPage.includes("SettingsChrome"), "signed-in settings is Quiet Capital");
+assert(!settingsQuiet.toLowerCase().includes("deposit"), "settings copy has no deposit theater");
+
 if (failures.length) {
   console.error("craft-smoke FAIL");
   for (const item of failures) console.error(" -", item);
