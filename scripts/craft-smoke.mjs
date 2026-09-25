@@ -1725,6 +1725,43 @@ assert(shell.includes("New intent") && shell.includes("← Intent"), "Intent chr
 assert(shell.includes('href="/intent/new"'), "New intent opens the hunt form");
 assert(shell.includes("grid-cols-4"), "Intent stays on the four phone tabs");
 
+const vaultQuiet = read("lib/vault-quiet.ts");
+const vaultQuietUi = read("components/vault-quiet.tsx");
+const vaultCraft = read("app/craft/vault/page.tsx");
+assert(vaultPage.includes("VaultQuiet"), "signed-in Vault is Quiet Capital");
+assert(vaultCraft.includes("panel=spend-limit") || vaultCraft.includes("spend-limit"), "craft vault spend-limit panel");
+assert(vaultCraft.includes('path="/vault"'), "craft vault uses Vault tab");
+assert(vaultQuiet.includes('VAULT_EMPTY_H = "No payment method yet"'), "vault empty headline");
+assert(vaultQuiet.includes("Nothing is charged on this screen. Auto-approve is off."), "vault empty charge micro");
+assert(
+  vaultQuiet.includes("Pay at purchase from your linked method. Your spend limit still applies."),
+  "vault honesty pay at purchase",
+);
+assert(vaultQuiet.includes("BotBuyer only spends what you approve."), "vault honesty approve");
+assert(
+  vaultQuiet.includes("BotBuyer will not exceed this without your approval."),
+  "vault spend limit will not exceed",
+);
+assert(vaultQuiet.includes("nothing sits in a balance here"), "vault empty denies a held balance");
+assert(vaultQuiet.includes("no holding balance"), "vault populated denies a holding balance");
+assert(vaultQuiet.includes("•••• 4242"), "vault example Visa");
+assert(vaultQuiet.includes("ACH · Linked"), "vault example ACH");
+assert(vaultQuiet.includes("VAULT_EXAMPLE_LIMIT_USD = 25_000"), "vault example spend limit");
+assert(vaultQuiet.includes('VAULT_ADD = "Add payment method"'), "vault primary Add payment method");
+assert(vaultQuiet.includes('VAULT_SET = "Set spend limit"'), "vault set spend limit");
+assert(vaultQuietUi.includes("VAULT_ADD") && vaultQuietUi.includes("VAULT_SET"), "vault UI uses locked verbs");
+assert(vaultQuietUi.includes('data-quiet="vault-empty"') || vaultQuietUi.includes("vault-empty"), "vault empty surface");
+assert(vaultQuietUi.includes("vault-populated"), "vault populated surface");
+assert(vaultQuietUi.includes("vault-spend-limit"), "vault spend-limit surface");
+assert(vaultQuietUi.includes(">#2DD4BF<") || vaultQuietUi.includes("bg-[#2DD4BF]"), "vault Save is teal");
+assert(!vaultQuietUi.includes("rounded-full"), "vault controls are not pills");
+assert(!vaultQuiet.includes("autoApprove: true"), "vault auto-approve stays off");
+assert(!vaultQuiet.toLowerCase().includes("deposit"), "vault copy has no deposit theater");
+assert(!vaultQuiet.toLowerCase().includes("wallet"), "vault copy has no wallet theater");
+assert(!vaultQuietUi.toLowerCase().includes("gmv"), "vault UI has no GMV");
+assert(!vaultQuiet.includes("Fund your vault"), "vault quiet dropped Fund your vault");
+assert(shell.includes("vaultDesk"), "Vault chrome hides the search CTA");
+
 if (failures.length) {
   console.error("craft-smoke FAIL");
   for (const item of failures) console.error(" -", item);

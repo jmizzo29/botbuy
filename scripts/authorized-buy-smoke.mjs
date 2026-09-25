@@ -68,11 +68,13 @@ assert(vaultApi.includes("authorizedBuyVaultStatus"), "vault API uses honesty he
 
 assert(vaultRails.includes("We don’t hold a balance."), "vault stays non-custody");
 assert(vaultRails.includes("VAULT_AUTHORIZED_BUY_NOTE"), "vault rails authorized-buy note");
-assert(vaultPage.includes("VAULT_AUTHORIZED_BUY_NOTE"), "vault page authorized-buy note");
-assert(vaultPage.includes("authorizedBuyVaultStatus"), "vault page prints key smoke");
-assert(vaultPage.includes("keysConfigured"), "vault page shows keysConfigured");
-assert(vaultPage.includes('token="spend=false"'), "vault page spend=false HonestyFlag");
-assert(vaultPage.includes("AUTO_APPROVE_OFF"), "vault page Auto-approve OFF");
+const vaultQuiet = read("lib/vault-quiet.ts");
+assert(vaultApi.includes("keysConfigured") || rails.includes("keysConfigured"), "authorized-buy names keysConfigured");
+assert(vaultQuiet.includes("Nothing is charged on this screen."), "vault quiet nothing charged");
+assert(vaultQuiet.includes("Auto-approve is off."), "vault quiet auto-approve off");
+assert(vaultQuiet.includes("Auto-approve off."), "vault quiet auto-approve off line");
+assert(!vaultPage.includes("autoApprove: true"), "vault page does not enable auto-approve");
+assert(vaultPage.includes("VaultQuiet"), "vault page is Quiet Capital methods + spend limit");
 assert(prepUi.includes("publishableConfigured"), "prep UI shows publishable status");
 assert(prepUi.includes('token="spend=false"'), "prep UI spend=false HonestyFlag");
 assert(prepUi.includes("amountCents"), "prep UI shows amount honesty");

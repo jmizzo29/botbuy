@@ -53,6 +53,7 @@ export function AppShell({
   const dealDetail = /^\/deals\/[^/]+/.test(pathname);
   const intentThread = /^\/intent\/(?!new$)[^/]+/.test(pathname);
   const intentDesk = pathname === "/intent" || pathname.startsWith("/intent/");
+  const vaultDesk = pathname === "/vault" || pathname.startsWith("/vault/");
 
   return (
     <div className="bb-app-phone relative min-h-dvh bg-background bg-[#0B1F3A] text-white">
@@ -102,25 +103,27 @@ export function AppShell({
             href="/settings"
             className={cn(
               "font-medium",
-              intentDesk
+              intentDesk || vaultDesk
                 ? "text-[12px] text-white/55 md:text-[13px]"
                 : "text-sm text-white/70",
             )}
           >
             Settings
           </Link>
-          <Link
-            href="/intent/new"
-            className={cn(
-              "inline-flex items-center justify-center rounded-[8px] bg-[#2DD4BF] font-[650] text-[#042F2E]",
-              intentDesk
-                ? "h-8 px-3 text-[12px] md:h-[34px] md:px-3.5 md:text-[13px]"
-                : "h-9 px-3 text-sm font-semibold",
-              (dealDetail || intentThread) && "hidden md:inline-flex",
-            )}
-          >
-            {intentDesk ? "New intent" : "New search"}
-          </Link>
+          {vaultDesk ? null : (
+            <Link
+              href="/intent/new"
+              className={cn(
+                "inline-flex items-center justify-center rounded-[8px] bg-[#2DD4BF] font-[650] text-[#042F2E]",
+                intentDesk
+                  ? "h-8 px-3 text-[12px] md:h-[34px] md:px-3.5 md:text-[13px]"
+                  : "h-9 px-3 text-sm font-semibold",
+                (dealDetail || intentThread) && "hidden md:inline-flex",
+              )}
+            >
+              {intentDesk ? "New intent" : "New search"}
+            </Link>
+          )}
         </div>
       </header>
       <p className="sr-only">
