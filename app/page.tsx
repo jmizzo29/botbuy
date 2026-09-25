@@ -2,10 +2,13 @@ import type { Viewport } from "next";
 import Link from "next/link";
 import { PublicChrome } from "@/components/public-chrome";
 import { Button } from "@/components/ui/button";
+import { CLERK_SIGN_IN_URL } from "@/lib/auth-config";
 import {
   BRAND,
+  LAND_ALREADY_HERE,
   LAND_PRODUCT_H1,
   LAND_PRODUCT_SUPPORT,
+  LAND_REQUEST_ACCESS,
   LAND_STORY,
 } from "@/lib/brand";
 import { redirectSignedInFromLand } from "@/lib/land-gate";
@@ -54,9 +57,16 @@ export default async function LandPage() {
             <div className="bb-land-cta">
               <Button asChild className="bb-land-signup">
                 <Link href="/signup" data-cta="land-signup">
-                  {BRAND.primaryCta}
+                  {LAND_REQUEST_ACCESS}
                 </Link>
               </Button>
+              <Link
+                href={CLERK_SIGN_IN_URL}
+                className="bb-land-login"
+                data-cta="land-login"
+              >
+                {LAND_ALREADY_HERE}
+              </Link>
             </div>
           </div>
           <ol className="bb-land-story">
