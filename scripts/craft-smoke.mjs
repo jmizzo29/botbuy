@@ -414,6 +414,12 @@ assert(
     !signIn.includes("Signup"),
   "sign-in has no banned auth labels",
 );
+assert(
+  css.includes(
+    '.bb-auth-shell[data-auth-screen="request"]:not([data-auth-password="open"]) .cl-formFieldRow__password',
+  ) && css.includes('content: "Request access"'),
+  "request access first step hides password and labels the primary",
+);
 assert(!signup.includes("in-memory session"), "signup scrubbed in-memory copy");
 assert(!signup.includes("not a live account"), "signup scrubbed POC persist copy");
 assert(!signup.includes("persistSignupAction"), "signup is not in-memory persist");

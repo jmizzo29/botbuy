@@ -1696,3 +1696,29 @@ html:has(.bb-auth-shell) a[href*="clerk.dev"] {
     padding-right: 5.5rem !important;
   }
 }
+
+/* Request access first step — email + Google only. Password waits until email is set. */
+.bb-auth-shell[data-auth-screen="request"]:not([data-auth-password="open"]) .cl-formFieldRow__password {
+  display: none !important;
+}
+
+.bb-auth-shell[data-auth-screen="request"] .cl-formButtonPrimary {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-auth-shell[data-auth-screen="request"] .cl-formButtonPrimary > span {
+  font-size: 0 !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.bb-auth-shell[data-auth-screen="request"] .cl-formButtonPrimary::after {
+  content: "Request access";
+  font-size: 15px !important;
+  line-height: 1;
+  font-weight: 650;
+  color: #042f2e !important;
+  -webkit-text-fill-color: #042f2e !important;
+}

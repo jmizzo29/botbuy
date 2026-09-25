@@ -87,7 +87,7 @@ export const CLERK_APPEARANCE = {
 
 /**
  * Clerk 7 localization lives on ClerkProvider, not SignIn/SignUp.
- * Primary label stays Clerk's Continue; the request screen rewrites it in AuthFields.
+ * Request access paints its primary through auth CSS so Log in can keep Continue.
  */
 export const CLERK_AUTH_LOCALIZATION = {
   socialButtonsBlockButton: AUTH_GOOGLE_LABEL.replace(

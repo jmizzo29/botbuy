@@ -4,18 +4,8 @@ import { useEffect } from "react";
 import {
   AUTH_EMAIL_LABEL,
   AUTH_EMAIL_PLACEHOLDER,
-  AUTH_LOGIN_CTA,
   AUTH_REQUEST_CTA,
 } from "@/lib/auth-copy";
-
-const CLERK_PRIMARY_DEFAULTS = new Set([
-  "Continue",
-  "Sign up",
-  "Sign in",
-  "Create account",
-  "Signup",
-  "Sign-in",
-]);
 
 /** Clerk ships light placeholders and stock labels. Keep A1 copy on the live fields. */
 export function AuthFields() {
@@ -32,7 +22,6 @@ export function AuthFields() {
       const root = document.querySelector(".bb-auth-shell");
       if (!root) return;
       const request = root.getAttribute("data-auth-screen") === "request";
-      const primary = request ? AUTH_REQUEST_CTA : AUTH_LOGIN_CTA;
 
       root
         .querySelectorAll(
@@ -53,21 +42,20 @@ export function AuthFields() {
           }
         });
 
-      root.querySelectorAll(".cl-formButtonPrimary").forEach((el) => {
-        const node = el as HTMLElement;
-        const current = (node.textContent || "").replace(/\s+/g, " ").trim();
-        if (!CLERK_PRIMARY_DEFAULTS.has(current) || current === primary) return;
-        const label = node.querySelector("span");
-        if (label && label.childElementCount === 0) {
-          if (label.textContent !== primary) label.textContent = primary;
-          return;
-        }
-        node.childNodes.forEach((child) => {
-          if (child.nodeType === Node.TEXT_NODE && child.textContent?.trim()) {
-            child.textContent = primary;
+      if (request) {
+        const passwordOpen = root.getAttribute("data-auth-password") === "open";
+        root.querySelectorAll(".cl-formFieldRow__password input[name='password']").forEach((node) => {
+          const input = node as HTMLInputElement;
+          input.required = passwordOpen;
+          input.tabIndex = passwordOpen ? 0 : -1;
+        });
+        root.querySelectorAll(".cl-formButtonPrimary").forEach((el) => {
+          const button = el as HTMLElement;
+          if (button.getAttribute("aria-label") !== AUTH_REQUEST_CTA) {
+            button.setAttribute("aria-label", AUTH_REQUEST_CTA);
           }
         });
-      });
+      }
 
       root.querySelectorAll(".cl-formFieldLabel, [data-localization-key^='formFieldLabel__email']").forEach((el) => {
         const node = el as HTMLElement;
@@ -109,10 +97,39 @@ export function AuthFields() {
       });
     }
 
+    function onPrimaryClick(event: MouseEvent) {
+      const root = document.querySelector(".bb-auth-shell");
+      if (!root || root.getAttribute("data-auth-screen") !== "request") return;
+      if (root.getAttribute("data-auth-password") === "open") return;
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const button = target.closest(".cl-formButtonPrimary");
+      if (!button || !root.contains(button)) return;
+      const email = root.querySelector(
+        "input[name='emailAddress']",
+      ) as HTMLInputElement | null;
+      if (!email?.value.trim()) return;
+      event.preventDefault();
+      event.stopPropagation();
+      root.setAttribute("data-auth-password", "open");
+      const password = root.querySelector(
+        "input[name='password']",
+      ) as HTMLInputElement | null;
+      if (password) {
+        password.required = true;
+        password.tabIndex = 0;
+        password.focus();
+      }
+    }
+
     fix();
     const obs = new MutationObserver(fix);
     obs.observe(document.body, { childList: true, subtree: true, characterData: true });
-    return () => obs.disconnect();
+    document.addEventListener("click", onPrimaryClick, true);
+    return () => {
+      obs.disconnect();
+      document.removeEventListener("click", onPrimaryClick, true);
+    };
   }, []);
   return null;
 }
