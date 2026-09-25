@@ -13,10 +13,12 @@ export function PublicChrome({
   children,
   land = false,
   auth = false,
+  authScreen,
 }: {
   children: React.ReactNode;
   land?: boolean;
   auth?: boolean;
+  authScreen?: "login" | "request";
 }) {
   return (
     <div
@@ -28,6 +30,7 @@ export function PublicChrome({
             : "min-h-dvh bg-background text-foreground",
       )}
       data-surface={auth ? "auth-shell" : land ? "land-shell" : "public-shell"}
+      data-auth-screen={auth ? authScreen : undefined}
     >
       <div
         className={
@@ -36,17 +39,23 @@ export function PublicChrome({
       >
         <header
           className={
-            land
+            land || auth
               ? "bb-land-header"
-              : auth
-                ? "bb-auth-header"
-                : "mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8"
+              : "mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-8"
           }
         >
           <Link href="/" className="flex items-center" aria-label="BotBuyer">
             <BrandLockup priority onDark={land || auth} />
           </Link>
-          {auth ? null : <PublicNav land={land} />}
+          {auth ? (
+            <div className="bb-land-nav">
+              <Link href="/about" className={landLinkClass("about")} data-nav="about">
+                About
+              </Link>
+            </div>
+          ) : (
+            <PublicNav land={land} />
+          )}
         </header>
         {auth ? <AuthFields /> : null}
         {land || auth ? null : <InstallHint />}
@@ -61,7 +70,11 @@ export function PublicChrome({
         >
           {children}
         </main>
-        {land || auth ? null : (
+        {auth ? (
+          <footer className="bb-auth-legal">
+            <SiteFooter legalOnly onDark />
+          </footer>
+        ) : land ? null : (
           <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pb-10 md:px-8">
             <div>
               <SiteFooter />
