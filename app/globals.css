@@ -488,8 +488,6 @@ body {
 .bb-land-cta [data-cta]:not(.bb-land-login),
 .bb-land-signup {
   flex: 0 0 auto;
-  width: auto;
-  min-width: 0;
   max-width: none;
   min-height: 48px;
   height: 48px;
@@ -593,8 +591,8 @@ body {
   }
 
   /* Request access = 100% of content column. Login micro stays a text link. */
-  .bb-land-signup,
-  .bb-land-cta [data-cta="land-signup"] {
+  .bb-land-cta > a.bb-land-signup,
+  .bb-land-cta > [data-cta="land-signup"] {
     width: 100%;
     min-width: 100%;
   }
@@ -669,8 +667,8 @@ body {
     margin-top: 0;
   }
 
-  .bb-land-signup,
-  .bb-land-cta [data-cta="land-signup"] {
+  .bb-land-cta > a.bb-land-signup,
+  .bb-land-cta > [data-cta="land-signup"] {
     width: auto;
     min-width: 200px;
   }
