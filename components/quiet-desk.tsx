@@ -124,7 +124,7 @@ export function QuietSearchesEmpty() {
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/70">
             {QUIET_SEARCHES_EMPTY_BODY}
           </p>
-          <Link href="/intent" className={`${primaryBtn} mt-4 w-full`}>
+          <Link href="/intent/new" className={`${primaryBtn} mt-4 w-full`}>
             {QUIET_NEW_SEARCH}
           </Link>
           <div className="mt-3">
@@ -148,7 +148,7 @@ export function QuietNeedsEmpty() {
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/70">
             {QUIET_NEEDS_EMPTY_BODY}
           </p>
-          <Link href="/intent" className={`${primaryBtn} mt-4 w-full`}>
+          <Link href="/intent/new" className={`${primaryBtn} mt-4 w-full`}>
             {QUIET_NEW_SEARCH}
           </Link>
           <p className="mt-3 text-sm leading-relaxed text-white/55">

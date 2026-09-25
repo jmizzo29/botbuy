@@ -1,70 +1,28 @@
-import { IntentForm } from "@/components/intent-form";
+import { IntentEmpty, IntentList } from "@/components/intent-chat";
 import { requireUser } from "@/lib/auth";
 import {
-  INTENT_H1,
-  INTENT_SUB,
-  displayAccountEmail,
-  hasReachableEmail,
-} from "@/lib/john-ux";
-import { MY_DEALS_HREF } from "@/lib/cpo-techlux";
-import { formatUsd } from "@/lib/money";
-import { listIntents } from "@/lib/store";
-import { formatDate } from "@/lib/utils";
+  INTENT_EXAMPLE_ROWS,
+  intentRowsFromLive,
+} from "@/lib/intent-chat";
+import { hydrateStore, listDeals, listIntents } from "@/lib/store";
 
 export const metadata = {
-  title: "New hunt",
+  title: "Intent",
 };
 
-export default async function IntentPage() {
+export const dynamic = "force-dynamic";
+
+export default async function IntentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ example?: string }>;
+}) {
+  const { example } = await searchParams;
+  if (example === "1") return <IntentList rows={INTENT_EXAMPLE_ROWS} />;
+
   const user = await requireUser();
+  await hydrateStore(user.id);
   const intents = listIntents(user.id);
-
-  return (
-    <div className="bb-hunt-page space-y-6">
-      <header>
-        <p className="sr-only">{INTENT_H1}</p>
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9bb0c7]">
-          Start
-        </p>
-        <h1 className="mt-1 text-[1.85rem] font-semibold tracking-tight text-white">
-          New hunt
-        </h1>
-        <p className="sr-only">{INTENT_SUB}</p>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#9bb0c7]">
-          A business, a car, a house, a book, or anything else you want bought.
-        </p>
-      </header>
-
-      <div className="bb-hunt-form">
-        <IntentForm
-          emailMissing={!hasReachableEmail(user)}
-          cancelHref={MY_DEALS_HREF}
-          contactEmail={
-            displayAccountEmail(user.notificationEmail) ||
-            displayAccountEmail(user.email)
-          }
-        />
-      </div>
-
-      {intents.length ? (
-        <section className="space-y-3">
-          <h2 className="text-sm font-medium text-white/80">Recent</h2>
-          <ul className="grid list-none gap-3 p-0">
-            {intents.map((intent) => (
-              <li
-                key={intent.id}
-                className="rounded-xl border border-white/15 bg-[#163556] px-4 py-4"
-              >
-                <p className="text-[15px] font-medium text-white">{intent.summary}</p>
-                <p className="mt-1 font-mono text-xs text-white/55">
-                  {intent.status} \u00b7 {formatUsd(intent.maxPriceUsd)} \u00b7{" "}
-                  {formatDate(intent.createdAt)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-    </div>
-  );
+  if (!intents.length) return <IntentEmpty />;
+  return <IntentList rows={intentRowsFromLive(intents, listDeals(user.id))} />;
 }

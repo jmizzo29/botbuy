@@ -51,6 +51,8 @@ export function AppShell({
   const livePath = usePathname();
   const pathname = path ?? livePath;
   const dealDetail = /^\/deals\/[^/]+/.test(pathname);
+  const intentThread = /^\/intent\/(?!new$)[^/]+/.test(pathname);
+  const intentDesk = pathname === "/intent" || pathname.startsWith("/intent/");
 
   return (
     <div className="bb-app-phone relative min-h-dvh bg-background bg-[#0B1F3A] text-white">
@@ -91,17 +93,33 @@ export function AppShell({
               ← Searches
             </Link>
           ) : null}
-          <Link href="/settings" className="text-sm text-white/70">
+          {intentThread ? (
+            <Link href="/intent" className="text-[12px] font-[550] text-white/70 md:hidden">
+              ← Intent
+            </Link>
+          ) : null}
+          <Link
+            href="/settings"
+            className={cn(
+              "font-medium",
+              intentDesk
+                ? "text-[12px] text-white/55 md:text-[13px]"
+                : "text-sm text-white/70",
+            )}
+          >
             Settings
           </Link>
           <Link
-            href="/intent"
+            href="/intent/new"
             className={cn(
-              "inline-flex h-9 items-center rounded-[8px] bg-[#2DD4BF] px-3 text-sm font-semibold text-[#042F2E]",
-              dealDetail && "hidden md:inline-flex",
+              "inline-flex items-center justify-center rounded-[8px] bg-[#2DD4BF] font-[650] text-[#042F2E]",
+              intentDesk
+                ? "h-8 px-3 text-[12px] md:h-[34px] md:px-3.5 md:text-[13px]"
+                : "h-9 px-3 text-sm font-semibold",
+              (dealDetail || intentThread) && "hidden md:inline-flex",
             )}
           >
-            New search
+            {intentDesk ? "New intent" : "New search"}
           </Link>
         </div>
       </header>
