@@ -26,6 +26,8 @@ export function InstallHint() {
 
   if (onLand) return null;
   if (onAuth) return null;
+  // Track B craft board is the identical-gate surface. No PWA pill there.
+  if (pathname === "/craft/quiet" || pathname.startsWith("/craft/")) return null;
 
   const open = !dismissed && !hidden;
   if (!open && !howTo) return null;

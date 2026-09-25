@@ -30,7 +30,9 @@ const primaryBtn =
 const secondaryBtn =
   "inline-flex min-h-11 items-center justify-center rounded-[8px] border border-white/30 bg-transparent px-4 text-sm font-semibold text-white/90";
 const approveCompact =
-  "inline-flex h-9 items-center justify-center rounded-[8px] bg-[#2DD4BF] px-3 text-sm font-semibold text-[#042F2E]";
+  "inline-flex h-8 items-center justify-center rounded-[8px] bg-[#2DD4BF] px-3 text-[13px] font-semibold text-[#042F2E] md:h-9 md:text-sm";
+const pairBtn =
+  "inline-flex h-9 w-full items-center justify-center rounded-[8px] px-3 text-[14px] font-semibold md:min-h-11 md:px-4 md:text-sm";
 
 function StatusChip({ label }: { label: string }) {
   const hot = label === "Needs you";
@@ -66,13 +68,17 @@ function DeskHeading({
 }) {
   return (
     <header>
-      <h1 className="text-[1.65rem] font-semibold tracking-tight text-white">
+      <h1 className="text-[22px] font-semibold leading-tight tracking-tight text-white md:text-[1.65rem]">
         {title}
       </h1>
-      <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-white/70">
+      <p className="mt-1 max-w-3xl text-[13px] leading-snug text-white/70 md:mt-1.5 md:text-sm md:leading-relaxed">
         {sub}
       </p>
-      {extra ? <div className="mt-1 text-sm text-white/70">{extra}</div> : null}
+      {extra ? (
+        <div className="mt-0.5 text-[13px] leading-snug text-white/70 md:mt-1 md:text-sm">
+          {extra}
+        </div>
+      ) : null}
     </header>
   );
 }
@@ -136,22 +142,22 @@ export function QuietNeedsEmpty() {
 function SearchPhoneRow({ row }: { row: QuietRow }) {
   const needs = row.chip === "Needs you";
   return (
-    <li className="border-b border-white/[0.08] px-3 py-2.5 last:border-b-0">
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+    <li className="border-b border-white/[0.08] px-3 py-2 last:border-b-0 md:px-3 md:py-2.5">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 md:gap-3">
         <div className="min-w-0">
           {row.href ? (
             <Link
               href={row.href}
-              className="text-[15px] font-medium tracking-tight text-white"
+              className="text-[14px] font-medium leading-5 tracking-tight text-white md:text-[15px]"
             >
               {row.title}
             </Link>
           ) : (
-            <p className="text-[15px] font-medium tracking-tight text-white">
+            <p className="text-[14px] font-medium leading-5 tracking-tight text-white md:text-[15px]">
               {row.title}
             </p>
           )}
-          <div className="mt-1.5 flex flex-wrap items-center gap-2">
+          <div className="mt-1 flex flex-wrap items-center gap-1.5 md:mt-1.5 md:gap-2">
             <StatusChip label={row.chip} />
             {row.example ? <ExampleChip>{QUIET_EXAMPLE_CHIP}</ExampleChip> : null}
             {needs ? null : (
@@ -181,7 +187,7 @@ export function QuietSearchesList({ rows }: { rows: QuietRow[] }) {
     <div data-surface="quiet-desk" data-quiet="searches">
       <DeskHeading title={QUIET_SEARCHES_TITLE} sub={QUIET_SEARCHES_SUB} />
       <div className="mt-4">
-        <ul className="list-none rounded-[8px] border border-white/10 bg-white/[0.03] p-0 md:hidden">
+        <ul className="mt-3 list-none overflow-hidden rounded-[8px] border border-white/[0.12] bg-white/[0.03] p-0 md:hidden">
           {rows.map((row) => (
             <SearchPhoneRow key={row.id} row={row} />
           ))}
@@ -255,15 +261,18 @@ function PairActions({ row }: { row: QuietRow }) {
   return (
     <div className="grid grid-cols-2 gap-2">
       {row.href ? (
-        <Link href={row.href} className={primaryBtn}>
+        <Link href={row.href} className={`${pairBtn} bg-[#2DD4BF] text-[#042F2E]`}>
           {QUIET_APPROVE}
         </Link>
       ) : (
-        <button type="button" className={primaryBtn}>
+        <button type="button" className={`${pairBtn} bg-[#2DD4BF] text-[#042F2E]`}>
           {QUIET_APPROVE}
         </button>
       )}
-      <button type="button" className={secondaryBtn}>
+      <button
+        type="button"
+        className={`${pairBtn} border border-white/30 bg-transparent text-white/90`}
+      >
         {QUIET_REJECT}
       </button>
     </div>
@@ -278,25 +287,30 @@ export function QuietNeedsList({ rows }: { rows: QuietRow[] }) {
         sub={QUIET_NEEDS_POP_SUB}
         extra={QUIET_CHARGE_MICRO}
       />
-      <div className="mt-4 grid gap-3 md:hidden">
+      <div className="mt-3 grid gap-2 md:hidden">
         {rows.map((row) => (
           <article
             key={row.id}
-            className="rounded-[8px] border border-white/10 bg-white/[0.03] px-3 py-3"
+            className="rounded-[8px] border border-white/[0.12] bg-white/[0.03] px-3 py-2.5"
           >
             {row.href ? (
-              <Link href={row.href} className="text-[15px] font-medium text-white">
+              <Link
+                href={row.href}
+                className="text-[14px] font-medium leading-5 tracking-tight text-white"
+              >
                 {row.title}
               </Link>
             ) : (
-              <p className="text-[15px] font-medium text-white">{row.title}</p>
+              <p className="text-[14px] font-medium leading-5 tracking-tight text-white">
+                {row.title}
+              </p>
             )}
-            <div className="mt-2 flex flex-wrap items-center gap-2">
+            <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
               <StatusChip label={row.chip} />
               {row.example ? <ExampleChip>{QUIET_EXAMPLE_CHIP}</ExampleChip> : null}
               <span className="text-[12px] text-white/55">{row.amount}</span>
             </div>
-            <div className="mt-3">
+            <div className="mt-2">
               <PairActions row={row} />
             </div>
           </article>
