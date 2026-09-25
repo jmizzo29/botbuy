@@ -248,14 +248,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.85rem;
   width: 100%;
   /* ~56px product-bar density: 14px + 28px lockup + 14px. Soft HOLD. */
   padding: max(0.875rem, env(safe-area-inset-top, 0px)) 1.25rem 0.875rem;
   background: transparent;
   border: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow: none;
 }
 
@@ -269,14 +268,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  flex-wrap: nowrap;
+  gap: 1rem;
 }
 
 .bb-land-link {
-  font-size: 0.75rem;
+  font-size: 14px;
   line-height: 1.2;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.90);
   background: none;
   border: 0;
   border-radius: 0;
@@ -287,10 +286,11 @@ body {
 }
 
 .bb-land-header .about,
-.bb-land-header [data-nav="about"] {
-  font-size: 15px;
-  font-weight: 550;
-  color: rgba(255, 255, 255, 0.9);
+.bb-land-header [data-nav="about"],
+.bb-land-header [data-nav="signin"] {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.90);
   padding: 0;
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -345,23 +345,6 @@ body {
   box-shadow: none;
 }
 
-.bb-land-watermark {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.bb-mark-watermark {
-  position: absolute;
-  top: 22%;
-  right: -6%;
-  width: min(72vw, 22rem);
-  height: auto;
-  opacity: 0.12;
-}
-
 .bb-land-panel {
   position: relative;
   z-index: 1;
@@ -372,7 +355,16 @@ body {
   min-height: 0;
   background: transparent;
   border-top: none;
-  padding: 48px 24px calc(48px + env(safe-area-inset-bottom, 0px));
+  padding: 28px 24px calc(32px + env(safe-area-inset-bottom, 0px));
+  gap: 1.75rem;
+}
+
+.bb-land-folio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 22rem;
 }
 
 .bb-land-copy {
@@ -433,6 +425,65 @@ body {
   margin-top: 0;
 }
 
+.bb-land-story {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 22rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.bb-land-story-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.bb-land-story-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.bb-land-story-index {
+  flex: 0 0 auto;
+  min-width: 1.5rem;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  color: #2dd4bf;
+  font-variant-numeric: tabular-nums;
+}
+
+.bb-land-story-body {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.bb-land-story-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.bb-land-story-support {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.58);
+}
+
 .bb-land-cta > a,
 .bb-land-cta > button,
 .bb-land-cta [data-cta],
@@ -460,37 +511,7 @@ body {
   border: 1.5px solid #2DD4BF;
 }
 
-.bb-land-cta [data-cta="land-signin"],
-.bb-land-signin {
-  flex: 0 0 auto;
-  width: auto;
-  min-width: 0;
-  max-width: none;
-  min-height: 0;
-  height: auto;
-  padding: 0;
-  border-radius: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.90);
-  border: 0;
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 1.2;
-}
-
-.bb-land-signin:hover,
-.bb-land-signin:focus-visible {
-  color: #ffffff;
-  text-decoration: underline;
-  text-underline-offset: 0.22em;
-  background: transparent;
-  border: 0;
-}
-
-/* Phone / max-lg: Q1 institutional-folio. Soft-signal HOLD. */
+/* Phone / max-lg: L1 capital-desk. Soft-signal HOLD. */
 @media (max-width: 1023px) {
   .bb-land-header {
     justify-content: space-between;
@@ -502,7 +523,15 @@ body {
 
   .bb-land-panel {
     min-height: 0;
-    padding: 48px 24px calc(48px + env(safe-area-inset-bottom, 0px));
+    padding: 28px 24px calc(32px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .bb-land-folio,
+  .bb-land-copy,
+  .bb-land-cta,
+  .bb-land-story {
+    max-width: none;
+    width: 100%;
   }
 
   .bb-land-copy {
@@ -514,9 +543,10 @@ body {
   }
 
   .bb-land-h1 {
-    font-size: 2.25rem;
+    /* 30px — "Your AI agent for buying," stays one line on 390. */
+    font-size: 1.875rem;
     font-weight: 600;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.042em;
     line-height: 1.12;
   }
 
@@ -529,11 +559,11 @@ body {
   .bb-land-cta {
     margin-top: 0;
     justify-content: flex-start;
-    max-width: 13.75rem;
+    max-width: none;
     margin-inline: 0;
   }
 
-  /* Sign up = 100% of ~220px content stack. Sign in stays text. */
+  /* Sign up = 100% of content column. Sign in lives in chrome. */
   .bb-land-signup,
   .bb-land-cta [data-cta="land-signup"] {
     width: 100%;
@@ -566,15 +596,17 @@ body {
     min-height: 100svh;
   }
 
-  .bb-land-watermark .bb-mark-watermark {
-    top: 18%;
-    right: 6%;
-    width: min(36vw, 26rem);
+  .bb-land-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 28rem);
+    align-items: start;
+    column-gap: 4rem;
+    min-height: 0;
+    padding: 3.25rem 5.5rem calc(3.5rem + env(safe-area-inset-bottom, 0px));
   }
 
-  .bb-land-panel {
-    min-height: 0;
-    padding: 4.5rem 5.5rem calc(3.5rem + env(safe-area-inset-bottom, 0px));
+  .bb-land-folio {
+    max-width: 32rem;
   }
 
   .bb-land-copy {
@@ -603,8 +635,41 @@ body {
   .bb-land-cta {
     justify-content: flex-start;
     max-width: 22rem;
+    width: auto;
     margin-inline: 0;
     margin-top: 0;
+  }
+
+  .bb-land-signup,
+  .bb-land-cta [data-cta="land-signup"] {
+    width: auto;
+    min-width: 200px;
+  }
+
+  .bb-land-story {
+    max-width: none;
+    margin-top: 0.35rem;
+    padding: 0.15rem 1.35rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+  }
+
+  .bb-land-story-row {
+    padding: 1.05rem 0;
+  }
+
+  .bb-land-story-row:last-child {
+    padding-bottom: 1.05rem;
+  }
+
+  .bb-land-story-title {
+    font-size: 1rem;
+  }
+
+  .bb-land-story-support {
+    font-size: 0.875rem;
   }
 
   .bb-land-meta {
@@ -927,4 +992,541 @@ html:has(:is(.bb-auth-shell, .bb-land-shell, [data-surface="about-story"]))
 .bb-prose th {
   color: var(--bb-muted);
   font-weight: 500;
+}
+
+/* Stop the page sliding sideways on a phone. */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip !important;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+}
+
+.bb-land-shell,
+.bb-auth-shell,
+.bb-app-phone,
+.bb-land-content,
+.bb-auth-content,
+.bb-land-stage,
+.bb-auth-door {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.bb-auth-shell input,
+.bb-auth-shell button,
+.bb-auth-shell img,
+.bb-land-shell img {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.bb-auth-header {
+  justify-content: flex-start !important;
+}
+
+.bb-auth-header .bb-land-lockup {
+  height: 1.35rem !important;
+}
+
+.bb-auth-main {
+  padding-top: 0.25rem !important;
+}
+
+.bb-auth-h1 {
+  font-size: 1.6rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.1 !important;
+  margin: 0 !important;
+}
+
+.bb-auth-lead,
+.bb-auth-legal {
+  display: none !important;
+}
+
+.bb-auth-card {
+  margin-top: 1.25rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.bb-auth-foot {
+  margin-top: 1.25rem !important;
+}
+
+.bb-auth-alt {
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  margin: 4px 0 0 !important;
+  text-align: center;
+  font-size: 16px !important;
+  line-height: 1.35;
+  color: rgba(247, 248, 250, 0.88) !important;
+}
+
+.bb-auth-shell .cl-rootBox,
+.bb-auth-shell .cl-cardBox,
+.bb-auth-shell .cl-card,
+.bb-auth-shell .cl-main,
+.bb-auth-shell .cl-scrollBox,
+.bb-auth-shell .cl-pageScrollBox,
+.bb-auth-shell .cl-header,
+.bb-auth-shell .cl-footer,
+.bb-auth-shell .cl-badge {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.bb-auth-shell .cl-header,
+.bb-auth-shell .cl-footer,
+.bb-auth-shell .cl-badge,
+.bb-auth-shell [data-localization-key*="development"] {
+  display: none !important;
+}
+
+
+.bb-auth-shell {
+  color-scheme: dark;
+}
+
+.bb-auth-shell input,
+.bb-auth-shell button,
+.bb-auth-shell .cl-formFieldInput,
+.bb-auth-shell .cl-input,
+.bb-auth-shell .cl-socialButtonsBlockButton,
+.bb-auth-shell .cl-formButtonPrimary {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.bb-auth-shell .cl-formFieldInput,
+.bb-auth-shell .cl-input,
+.bb-auth-shell input {
+  background: #ffffff !important;
+  color: #0b1f3a !important;
+  -webkit-text-fill-color: #0b1f3a !important;
+  caret-color: #0b1f3a;
+  border: 1px solid #ffffff !important;
+  border-radius: 14px !important;
+  min-height: 48px !important;
+  font-size: 16px !important;
+  box-shadow: none !important;
+}
+
+.bb-auth-shell input::placeholder {
+  color: #5c6b80 !important;
+  -webkit-text-fill-color: #5c6b80 !important;
+  opacity: 1 !important;
+}
+
+.bb-auth-shell input:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.45) !important;
+}
+
+.bb-auth-shell input:-webkit-autofill {
+  -webkit-text-fill-color: #0b1f3a !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+}
+
+.bb-auth-shell .cl-formButtonPrimary {
+  background: #2dd4bf !important;
+  color: #042f2e !important;
+  -webkit-text-fill-color: #042f2e !important;
+  border-radius: 14px !important;
+  min-height: 48px !important;
+  font-weight: 650 !important;
+  box-shadow: none !important;
+}
+
+.bb-auth-shell .cl-formButtonPrimary svg,
+.bb-auth-shell .cl-buttonArrow {
+  display: none !important;
+}
+
+.bb-auth-shell .cl-socialButtonsBlockButton {
+  border-radius: 14px !important;
+  min-height: 48px !important;
+  background: #f7f8fa !important;
+  color: #0b1f3a !important;
+  box-shadow: none !important;
+}
+
+.bb-auth-shell .cl-socialButtonsBlockButtonText,
+.bb-auth-shell .cl-socialButtonsBlockButton span {
+  color: #0b1f3a !important;
+  -webkit-text-fill-color: #0b1f3a !important;
+}
+
+.bb-auth-shell .cl-formFieldLabel {
+  color: #f7f8fa !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+.bb-auth-shell .cl-dividerLine {
+  background: rgba(255, 255, 255, 0.28) !important;
+}
+
+.bb-auth-shell .cl-dividerText {
+  color: rgba(247, 248, 250, 0.72) !important;
+  font-size: 13px !important;
+}
+
+.bb-auth-shell .cl-formFieldInputShowPasswordButton,
+.bb-auth-shell .cl-formFieldInputShowPasswordIcon {
+  color: #0b1f3a !important;
+}
+
+.bb-auth-shell input[name="password"] {
+  padding-right: 44px !important;
+}
+
+.bb-auth-alt a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #f7f8fa !important;
+  font-size: 16px !important;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.bb-app-phone {
+  --bb-bg: #0b1f3a;
+  --bb-surface: #163556;
+  --bb-text: #f7f8fa;
+  --bb-muted: #9bb0c7;
+  --bb-line: rgba(255, 255, 255, 0.12);
+  background: #0b1f3a;
+  color: #f7f8fa;
+}
+
+.bb-app-phone header,
+.bb-app-phone aside,
+.bb-app-phone [data-surface="phone-tabs"] {
+  background: #0b1f3a;
+  color: #f7f8fa;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bb-app-phone .bg-surface,
+.bb-app-phone [data-surface="my-deals-empty"] {
+  background: #163556;
+  color: #f7f8fa;
+}
+
+.bb-app-phone .text-foreground {
+  color: #f7f8fa;
+}
+
+.bb-app-phone .text-muted {
+  color: #9bb0c7;
+}
+
+.bb-app-phone .bb-browser-only,
+.bb-app-phone footer {
+  display: none;
+}
+
+.bb-app-phone main {
+  max-width: 32rem;
+  padding-top: 0.25rem;
+}
+
+.bb-app-phone input,
+.bb-app-phone textarea {
+  background: #0a182c;
+  color: #f7f8fa;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.bb-app-phone [data-surface="intent-capture"] button[type="submit"] {
+  background: #2dd4bf;
+  color: #042f2e;
+  border-radius: 999px;
+  min-height: 48px;
+}
+
+
+.bb-app-phone [data-surface="intent-capture"] .bb-hunt-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+}
+
+.bb-app-phone [data-surface="intent-capture"] .bb-hunt-actions button {
+  width: 100%;
+}
+
+.bb-app-phone [data-surface="intent-capture"] .bb-hunt-cancel {
+  background: transparent !important;
+  color: #f7f8fa !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35) !important;
+  border-radius: 999px !important;
+  min-height: 48px !important;
+}
+
+/* Clerk parks the password field on top of Continue with Google until email is accepted. */
+.bb-auth-shell .cl-formFieldRow__password[aria-hidden="true"] {
+  display: none !important;
+}
+
+.bb-auth-shell .cl-socialButtonsRoot,
+.bb-auth-shell .cl-socialButtonsBlockButton {
+  position: relative;
+  z-index: 2;
+}
+
+.bb-auth-shell .cl-header,
+.bb-auth-shell .cl-headerTitle,
+.bb-auth-shell .cl-headerSubtitle,
+.bb-auth-shell .cl-logoBox,
+.bb-auth-shell .cl-logoImage {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.bb-auth-h1 {
+  margin: 0 0 1.35rem !important;
+}
+
+.bb-auth-card {
+  margin-top: 0 !important;
+  position: relative;
+  z-index: 1;
+}
+
+.bb-auth-shell .cl-socialButtonsBlockButton {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.bb-auth-shell .cl-socialButtonsProviderIcon,
+.bb-auth-shell .cl-socialButtonsProviderIcon svg {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  max-width: 18px !important;
+  flex: 0 0 18px !important;
+}
+
+.bb-hunt-page,
+.bb-hunt-form,
+.bb-hunt-fields {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.bb-app-phone [data-surface="intent-capture"] input,
+.bb-app-phone [data-surface="intent-capture"] textarea {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 16px !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  scroll-margin-top: 5.5rem;
+  scroll-margin-bottom: 8.5rem;
+}
+
+.bb-app-phone [data-surface="intent-capture"] textarea.bb-hunt-text {
+  min-height: 8.5rem !important;
+  max-height: 12rem !important;
+  resize: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  white-space: pre-wrap !important;
+}
+
+.bb-app-phone .bb-hunt-actions {
+  position: sticky;
+  bottom: calc(4.6rem + env(safe-area-inset-bottom));
+  z-index: 15;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 12px 0 8px;
+  background: #0b1f3a;
+}
+
+.bb-app-phone .bb-hunt-actions button {
+  width: 100%;
+  min-height: 48px;
+}
+
+.bb-thread {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bb-thread h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.bb-thread-note {
+  margin: 0;
+  color: #9bb0c7;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.bb-thread ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.bb-thread li {
+  max-width: 100%;
+  border-radius: 16px;
+  padding: 12px 14px;
+  overflow-wrap: anywhere;
+}
+
+.bb-thread li.is-agent {
+  background: #163556;
+  color: #f7f8fa;
+}
+
+.bb-thread li.is-you {
+  background: #f7f8fa;
+  color: #0b1f3a;
+}
+
+.bb-thread .who {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.62;
+}
+
+.bb-thread .text {
+  margin: 4px 0 0;
+  font-size: 16px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.bb-thread .when {
+  margin: 6px 0 0;
+  font-size: 12px;
+  opacity: 0.55;
+}
+
+.bb-thread form {
+  display: grid;
+  gap: 8px;
+  position: sticky;
+  bottom: calc(4.6rem + env(safe-area-inset-bottom));
+  z-index: 15;
+  padding: 12px 0 8px;
+  background: #0b1f3a;
+}
+
+.bb-thread label {
+  font-size: 13px;
+  font-weight: 650;
+  color: #d5deea;
+}
+
+.bb-thread textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 5.5rem;
+  max-height: 9rem;
+  resize: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  border: 0;
+  border-radius: 14px;
+  background: #fff;
+  color: #0b1f3a;
+  font-size: 16px;
+  line-height: 1.4;
+  padding: 12px 14px;
+}
+
+.bb-thread button {
+  height: 48px;
+  border: 0;
+  border-radius: 999px;
+  background: #2dd4bf;
+  color: #042f2e;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.bb-thread button:disabled {
+  opacity: 0.45;
+}
+
+.bb-thread-error {
+  margin: 0;
+  color: #fb7185;
+  font-size: 14px;
+}
+
+html:has(.bb-app-phone),
+html:has(.bb-app-phone) body {
+  background: #0b1f3a !important;
+}
+
+.bb-app-phone {
+  min-height: 100dvh;
+  background: #0b1f3a !important;
+}
+
+.bb-app-phone [data-surface="phone-tabs"] {
+  background: #0b1f3a !important;
+}
+
+.bb-app-phone [data-surface="phone-tabs"] {
+  background-color: #0b1f3a !important;
+  box-shadow: 0 48px 0 48px #0b1f3a;
+}
+
+.bb-app-phone::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: max(34px, env(safe-area-inset-bottom));
+  background: #0b1f3a;
+  z-index: 19;
+  pointer-events: none;
 }

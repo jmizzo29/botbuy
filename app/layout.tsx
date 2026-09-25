@@ -5,7 +5,6 @@ import { ClerkAppProvider } from "@/components/clerk-app-provider";
 import { PwaRegister } from "@/components/pwa-register";
 import { BRAND, LAND_PRODUCT_SUPPORT } from "@/lib/brand";
 import "./globals.css";
-import "./phone-theme.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -444,7 +444,13 @@ assert(!chrome.includes(">Demo<"), "land header has no Demo badge");
 assert(!chrome.includes("BRAND.landHonesty"), "land chrome has no Private beta honesty link");
 assert(!chrome.includes("Private beta"), "land chrome has no Private beta string");
 assert(!chrome.includes('href="/beta"'), "land chrome has no /beta top link");
-assert(chrome.includes('data-nav="signin"') && chrome.includes('data-nav="signup"'), "signed-out land nav is Sign in and Sign up");
+assert(chrome.includes('href="/about"'), "land overlay includes About word link");
+assert(
+  chrome.includes('data-nav="signin"') &&
+    chrome.includes('data-nav="about"') &&
+    chrome.indexOf('data-nav="signin"') < chrome.indexOf('data-nav="about"'),
+  "signed-out land nav is Sign in then About",
+);
 assert(!chrome.includes("hidden sm:inline"), "About stays visible on phone and desktop");
 assert(!chrome.includes("bb-land-air"), "land chrome dropped light Techlux air band");
 assert(chrome.includes("bb-land-header"), "land header overlays the navy stage");
@@ -558,7 +564,12 @@ const LAND_META =
 assert(brand.includes(LAND_META), "land/meta one-liner lock");
 assert(brand.includes("signupLine: LAND_META_LINE"), "signup uses locked one-liner");
 assert(!brand.includes("LAND_COMING_SOON"), "public land coming-soon lock retired");
-assert(brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying."'), "land H1 lock");
+assert(
+  brand.includes(
+    'LAND_PRODUCT_H1 =\n  "Your AI agent for buying, almost anything!!!"',
+  ) || brand.includes('LAND_PRODUCT_H1 = "Your AI agent for buying, almost anything!!!"'),
+  "land H1 lock",
+);
 assert(
   brand.includes('LAND_PRODUCT_SUPPORT = "Acts for you. Spends only with your OK."'),
   "land support lock",
@@ -622,7 +633,9 @@ assert(!land.includes("bb-land-atm"), "Q1 land has no full-bleed atm layer");
 assert(!land.includes("bb-land-sky"), "Q1 land has no 50/50 sky zone");
 assert(!land.includes("bb-mark-hero"), "Q1 land has no giant hero mark");
 assert(!land.includes("bb-atm-mesh-glow"), "land no longer wires unused mesh-glow");
-assert(land.includes("bb-land-watermark") && land.includes("bb-mark-watermark"), "Q1 faint watermark is wired");
+assert(!land.includes("bb-land-watermark") && !land.includes("bb-mark-watermark"), "L1 killed the Q1 watermark");
+assert(!land.includes("bb-land-jewelry") && !land.includes("jewelry"), "L1 HARDEN killed teal jewelry");
+assert(land.includes("bb-land-story") && land.includes("LAND_STORY"), "L1 fold mounts the story strip");
 assert(land.includes("bb-land-h1") && land.includes("bb-land-support"), "land fold uses CSS type-scale classes");
 assert(!land.includes("bb-land-meta"), "land fold dropped meta one-liner");
 assert(chrome.includes("bb-land-main w-full"), "land main is unguttered full width");
@@ -654,12 +667,17 @@ assert(
 assert(!land.includes("LandInstallButton"), "land has no Install door");
 assert(!land.includes("Install"), "land page source has no Install string");
 assert(!land.includes("land-install"), "land fold has no Install CTA");
-assert(land.includes('data-cta="land-signin"'), "land fold pairs Sign in with Sign up");
-assert(land.includes("bb-land-signin"), "land Sign in uses fold class");
+assert(!land.includes('data-cta="land-signin"'), "L1 HARDEN removed fold Sign in");
+assert(!land.includes("bb-land-signin"), "land fold has no Sign in class");
 assert(land.includes("bb-land-signup"), "land Sign up uses fold class");
-assert(land.includes("CLERK_SIGN_IN_URL") || land.includes("/signin"), "fold Sign in uses canonical /signin");
+assert(!land.includes("CLERK_SIGN_IN_URL") && !land.includes("/signin"), "fold has no Sign in href");
 assert(land.includes('href="/signup"'), "land Sign up door is /signup");
-assert(chrome.includes('data-nav="signin"'), "signed-out land header offers Sign in");
+assert(chrome.includes('data-nav="signin"'), "land chrome mounts Sign in");
+assert(chrome.includes('data-nav="about"'), "land chrome mounts About after Sign in");
+assert(
+  chrome.indexOf('data-nav="signin"') < chrome.indexOf('data-nav="about"'),
+  "chrome right is Sign in then About",
+);
 assert(
   read("components/install-hint.tsx").includes("if (onLand) return null"),
   "InstallHint is already null on land",
@@ -744,11 +762,18 @@ assert(
 assert(css.includes("#0b1f3a") && css.includes("#163556") && css.includes("#0a182c"), "navy stage tokens stay");
 assert(css.includes(".bb-atm-richer-mesh-deep::before"), "A1 richer-mesh-deep atmosphere CSS stays for auth");
 assert(css.includes("rgba(42,125,158,0.42)"), "A1 richer-mesh-deep teal blob stays for auth");
-assert(css.includes(".bb-land-watermark") && css.includes("opacity: 0.12"), "Q1 watermark opacity is ≤12%");
-assert(css.includes(".bb-land-panel") && css.includes("z-index: 1"), "panel stays above watermark");
-assert(css.includes("background: #0b1f3a"), "Q1 land stage is flat navy");
-assert(!css.includes("rgba(5, 10, 12, 0.38)"), "Q1 killed the #050A0C scrim slab");
-assert(!css.includes("width: 148px"), "Q1 killed the 148px hero mark");
+assert(!css.includes(".bb-land-watermark") && !css.includes(".bb-mark-watermark"), "L1 CSS dropped the watermark");
+assert(!css.includes(".bb-land-jewelry") && !css.includes(".jewelry"), "L1 HARDEN deleted jewelry CSS");
+assert(
+  !existsSync(join(root, "app/phone-theme.css")) &&
+    !/bb-land-copy[\s\S]{0,240}(?:width|height):\s*1px/.test(css) &&
+    !/clip:\s*rect\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0\s*\)/.test(css),
+  "no phone-theme clip hides land copy or fold CTA",
+);
+assert(css.includes(".bb-land-panel") && css.includes("z-index: 1"), "panel stays above the navy field");
+assert(css.includes("background: #0b1f3a"), "L1 land stage is flat navy");
+assert(!css.includes("rgba(5, 10, 12, 0.38)"), "L1 killed the #050A0C scrim slab");
+assert(!css.includes("width: 148px"), "L1 killed the 148px hero mark");
 assert(!css.includes("bb-atm-grain-veil"), "do not ship grain-veil");
 assert(!css.includes("bb-atm-eclipse-whisper"), "do not ship eclipse-whisper");
 assert(css.includes(".bb-land-main") && css.includes("padding: 0"), "land main kills stage gutters");
@@ -763,27 +788,27 @@ assert(
 assert(css.includes("border-radius: 0"), "stage is square full-bleed");
 assert(!css.includes("border-radius: 20px") && !css.includes("border-radius: 28px"), "no inset-card stage radius");
 assert(css.includes(".bb-land-h1") && css.includes(".bb-land-support") && css.includes(".bb-land-meta"), "land type scale is CSS-owned");
-assert(css.includes(".bb-land-copy") && css.includes("text-align: left"), "Q1 land copy is left folio");
+assert(css.includes(".bb-land-copy") && css.includes("text-align: left"), "L1 land copy is left folio");
 assert(
   css.includes(".bb-land-header") &&
     css.includes("justify-content: space-between") &&
-    css.includes("flex-wrap: wrap"),
-  "phone overlay is lockup + About on the chrome row",
+    css.includes("flex-wrap: nowrap"),
+  "phone overlay is lockup + Sign in + About on the chrome row",
 );
 assert(
   css.includes("justify-content: space-between") &&
     css.includes(".bb-land-panel") &&
     css.includes("border-top: none") &&
-    css.includes("rgba(255, 255, 255, 0.10)"),
-  "Q1 chrome is lockup + About with hairline; no teal divider",
+    !/\.bb-land-header \{[\s\S]{0,400}border-bottom:/.test(css),
+  "L1 chrome killed header hairline; no teal divider",
 );
 assert(css.includes("@media (max-width: 1023px)"), "phone axis is locked at max-lg");
-assert(css.includes(".bb-land-cta") && css.includes("flex-direction: column"), "fold CTA is Sign up over Sign in");
-assert(!css.includes("flex: 1 1 0%"), "Q1 killed dual equal CTA flex");
+assert(css.includes(".bb-land-cta") && css.includes("flex-direction: column"), "fold CTA is Sign up only");
+assert(!css.includes("flex: 1 1 0%"), "L1 killed dual equal CTA flex");
 assert(
   !css.includes("min-width: calc((100% - 10px) / 2)") &&
     !css.includes("width: calc((100% - 10px) / 2)"),
-  "Q1 killed half-row dual CTAs",
+  "L1 killed half-row dual CTAs",
 );
 assert(css.includes("min-height: 48px") && css.includes("height: 48px"), "Sign up keeps 48px height");
 assert(css.includes("border-radius: 8px"), "Sign up radius is 8px");
@@ -795,69 +820,88 @@ assert(
   "Sign up is filled primary teal",
 );
 assert(
-  css.includes('.bb-land-cta [data-cta="land-signin"]') &&
-    css.includes("color: rgba(255, 255, 255, 0.90)") &&
-    /\[data-cta="land-signin"\][\s\S]{0,800}border:\s*0/.test(css),
-  "Sign in is a text link, not a teal outline pill",
+  !css.includes('.bb-land-cta [data-cta="land-signin"]') &&
+    !css.includes(".bb-land-signin") &&
+    css.includes(".bb-land-link") &&
+    css.includes("color: rgba(255, 255, 255, 0.90)"),
+  "Sign in is a chrome text link, not a fold CTA",
 );
 assert(css.includes("max-width: 22rem"), "phone copy+CTA share 22rem");
 assert(!land.includes("data-fold"), "land production DOM has no data-fold debug tag");
 assert(
-  land.includes("bb-land-watermark") &&
+  !land.includes("bb-land-jewelry") &&
     land.includes("bb-land-panel") &&
-    css.includes(".bb-land-watermark") &&
+    land.includes("bb-land-story") &&
+    !css.includes(".bb-land-jewelry") &&
     css.includes(".bb-land-panel") &&
+    css.includes(".bb-land-story") &&
     css.includes("border-top: none") &&
     !css.includes("rgba(5, 10, 12, 0.38)") &&
     !css.includes("border-top: 2px solid #2dd4bf") &&
     !css.includes("background: #050a0c"),
-  "Q1 fold is flat navy folio with no mesh slab or teal edge",
+  "L1 fold is flat navy folio with story and no jewelry or mesh slab",
 );
 assert(
   css.includes("font-size: 1.875rem") &&
     css.includes("letter-spacing: -0.04em") &&
     css.includes("text-wrap: balance"),
-  "Q1 H1 is 30px / 600 / -0.04em / balance",
+  "L1 H1 is 30px / 600 / -0.04em / balance",
 );
-assert(!land.includes("bb-land-arc"), "Q1 fold has no arc rail");
-assert(!land.includes("bb-land-rule"), "Q1 fold has no D1 teal rule");
-assert(!land.includes("LAND_ARC_SRC"), "Q1 fold does not mount the arc asset");
-assert(!css.includes(".bb-land-arc"), "Q1 CSS dropped the arc rail");
-assert(!css.includes(".bb-land-rule"), "Q1 CSS dropped the D1 hairline rule");
+assert(!land.includes("bb-land-arc"), "L1 fold has no arc rail");
+assert(!land.includes("bb-land-rule"), "L1 fold has no D1 teal rule");
+assert(!land.includes("LAND_ARC_SRC"), "L1 fold does not mount the arc asset");
+assert(!css.includes(".bb-land-arc"), "L1 CSS dropped the arc rail");
+assert(!css.includes(".bb-land-rule"), "L1 CSS dropped the D1 hairline rule");
 assert(
   !land.includes("bb-mark-hero") &&
     !css.includes(".bb-mark-hero") &&
     !css.includes("width: 148px") &&
     !css.includes("height: 148px"),
-  "Q1 killed the oversized 148px hero mark",
+  "L1 killed the oversized 148px hero mark",
 );
 assert(
-  land.includes("LAND_SKY_MARK_SRC") &&
+  !land.includes("LAND_SKY_MARK_SRC") &&
     brand.includes(
       'LAND_SKY_MARK_SRC =\n  "/brand/logo-soft-spine/botbuyer-mark-reverse.svg"',
     ),
-  "Q1 watermark is the locked soft-spine reverse",
+  "L1 land fold does not mount the watermark mark",
 );
 assert(
-  land.indexOf("bb-land-watermark") < land.indexOf("bb-land-panel") &&
-    land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
-    land.indexOf("bb-land-support") < land.indexOf("bb-land-cta"),
-  "Q1 fold order is watermark → panel H1 → support → CTA",
+  land.indexOf("bb-land-h1") < land.indexOf("bb-land-support") &&
+    land.indexOf("bb-land-support") < land.indexOf("bb-land-cta") &&
+    land.indexOf("bb-land-cta") < land.indexOf("bb-land-story"),
+  "L1 fold order is H1 → support → Sign up → story",
 );
 assert(
   css.includes("margin-block-start: 0") &&
     css.includes("align-items: flex-start") &&
-    css.includes("padding: 48px 24px"),
-  "phone Q1 panel is top-weighted left folio",
+    css.includes("padding: 28px 24px"),
+  "phone L1 panel is dense top folio",
 );
 assert(
-  /@media \(max-width: 1023px\)[\s\S]*?\.bb-land-cta \{[\s\S]*?max-width: 13\.75rem/.test(
+  /@media \(max-width: 1023px\)[\s\S]*?\[data-cta="land-signup"\][\s\S]*?width:\s*100%/.test(
     css,
   ) &&
-    /@media \(max-width: 1023px\)[\s\S]*?\[data-cta="land-signup"\][\s\S]*?width:\s*100%/.test(
+    !/@media \(max-width: 1023px\)[\s\S]*?\.bb-land-cta \{[\s\S]*?max-width: 13\.75rem/.test(
       css,
     ),
-  "phone Sign up is 100% of the ~220px content stack",
+  "phone Sign up is 100% of the content column",
+);
+assert(
+  brand.includes("Tell it what to find") &&
+    brand.includes("One intent. BotBuyer runs the chase.") &&
+    brand.includes("Searches land for review") &&
+    brand.includes("Quiet queue — no spend until you say so.") &&
+    brand.includes("You approve. Then it buys.") &&
+    brand.includes("Every search needs your OK."),
+  "L1 story strip copy is locked in brand",
+);
+assert(
+  css.includes("color: #2dd4bf") &&
+    css.includes("min-width: 200px") &&
+    css.includes("rgba(255, 255, 255, 0.03)") &&
+    css.includes("border-radius: 8px"),
+  "L1 story indices are teal, desktop story card is 8px with a 3% fill, Sign up hugs 200px",
 );
 assert(
   css.includes(
@@ -867,9 +911,9 @@ assert(
 );
 assert(
   !css.includes("padding: 10px 6px") &&
-    css.includes("font-size: 15px") &&
-    css.includes("color: rgba(255, 255, 255, 0.9)"),
-  "About stays 15px / 0.90 without inflating chrome",
+    css.includes("font-size: 14px") &&
+    css.includes("color: rgba(255, 255, 255, 0.90)"),
+  "chrome Sign in + About stay 14px / 0.90 without inflating chrome",
 );
 assert(
   /@media \(max-width: 1023px\)[\s\S]*?\.bb-land-support \{[\s\S]*?margin-bottom: 0\.5rem/.test(
@@ -897,26 +941,27 @@ assert(
   "Q1 institutional-folio INSTALL is READY-TO-SHIP",
 );
 assert(
-  read("land/INSTALL.md").includes("land/craft-raise-2026-09-13/INSTALL.md"),
-  "land INSTALL points at Q1 kit SoT",
+  read("land/INSTALL.md").includes("land/craft-raise-v2-2026-09-14/INSTALL.md"),
+  "land INSTALL points at L1 kit SoT",
 );
 assert(
   read("land/INSTALL.md").includes("land/mobile-rebuild-v2/r3-lower-panel/INSTALL.md"),
   "land INSTALL records replaced R3 kit",
 );
 assert(chrome.includes('data-nav="signin"'), "land Sign in link is marked for chrome QA");
-assert(chrome.includes('data-nav="signup"'), "land Sign up link is marked for chrome QA");
+assert(chrome.includes('data-nav="about"'), "land About link is marked for chrome QA");
+assert(chrome.includes('link("about")') || chrome.includes('className={link("about")}'), "land About uses U1 about class");
 assert(
-  css.includes("font-size: 15px") &&
-    css.includes("font-weight: 550") &&
-    css.includes(".about"),
-  "U1 About chrome is 15px / 550",
+  css.includes("font-size: 14px") &&
+    css.includes("font-weight: 500") &&
+    css.includes(".about") &&
+    css.includes('[data-nav="signin"]'),
+  "HARDEN chrome Sign in + About are 14px / 500 / 0.90",
 );
 assert(
-  css.includes(".bb-land-watermark") &&
-    css.includes("inset: 0") &&
-    css.includes("opacity: 0.12"),
-  "Q1 watermark is a faint full-bleed mark",
+  !css.includes(".bb-land-jewelry") &&
+    !css.includes("opacity: 0.12"),
+  "L1 HARDEN killed jewelry — no 12% watermark",
 );
 assert(
   !read("public/brand/logo-soft-spine/botbuyer-mark-reverse.svg").includes(
@@ -1556,7 +1601,7 @@ if (failures.length) {
 
 console.log("craft-smoke PASS");
 console.log(" - g-techlux light #F7F8FA · teal #2DD4BF / #042F2E ≥4.5:1");
-console.log(" - land Q1 institutional-folio · flat navy · Sign up 8px · Sign in text · Soft HOLD");
+console.log(" - land L1 capital-desk · flat navy · story strip · Sign up 8px · Soft HOLD");
 console.log(" - land/meta one-liner payment method lock · no Vault it");
 console.log(" - go-live Run BotBuyer present");
 console.log(" - CPO land/signup/proof/empty CTA locks");
