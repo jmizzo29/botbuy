@@ -51,7 +51,6 @@ import {
   type SettingsHrefs,
   type SettingsPanel,
 } from "@/lib/settings-quiet";
-
 function Pair({ phone, desk }: { phone: string; desk: string }) {
   if (phone === desk) return phone;
   return (

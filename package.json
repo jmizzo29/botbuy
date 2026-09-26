@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "smoke": "node scripts/craft-smoke.mjs && node scripts/connector-smoke.mjs && node scripts/authorized-buy-smoke.mjs && node scripts/act-on-behalf-smoke.mjs && npx --yes tsx scripts/ingest-candidates-smoke.mts && npm run test:engine-persist",
+    "smoke": "node scripts/craft-smoke.mjs && node scripts/connector-smoke.mjs && node scripts/authorized-buy-smoke.mjs && node scripts/act-on-behalf-smoke.mjs && npx --yes tsx scripts/needs-you-notify-smoke.mts && npx --yes tsx scripts/ingest-candidates-smoke.mts && npm run test:engine-persist",
     "test:engine-persist": "npx --yes tsx scripts/engine-persist-roundtrip.ts",
     "test:engine-neon": "npx --yes tsx scripts/engine-neon-roundtrip.ts",
     "db:generate": "drizzle-kit generate",

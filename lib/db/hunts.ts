@@ -1,6 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { eq, inArray } from "drizzle-orm";
 import { getDb } from "@/lib/db";
+import { isFreshNeedsYouTransition } from "@/lib/ingest/candidates";
 import { auditLogs, dealEvents, deals, intents, users } from "@/lib/db/schema";
 import type {
   AgentEventStatus,
@@ -325,11 +326,14 @@ export async function saveIngestedCandidate(input: {
     createdAt: new Date(),
   });
 
+  const previousWorkflowStatus = (existing?.status ?? null) as DealStatus | null;
   return {
     created: !existing,
     changed,
     status: workflowStatus,
     priceUsd: input.deal.priceUsd,
+    previousStatus: previousWorkflowStatus,
+    enteredNeedsYou: isFreshNeedsYouTransition(previousWorkflowStatus, workflowStatus),
   };
 }
 

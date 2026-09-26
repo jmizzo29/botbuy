@@ -2,6 +2,8 @@
 
 Soft-signal HOLD. Draft prep only. Not live mail. Not a live register.
 
+User alerts when a deal first becomes **Needs you** are a separate gate (`BOTBUY_NOTIFY_LIVE`, see `docs/needs-you-notify.md`). This surface does not send those alerts. `BOTBUY_MAIL_LIVE` stays false. Act/email responses stay `sent: false` and `live: false`.
+
 After the designated-holder Approve trail (**Needs you → Buying**), BotBuyer can prepare:
 
 1. **email** — on-behalf chase draft (subject + body)

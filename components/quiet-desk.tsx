@@ -485,7 +485,10 @@ export function QuietDeal({
             <FactRow label="Auto-approve" value="Off" />
           </div>
         </div>
-        <aside className="mt-4 md:mt-0 md:rounded-[8px] md:border md:border-white/10 md:bg-white/[0.03] md:p-4">
+        <aside
+          id="approve"
+          className="mt-4 md:mt-0 md:rounded-[8px] md:border md:border-white/10 md:bg-white/[0.03] md:p-4"
+        >
           <p className="hidden text-sm font-medium text-white md:block">Decision</p>
           <div className="md:mt-3">{actions}</div>
           <p className="mt-3 text-sm leading-relaxed text-white/55">{QUIET_CHARGE_MICRO}</p>
