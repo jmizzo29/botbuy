@@ -15,6 +15,7 @@ import {
 import {
   NEEDS_YOU_NOTIFY_SUBJECT,
   listNeedsYouNotifyAudits,
+  needsYouAppBase,
   notifyNeedsYouEntered,
   setNeedsYouNotifyTransport,
 } from "../lib/needs-you-notify.ts";
@@ -125,14 +126,18 @@ const payload = JSON.parse(sends[0].init.body) as {
   subject: string;
   text: string;
 };
+assert.equal(payload.subject, "BotBuyer — a deal needs your Approve");
 assert.equal(payload.subject, NEEDS_YOU_NOTIFY_SUBJECT);
 assert.equal(payload.from, "BotBuyer <notify@botbuyer.ai>");
 assert.equal(payload.to.length, 1);
 assert.equal(payload.to[0], "john.mitchell@buildstarlabs.com");
-assert.match(payload.text, /Notify live tools|Find invoice software/);
-assert.match(payload.text, /needs your OK/);
-assert.match(payload.text, /\/deals\//);
-assert.match(payload.text, /Nothing is approved, bought, or spent/);
+assert.match(payload.text, /^Find invoice software/);
+assert.match(payload.text, /Approve or Reject in BotBuyer\./);
+assert.match(payload.text, /Open deal/);
+assert.match(payload.text, /\/deals\/.+#approve/);
+assert.match(payload.text, /BotBuyer only runs what you approve\. Auto-approve is off\./);
+assert.doesNotMatch(payload.text, /\b(Bought|Purchased|Complete)\b/);
+assert.equal(payload.text.includes("$"), false);
 assert.equal(payload.text.includes("notify-test-key"), false);
 assert.equal(payload.text.includes("4111111111111111"), false);
 const sentEvent = listDealEvents(sentDeal.id).find((event) =>
@@ -203,26 +208,64 @@ appendDealEvent({
   dealId: sentDeal.id,
   type: "status",
   title: "Status Buying → Needs you",
-  detail: "Re-entered Needs you for notify smoke.",
+  detail: "Re-entered Needs you with the same candidates.",
   at: new Date().toISOString(),
   status: "done",
   actor: "engine",
   fromStatus: "Buying",
   toStatus: "Needs you",
 });
-const reentered = await notifyNeedsYouEntered({
+const sameCandidates = await notifyNeedsYouEntered({
   deal: sentDeal,
   userId: SEED_OWNER.id,
   previousStatus: "Buying",
 });
-assert.equal(reentered.sent, true);
+assert.equal(sameCandidates.sent, false);
+assert.equal(sameCandidates.reason, "already_needs_you");
+assert.equal(sends.length, 2);
+appendDealEvent({
+  id: `evt_${sentDeal.id}_new_candidates`,
+  dealId: sentDeal.id,
+  type: "note",
+  stage: "gate",
+  title: "Connector candidates",
+  detail: "New candidates awaiting Approve or Reject.",
+  at: new Date().toISOString(),
+  status: "done",
+  actor: "engine",
+  fromStatus: "Buying",
+  toStatus: "Needs you",
+  metadata: {
+    kind: "search_act_handoff",
+    live: false,
+    provider: "shopify",
+    candidates: [
+      {
+        label: "Second candidate",
+        kind: "product",
+        provider: "shopify",
+        available: null,
+        listedUsd: null,
+        amountStatus: "unverified",
+        verified: false,
+      },
+    ],
+    quote: null,
+  },
+});
+const newCandidates = await notifyNeedsYouEntered({
+  deal: sentDeal,
+  userId: SEED_OWNER.id,
+  previousStatus: "Buying",
+});
+assert.equal(newCandidates.sent, true);
 assert.equal(sends.length, 3);
-const reenteredAgain = await notifyNeedsYouEntered({
+const newCandidatesAgain = await notifyNeedsYouEntered({
   deal: sentDeal,
   userId: SEED_OWNER.id,
   previousStatus: "Buying",
 });
-assert.equal(reenteredAgain.sent, false);
+assert.equal(newCandidatesAgain.sent, false);
 assert.equal(sends.length, 3);
 
 delete process.env.BOTBUY_MAIL_API_KEY;
@@ -286,6 +329,74 @@ const failedEvent = listDealEvents(failed.dealId).find((event) => event.id === f
 assert.match(failedEvent?.detail ?? "", /reason=send_failed/);
 assert.match(failedEvent?.detail ?? "", /sent=false/);
 
+const searching = await notifyNeedsYouEntered({
+  deal: { ...imported.deal, id: `${imported.deal.id}_searching`, status: "Searching" },
+  userId: SEED_OWNER.id,
+  previousStatus: null,
+});
+assert.equal(searching.reason, "not_approve_gate");
+assert.equal(searching.sent, false);
+
+const kyc = await notifyNeedsYouEntered({
+  deal: {
+    ...imported.deal,
+    id: "deal_kyc_only",
+    source: "engine",
+    status: "Needs you",
+    title: "Bank KYC gate",
+    notes: "captcha and bank gate only",
+    blockers: ["KYC required"],
+    evidencePath: null,
+  },
+  userId: SEED_OWNER.id,
+  previousStatus: "Found",
+});
+assert.equal(kyc.reason, "not_approve_gate");
+assert.equal(kyc.sent, false);
+
+const closed = await notifyNeedsYouEntered({
+  deal: { ...imported.deal, id: `${imported.deal.id}_closed`, status: "Closed" },
+  userId: SEED_OWNER.id,
+  previousStatus: "Failed",
+});
+assert.equal(closed.reason, "not_approve_gate");
+assert.equal(closed.sent, false);
+assert.equal(sends.length, 4);
+
+rememberDirectoryUser({
+  id: "usr_alerts_off",
+  email: "alerts-off@example.com",
+  name: "Alerts Off",
+  company: "",
+  role: "customer",
+  clerkUserId: null,
+  notificationEmail: "alerts-off@example.com",
+  phone: "",
+  needsYouAlerts: false,
+});
+const optedOut = await notifyNeedsYouEntered({
+  deal: {
+    ...imported.deal,
+    id: `${imported.deal.id}_alerts_off`,
+    userId: "usr_alerts_off",
+  },
+  userId: "usr_alerts_off",
+  previousStatus: null,
+});
+assert.equal(optedOut.reason, "alerts_off");
+assert.equal(optedOut.sent, false);
+assert.equal(optedOut.attempted, false);
+assert.equal(sends.length, 4);
+
+process.env.VERCEL_ENV = "preview";
+process.env.VERCEL_URL = "botbuy-preview.vercel.app";
+process.env.NEXT_PUBLIC_APP_URL = "https://botbuyer.ai";
+assert.equal(needsYouAppBase(), "https://botbuy-preview.vercel.app");
+delete process.env.VERCEL_ENV;
+delete process.env.VERCEL_URL;
+process.env.NEXT_PUBLIC_APP_URL = "https://botbuyer.ai";
+assert.equal(needsYouAppBase(), "https://botbuyer.ai");
+
 const act = actOnBehalfVaultStatus();
 assert.equal(act.sent, false);
 assert.equal(act.live, false);
@@ -307,6 +418,27 @@ const handoff = readFileSync(
 assert.match(handoff, /transitionDeal\(found\.id, "Needs you"/);
 assert.match(handoff, /notifyNeedsYouEntered/);
 const envExample = readFileSync(new URL("../.env.example", import.meta.url), "utf8");
+const settingsCopy = readFileSync(
+  new URL("../lib/settings-quiet.ts", import.meta.url),
+  "utf8",
+);
+const settingsUi = readFileSync(
+  new URL("../components/settings-quiet.tsx", import.meta.url),
+  "utf8",
+);
+const alertSwitch = readFileSync(
+  new URL("../components/settings-needs-you-alert.tsx", import.meta.url),
+  "utf8",
+);
+assert.match(settingsCopy, /Alert me when a deal needs Approve/);
+assert.match(
+  settingsCopy,
+  /Email when search finishes and something needs your OK\. Auto-approve stays off\./,
+);
+assert.match(settingsUi, /SettingsNeedsYouAlert/);
+assert.match(settingsUi, /data-auto-approve="off"/);
+assert.equal(settingsUi.includes('role="switch"'), false);
+assert.match(alertSwitch, /role="switch"/);
 assert.match(envExample, /BOTBUY_NOTIFY_LIVE=false/);
 assert.match(envExample, /BOTBUY_MAIL_LIVE=false/);
 assert.equal(envExample.includes("BOTBUY_MAIL_API_KEY=re_"), false);

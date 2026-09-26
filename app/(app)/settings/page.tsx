@@ -77,6 +77,8 @@ export default async function SettingsPage({
           email={email || SETTINGS_EXAMPLE_EMAIL}
           exampleAccount={exampleAccount}
           hrefs={SETTINGS_SIGNED_IN_HREFS}
+          needsYouAlerts={user.needsYouAlerts !== false}
+          persistNeedsYouAlerts
         />
       </SettingsChrome>
       <div className="bb-settings-legacy">

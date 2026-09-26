@@ -7,11 +7,14 @@
  * and Resend keys are present. Otherwise the transition stands and
  * a deal event records why notify was skipped.
  */
+import { createHash } from "crypto";
 import { getDb } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { saveHuntEvent } from "@/lib/db/hunts";
+import { ensureNeedsYouAlertsColumn, needsYouAlertsEnabled } from "@/lib/db/users";
 import { isFreshNeedsYouTransition } from "@/lib/ingest/candidates";
 import { isPendingClerkEmail } from "@/lib/john-ux";
+import { readSearchActHandoff } from "@/lib/connectors/search-handoff";
 import { sanitizeAuditMetadata } from "@/lib/connectors/sanitize";
 import {
   appendDealEvent,
@@ -20,10 +23,14 @@ import {
   recordAuditLog,
 } from "@/lib/store";
 import { getDirectoryUser } from "@/lib/user-directory";
-import type { Deal, DealStatus } from "@/lib/types";
+import type { Deal, DealEvent, DealStatus } from "@/lib/types";
 import { eq } from "drizzle-orm";
 
-export const NEEDS_YOU_NOTIFY_SUBJECT = "BotBuyer needs you";
+export const NEEDS_YOU_NOTIFY_SUBJECT = "BotBuyer — a deal needs your Approve";
+export const NEEDS_YOU_NOTIFY_DECIDE = "Approve or Reject in BotBuyer.";
+export const NEEDS_YOU_NOTIFY_CTA = "Open deal";
+export const NEEDS_YOU_NOTIFY_FOOTER =
+  "BotBuyer only runs what you approve. Auto-approve is off.";
 
 const RESEND_EMAILS_URL = "https://api.resend.com/emails";
 
@@ -33,7 +40,9 @@ export type NeedsYouNotifyReason =
   | "missing_keys"
   | "no_email"
   | "send_failed"
-  | "already_needs_you";
+  | "already_needs_you"
+  | "alerts_off"
+  | "not_approve_gate";
 
 export interface NeedsYouNotifyResult {
   attempted: boolean;
@@ -67,17 +76,34 @@ export function needsYouNotifyLive() {
   return process.env.BOTBUY_NOTIFY_LIVE?.trim() === "true";
 }
 
-export function needsYouAppBase() {
-  const raw = process.env.NEXT_PUBLIC_APP_URL?.trim() || "https://botbuyer.ai";
+function originFrom(raw: string | undefined) {
+  if (!raw?.trim()) return null;
+  const withProto = /^https?:\/\//i.test(raw.trim())
+    ? raw.trim()
+    : `https://${raw.trim()}`;
   try {
-    const url = new URL(raw);
-    if (url.protocol !== "https:" && url.protocol !== "http:") {
-      return "https://botbuyer.ai";
-    }
+    const url = new URL(withProto);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
     return url.origin;
   } catch {
-    return "https://botbuyer.ai";
+    return null;
   }
+}
+
+/**
+ * Preview/staging smoke uses the deployment host.
+ * NEXT_PUBLIC_APP_URL wins off preview. Production stays the public app URL.
+ */
+export function needsYouAppBase() {
+  const app = originFrom(process.env.NEXT_PUBLIC_APP_URL);
+  const vercel = originFrom(process.env.VERCEL_URL);
+  const env = process.env.VERCEL_ENV?.trim();
+  if ((env === "preview" || env === "development") && vercel) return vercel;
+  return app || vercel || "https://botbuyer.ai";
+}
+
+export function needsYouDealUrl(appUrl: string, dealId: string) {
+  return `${appUrl}/deals/${encodeURIComponent(dealId)}#approve`;
 }
 
 export function pickNotifyRecipient(
@@ -93,8 +119,39 @@ export function pickNotifyRecipient(
   return chosen;
 }
 
-export function needsYouNotifyEventId(dealId: string, episode: number) {
-  return `evt_${dealId}_needs_you_notify_${episode}`;
+export function needsYouNotifyEventId(dealId: string, candidateKey: string) {
+  const digest = createHash("sha256").update(candidateKey).digest("hex").slice(0, 12);
+  return `evt_${dealId}_needs_you_notify_${digest}`;
+}
+
+/**
+ * Search candidates or an imported listing waiting on Approve|Reject.
+ * Searching, already-approved with the same candidates, rejected/closed,
+ * and KYC/captcha/bank-only Needs you return null.
+ */
+export function needsYouApproveCandidateKey(
+  deal: Deal,
+  events: DealEvent[],
+): string | null {
+  if (deal.status !== "Needs you") return null;
+  const handoff = readSearchActHandoff([...events].reverse());
+  if (handoff && handoff.candidates.length > 0) {
+    const labels = handoff.candidates
+      .map((row) => row.label.trim())
+      .filter(Boolean)
+      .sort();
+    if (!labels.length) return null;
+    return `search:${labels.join("|")}`;
+  }
+  const blob = `${deal.title}\n${deal.notes}\n${deal.blockers.join("\n")}`;
+  const gateOnly = /\b(kyc|captcha|bank)\b/i.test(blob);
+  const imported = deal.source === "imported" || deal.id.startsWith("ing_");
+  if (imported) {
+    if (gateOnly && !deal.evidencePath) return null;
+    return `import:${deal.id}:${deal.evidencePath ?? deal.title}`;
+  }
+  if (gateOnly) return null;
+  return null;
 }
 
 export function listNeedsYouNotifyAudits(userId: string) {
@@ -110,14 +167,15 @@ export function needsYouNotifyText(input: {
   dealId: string;
   appUrl: string;
 }) {
-  const link = `${input.appUrl}/deals/${encodeURIComponent(input.dealId)}`;
   return [
     input.title,
     "",
-    "Something on this deal needs your OK. Open Needs you to review it.",
-    link,
+    NEEDS_YOU_NOTIFY_DECIDE,
     "",
-    "Nothing is approved, bought, or spent until you say so. Auto-approve is off.",
+    NEEDS_YOU_NOTIFY_CTA,
+    needsYouDealUrl(input.appUrl, input.dealId),
+    "",
+    NEEDS_YOU_NOTIFY_FOOTER,
   ].join("\n");
 }
 
@@ -140,29 +198,29 @@ function mailKeys() {
   };
 }
 
-function entryEpisode(dealId: string) {
-  const entries = listDealEvents(dealId).filter(
-    (event) =>
-      (event.type === "status" || event.type === "import") &&
-      event.toStatus === "Needs you" &&
-      event.fromStatus !== "Needs you",
-  );
-  return Math.max(1, entries.length);
-}
-
-async function resolveRecipient(userId: string) {
+async function resolveNotifyPrefs(userId: string): Promise<{
+  email: string | null;
+  alerts: boolean;
+}> {
   const db = getDb();
   if (db) {
     try {
+      await ensureNeedsYouAlertsColumn();
       const [row] = await db
         .select({
           email: users.email,
           notificationEmail: users.notificationEmail,
+          needsYouAlerts: users.needsYouAlerts,
         })
         .from(users)
         .where(eq(users.id, userId))
         .limit(1);
-      if (row) return pickNotifyRecipient(row.notificationEmail, row.email);
+      if (row) {
+        return {
+          email: pickNotifyRecipient(row.notificationEmail, row.email),
+          alerts: needsYouAlertsEnabled(row.needsYouAlerts),
+        };
+      }
     } catch (error) {
       console.error(
         "[needs-you-notify] user lookup failed",
@@ -171,8 +229,11 @@ async function resolveRecipient(userId: string) {
     }
   }
   const memory = getDirectoryUser(userId);
-  if (!memory) return null;
-  return pickNotifyRecipient(memory.notificationEmail, memory.email);
+  if (!memory) return { email: null, alerts: true };
+  return {
+    email: pickNotifyRecipient(memory.notificationEmail, memory.email),
+    alerts: needsYouAlertsEnabled(memory.needsYouAlerts),
+  };
 }
 
 async function postResend(input: {
@@ -221,13 +282,13 @@ async function recordNotify(input: {
   deal: Deal;
   userId: string;
   previousStatus: DealStatus | null;
-  episode: number;
+  eventId: string;
   reason: NeedsYouNotifyReason;
   sent: boolean;
   attempted: boolean;
   persist: "memory" | "hunt";
 }): Promise<NeedsYouNotifyResult> {
-  const eventId = needsYouNotifyEventId(input.deal.id, input.episode);
+  const eventId = input.eventId;
   const at = new Date().toISOString();
   const detail = [
     `reason=${input.reason}`,
@@ -301,13 +362,25 @@ async function notifyNeedsYouEnteredInner(input: {
   persist?: "memory" | "hunt";
 }): Promise<NeedsYouNotifyResult> {
   const persist = input.persist ?? "memory";
+  if (
+    input.deal.status === "Closed" ||
+    input.deal.status === "Failed" ||
+    input.deal.status === "Searching" ||
+    input.previousStatus === "Closed" ||
+    input.previousStatus === "Failed"
+  ) {
+    return skipped(input.deal.id, "not_approve_gate");
+  }
   if (!isFreshNeedsYouTransition(input.previousStatus, input.deal.status)) {
     return skipped(input.deal.id, "already_needs_you");
   }
 
-  const episode = entryEpisode(input.deal.id);
-  const eventId = needsYouNotifyEventId(input.deal.id, episode);
-  if (listDealEvents(input.deal.id).some((event) => event.id === eventId)) {
+  const events = listDealEvents(input.deal.id);
+  const candidateKey = needsYouApproveCandidateKey(input.deal, events);
+  if (!candidateKey) return skipped(input.deal.id, "not_approve_gate");
+
+  const eventId = needsYouNotifyEventId(input.deal.id, candidateKey);
+  if (events.some((event) => event.id === eventId)) {
     return skipped(input.deal.id, "already_needs_you");
   }
 
@@ -315,9 +388,19 @@ async function notifyNeedsYouEnteredInner(input: {
     deal: input.deal,
     userId: input.userId,
     previousStatus: input.previousStatus,
-    episode,
+    eventId,
     persist,
   };
+
+  const prefs = await resolveNotifyPrefs(input.userId);
+  if (!prefs.alerts) {
+    return recordNotify({
+      ...base,
+      reason: "alerts_off",
+      sent: false,
+      attempted: false,
+    });
+  }
 
   if (!needsYouNotifyLive()) {
     return recordNotify({
@@ -338,7 +421,7 @@ async function notifyNeedsYouEnteredInner(input: {
     });
   }
 
-  const to = await resolveRecipient(input.userId);
+  const to = prefs.email;
   if (!to) {
     return recordNotify({
       ...base,

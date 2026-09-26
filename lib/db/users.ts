@@ -1,3 +1,4 @@
+import { neon } from "@neondatabase/serverless";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { spendLimits, users } from "@/lib/db/schema";
@@ -39,6 +40,7 @@ function toUser(row: {
   clerkUserId?: string | null;
   notificationEmail?: string | null;
   phone?: string | null;
+  needsYouAlerts?: boolean | null;
 }): User {
   const email = displayAccountEmail(row.email);
   return {
@@ -50,7 +52,32 @@ function toUser(row: {
     clerkUserId: row.clerkUserId ?? null,
     notificationEmail: row.notificationEmail ?? email,
     phone: row.phone ?? "",
+    needsYouAlerts: row.needsYouAlerts !== false,
   };
+}
+
+let needsYouAlertsColumn: Promise<void> | null = null;
+
+/** Idempotent. Existing rows stay default ON. No-op without DATABASE_URL. */
+export function ensureNeedsYouAlertsColumn(): Promise<void> {
+  if (needsYouAlertsColumn) return needsYouAlertsColumn;
+  const url = process.env.DATABASE_URL?.trim();
+  if (!url) {
+    needsYouAlertsColumn = Promise.resolve();
+    return needsYouAlertsColumn;
+  }
+  needsYouAlertsColumn = (async () => {
+    const sql = neon(url);
+    await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS needs_you_alerts boolean NOT NULL DEFAULT true`;
+  })().catch((error) => {
+    needsYouAlertsColumn = null;
+    throw error;
+  });
+  return needsYouAlertsColumn;
+}
+
+export function needsYouAlertsEnabled(value: boolean | null | undefined) {
+  return value !== false;
 }
 
 function roleForEmail(email: string): UserRole {
@@ -87,6 +114,7 @@ export async function resolveOrCreateAppUser(
   const db = getDb();
 
   if (db) {
+    await ensureNeedsYouAlertsColumn();
     const byClerk = await db
       .select()
       .from(users)
@@ -126,6 +154,7 @@ export async function resolveOrCreateAppUser(
         name: ownerEmail(email) ? SEED_OWNER.name : name,
         company: ownerEmail(email) ? SEED_OWNER.company : null,
         notificationEmail: email || null,
+        needsYouAlerts: true,
         role: roleForEmail(email),
       })
       .returning();
@@ -139,6 +168,7 @@ export async function resolveOrCreateAppUser(
         role: roleForEmail(email),
         clerkUserId: identity.clerkUserId,
         notificationEmail: email || null,
+        needsYouAlerts: true,
       },
     );
     rememberDirectoryUser(user);
@@ -168,6 +198,7 @@ export async function resolveOrCreateAppUser(
     clerkUserId: identity.clerkUserId,
     notificationEmail: email || "",
     phone: "",
+    needsYouAlerts: true,
   };
   rememberDirectoryUser(user);
   return user;
@@ -180,12 +211,14 @@ export async function updateAppUserProfile(
     notificationEmail?: string | null;
     phone?: string | null;
     company?: string | null;
+    needsYouAlerts?: boolean;
   },
 ): Promise<User | null> {
   const current = getDirectoryUser(userId);
   const db = getDb();
 
   if (db) {
+    await ensureNeedsYouAlertsColumn();
     const [updated] = await db
       .update(users)
       .set({
@@ -195,6 +228,9 @@ export async function updateAppUserProfile(
           : {}),
         ...(patch.phone !== undefined ? { phone: patch.phone || null } : {}),
         ...(patch.company !== undefined ? { company: patch.company || null } : {}),
+        ...(patch.needsYouAlerts !== undefined
+          ? { needsYouAlerts: patch.needsYouAlerts }
+          : {}),
       })
       .where(eq(users.id, userId))
       .returning();
@@ -215,6 +251,10 @@ export async function updateAppUserProfile(
         : current.notificationEmail,
     phone: patch.phone !== undefined ? patch.phone : current.phone,
     company: patch.company !== undefined ? patch.company ?? "" : current.company,
+    needsYouAlerts:
+      patch.needsYouAlerts !== undefined
+        ? patch.needsYouAlerts
+        : current.needsYouAlerts,
   };
   rememberDirectoryUser(next);
   return next;

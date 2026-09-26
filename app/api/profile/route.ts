@@ -17,6 +17,7 @@ const patchProfile = z.object({
     .optional(),
   phone: z.string().trim().max(32).optional(),
   company: z.string().trim().max(80).optional(),
+  needsYouAlerts: z.boolean().optional(),
 });
 
 export async function GET() {
@@ -30,6 +31,7 @@ export async function GET() {
       notificationEmail: user.notificationEmail ?? user.email,
       phone: user.phone ?? "",
       company: user.company,
+      needsYouAlerts: user.needsYouAlerts !== false,
     },
   });
 }
@@ -56,6 +58,7 @@ export async function PATCH(request: Request) {
       notificationEmail: user.notificationEmail ?? "",
       phone: user.phone ?? "",
       company: user.company,
+      needsYouAlerts: user.needsYouAlerts !== false,
     },
   });
 }

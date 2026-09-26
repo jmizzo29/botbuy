@@ -32,6 +32,10 @@ export const SETTINGS_AUTO_META_DESK = "Locked off — not editable to ON";
 export const SETTINGS_AUTO_OFF = "Off";
 export const SETTINGS_AUTO_OFF_ROW = "Auto-approve Off";
 
+export const SETTINGS_NEEDS_YOU_ALERT = "Alert me when a deal needs Approve";
+export const SETTINGS_NEEDS_YOU_ALERT_HELP =
+  "Email when search finishes and something needs your OK. Auto-approve stays off.";
+
 export const SETTINGS_USAGE = "Usage";
 export const SETTINGS_USAGE_META = "EXAMPLE · not CHO-verified";
 

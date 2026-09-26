@@ -24,6 +24,7 @@ export const users = pgTable("users", {
   company: text("company"),
   notificationEmail: text("notification_email"),
   phone: text("phone"),
+  needsYouAlerts: boolean("needs_you_alerts").notNull().default(true),
   role: text("role").notNull().default("customer"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

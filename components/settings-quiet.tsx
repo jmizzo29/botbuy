@@ -51,6 +51,7 @@ import {
   type SettingsHrefs,
   type SettingsPanel,
 } from "@/lib/settings-quiet";
+import { SettingsNeedsYouAlert } from "@/components/settings-needs-you-alert";
 
 function Pair({ phone, desk }: { phone: string; desk: string }) {
   if (phone === desk) return phone;
@@ -146,11 +147,17 @@ export function SettingsQuiet({
   email,
   exampleAccount,
   hrefs,
+  needsYouAlerts = true,
+  persistNeedsYouAlerts = false,
 }: {
   panel: SettingsPanel;
   email: string;
   exampleAccount: boolean;
   hrefs: SettingsHrefs;
+  /** Default ON. Customer #1 and new accounts start here. */
+  needsYouAlerts?: boolean;
+  /** Signed-in Settings writes the user row. Craft stays local. */
+  persistNeedsYouAlerts?: boolean;
 }) {
   if (panel === "connectors") {
     return (
@@ -232,6 +239,10 @@ export function SettingsQuiet({
               {SETTINGS_AUTO_OFF}
             </span>
           }
+        />
+        <SettingsNeedsYouAlert
+          initialOn={needsYouAlerts}
+          persist={persistNeedsYouAlerts}
         />
         <Row href={hrefs.usage} label={SETTINGS_USAGE} meta={SETTINGS_USAGE_META} />
         <Row
