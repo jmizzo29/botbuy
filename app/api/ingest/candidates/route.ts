@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 import { explainHuntSaveError, saveIngestedCandidate } from "@/lib/db/hunts";
+import { notifyNeedsYouEntered } from "@/lib/needs-you-notify";
 import {
   INGEST_MAX_BYTES,
   INGEST_OWNER_ENV,
@@ -106,6 +107,21 @@ export async function POST(request: Request) {
           },
         },
       });
+      if (saved.enteredNeedsYou) {
+        try {
+          await notifyNeedsYouEntered({
+            deal: { ...deal, status: "Needs you", userId: ownerUserId },
+            userId: ownerUserId,
+            previousStatus: saved.previousStatus,
+            persist: "hunt",
+          });
+        } catch (error) {
+          console.error(
+            "[needs-you-notify] ingest notify failed",
+            error instanceof Error ? error.message : error,
+          );
+        }
+      }
       items.push({
         id: deal.id,
         url: deal.evidencePath,

@@ -12,6 +12,8 @@ export const flags = {
   // to claim live pay.
   // BOTBUY_MAIL_LIVE is named for later on-behalf mail. Act/email still
   // returns live: false and sent: false. Do not use this flag to claim sent.
+  // Needs you user alerts use BOTBUY_NOTIFY_LIVE in lib/needs-you-notify.ts.
+  // That gate does not approve, spend, or send merchant mail.
   plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || null,
 };
 

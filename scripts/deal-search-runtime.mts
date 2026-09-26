@@ -342,7 +342,7 @@ const replayCount = listDealEvents(replay.id).filter((event) =>
 ).length;
 if (replayCount !== 1) throw new Error("pipeline must be idempotent");
 
-const reviewed = applySearchActHandoff({
+const reviewed = await applySearchActHandoff({
   deal: softwareDeal,
   userId: SEED_OWNER.id,
   provider: "shopify",
@@ -435,7 +435,7 @@ if (!listDealEvents(buying.id).some((event) => event.id.endsWith("_authorized_bu
   throw new Error("authorized-buy prep must persist a deal event");
 }
 
-const replayHandoff = applySearchActHandoff({
+const replayHandoff = await applySearchActHandoff({
   deal: buying,
   userId: SEED_OWNER.id,
   provider: "shopify",

@@ -82,6 +82,17 @@ export function canonicalListingUrl(raw: string) {
   return url.toString();
 }
 
+/**
+ * True only on the edge into Needs you.
+ * A rewrite that is already Needs you is not a new transition.
+ */
+export function isFreshNeedsYouTransition(
+  previousStatus: string | null | undefined,
+  nextStatus: string,
+) {
+  return nextStatus === "Needs you" && previousStatus !== "Needs you";
+}
+
 export function ingestDealId(marketplace: string, url: string) {
   const key = `${marketplace.trim().toLowerCase()}\n${canonicalListingUrl(url)}`;
   return `ing_${createHash("sha256").update(key).digest("hex").slice(0, 24)}`;

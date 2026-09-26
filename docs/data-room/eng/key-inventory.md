@@ -38,14 +38,17 @@ CI / `next build` may pass with empties. Protected routes then fail closed (no `
 | `BOTBUY_STRIPE_WEBHOOK_SECRET` |
 | `BOTBUY_STRIPE_LIVE` |
 
-## Mail (draft prep only)
+## Mail
 
-| Name |
-| --- |
-| `BOTBUY_MAIL_PROVIDER` |
-| `BOTBUY_MAIL_API_KEY` |
-| `BOTBUY_MAIL_FROM` |
-| `BOTBUY_MAIL_LIVE` |
+Act-on-behalf merchant mail stays prep-only. `BOTBUY_MAIL_LIVE` stays false and does not send Needs you alerts. User alerts use `BOTBUY_NOTIFY_LIVE` plus the provider names below. Soft Companies owns Resend values. See `docs/needs-you-notify.md`. Never paste values.
+
+| Name | Note |
+| --- | --- |
+| `BOTBUY_MAIL_PROVIDER` | User alerts expect `resend`. |
+| `BOTBUY_MAIL_API_KEY` | Server only. Never commit. |
+| `BOTBUY_MAIL_FROM` | From address. |
+| `BOTBUY_MAIL_LIVE` | Act-on-behalf. Stays false. Responses stay `sent: false`. |
+| `BOTBUY_NOTIFY_LIVE` | Needs you user alert. Must be `true` to send. |
 
 ## Namecheap
 

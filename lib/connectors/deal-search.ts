@@ -30,6 +30,7 @@ import {
 } from "@/lib/connectors/stage-search-fixture";
 import { CONNECTOR_TECH_LOCK_NOTE } from "@/lib/connectors/tech-lock";
 import type { ConnectorProvider, ConnectorToolResult } from "@/lib/connectors/types";
+import { notifyNeedsYouEntered } from "@/lib/needs-you-notify";
 import { assertRunDealSoftHold } from "@/lib/run-deal";
 import {
   appendDealEvent,
@@ -202,7 +203,7 @@ export async function applyDealSearchPipeline(input: {
       !dealHasSearchActHandoff(deal.id, listDealEvents(deal.id)) &&
       isStageSearchFixtureEnabled(intentForFixture)
     ) {
-      return applyStageSearchFixtureHandoff({
+      return await applyStageSearchFixtureHandoff({
         deal,
         userId: input.userId,
         query: route.query || route.domain || deal.title,
@@ -310,7 +311,7 @@ export async function applyDealSearchPipeline(input: {
       deal.status === "Searching" &&
       isStageSearchFixtureEnabled(intentForFixture)
     ) {
-      const next = applyStageSearchFixtureHandoff({
+      const next = await applyStageSearchFixtureHandoff({
         deal,
         userId: input.userId,
         query: route.query || deal.title,
@@ -392,7 +393,7 @@ export async function applyDealSearchPipeline(input: {
     connectorResultHasCandidates(searchResult.data) &&
     deal.status === "Searching"
   ) {
-    const next = applySearchActHandoff({
+    const next = await applySearchActHandoff({
       deal,
       userId: input.userId,
       provider: route.provider,
@@ -408,7 +409,7 @@ export async function applyDealSearchPipeline(input: {
     deal.status === "Searching" &&
     isStageSearchFixtureEnabled(intentForFixture)
   ) {
-    const next = applyStageSearchFixtureHandoff({
+    const next = await applyStageSearchFixtureHandoff({
       deal,
       userId: input.userId,
       query: route.query || route.domain || deal.title,
@@ -428,7 +429,7 @@ export async function applyDealSearchPipeline(input: {
  * Attach structured candidates + quote, then Searching → Found → Needs you.
  * Does not invent verified prices or skip the Approve sheet.
  */
-export function applySearchActHandoff(input: {
+export async function applySearchActHandoff(input: {
   deal: Deal;
   userId: string;
   provider: ConnectorProvider | null;
@@ -538,6 +539,18 @@ export function applySearchActHandoff(input: {
   appendSearchNote(next, SEARCH_ACT_HOLD_NOTE);
   if (fixture) appendSearchNote(next, STAGE_SEARCH_FIXTURE_NOTE);
   assertRunDealSoftHold(next);
+  try {
+    await notifyNeedsYouEntered({
+      deal: next,
+      userId: input.userId,
+      previousStatus: "Found",
+    });
+  } catch (error) {
+    console.error(
+      "[needs-you-notify] handoff notify failed",
+      error instanceof Error ? error.message : error,
+    );
+  }
   void persistEngineStore().catch((error) => {
     console.error(
       "[deal-search] persist after act handoff failed",
@@ -548,7 +561,7 @@ export function applySearchActHandoff(input: {
 }
 
 /** Honest unverified stub candidates — never live, never verified, never auto-approved. */
-export function applyStageSearchFixtureHandoff(input: {
+export async function applyStageSearchFixtureHandoff(input: {
   deal: Deal;
   userId: string;
   query?: string;
