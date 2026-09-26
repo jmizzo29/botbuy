@@ -326,14 +326,14 @@ export async function saveIngestedCandidate(input: {
     createdAt: new Date(),
   });
 
-  const previousStatus = (existing?.status ?? null) as DealStatus | null;
+  const previousWorkflowStatus = (existing?.status ?? null) as DealStatus | null;
   return {
     created: !existing,
     changed,
     status: workflowStatus,
     priceUsd: input.deal.priceUsd,
-    previousStatus,
-    enteredNeedsYou: isFreshNeedsYouTransition(previousStatus, workflowStatus),
+    previousStatus: previousWorkflowStatus,
+    enteredNeedsYou: isFreshNeedsYouTransition(previousWorkflowStatus, workflowStatus),
   };
 }
 

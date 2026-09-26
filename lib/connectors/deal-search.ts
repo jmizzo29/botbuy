@@ -436,7 +436,7 @@ export async function applySearchActHandoff(input: {
   searchData?: Record<string, unknown>;
   quoteData?: Record<string, unknown> | null;
   fixture?: boolean;
-}): Deal {
+}): Promise<Deal> {
   const deal = getDeal(input.deal.id, input.userId) ?? input.deal;
   const events = listDealEvents(deal.id);
   if (dealHasSearchActHandoff(deal.id, events)) {
@@ -566,7 +566,7 @@ export async function applyStageSearchFixtureHandoff(input: {
   userId: string;
   query?: string;
   domain?: string | null;
-}): Deal {
+}): Promise<Deal> {
   const deal = getDeal(input.deal.id, input.userId) ?? input.deal;
   const events = listDealEvents(deal.id);
   const fixtureId = stageSearchFixtureEventId(deal.id);

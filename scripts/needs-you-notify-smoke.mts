@@ -14,6 +14,7 @@ import {
 } from "../lib/ingest/candidates.ts";
 import {
   NEEDS_YOU_NOTIFY_SUBJECT,
+  listNeedsYouNotifyAudits,
   notifyNeedsYouEntered,
   setNeedsYouNotifyTransport,
 } from "../lib/needs-you-notify.ts";
@@ -21,7 +22,6 @@ import {
   addIntent,
   appendDealEvent,
   createSearchingDealFromIntent,
-  listAuditLogs,
   listDealEvents,
 } from "../lib/store.ts";
 import { rememberDirectoryUser } from "../lib/user-directory.ts";
@@ -78,7 +78,9 @@ assert.match(skippedEvent.detail, /autoApprove=false/);
 assert.match(skippedEvent.detail, /spend=false/);
 assert.equal(skippedEvent.metadata?.sent, false);
 assert.equal(
-  listAuditLogs(SEED_OWNER.id).some((row) => row.action === "needs_you.notify.skipped"),
+  listNeedsYouNotifyAudits(SEED_OWNER.id).some(
+    (row) => row.action === "needs_you.notify.skipped",
+  ),
   true,
 );
 
@@ -126,7 +128,7 @@ const payload = JSON.parse(sends[0].init.body) as {
 assert.equal(payload.subject, NEEDS_YOU_NOTIFY_SUBJECT);
 assert.equal(payload.from, "BotBuyer <notify@botbuyer.ai>");
 assert.equal(payload.to.length, 1);
-assert.match(payload.to[0], /@/);
+assert.equal(payload.to[0], "john.mitchell@buildstarlabs.com");
 assert.match(payload.text, /Notify live tools|Find invoice software/);
 assert.match(payload.text, /needs your OK/);
 assert.match(payload.text, /\/deals\//);
@@ -142,7 +144,9 @@ assert.match(sentEvent.detail, /sent=true/);
 assert.equal(sentEvent.metadata?.sent, true);
 assert.equal(JSON.stringify(sentEvent).includes("notify-test-key"), false);
 assert.equal(
-  listAuditLogs(SEED_OWNER.id).some((row) => row.action === "needs_you.notify.sent"),
+  listNeedsYouNotifyAudits(SEED_OWNER.id).some(
+    (row) => row.action === "needs_you.notify.sent",
+  ),
   true,
 );
 
@@ -268,6 +272,19 @@ assert.equal(sends.length, 4);
 const panBody = JSON.parse(sends[3].init.body) as { text: string };
 assert.equal(panBody.text.includes("4111111111111111"), false);
 assert.match(panBody.text, /\[redacted\]/);
+
+setNeedsYouNotifyTransport(async () => ({ ok: false, status: 422 }));
+const failed = await notifyNeedsYouEntered({
+  deal: { ...imported.deal, id: `${imported.deal.id}_fail` },
+  userId: SEED_OWNER.id,
+  previousStatus: "Found",
+});
+assert.equal(failed.sent, false);
+assert.equal(failed.attempted, true);
+assert.equal(failed.reason, "send_failed");
+const failedEvent = listDealEvents(failed.dealId).find((event) => event.id === failed.eventId);
+assert.match(failedEvent?.detail ?? "", /reason=send_failed/);
+assert.match(failedEvent?.detail ?? "", /sent=false/);
 
 const act = actOnBehalfVaultStatus();
 assert.equal(act.sent, false);

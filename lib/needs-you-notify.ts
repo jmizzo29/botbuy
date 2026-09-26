@@ -15,6 +15,7 @@ import { isPendingClerkEmail } from "@/lib/john-ux";
 import { sanitizeAuditMetadata } from "@/lib/connectors/sanitize";
 import {
   appendDealEvent,
+  listAuditLogs,
   listDealEvents,
   recordAuditLog,
 } from "@/lib/store";
@@ -47,11 +48,19 @@ type NotifyTransport = (
   init: { method: string; headers: Record<string, string>; body: string },
 ) => Promise<{ ok: boolean; status: number }>;
 
-let transportOverride: NotifyTransport | null = null;
+function transportSlot(): { current: NotifyTransport | null } {
+  const globalStore = globalThis as typeof globalThis & {
+    __botbuyNeedsYouTransport?: { current: NotifyTransport | null };
+  };
+  if (!globalStore.__botbuyNeedsYouTransport) {
+    globalStore.__botbuyNeedsYouTransport = { current: null };
+  }
+  return globalStore.__botbuyNeedsYouTransport;
+}
 
 /** Test hook. Production uses fetch. Pass null to restore. */
 export function setNeedsYouNotifyTransport(next: NotifyTransport | null) {
-  transportOverride = next;
+  transportSlot().current = next;
 }
 
 export function needsYouNotifyLive() {
@@ -86,6 +95,14 @@ export function pickNotifyRecipient(
 
 export function needsYouNotifyEventId(dealId: string, episode: number) {
   return `evt_${dealId}_needs_you_notify_${episode}`;
+}
+
+export function listNeedsYouNotifyAudits(userId: string) {
+  return listAuditLogs(userId).filter(
+    (row) =>
+      row.action === "needs_you.notify.sent" ||
+      row.action === "needs_you.notify.skipped",
+  );
 }
 
 export function needsYouNotifyText(input: {
@@ -179,8 +196,9 @@ async function postResend(input: {
     },
     body,
   };
-  if (transportOverride) {
-    return transportOverride(RESEND_EMAILS_URL, init);
+  const override = transportSlot().current;
+  if (override) {
+    return override(RESEND_EMAILS_URL, init);
   }
   const response = await fetch(RESEND_EMAILS_URL, init);
   return { ok: response.ok, status: response.status };
