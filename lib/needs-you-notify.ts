@@ -11,7 +11,6 @@ import { createHash } from "crypto";
 import { getDb } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { saveHuntEvent } from "@/lib/db/hunts";
-import { ensureNeedsYouAlertsColumn, needsYouAlertsEnabled } from "@/lib/db/users";
 import { isFreshNeedsYouTransition } from "@/lib/ingest/candidates";
 import { isPendingClerkEmail } from "@/lib/john-ux";
 import { readSearchActHandoff } from "@/lib/connectors/search-handoff";
@@ -41,7 +40,6 @@ export type NeedsYouNotifyReason =
   | "no_email"
   | "send_failed"
   | "already_needs_you"
-  | "alerts_off"
   | "not_approve_gate";
 
 export interface NeedsYouNotifyResult {
@@ -169,12 +167,9 @@ export function needsYouNotifyText(input: {
 }) {
   return [
     input.title,
-    "",
     NEEDS_YOU_NOTIFY_DECIDE,
-    "",
     NEEDS_YOU_NOTIFY_CTA,
     needsYouDealUrl(input.appUrl, input.dealId),
-    "",
     NEEDS_YOU_NOTIFY_FOOTER,
   ].join("\n");
 }
@@ -198,29 +193,19 @@ function mailKeys() {
   };
 }
 
-async function resolveNotifyPrefs(userId: string): Promise<{
-  email: string | null;
-  alerts: boolean;
-}> {
+async function resolveNotifyEmail(userId: string): Promise<string | null> {
   const db = getDb();
   if (db) {
     try {
-      await ensureNeedsYouAlertsColumn();
       const [row] = await db
         .select({
           email: users.email,
           notificationEmail: users.notificationEmail,
-          needsYouAlerts: users.needsYouAlerts,
         })
         .from(users)
         .where(eq(users.id, userId))
         .limit(1);
-      if (row) {
-        return {
-          email: pickNotifyRecipient(row.notificationEmail, row.email),
-          alerts: needsYouAlertsEnabled(row.needsYouAlerts),
-        };
-      }
+      if (row) return pickNotifyRecipient(row.notificationEmail, row.email);
     } catch (error) {
       console.error(
         "[needs-you-notify] user lookup failed",
@@ -229,11 +214,8 @@ async function resolveNotifyPrefs(userId: string): Promise<{
     }
   }
   const memory = getDirectoryUser(userId);
-  if (!memory) return { email: null, alerts: true };
-  return {
-    email: pickNotifyRecipient(memory.notificationEmail, memory.email),
-    alerts: needsYouAlertsEnabled(memory.needsYouAlerts),
-  };
+  if (!memory) return null;
+  return pickNotifyRecipient(memory.notificationEmail, memory.email);
 }
 
 async function postResend(input: {
@@ -392,15 +374,7 @@ async function notifyNeedsYouEnteredInner(input: {
     persist,
   };
 
-  const prefs = await resolveNotifyPrefs(input.userId);
-  if (!prefs.alerts) {
-    return recordNotify({
-      ...base,
-      reason: "alerts_off",
-      sent: false,
-      attempted: false,
-    });
-  }
+  const toAddress = await resolveNotifyEmail(input.userId);
 
   if (!needsYouNotifyLive()) {
     return recordNotify({
@@ -421,7 +395,7 @@ async function notifyNeedsYouEnteredInner(input: {
     });
   }
 
-  const to = prefs.email;
+  const to = toAddress;
   if (!to) {
     return recordNotify({
       ...base,

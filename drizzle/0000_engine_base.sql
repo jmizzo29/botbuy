@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS users (
   company text,
   notification_email text,
   phone text,
-  needs_you_alerts boolean NOT NULL DEFAULT true,
   role text NOT NULL DEFAULT 'customer',
   created_at timestamptz NOT NULL DEFAULT now()
 );
@@ -28,7 +27,6 @@ CREATE UNIQUE INDEX IF NOT EXISTS users_clerk_user_id_uidx
 ALTER TABLE users ADD COLUMN IF NOT EXISTS clerk_user_id text;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS notification_email text;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS phone text;
-ALTER TABLE users ADD COLUMN IF NOT EXISTS needs_you_alerts boolean NOT NULL DEFAULT true;
 
 CREATE TABLE IF NOT EXISTS deals (
   id text PRIMARY KEY,

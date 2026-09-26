@@ -2635,39 +2635,6 @@ html:has(#connected-accounts:target) .bb-settings-legacy {
   font-size: 11px;
 }
 
-.bb-settings-switch {
-  position: relative;
-  flex-shrink: 0;
-  width: 36px;
-  height: 22px;
-  margin: 0;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 0;
-  cursor: pointer;
-}
-
-.bb-settings-switch.is-on {
-  border-color: #2dd4bf;
-  background: #042f2e;
-}
-
-.bb-settings-switch-knob {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.72);
-}
-
-.bb-settings-switch.is-on .bb-settings-switch-knob {
-  left: 16px;
-  background: #2dd4bf;
-}
-
 .bb-settings-logout,
 .bb-settings-btn-out,
 .bb-settings-btn-cancel {

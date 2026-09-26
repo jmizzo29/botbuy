@@ -85,8 +85,6 @@ export interface User {
   clerkUserId?: string | null;
   notificationEmail?: string | null;
   phone?: string | null;
-  /** Default on. Off means Needs-you email is never sent. */
-  needsYouAlerts?: boolean;
 }
 
 export interface Receipt {

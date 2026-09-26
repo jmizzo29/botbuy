@@ -128,14 +128,21 @@ const payload = JSON.parse(sends[0].init.body) as {
 };
 assert.equal(payload.subject, "BotBuyer — a deal needs your Approve");
 assert.equal(payload.subject, NEEDS_YOU_NOTIFY_SUBJECT);
+assert.equal(payload.subject.includes("BotBuyer - "), false);
+assert.equal(payload.subject.includes("BotBuyer needs you"), false);
 assert.equal(payload.from, "BotBuyer <notify@botbuyer.ai>");
 assert.equal(payload.to.length, 1);
 assert.equal(payload.to[0], "john.mitchell@buildstarlabs.com");
-assert.match(payload.text, /^Find invoice software/);
-assert.match(payload.text, /Approve or Reject in BotBuyer\./);
-assert.match(payload.text, /Open deal/);
-assert.match(payload.text, /\/deals\/.+#approve/);
-assert.match(payload.text, /BotBuyer only runs what you approve\. Auto-approve is off\./);
+const bodyLines = payload.text.split("\n");
+assert.match(bodyLines[0], /^Find invoice software/);
+assert.equal(bodyLines[1], "Approve or Reject in BotBuyer.");
+assert.equal(bodyLines[2], "Open deal");
+assert.match(bodyLines[3], /\/deals\/.+#approve$/);
+assert.equal(
+  bodyLines[4],
+  "BotBuyer only runs what you approve. Auto-approve is off.",
+);
+assert.equal(payload.text.includes("Something on this deal needs your OK"), false);
 assert.doesNotMatch(payload.text, /\b(Bought|Purchased|Complete)\b/);
 assert.equal(payload.text.includes("$"), false);
 assert.equal(payload.text.includes("notify-test-key"), false);
@@ -363,31 +370,6 @@ assert.equal(closed.reason, "not_approve_gate");
 assert.equal(closed.sent, false);
 assert.equal(sends.length, 4);
 
-rememberDirectoryUser({
-  id: "usr_alerts_off",
-  email: "alerts-off@example.com",
-  name: "Alerts Off",
-  company: "",
-  role: "customer",
-  clerkUserId: null,
-  notificationEmail: "alerts-off@example.com",
-  phone: "",
-  needsYouAlerts: false,
-});
-const optedOut = await notifyNeedsYouEntered({
-  deal: {
-    ...imported.deal,
-    id: `${imported.deal.id}_alerts_off`,
-    userId: "usr_alerts_off",
-  },
-  userId: "usr_alerts_off",
-  previousStatus: null,
-});
-assert.equal(optedOut.reason, "alerts_off");
-assert.equal(optedOut.sent, false);
-assert.equal(optedOut.attempted, false);
-assert.equal(sends.length, 4);
-
 process.env.VERCEL_ENV = "preview";
 process.env.VERCEL_URL = "botbuy-preview.vercel.app";
 process.env.NEXT_PUBLIC_APP_URL = "https://botbuyer.ai";
@@ -418,27 +400,14 @@ const handoff = readFileSync(
 assert.match(handoff, /transitionDeal\(found\.id, "Needs you"/);
 assert.match(handoff, /notifyNeedsYouEntered/);
 const envExample = readFileSync(new URL("../.env.example", import.meta.url), "utf8");
-const settingsCopy = readFileSync(
-  new URL("../lib/settings-quiet.ts", import.meta.url),
-  "utf8",
-);
 const settingsUi = readFileSync(
   new URL("../components/settings-quiet.tsx", import.meta.url),
   "utf8",
 );
-const alertSwitch = readFileSync(
-  new URL("../components/settings-needs-you-alert.tsx", import.meta.url),
-  "utf8",
-);
-assert.match(settingsCopy, /Alert me when a deal needs Approve/);
-assert.match(
-  settingsCopy,
-  /Email when search finishes and something needs your OK\. Auto-approve stays off\./,
-);
-assert.match(settingsUi, /SettingsNeedsYouAlert/);
 assert.match(settingsUi, /data-auto-approve="off"/);
+assert.equal(settingsUi.includes("Alert me when a deal needs Approve"), false);
 assert.equal(settingsUi.includes('role="switch"'), false);
-assert.match(alertSwitch, /role="switch"/);
+assert.equal(settingsUi.includes("SettingsNeedsYouAlert"), false);
 assert.match(envExample, /BOTBUY_NOTIFY_LIVE=false/);
 assert.match(envExample, /BOTBUY_MAIL_LIVE=false/);
 assert.equal(envExample.includes("BOTBUY_MAIL_API_KEY=re_"), false);
